@@ -1,4 +1,4 @@
-import { JDita } from "jdita/src/classes";
+import { JDita } from "jdita";
 
 export const NODES: Record<string, (value: JDita) => any> = {
   audio: (value: JDita) => {
@@ -30,6 +30,41 @@ export const NODES: Record<string, (value: JDita) => any> = {
     }
     return { type: value.nodeName, attrs, content: content.map(travel) };
   },
+  video: (value: JDita) => {
+    const attrs: any = { ...value.attributes };
+    const content: JDita[] = [];
+    if (value.children) {
+      value.children.forEach(child => {
+        console.log('--------------------')
+        console.log('poster:', child)
+        if (child.nodeName === 'media-autoplay') {
+          attrs.autoplay = true;
+          return;
+        }
+        if (child.nodeName === 'media-controls') {
+          attrs.controls = true;
+          return;
+        }
+        if (child.nodeName === 'media-loop') {
+          attrs.loop = true;
+          return;
+        }
+        if (child.nodeName === 'media-muted') {
+          attrs.muted = true;
+          return;
+        }
+        if (child.nodeName === 'video-poster') {
+          attrs.poster = child.attributes?.value;
+          return;
+        }
+        if (child.nodeName === 'media-track' || child.nodeName === 'media-source') {
+          content.push(child);
+          return;
+        }
+      });
+    }
+    return { type: value.nodeName, attrs, content: content.map(travel) };
+  },
   image: (value: JDita) => {
     if (value.children
       && value.children[0].nodeName === 'alt'
@@ -43,7 +78,6 @@ export const NODES: Record<string, (value: JDita) => any> = {
   },
   text: (value: JDita) => ({ type: 'text', text: value.content }),
 };
-NODES.video = NODES.audio;
 
 function defaultTravel(value: JDita): any {
   return {
