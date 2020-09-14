@@ -1,4 +1,4 @@
-import { document } from "./document";
+import { document } from "../src/document";
 import { xditaToJson } from "jdita";
 
 const xml = `<?xml version="1.0" encoding="UTF-8"?>
