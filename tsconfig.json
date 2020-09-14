@@ -1,7 +1,8 @@
 {
   "exclude": [
     "**/*.spec.ts",
-    "src/tests.ts"
+    "src/tests.ts",
+    "example"
   ],
   "compilerOptions": {
     /* Basic Options */
