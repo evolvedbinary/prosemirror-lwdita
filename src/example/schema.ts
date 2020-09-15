@@ -1,4 +1,5 @@
-import { Schema, NodeSpec, MarkSpec, DOMOutputSpec } from "prosemirror-model"
+import { Schema, NodeSpec, MarkSpec, DOMOutputSpec } from "prosemirror-model";
+import { schema } from "../schema";
 
 const
   pDOM: DOMOutputSpec = ["p", 0],

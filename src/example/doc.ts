@@ -1,122 +1,71 @@
-const doc = {
-  "type": "doc",
-  "content": [
-    {
-      "type": "heading",
-      "attrs": {
-        "level": 3
-      },
-      "content": [
-        {
-          "type": "text",
-          "text": "Hello ProseMirror"
-        }
-      ]
-    },
-    {
-      "type": "paragraph",
-      "content": [
-        {
-          "type": "text",
-          "text": "This is editable text. You can focus it and start typing."
-        }
-      ]
-    },
-    {
-      "type": "paragraph",
-      "content": [
-        {
-          "type": "text",
-          "text": "To apply styling, you can select a piece of text and manipulate its styling from the menu. The basic schema supports "
-        },
-        {
-          "type": "text",
-          "marks": [
-            {
-              "type": "em"
-            }
-          ],
-          "text": "emphasis"
-        },
-        {
-          "type": "text",
-          "text": ", "
-        },
-        {
-          "type": "text",
-          "marks": [
-            {
-              "type": "strong"
-            }
-          ],
-          "text": "strong text"
-        },
-        {
-          "type": "text",
-          "text": ", "
-        },
-        {
-          "type": "text",
-          "marks": [
-            {
-              "type": "link",
-              "attrs": {
-                "href": "http://marijnhaverbeke.nl/blog",
-                "title": null
-              }
-            }
-          ],
-          "text": "links"
-        },
-        {
-          "type": "text",
-          "text": ", "
-        },
-        {
-          "type": "text",
-          "marks": [
-            {
-              "type": "code"
-            }
-          ],
-          "text": "code font"
-        },
-        {
-          "type": "text",
-          "text": ", and "
-        },
-        {
-          "type": "image",
-          "attrs": {
-            "src": "/smiley.2e0954af.png",
-            "alt": null,
-            "title": null
-          }
-        },
-        {
-          "type": "text",
-          "text": " images."
-        }
-      ]
-    },
-    {
-      "type": "paragraph",
-      "content": [
-        {
-          "type": "text",
-          "text": "Block-level structure can be manipulated with key bindings (try ctrl-shift-2 to create a level 2 heading, or enter in an empty textblock to exit the parent block), or through the menu."
-        }
-      ]
-    },
-    {
-      "type": "paragraph",
-      "content": [
-        {
-          "type": "text",
-          "text": "Try using the “list” item in the menu to wrap this paragraph in a numbered list."
-        }
-      ]
-    }
-  ]
-}
+import { xditaToJson } from "jdita";
+import { document } from "../document";
+
+const xml = `<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE topic PUBLIC "-//OASIS//DTD LIGHTWEIGHT DITA Topic//EN" "lw-topic.dtd">
+<topic id="program-bulbs-to-groups">
+  <title>Programming Light Bulbs to a Lighting Group</title>
+  <shortdesc>You can program one or more light bulbs to a lighting group to operate that group
+    with your remote control.</shortdesc>
+  <body>
+    <video width="320" height="240">
+      <media-controls />
+      <media-source value="movie.mp4" />
+      <media-source value="movie.ogg" />
+      <desc>Your browser does not support the video tag.</desc>
+    </video>
+    <section id="context">
+      <p>Your <ph keyref="product-name"/> remote control can manage up to 250 network light bulbs on the same lighting
+        network. When you add a light bulb to the network, you can program it to one or more
+        lighting groups. You must assign a light bulb to at least one lighting group to
+        operate that light bulb  A network light bulb that is not programmed to a
+        lighting group will still operate when controlling all network light bulbs from
+        the remote control.</p>
+    </section>
+    <section id="steps">
+    <ol>
+      <li><p>Make sure your <b>remote control</b> is in range of the <i>light bulbs</i> you are
+        adding.</p></li>
+      <li><p>If a network <u>light bulb</u> is new, you must install it by performing the following
+          steps:</p>
+          <ol>
+            <li><p>Make sure <sup>power</sup> to the <sub>fixture</sub> where you are installing the light bulb
+              is turned OFF.
+              <image><alt>alt text</alt></image>
+              <image></image></p>
+              <p conref="intro-product.dita#intro-product/warning" />
+
+            </li>
+              <li><p>Remove any existing light bulb from the light fixture.</p></li>
+              <li><p>Install the network light bulb into the light fixture as you would any
+              standard light bulb.</p></li>
+              <li><p>Turn power to the light fixture on.</p>
+              <p>The light bulb begins to brighten and dim while finding the
+              remote control's network.</p></li>
+          <li><p>Repeat steps for each new network light bulb.</p></li>
+          </ol></li>
+        <li><p>Turn power on to the fixtures containing network light bulbs you want added to
+          the light group.</p></li>
+          <li><p>Turn power off to the fixtures containing light bulbs you do not want added to
+          the light group. </p></li>
+          <li><p>On the remote control, press and hold the desired lighting group button for 5
+          seconds.</p>
+        <p>The button indicator for the selected lighting group flashes green while
+          the light bulb(s) are added to the group. If the indicator flashes red, the
+          lighting group was not activated and you must try again. Light flashes red for 3
+          seconds if programming fails.</p>
+      </li>
+      <li><p>Leave the light fixture switches ON so that power is available when using your
+          remote control to turn the light bulbs on and off. Also remember to turn on any
+          excluded fixtures that you turned off.</p></li>
+    </ol>
+    </section>
+
+  </body>
+</topic>
+`;
+const doc = xditaToJson(xml).then(json => {
+  json = document(json);
+  return json;
+});
 export default doc;

@@ -4020,10 +4020,10 @@ iterate-value@^1.0.0:
     es-get-iterator "^1.0.2"
     iterate-iterator "^1.0.1"
 
-jdita@^0.2.3:
-  version "0.2.3"
-  resolved "https://registry.yarnpkg.com/jdita/-/jdita-0.2.3.tgz#2a3df58db29d19beb320397f576f87c8048c943e"
-  integrity sha512-wNRp+kJzkmQbYaPgP9d40wo2/QJAGdpRhq2Dp72LzF/YZVFhIkwsxGJTxznwbLwa+B9/KtQEZefsvNUO2M5NVw==
+jdita@^0.2.4:
+  version "0.2.4"
+  resolved "https://registry.yarnpkg.com/jdita/-/jdita-0.2.4.tgz#bdea5ad93620bf48ea4a3a012865494159b2ef62"
+  integrity sha512-W/QtiTHu8qyzv7PeDk+596ZsNnjsJpyXrLQxtUJYBlROqBMr0fmq1y7txGzjLWiI7t0qGreok7v/9GadZx9yvQ==
   dependencies:
     saxes "^5.0.1"
 

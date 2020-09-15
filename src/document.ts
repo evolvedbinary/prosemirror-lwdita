@@ -35,8 +35,6 @@ export const NODES: Record<string, (value: JDita) => any> = {
     const content: JDita[] = [];
     if (value.children) {
       value.children.forEach(child => {
-        console.log('--------------------')
-        console.log('poster:', child)
         if (child.nodeName === 'media-autoplay') {
           attrs.autoplay = true;
           return;
