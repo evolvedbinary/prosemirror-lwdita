@@ -1,8 +1,7 @@
-// import { Schema } from 'prosemirror-model';
 import { BaseNode, getNodeClassType, UnknownNodeError, DocumentNode, nodeGroups, customChildTypesToString } from 'jdita';
 import { getDomNode } from './dom';
 import { ChildTypes } from 'jdita';
-import { Schema } from 'prosemirror-model';
+import { NodeSpec, Schema, SchemaSpec, Node, MarkSpec } from 'prosemirror-model';
 
 
 export const NODE_NAMES: Record<string, string> = {
@@ -21,6 +20,7 @@ export const SCHEMA_CONTENT: Record<string, (type: ChildTypes, getNodeName?: (no
   image: type => '',
 }
 export const SCHEMA_CHILDREN: Record<string, (type: ChildTypes) => string[]> = {}
+export const IS_MARK = ['b', 'i', 'u', 'sub', 'sup'];
 
 export interface SchemaNode {
   inline?: boolean;
@@ -45,20 +45,22 @@ export function travel(node: typeof BaseNode, next: (nodeName: string) => void):
   return (SCHEMAS[node.nodeName] || defaultTravel)(node, next);
 }
 
-function defaultTravel(node: typeof BaseNode, next: (nodeName: string) => void): SchemaNode {
+function defaultTravel(node: typeof BaseNode, next: (nodeName: string) => void): NodeSpec {
   const children = (SCHEMA_CHILDREN[node.nodeName] || getChildren)(node.childTypes);
-  const content = (SCHEMA_CONTENT[node.nodeName] || customChildTypesToString)(node.childTypes, defaultNodeName);
+  const content = (SCHEMA_CONTENT[node.nodeName] || customChildTypesToString)(node.childTypes, n => IS_MARK.indexOf(n) < 0
+  ? NODE_NAMES[n] || n.replace(/-/g, '_')
+  : 'text');
   const domNodeName = getDomNode(node.nodeName);
   const attrs= node.fields.reduce((attrs, field) => {
     attrs[field] = { default: '' };
     return attrs;
   }, {} as Record<string, { default: string }>);
-  const result: any = {
+  const result: NodeSpec = {
     domNodeName,
     attrs,
     parseDom: [{
       tag: domNodeName + '[data-type=' + node.nodeName + ']',
-      getAttrs(dom: any) {
+      getAttrs(dom: HTMLElement) {
         return attrs
           ? Object.keys(attrs).reduce((newAttrs, attr) => {
             if (dom.hasAttribute('data-jdita-' + attr)) {
@@ -69,11 +71,11 @@ function defaultTravel(node: typeof BaseNode, next: (nodeName: string) => void):
           : {}
       },
     }],
-    toDOM(node: any) {
+    toDOM(pmNode: Node) {
       return [domNodeName, attrs
         ? Object.keys(attrs).reduce((newAttrs, attr) => {
-          if (node.attrs[attr]) {
-            newAttrs['data-jdita-' + attr] = node.attrs[attr];
+          if (pmNode.attrs[attr]) {
+            newAttrs['data-jdita-' + attr] = pmNode.attrs[attr];
           }
           return newAttrs;
         }, { 'data-type': node.nodeName } as any)
@@ -91,19 +93,22 @@ function defaultTravel(node: typeof BaseNode, next: (nodeName: string) => void):
   return result;
 }
 
-function defaultNodeName(nodeName: string): string {
+export function defaultNodeName(nodeName: string): string {
   return NODE_NAMES[nodeName] || nodeName.replace(/-/g, '_');
 }
 
 export function schema(): Schema {
   const done: string[] = [];
-  const nodes: any = {
-    text: {},
-    'text_node': {
-      domNodeName: 'span',
-      content: 'text*',
+  const spec: SchemaSpec = {
+    nodes: {
+      text: {},
+      'text_node': {
+        domNodeName: 'span',
+        content: 'text*',
+      },
     },
-  };
+    marks: {},
+  }
   function browse(node: string | typeof BaseNode): void {
     const nodeName = typeof node === 'string' ? node : node.nodeName;
     if (done.indexOf(nodeName) > -1) {
@@ -117,7 +122,11 @@ export function schema(): Schema {
       const NodeClass = typeof node === 'string' ? getNodeClassType(node) : node;
       const result = defaultTravel(NodeClass, browse);
       if (result) {
-        nodes[defaultNodeName(nodeName)] = result;
+        if (IS_MARK.indexOf(nodeName) > -1) {
+          (spec.marks as Record<string, MarkSpec>)[defaultNodeName(nodeName)] = result as MarkSpec;
+        } else {
+          (spec.nodes as Record<string, NodeSpec>)[defaultNodeName(nodeName)] = result;
+        }
       }
     } catch (e) {
       if (e instanceof UnknownNodeError) {
@@ -127,7 +136,8 @@ export function schema(): Schema {
       }
     }
   }
-
   browse(DocumentNode);
-  return new Schema({ nodes });
+  console.log('nodes:', spec.nodes);
+  console.log('marks:', spec.marks);
+  return new Schema(spec);
 }

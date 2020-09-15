@@ -1,4 +1,5 @@
 import { JDita } from "jdita";
+import { IS_MARK, defaultNodeName } from "./schema";
 
 export const NODES: Record<string, (value: JDita) => any> = {
   audio: (value: JDita) => {
@@ -78,11 +79,23 @@ export const NODES: Record<string, (value: JDita) => any> = {
 };
 
 function defaultTravel(value: JDita): any {
-  return {
-    type: value.nodeName.replace(/-/g, '_'),
-    attrs: value.attributes,
-    content: value.children?.map(travel),
-  };
+  const content = value.children?.map(travel);
+  const attrs =  value.attributes;
+  const type = defaultNodeName(value.nodeName);
+  let result: any;;
+  if (IS_MARK.indexOf(value.nodeName) > -1) {
+    if (content?.length === 1) {
+      result = content[0];
+      result.marks = [{ type }]
+    }
+  } else {
+    result = {
+      content,
+      attrs,
+      type,
+    };
+  }
+  return result;
 }
 export function travel(value: JDita): any {
   return (NODES[value.nodeName] || defaultTravel)(value);
