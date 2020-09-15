@@ -1,9 +1,20 @@
 import { JDita } from "jdita";
 import { IS_MARK, defaultNodeName } from "./schema";
 
+function deleteUndefined(object?: any) {
+  if (object) {
+    for (let key in object) {
+      if (typeof object[key] === 'undefined') {
+        delete(object[key]);
+      }
+    }
+  }
+  return object;
+}
+
 export const NODES: Record<string, (value: JDita) => any> = {
   audio: (value: JDita) => {
-    const attrs: any = { ...value.attributes };
+    const attrs: any = deleteUndefined({ ...value.attributes });
     const content: JDita[] = [];
     if (value.children) {
       value.children.forEach(child => {
@@ -29,10 +40,14 @@ export const NODES: Record<string, (value: JDita) => any> = {
         }
       });
     }
-    return { type: value.nodeName, attrs, content: content.map(travel) };
+    const result = { type: value.nodeName, attrs, content: content.map(travel) };
+    if (attrs && Object.keys(attrs).length) {
+      result.attrs = attrs;
+    }
+    return result;
   },
   video: (value: JDita) => {
-    const attrs: any = { ...value.attributes };
+    const attrs: any = deleteUndefined({ ...value.attributes });
     const content: JDita[] = [];
     if (value.children) {
       value.children.forEach(child => {
@@ -62,7 +77,11 @@ export const NODES: Record<string, (value: JDita) => any> = {
         }
       });
     }
-    return { type: value.nodeName, attrs, content: content.map(travel) };
+    const result = { type: value.nodeName, attrs, content: content.map(travel) };
+    if (attrs && Object.keys(attrs).length) {
+      result.attrs = attrs;
+    }
+    return result;
   },
   image: (value: JDita) => {
     if (value.children
@@ -70,8 +89,12 @@ export const NODES: Record<string, (value: JDita) => any> = {
       && value.children[0]?.children
       && value.children[0].children[0].nodeName == 'text'
       ) {
-      const attrs = { ...value.attributes, alt: value.children[0].children[0].content };
-      return { type: 'image', attrs };
+      const attrs = deleteUndefined({ ...value.attributes, alt: value.children[0].children[0].content });
+      const result = { type: 'image', attrs };
+      if (attrs && Object.keys(attrs).length) {
+        result.attrs = attrs;
+      }
+      return result;
     }
     return defaultTravel(value);
   },
@@ -81,6 +104,7 @@ export const NODES: Record<string, (value: JDita) => any> = {
 function defaultTravel(value: JDita): any {
   const content = value.children?.map(travel);
   const attrs =  value.attributes;
+  deleteUndefined(attrs);
   const type = defaultNodeName(value.nodeName);
   let result: any;;
   if (IS_MARK.indexOf(value.nodeName) > -1) {
@@ -90,10 +114,14 @@ function defaultTravel(value: JDita): any {
     }
   } else {
     result = {
-      content,
-      attrs,
       type,
     };
+    if (content) {
+      result.content = content;
+    }
+    if (attrs && Object.keys(attrs).length) {
+      result.attrs = attrs;
+    }
   }
   return result;
 }
