@@ -1,18 +1,28 @@
-export const DOM_NODES: Record<string, string> = {
+export const DOM_NODES: Record<string, string | ((parent?: string) => string)> = {
+  audio: 'audio',
   body: 'div',
-  b: 'b',
-  desc: 'caption',
+  b: 'strong',
+  data: 'data',
+  desc: parent => parent === 'fig' ? 'figcaption' : 'caption',
+  dd: 'dd',
+  dl: 'dl',
   document: 'doc',
+  dt: 'dt',
   'dl-entry': '',
   fig: 'figure',
   fn: 'span',
-  i: 'i',
+  i: 'em',
   image: 'img',
   'media-source': 'source',
   'media-track': 'track',
+  li: 'li',
   note: 'div',
+  ol: 'ol',
+  p: 'p',
   ph: 'span',
+  pre: 'pre',
   prolog: '',
+  section: 'section',
   shortdesc: 'p',
   'simple-table': 'table',
   stentry: 'td',
@@ -20,23 +30,16 @@ export const DOM_NODES: Record<string, string> = {
   strow: 'tr',
   sub: 'sub',
   sup: 'sup',
-  title: 'h1',
+  title: parent => parent === 'section' ? 'h2' : 'h1',
   topic: 'article',
   u: 'u',
-  xref: 'a',
-  data: 'data',
-  section: 'section',
-  p: 'p',
   ul: 'ul',
-  li: 'li',
-  ol: 'ol',
-  dl: 'dl',
-  dt: 'dt',
-  dd: 'dd',
-  pre: 'pre',
-  audio: 'audio',
   video: 'video',
+  xref: 'a',
 }
-export function getDomNode(node: string): string {
-  return DOM_NODES[node] || 'jdita-node-' + node;
+export function getDomNode(node: string, parent?: string): string {
+  const domName = DOM_NODES[node];
+  return domName
+    ? typeof domName === 'string' ? domName : domName(parent)
+    : 'jdita-node-' + node;
 }

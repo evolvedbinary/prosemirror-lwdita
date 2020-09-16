@@ -1,18 +1,21 @@
 import { xditaToJson } from "jdita";
 import { document } from "../document";
-
-const xml = `<?xml version="1.0" encoding="UTF-8"?>
+let xml: string;
+xml = `<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE topic PUBLIC "-//OASIS//DTD LIGHTWEIGHT DITA Topic//EN" "lw-topic.dtd">
 <topic id="program-bulbs-to-groups">
   <title>Programming Light Bulbs to a Lighting Group</title>
   <shortdesc>You can program one or more light bulbs to a lighting group to operate that group
     with your remote control.</shortdesc>
   <body>
-    <video width="320" height="240">
+    <video width="640" height="360">
+      <desc>Your browser does not support the video tag.</desc>
+      <video-poster value="movie.jpg" />
       <media-controls />
+      <media-autoplay />
+      <media-muted />
       <media-source value="movie.mp4" />
       <media-source value="movie.ogg" />
-      <desc>Your browser does not support the video tag.</desc>
     </video>
     <section id="context">
       <p>Your <ph keyref="product-name"/> remote control can manage up to 250 network light bulbs on the same lighting
@@ -64,8 +67,27 @@ const xml = `<?xml version="1.0" encoding="UTF-8"?>
   </body>
 </topic>
 `;
+xml = `<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE topic PUBLIC "-//OASIS//DTD LIGHTWEIGHT DITA Topic//EN" "lw-topic.dtd">
+<topic id="program-bulbs-to-groups">
+  <title>Programming Light Bulbs to a Lighting Group</title>
+  <shortdesc>You can program one or more light bulbs to a lighting group to operate that group
+    with your remote control.</shortdesc>
+  <body>
+    <section>
+      <title>Programming Light Bulbs to a Lighting Group</title>
+      <p>Programming Light Bulbs to a Lighting Group</p>
+      <note>
+        <p>Programming Light Bulbs to a Lighting Group</p>
+      </note>
+    </section>
+  </body>
+</topic>
+`;
 const doc = xditaToJson(xml).then(json => {
+  console.log('jdita:', json);
   json = document(json);
+  console.log('document:', json);
   return json;
 });
 export default doc;

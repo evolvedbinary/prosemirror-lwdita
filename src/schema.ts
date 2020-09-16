@@ -7,6 +7,27 @@ import { NodeSpec, Schema, SchemaSpec, Node, MarkSpec } from 'prosemirror-model'
 export const NODE_NAMES: Record<string, string> = {
   document: 'doc',
 }
+export const NODE_ATTRS: Record<string, (attrs: string[]) => any> = {
+  video: node => defaultNodeAttrs([...node, 'controls', 'autoplay', 'loop', 'muted', 'poster']),
+  audio: node => defaultNodeAttrs([...node, 'controls', 'autoplay', 'loop', 'muted']),
+}
+export const NODE_ATTR_NAMES: Record<string, Record<string, string>> = {
+  video: {
+    _: '*',
+    autoplay: '*',
+    controls: '*',
+  },
+  'media-source': {
+    value: 'src',
+  },
+  xref: {
+    keyref: 'href',
+  },
+  image: {
+    _: '*',
+    href: 'src',
+  },
+}
 export const SCHEMAS: Record<string, (node: typeof BaseNode, next: (nodeName: string) => void) => SchemaNode> = {
   'text': (node: typeof BaseNode, next: (nodeName: string) => void): SchemaNode => {
     const result: SchemaNode = {
@@ -14,12 +35,17 @@ export const SCHEMAS: Record<string, (node: typeof BaseNode, next: (nodeName: st
       attrs: {},
     };
     return result;
-  }
+  },
 }
 export const SCHEMA_CONTENT: Record<string, (type: ChildTypes, getNodeName?: (nodeName: string) => string) => string> = {
   image: type => '',
+  video: type => 'desc?|media_source*|media_track*',
+  audio: type => 'desc?|media_source*|media_track*',
 }
-export const SCHEMA_CHILDREN: Record<string, (type: ChildTypes) => string[]> = {}
+export const SCHEMA_CHILDREN: Record<string, (type: ChildTypes) => string[]> = {
+  video: type => ['media-source', 'media-track', 'desc'],
+  audio: type => ['media-source', 'media-track', 'desc'],
+}
 export const IS_MARK = ['b', 'i', 'u', 'sub', 'sup'];
 
 export interface SchemaNode {
@@ -45,26 +71,39 @@ export function travel(node: typeof BaseNode, next: (nodeName: string) => void):
   return (SCHEMAS[node.nodeName] || defaultTravel)(node, next);
 }
 
-function defaultTravel(node: typeof BaseNode, next: (nodeName: string) => void): NodeSpec {
+export function getDomAttr(nodeName: string, attr: string): string {
+  return NODE_ATTR_NAMES[nodeName]
+    ? NODE_ATTR_NAMES[nodeName]._
+      ? NODE_ATTR_NAMES[nodeName][attr]
+        ? NODE_ATTR_NAMES[nodeName][attr] === '*' ? 'data-j-' + attr : NODE_ATTR_NAMES[nodeName][attr]
+        : attr
+      : NODE_ATTR_NAMES[nodeName][attr] ? NODE_ATTR_NAMES[nodeName][attr] : 'data-j-' + attr
+    : 'data-j-' + attr;
+}
+
+export function defaultNodeAttrs(attrs: string[]): any {
+  return attrs.reduce((result, field) => {
+    result[field] = { default: '' };
+    return result;
+  }, {} as Record<string, { default: string }>);
+}
+
+function defaultTravel(node: typeof BaseNode, parent: typeof BaseNode, next: (nodeName: string, parent: typeof BaseNode) => void): NodeSpec {
   const children = (SCHEMA_CHILDREN[node.nodeName] || getChildren)(node.childTypes);
   const content = (SCHEMA_CONTENT[node.nodeName] || customChildTypesToString)(node.childTypes, n => IS_MARK.indexOf(n) < 0
   ? NODE_NAMES[n] || n.replace(/-/g, '_')
   : 'text');
-  const domNodeName = getDomNode(node.nodeName);
-  const attrs= node.fields.reduce((attrs, field) => {
-    attrs[field] = { default: '' };
-    return attrs;
-  }, {} as Record<string, { default: string }>);
+  const attrs = (NODE_ATTRS[node.nodeName] || defaultNodeAttrs)(['parent', ...node.fields]);
   const result: NodeSpec = {
-    domNodeName,
     attrs,
     parseDom: [{
-      tag: domNodeName + '[data-type=' + node.nodeName + ']',
+      tag: '[data-j-type=' + node.nodeName + ']',
       getAttrs(dom: HTMLElement) {
         return attrs
           ? Object.keys(attrs).reduce((newAttrs, attr) => {
-            if (dom.hasAttribute('data-jdita-' + attr)) {
-              newAttrs[attr] = dom.getAttribute('data-jdita-' + attr);
+            const domAttr = getDomAttr(node.nodeName, attr);
+            if (dom.hasAttribute(domAttr)) {
+              newAttrs[attr] = dom.getAttribute(domAttr);
             }
             return newAttrs;
           }, {} as any)
@@ -72,13 +111,14 @@ function defaultTravel(node: typeof BaseNode, next: (nodeName: string) => void):
       },
     }],
     toDOM(pmNode: Node) {
-      return [domNodeName, attrs
+      return [getDomNode(node.nodeName, pmNode.attrs?.parent), attrs
         ? Object.keys(attrs).reduce((newAttrs, attr) => {
           if (pmNode.attrs[attr]) {
-            newAttrs['data-jdita-' + attr] = pmNode.attrs[attr];
+            const domAttr = getDomAttr(node.nodeName, attr);
+            newAttrs[domAttr] = pmNode.attrs[attr];
           }
           return newAttrs;
-        }, { 'data-type': node.nodeName } as any)
+        }, { 'data-j-type': node.nodeName } as any)
       : {}, 0];
     }
   };
@@ -89,7 +129,7 @@ function defaultTravel(node: typeof BaseNode, next: (nodeName: string) => void):
     result.inline = true;
   }
   result.inline = true;
-  children.forEach(next);
+  children.forEach(child => next(child, node));
   return result;
 }
 
@@ -109,7 +149,7 @@ export function schema(): Schema {
     },
     marks: {},
   }
-  function browse(node: string | typeof BaseNode): void {
+  function browse(node: string | typeof BaseNode, parent: typeof BaseNode): void {
     const nodeName = typeof node === 'string' ? node : node.nodeName;
     if (done.indexOf(nodeName) > -1) {
       return;
@@ -120,7 +160,7 @@ export function schema(): Schema {
     }
     try {
       const NodeClass = typeof node === 'string' ? getNodeClassType(node) : node;
-      const result = defaultTravel(NodeClass, browse);
+      const result = defaultTravel(NodeClass, parent, browse);
       if (result) {
         if (IS_MARK.indexOf(nodeName) > -1) {
           (spec.marks as Record<string, MarkSpec>)[defaultNodeName(nodeName)] = result as MarkSpec;
@@ -136,7 +176,7 @@ export function schema(): Schema {
       }
     }
   }
-  browse(DocumentNode);
+  browse(DocumentNode, DocumentNode);
   console.log('nodes:', spec.nodes);
   console.log('marks:', spec.marks);
   return new Schema(spec);
