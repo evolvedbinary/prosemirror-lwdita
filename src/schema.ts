@@ -31,8 +31,9 @@ export const NODE_ATTR_NAMES: Record<string, Record<string, string>> = {
 export const SCHEMAS: Record<string, (node: typeof BaseNode, next: (nodeName: string) => void) => SchemaNode> = {
   'text': (node: typeof BaseNode, next: (nodeName: string) => void): SchemaNode => {
     const result: SchemaNode = {
-      domNodeName: 'span',
-      attrs: {},
+      attrs: {
+        parent: { default: '' }
+      },
     };
     return result;
   },

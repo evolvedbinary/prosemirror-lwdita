@@ -97,10 +97,10 @@ export const NODES: Record<string, (value: JDita, parent: JDita) => any> = {
 
 function defaultTravel(value: JDita, parent: JDita): any {
   const content = value.children?.map(child => travel(child, value));
-  const attrs =  value.attributes;
+  const attrs =  value.attributes || {};
   deleteUndefined(attrs);
   const type = defaultNodeName(value.nodeName);
-  let result: any;;
+  let result: any;
   if (IS_MARK.indexOf(value.nodeName) > -1) {
     if (content?.length === 1) {
       result = content[0];
@@ -119,7 +119,7 @@ function defaultTravel(value: JDita, parent: JDita): any {
 }
 export function travel(value: JDita, parent: JDita): any {
   const result = (NODES[value.nodeName] || defaultTravel)(value, parent);
-  if (result.attrs) {
+  if (value.nodeName !== 'doc' && result.attrs) {
     result.attrs.parent = parent.nodeName;
   }
   return result;
