@@ -4,10 +4,24 @@ import { Fragment, Node, Schema, Slice } from 'prosemirror-model';
 import { Selection, TextSelection } from 'prosemirror-state';
 
 export function newLine(schema: Schema): Command {
+  const splittable = [ schema.nodes.p ]
   return function (state, dispatch) {
     let { $from, $to } = state.selection;
-    let parent = $from.parent;
-    let grandParent = $from.node(-1);
+    let parent: Node | null = null;
+    let grandParent: Node | null = null;
+    let depth = 0;
+    for (let i = $from.depth; i > 0; i--) {
+      parent = $from.node(i);
+      if (splittable.indexOf(parent.type) > -1) {
+        grandParent = $from.node(i - 1);
+        depth = $from.depth - i + 1;
+        console.log('depth', depth);
+        break;
+      }
+    }
+    if (!parent || !grandParent) {
+      return false;
+    }
     console.group('splitting:', parent.type.name);
     console.log('parent:', parent);
     console.log('$from:', $from);
@@ -34,7 +48,7 @@ export function newLine(schema: Schema): Command {
             const newSelection = new TextSelection(pos, pos);
             dispatch(tr.setSelection(newSelection).scrollIntoView());
           } else {
-            dispatch(tr.split($from.pos).scrollIntoView());
+            dispatch(tr.split($from.pos, depth).scrollIntoView());
           }
         }
         console.groupEnd();
