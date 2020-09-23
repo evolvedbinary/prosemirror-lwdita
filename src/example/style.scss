@@ -21,10 +21,11 @@ body {
 $nodes: "audio", "body", "data", "dd", "desc", "dl", "dlentry", "dt", "document", "fig", "fn", "image", "media-source", "media-track", "li", "note", "ol", "p", "ph", "pre", "prolog", "section", "simpletable", "shortdesc", "stentry", "sthead", "strow", "title", "topic", "ul", "video", "xref";
 @each $node in $nodes {
   [data-j-type=#{$node}] {
+    border: 2px solid rgba(blue, 0.05);
     position: relative;
     padding-right: 10px;
     &:hover {
-      outline: 1px solid rgba(blue, 0.3);
+      border: 2px solid rgba(blue, 0.3);
       &::before {
         background-color: rgba(blue, 0.7);
         color: white;
