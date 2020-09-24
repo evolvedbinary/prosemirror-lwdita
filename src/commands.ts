@@ -1,7 +1,8 @@
+export { toggleMark } from 'prosemirror-commands';
 import { canSplit } from 'prosemirror-transform';
 import { Command } from 'prosemirror-commands';
-import { Fragment, Node, Schema, Slice } from 'prosemirror-model';
-import { Selection, TextSelection } from 'prosemirror-state';
+import { Fragment, Node, Schema } from 'prosemirror-model';
+import { TextSelection } from 'prosemirror-state';
 
 export function newLine(schema: Schema): Command {
   const splittable: Record<string, number> = {
