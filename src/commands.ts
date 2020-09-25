@@ -1,15 +1,41 @@
 export { toggleMark } from 'prosemirror-commands';
 import { canSplit } from 'prosemirror-transform';
 import { Command } from 'prosemirror-commands';
-import { Fragment, MarkType, Node, Schema } from 'prosemirror-model';
+import { Fragment, MarkType, Node, NodeType, Schema } from 'prosemirror-model';
 import { TextSelection, EditorState } from 'prosemirror-state';
+import { schema } from '../lib/example/schema';
 
-export function createNode(schema: Schema, type: string): Node {
-  switch (type) {
-    case 'p': return schema.nodes[type].createAndFill() as Node;
-    case 'li': return schema.nodes[type].createAndFill({}, createNode(schema, 'p')) as Node;
+export function createNode(type: NodeType<Schema>): Node {
+  switch (type.name) {
+    case 'p': return type.createAndFill() as Node;
+    case 'li': return type.createAndFill({}, createNode(type.schema.nodes['p'])) as Node;
+    case 'ul':
+    case 'ol': return type.createAndFill({}, createNode(type.schema.nodes['li'])) as Node;
   }
-  throw new Error('unkown node type');
+  throw new Error('unkown node type: ' + type.name);
+}
+
+export function insertNode(type: NodeType<Schema>): Command {
+  return function (state, dispatch) {
+    try {
+      if (!state.selection.empty) {
+        console.log('Wrapping and replacing not implemented yet');
+        return false;
+      }
+      if (dispatch) {
+        const node = createNode(type);
+        const tr = state.tr.insert(state.selection.$to.end() + 1, node);
+        const pos = tr.selection.$to.doc.resolve(tr.selection.$to.pos + 2);
+        const newSelection = new TextSelection(pos, pos);
+        dispatch(tr.setSelection(newSelection).scrollIntoView());
+      }
+      return true;
+    } catch(e) {
+      console.info('Error inserting: ' + type.name);
+      console.error(e);
+      return false;
+    }
+  }
 }
 
 export function newLine(schema: Schema): Command {
@@ -41,22 +67,19 @@ export function newLine(schema: Schema): Command {
     if (!parent || !grandParent) {
       return false;
     }
-    console.group('splitting:', parent.type.name); 481
     if (allowedNodes[parent.type.name]) {
       let tr = state.tr.delete($from.pos, $to.pos);
       if (!canSplit(tr.doc, $from.pos - (deleteParent ? 1 : 0))) {
-        console.groupEnd();
         return false;
       }
       if (deleteParent && depth === allowedNodes[deleteParent]) {
-        console.groupEnd();
         return false;
       }
       if (dispatch) {
         const EOL = $to.end() === $to.pos;
         if (!deleteParent && EOL) {
           let content: Fragment | undefined;
-          tr = tr.insert($to.pos + 1, createNode(schema, parent.type.name));
+          tr = tr.insert($to.pos + 1, createNode(parent.type));
           const pos = tr.selection.$to.doc.resolve(tr.selection.$to.pos + 2 * depth);
           const newSelection = new TextSelection(pos, pos);
           dispatch(tr.setSelection(newSelection).scrollIntoView());
@@ -64,10 +87,8 @@ export function newLine(schema: Schema): Command {
           dispatch(tr.split($from.pos - (deleteParent ? 1 : 0), depth - (deleteParent ? 1 : 0)).scrollIntoView());
         }
       }
-      console.groupEnd();
       return true;
     } else {
-      console.groupEnd();
       return false;
     }
   }
