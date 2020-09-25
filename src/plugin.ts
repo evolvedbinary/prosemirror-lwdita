@@ -23,9 +23,11 @@ function commandItem(command: Command, props: Partial<MenuItemSpec> = {}) {
 }
 
 function markItem(mark: MarkType, props: Partial<MenuItemSpec> = {}): MenuElement {
-  return commandItem(toggleMark(mark), {
+  const command = toggleMark(mark);
+  return commandItem(command, {
     ...props,
     active: state => hasMark(state, mark),
+    enable: state => !state.selection.empty,
   });
 }
 
