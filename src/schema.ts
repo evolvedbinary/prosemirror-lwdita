@@ -1,11 +1,13 @@
 import { BaseNode, getNodeClassType, UnknownNodeError, DocumentNode, nodeGroups, customChildTypesToString } from 'jdita';
 import { getDomNode } from './dom';
 import { ChildTypes } from 'jdita';
-import { NodeSpec, Schema, SchemaSpec, Node, MarkSpec } from 'prosemirror-model';
+import { NodeSpec, Schema, SchemaSpec, Node, MarkSpec, DOMOutputSpec } from 'prosemirror-model';
 
 
 export const NODE_NAMES: Record<string, string> = {
   document: 'doc',
+}
+export const TO_DOM: Record<string, (node: typeof BaseNode, attrs: any) => (node: Node) => DOMOutputSpec> = {
 }
 export const NODE_ATTRS: Record<string, (attrs: string[]) => any> = {
   video: node => defaultNodeAttrs([...node, 'controls', 'autoplay', 'loop', 'muted', 'poster']),
@@ -101,6 +103,20 @@ export function travel(node: typeof BaseNode, next: (nodeName: string) => void):
   return (SCHEMAS[node.nodeName] || defaultTravel)(node, next);
 }
 
+export function defaultToDom(node: typeof BaseNode, attrs: any): (node: Node) => DOMOutputSpec {
+  return function(pmNode: Node) {
+    return [getDomNode(node.nodeName, pmNode.attrs?.parent), attrs
+      ? Object.keys(attrs).reduce((newAttrs, attr) => {
+        if (pmNode.attrs[attr]) {
+          const domAttr = getDomAttr(node.nodeName, attr);
+          newAttrs[domAttr] = pmNode.attrs[attr];
+        }
+        return newAttrs;
+      }, { 'data-j-type': node.nodeName } as any)
+    : {}, 0];
+  }
+}
+
 export function getDomAttr(nodeName: string, attr: string): string {
   return NODE_ATTR_NAMES[nodeName]
     ? NODE_ATTR_NAMES[nodeName]._
@@ -141,17 +157,7 @@ function defaultTravel(node: typeof BaseNode, parent: typeof BaseNode, next: (no
           : {}
       },
     }],
-    toDOM(pmNode: Node) {
-      return [getDomNode(node.nodeName, pmNode.attrs?.parent), attrs
-        ? Object.keys(attrs).reduce((newAttrs, attr) => {
-          if (pmNode.attrs[attr]) {
-            const domAttr = getDomAttr(node.nodeName, attr);
-            newAttrs[domAttr] = pmNode.attrs[attr];
-          }
-          return newAttrs;
-        }, { 'data-j-type': node.nodeName } as any)
-      : {}, 0];
-    }
+    toDOM: (TO_DOM[node.nodeName] || defaultToDom)(node, attrs),
   };
   if (typeof content === 'string') {
     result.content = content;
