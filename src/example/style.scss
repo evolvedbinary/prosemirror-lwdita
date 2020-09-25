@@ -15,6 +15,31 @@ body {
     border: 1px solid silver;
     background-color: white;
     border-radius: 4px;
+    .ProseMirror-menubar {
+      display: flex;
+      flex-direction: row;
+      min-height: auto !important;
+      .ProseMirror-menuitem {
+        & > * {
+          cursor: pointer;
+          &:hover {
+            background-color: #EEE;
+          }
+          padding: 4px;
+          margin: 4px;
+          border: 1px solid;
+          &.ProseMirror-menu-active {
+            background-color: #444;
+            color: white;
+          }
+          &.ProseMirror-menu-disabled {
+            cursor: default;
+            background-color: white;
+            color: #888;
+          }
+        }
+      }
+    }
   }
 }
 
@@ -26,17 +51,19 @@ $nodes: "audio", "body", "data", "dd", "desc", "dl", "dlentry", "dt", "document"
     padding-right: 10px;
     &:hover {
       border: 2px solid rgba(blue, 0.3);
+      background-color: rgba(black, 0.05);
       &::before {
         background-color: rgba(blue, 0.7);
         color: white;
         padding: 0 4px;
         content: $node;
         font-size: 12px;
+        font-weight: 400;
         position: absolute;
-        transform: rotate(-90deg);
-        transform-origin: right top;
-        top: 0;
-        right: 0;
+        transform: rotate(90deg);
+        transform-origin: left bottom;
+        bottom: 100%;
+        left: 100%;
       }
     }
   }
