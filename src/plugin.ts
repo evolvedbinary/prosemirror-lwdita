@@ -1,6 +1,8 @@
 import { keymap } from "prosemirror-keymap";
-import { Schema } from "prosemirror-model";
-import { toggleMark, newLine } from "./commands";
+import { MarkType, Schema } from "prosemirror-model";
+import { menuBar, MenuElement, MenuItem, MenuItemSpec } from "prosemirror-menu";
+import { toggleMark, newLine, hasMark } from "./commands";
+import { Command } from "prosemirror-commands";
 
 export function shortcuts(schema: Schema) {
   return keymap({
@@ -11,4 +13,30 @@ export function shortcuts(schema: Schema) {
     'Ctrl-=': toggleMark(schema.marks.sub),
     'Ctrl-+': toggleMark(schema.marks.sup),
   });
+}
+
+function commandItem(command: Command, props: Partial<MenuItemSpec> = {}) {
+  return new MenuItem({
+    ...props,
+    run: command
+  });
+}
+
+function markItem(mark: MarkType, props: Partial<MenuItemSpec> = {}): MenuElement {
+  return commandItem(toggleMark(mark), {
+    ...props,
+    active: state => hasMark(state, mark),
+  });
+}
+
+export function menu(schema: Schema) {
+  return menuBar({ content: [
+    [
+      markItem(schema.marks.b, { label: 'Bold' }),
+      markItem(schema.marks.u, { label: 'Underlined' }),
+      markItem(schema.marks.i, { label: 'Italic' }),
+      markItem(schema.marks.sub, { label: 'Subscript' }),
+      markItem(schema.marks.sup, { label: 'Superscript' }),
+    ],
+  ] });
 }

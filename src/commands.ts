@@ -1,8 +1,8 @@
 export { toggleMark } from 'prosemirror-commands';
 import { canSplit } from 'prosemirror-transform';
 import { Command } from 'prosemirror-commands';
-import { Fragment, Node, Schema } from 'prosemirror-model';
-import { TextSelection } from 'prosemirror-state';
+import { Fragment, MarkType, Node, Schema } from 'prosemirror-model';
+import { TextSelection, EditorState } from 'prosemirror-state';
 
 export function createNode(schema: Schema, type: string): Node {
   switch (type) {
@@ -71,4 +71,10 @@ export function newLine(schema: Schema): Command {
       return false;
     }
   }
+}
+
+export function hasMark(state: EditorState, mark: MarkType): boolean {
+  return state.selection.empty
+    ? !!mark.isInSet(state.storedMarks || state.selection.$from.marks())
+    : state.doc.rangeHasMark(state.selection.from, state.selection.to, mark);
 }
