@@ -6,12 +6,13 @@ import { TextSelection, EditorState } from 'prosemirror-state';
 import { schema } from '../lib/example/schema';
 import { document } from '../lib';
 
-export function createNode(type: NodeType<Schema>): Node {
+export function createNode(type: NodeType<Schema>, args: Record<string, any> = {}): Node {
   switch (type.name) {
     case 'p': return type.createAndFill() as Node;
     case 'li': return type.createAndFill({}, createNode(type.schema.nodes['p'])) as Node;
     case 'ul':
     case 'ol': return type.createAndFill({}, createNode(type.schema.nodes['li'])) as Node;
+    case 'image': return type.createAndFill({ href: args.src }) as Node;
   }
   throw new Error('unkown node type: ' + type.name);
 }
@@ -75,10 +76,30 @@ export class InputContainer {
   }
 }
 
+function encodeFile(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onerror = reject;
+    reader.onload = () => resolve(typeof reader.result === 'string' ? reader.result : '');
+  });
+}
+
 export function insertImage(type: NodeType<Schema>, input: InputContainer): Command {
   return function (state, dispatch) {
     function fileSelected(this: HTMLInputElement, event: Event) {
-      console.log('changed:', event);
+      if (input.el?.files?.length === 1) {
+        const file = input.el.files[0];
+        encodeFile(file).then(src => {
+          if (dispatch) {
+            const node = createNode(type, { src });
+            const tr = state.tr.insert(state.selection.$to.end() + 1, node);
+            dispatch(tr.scrollIntoView());
+          }
+        });
+      } else {
+        console.log('can not add image:', input.el?.files?.length);
+      }
     }
     try {
       if (!state.selection.empty) {
@@ -92,15 +113,7 @@ export function insertImage(type: NodeType<Schema>, input: InputContainer): Comm
         }
         input.el.value = '';
         input.on('command', fileSelected);
-        console.log('inserting image:', input.el?.files?.length ? 'files' : 'no files');
         return true;
-        // if (dispatch) {
-        //   const node = createNode(type);
-        //   const tr = state.tr.insert(state.selection.$to.end() + 1, node);
-        //   const pos = tr.selection.$to.doc.resolve(tr.selection.$to.pos + 2);
-        //   const newSelection = new TextSelection(pos, pos);
-        //   dispatch(tr.setSelection(newSelection).scrollIntoView());
-        // }
       }
       return true;
     } catch(e) {

@@ -88,3 +88,6 @@ $nodes: "audio", "body", "data", "dd", "desc", "dl", "dlentry", "dt", "document"
 [data-j-keyref]:before {
   content: "[" attr(data-j-keyref) "]";
 }
+[data-j-type=image] {
+  max-width: 100%;
+}
