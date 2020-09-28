@@ -37,7 +37,7 @@ body {
         flex-direction: column;
         flex: 1;
         .ProseMirror-menubar {
-          margin-bottom: 8px;
+          z-index: 1;
           display: flex;
           flex-direction: row;
           align-items: center;
@@ -111,6 +111,7 @@ body {
         }
       }
       .ProseMirror {
+        outline: none;
         overflow: scroll;
         padding: 32px 64px;
         > * {
