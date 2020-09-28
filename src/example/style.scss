@@ -1,14 +1,24 @@
+html {
+  height: 100%;
+  max-height: 100%;
+}
 body {
   font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
   font-size: 14pt;
+  margin: 0;
+  height: 100%;
+  max-height: 100%;
+  display: flex;
 }
 
 .main {
-  margin: 32px;
-  border: 1px solid silver;
+  display: flex;
+  flex: 1;
   background-color: whitesmoke;
-  border-radius: 8px;
   .editor-container{
+    display: flex;
+    flex-direction: column;
+    flex: 1;
     background-color: #2b579a;
     .header {
       color: white;
@@ -18,9 +28,14 @@ body {
       }
     }
     #editor {
-      // border: 1px solid silver;
+      overflow: hidden;
+      display: flex;
+      flex: 1;
       background-color: #f3f3f3;
       .ProseMirror-menubar-wrapper {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
         .ProseMirror-menubar {
           margin-bottom: 8px;
           display: flex;
@@ -96,9 +111,12 @@ body {
         }
       }
       .ProseMirror {
-        background-color: white;
-        padding: 1em;
-        margin: 32px 64px;
+        overflow: scroll;
+        padding: 32px 64px;
+        > * {
+          background-color: white;
+          padding: 1em;
+        }
 
         $nodes: "audio", "body", "data", "dd", "desc", "dl", "dlentry", "dt", "document", "fig", "fn", "image", "media-source",
           "media-track", "li", "note", "ol", "p", "ph", "pre", "prolog", "section", "simpletable", "shortdesc", "stentry",
