@@ -147,6 +147,7 @@ body {
         }
         [data-j-keyref]:before {
           content: "[" attr(data-j-keyref) "]";
+          background-color: khaki;
         }
         [data-j-type="image"] {
           max-width: 100%;
