@@ -38,6 +38,22 @@ body {
             color: #888;
           }
         }
+        .ProseMirror-menuitem-image {
+          position: relative;
+          overflow: hidden;
+          &.ProseMirror-menu-disabled input {
+            cursor: default;
+          }
+          input {
+            cursor: pointer;
+            opacity: 0;
+            position: absolute;
+            top: -100px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+          }
+        }
       }
     }
   }

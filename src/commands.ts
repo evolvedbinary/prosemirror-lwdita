@@ -4,6 +4,7 @@ import { Command } from 'prosemirror-commands';
 import { Fragment, MarkType, Node, NodeType, Schema } from 'prosemirror-model';
 import { TextSelection, EditorState } from 'prosemirror-state';
 import { schema } from '../lib/example/schema';
+import { document } from '../lib';
 
 export function createNode(type: NodeType<Schema>): Node {
   switch (type.name) {
@@ -28,6 +29,78 @@ export function insertNode(type: NodeType<Schema>): Command {
         const pos = tr.selection.$to.doc.resolve(tr.selection.$to.pos + 2);
         const newSelection = new TextSelection(pos, pos);
         dispatch(tr.setSelection(newSelection).scrollIntoView());
+      }
+      return true;
+    } catch(e) {
+      console.info('Error inserting: ' + type.name);
+      console.error(e);
+      return false;
+    }
+  }
+}
+
+export type InputContainerListener = (this: HTMLInputElement, event: Event) => void;
+export class InputContainer {
+  _el?: HTMLInputElement;
+  listeners: Record<string, InputContainerListener> = {};
+  get el(): HTMLInputElement | undefined {
+    return this._el;
+  }
+  set el(value: HTMLInputElement | undefined) {
+    if (this._el === value) {
+      return;
+    }
+    this._el = value;
+    this._el?.addEventListener('change', this.change.bind(this));
+  }
+  change(event: Event) {
+    if (this._el) {
+      const el = this._el;
+      Object.keys(this.listeners)
+        .forEach(key => console.log('firing event for:', key));
+      Object.keys(this.listeners)
+        .filter(key => typeof this.listeners[key] === 'function')
+        .forEach(key => this.listeners[key].bind(el)(event));
+    }
+  }
+  on(key: string, listener: InputContainerListener) {
+    if (!this.listeners[key]) {
+      this.listeners[key] = listener;
+    }
+  }
+  off(key: string, listener: InputContainerListener) {
+    if (this.listeners[key]) {
+      delete(this.listeners[key]);
+    }
+  }
+}
+
+export function insertImage(type: NodeType<Schema>, input: InputContainer): Command {
+  return function (state, dispatch) {
+    function fileSelected(this: HTMLInputElement, event: Event) {
+      console.log('changed:', event);
+    }
+    try {
+      if (!state.selection.empty) {
+        console.log('Wrapping and replacing not implemented yet');
+        return false;
+      }
+      if (dispatch) {
+        if (!input.el) {
+          console.log('no input found');
+          return false;
+        }
+        input.el.value = '';
+        input.on('command', fileSelected);
+        console.log('inserting image:', input.el?.files?.length ? 'files' : 'no files');
+        return true;
+        // if (dispatch) {
+        //   const node = createNode(type);
+        //   const tr = state.tr.insert(state.selection.$to.end() + 1, node);
+        //   const pos = tr.selection.$to.doc.resolve(tr.selection.$to.pos + 2);
+        //   const newSelection = new TextSelection(pos, pos);
+        //   dispatch(tr.setSelection(newSelection).scrollIntoView());
+        // }
       }
       return true;
     } catch(e) {
