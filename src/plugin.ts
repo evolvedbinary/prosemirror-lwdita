@@ -4,6 +4,28 @@ import { menuBar, MenuElement, MenuItem, MenuItemSpec } from "prosemirror-menu";
 import { toggleMark, newLine, hasMark, insertNode, insertImage, InputContainer } from "./commands";
 import { Command } from "prosemirror-commands";
 
+const targetNode = document.getElementById('editor');
+if (targetNode) {
+  const config = { attributes: false, childList: true, subtree: true };
+  const callback: MutationCallback = function(mutationsList) {
+    for(const mutation of mutationsList) {
+      if (mutation.type === 'childList') {
+        if((mutation.target as HTMLElement).classList.contains('ProseMirror-menubar')){
+          let separators: HTMLElement[] = [];
+          mutation.addedNodes.forEach(node => {
+            if (node.childNodes[0] && (node.childNodes[0] as HTMLElement).classList.contains('separator')) {
+              separators.push(node as HTMLElement);
+            }
+          });
+          separators.forEach(separator => separator.style.flex = '1');
+        }
+      }
+    }
+  };
+  const observer = new MutationObserver(callback);
+  observer.observe(targetNode, config);
+}
+
 export function shortcuts(schema: Schema) {
   return keymap({
     Enter: newLine(schema),
@@ -28,6 +50,33 @@ function markItem(mark: MarkType, props: Partial<MenuItemSpec> = {}): MenuElemen
     ...props,
     active: state => hasMark(state, mark),
     enable: state => !state.selection.empty,
+  });
+}
+
+interface SimpleItemCallbacks {
+  call: () => void;
+  enable?: () => boolean;
+  active?: () => boolean;
+}
+
+function simpleCommand(callbacks: SimpleItemCallbacks | (() => void), props: Partial<MenuItemSpec> = {}): MenuElement {
+  if (typeof callbacks === 'function') {
+    callbacks = { call: callbacks };
+  }
+  return new MenuItem({
+    ...props,
+    run: callbacks.call,
+    enable: callbacks.enable,
+    active: callbacks.active,
+  });
+}
+
+function separator(): MenuElement {
+  return new MenuItem({
+    run: () => {},
+    icon: {},
+    enable: () => false,
+    class: 'separator',
   });
 }
 
@@ -67,15 +116,20 @@ function insertImageItem(type: NodeType, props: Partial<MenuItemSpec> = {}): Men
 export function menu(schema: Schema) {
   return menuBar({ content: [
     [
-      markItem(schema.marks.b, { label: 'Bold' }),
-      markItem(schema.marks.u, { label: 'Underlined' }),
-      markItem(schema.marks.i, { label: 'Italic' }),
-      markItem(schema.marks.sub, { label: 'Subscript' }),
-      markItem(schema.marks.sup, { label: 'Superscript' }),
+      markItem(schema.marks.b, { icon: {}, title: 'Bold', class: 'ic-bold' }),
+      markItem(schema.marks.u, { icon: {}, title: 'Underlined', class: 'ic-underline' }),
+      markItem(schema.marks.i, { icon: {}, title: 'Italic', class: 'ic-italic' }),
+      markItem(schema.marks.sub, { icon: {}, title: 'Subscript', class: 'ic-subscript' }),
+      markItem(schema.marks.sup, { icon: {}, title: 'Superscript', class: 'ic-superscript' }),
     ], [
-      insertItem(schema.nodes.ol, { label: 'Ordered list' }),
-      insertItem(schema.nodes.ul, { label: 'Unordered list' }),
-      insertImageItem(schema.nodes.image, { label: 'Insert image', title: 'Insert images' }),
+      insertItem(schema.nodes.ol, { icon: {}, title: 'Ordered list', class: 'ic-olist' }),
+      insertItem(schema.nodes.ul, { icon: {}, title: 'Unordered list', class: 'ic-ulist' }),
+      insertImageItem(schema.nodes.image, { icon: {}, title: 'Insert image', class: 'ic-image' }),
+      separator(),
+      simpleCommand({
+        call: () => document.body.classList.toggle('debug'),
+        active: () => document.body.classList.contains('debug'),
+      }, { icon: {}, title: 'Show debug info', class: 'ic-bug' }),
     ]
   ] });
 }

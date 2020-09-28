@@ -65,24 +65,14 @@ export class InputContainer {
     }
   }
   on(key: string, listener: InputContainerListener) {
-    if (!this.listeners[key]) {
-      this.listeners[key] = listener;
-    }
+    this.off(key);
+    this.listeners[key] = listener;
   }
-  off(key: string, listener: InputContainerListener) {
+  off(key: string) {
     if (this.listeners[key]) {
       delete(this.listeners[key]);
     }
   }
-}
-
-function encodeFile(file: File): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onerror = reject;
-    reader.onload = () => resolve(typeof reader.result === 'string' ? reader.result : '');
-  });
 }
 
 export function insertImage(type: NodeType<Schema>, input: InputContainer): Command {
@@ -90,13 +80,18 @@ export function insertImage(type: NodeType<Schema>, input: InputContainer): Comm
     function fileSelected(this: HTMLInputElement, event: Event) {
       if (input.el?.files?.length === 1) {
         const file = input.el.files[0];
-        encodeFile(file).then(src => {
-          if (dispatch) {
-            const node = createNode(type, { src });
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onerror = () => {
+          console.log('an error reading while reading the image');
+        };
+        reader.onload = () => {
+          if (dispatch && typeof reader.result === 'string') {
+            const node = createNode(type, { src: reader.result });
             const tr = state.tr.insert(state.selection.$to.end() + 1, node);
             dispatch(tr.scrollIntoView());
           }
-        });
+        };
       } else {
         console.log('can not add image:', input.el?.files?.length);
       }

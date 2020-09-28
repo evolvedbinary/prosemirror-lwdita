@@ -1,93 +1,139 @@
 body {
-  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
   font-size: 14pt;
 }
 
 .main {
   margin: 32px;
-  padding: 16px;
   border: 1px solid silver;
   background-color: whitesmoke;
   border-radius: 8px;
-  #editor {
-    margin: 16px;
-    padding: 8px;
-    border: 1px solid silver;
-    background-color: white;
-    border-radius: 4px;
-    .ProseMirror-menubar {
-      display: flex;
-      flex-direction: row;
-      min-height: auto !important;
-      .ProseMirror-menuitem {
-        & > * {
-          cursor: pointer;
-          &:hover {
-            background-color: #EEE;
+  .editor-container{
+    background-color: #2b579a;
+    .header {
+      color: white;
+      padding: 12px 24px;
+      h2 {
+        margin: 0;
+      }
+    }
+    #editor {
+      // border: 1px solid silver;
+      background-color: #f3f3f3;
+      .ProseMirror-menubar-wrapper {
+        .ProseMirror-menubar {
+          margin-bottom: 8px;
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          min-height: auto !important;
+          background-color: #f3f2f1;
+          box-shadow: rgba(0, 0, 0, 0.133) 0px 1.6px 3.6px 0px, rgba(0, 0, 0, 0.11) 0px 0.3px 0.9px 0px;
+          .ProseMirror-menuitem {
+            & > * {
+              cursor: pointer;
+              line-height: 36px;
+              height: 36px;
+              width: 36px;
+              background-color: transparent;
+              color: #252423;
+              box-sizing: border-box;
+              border: 1px solid transparent;
+              text-decoration: none;
+              text-align: center;
+              vertical-align: top;
+              border-radius: 0px;
+              font-size: 14px;
+              font-weight: normal;
+              user-select: none;
+              &:hover {
+                background-color: #edebe9;
+                color: #252423;
+                outline: transparent dashed 2px;
+              }
+              &:active,
+              &.ProseMirror-menu-active:active {
+                background-color: #d2d0ce;
+                color: #252423;
+              }
+              &.ProseMirror-menu-active {
+                background-color: #e1dfdd;
+                outline: transparent solid 2px;
+              }
+              &.ProseMirror-menu-disabled {
+                cursor: default;
+                color: #a19f9d;
+                border: 1px solid transparent;
+                pointer-events: none;
+              }
+            }
+            .ProseMirror-menuitem-image {
+              position: relative;
+              overflow: hidden;
+              &.ProseMirror-menu-disabled input {
+                cursor: default;
+              }
+              input {
+                cursor: pointer;
+                opacity: 0;
+                position: absolute;
+                top: -100px;
+                left: 0;
+                right: 0;
+                bottom: 0;
+              }
+            }
+            &::has(.separator) {
+              flex: 1;
+            }
           }
-          padding: 4px;
-          margin: 4px;
-          border: 1px solid;
-          &.ProseMirror-menu-active {
-            background-color: #444;
-            color: white;
-          }
-          &.ProseMirror-menu-disabled {
-            cursor: default;
-            background-color: white;
-            color: #888;
+          .ProseMirror-menuseparator {
+            background-color: #c8c8c8;
+            width: 1px;
+            height: 28px;
+            margin: 0 12px;
           }
         }
-        .ProseMirror-menuitem-image {
-          position: relative;
-          overflow: hidden;
-          &.ProseMirror-menu-disabled input {
-            cursor: default;
+      }
+      .ProseMirror {
+        background-color: white;
+        padding: 1em;
+        margin: 32px 64px;
+
+        $nodes: "audio", "body", "data", "dd", "desc", "dl", "dlentry", "dt", "document", "fig", "fn", "image", "media-source",
+          "media-track", "li", "note", "ol", "p", "ph", "pre", "prolog", "section", "simpletable", "shortdesc", "stentry",
+          "sthead", "strow", "title", "topic", "ul", "video", "xref";
+        @each $node in $nodes {
+          .debug & [data-j-type="#{$node}"] {
+            border: 2px solid rgba(blue, 0.05);
+            position: relative;
+            margin-right: 10px;
+            &:hover {
+              border: 2px solid rgba(blue, 0.3);
+              background-color: rgba(black, 0.05);
+              &::after {
+                background-color: rgba(blue, 0.7);
+                color: white;
+                padding: 0 4px;
+                content: $node;
+                font-size: 12px;
+                font-weight: 400;
+                position: absolute;
+                transform: rotate(90deg);
+                transform-origin: left bottom;
+                bottom: 100%;
+                left: 100%;
+              }
+            }
           }
-          input {
-            cursor: pointer;
-            opacity: 0;
-            position: absolute;
-            top: -100px;
-            left: 0;
-            right: 0;
-            bottom: 0;
-          }
+        }
+        [data-j-keyref]:before {
+          content: "[" attr(data-j-keyref) "]";
+        }
+        [data-j-type="image"] {
+          max-width: 100%;
         }
       }
     }
   }
-}
-
-$nodes: "audio", "body", "data", "dd", "desc", "dl", "dlentry", "dt", "document", "fig", "fn", "image", "media-source", "media-track", "li", "note", "ol", "p", "ph", "pre", "prolog", "section", "simpletable", "shortdesc", "stentry", "sthead", "strow", "title", "topic", "ul", "video", "xref";
-@each $node in $nodes {
-  [data-j-type=#{$node}] {
-    border: 2px solid rgba(blue, 0.05);
-    position: relative;
-    margin-right: 10px;
-    &:hover {
-      border: 2px solid rgba(blue, 0.3);
-      background-color: rgba(black, 0.05);
-      &::after {
-        background-color: rgba(blue, 0.7);
-        color: white;
-        padding: 0 4px;
-        content: $node;
-        font-size: 12px;
-        font-weight: 400;
-        position: absolute;
-        transform: rotate(90deg);
-        transform-origin: left bottom;
-        bottom: 100%;
-        left: 100%;
-      }
-    }
-  }
-}
-
-[data-j-keyref]:before {
-  content: "[" attr(data-j-keyref) "]";
-}
-[data-j-type=image] {
-  max-width: 100%;
 }
