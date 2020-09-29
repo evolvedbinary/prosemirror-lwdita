@@ -1,8 +1,9 @@
 import { keymap } from "prosemirror-keymap";
 import { MarkType, NodeType, Schema } from "prosemirror-model";
 import { menuBar, MenuElement, MenuItem, MenuItemSpec } from "prosemirror-menu";
-import { toggleMark, newLine, hasMark, insertNode, insertImage, InputContainer } from "./commands";
+import { toggleMark, newLine, hasMark, insertNode, insertImage, InputContainer, goHome, goEnd } from "./commands";
 import { Command } from "prosemirror-commands";
+import { redo, undo } from "prosemirror-history";
 
 const targetNode = document.getElementById('editor');
 if (targetNode) {
@@ -34,13 +35,17 @@ export function shortcuts(schema: Schema) {
     'Ctrl-i': toggleMark(schema.marks.i),
     'Ctrl-=': toggleMark(schema.marks.sub),
     'Ctrl-+': toggleMark(schema.marks.sup),
+    'Ctrl-z': undo,
+    'Ctrl-y': redo,
+    'Ctrl-Shift-z': redo,
   });
 }
 
 function commandItem(command: Command, props: Partial<MenuItemSpec> = {}) {
   return new MenuItem({
     ...props,
-    run: command
+    run: command,
+    enable: command,
   });
 }
 
@@ -116,6 +121,9 @@ function insertImageItem(type: NodeType, props: Partial<MenuItemSpec> = {}): Men
 export function menu(schema: Schema) {
   return menuBar({ content: [
     [
+      commandItem(undo, { icon: {}, title: 'Undo', class: 'ic-undo' }),
+      commandItem(redo, { icon: {}, title: 'Redo', class: 'ic-redo' }),
+    ], [
       markItem(schema.marks.b, { icon: {}, title: 'Bold', class: 'ic-bold' }),
       markItem(schema.marks.u, { icon: {}, title: 'Underlined', class: 'ic-underline' }),
       markItem(schema.marks.i, { icon: {}, title: 'Italic', class: 'ic-italic' }),

@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'icons';
-  src:  url('fonts/icons.eot?rp8q0h');
-  src:  url('fonts/icons.eot?rp8q0h#iefix') format('embedded-opentype'),
-    url('fonts/icons.ttf?rp8q0h') format('truetype'),
-    url('fonts/icons.woff?rp8q0h') format('woff'),
-    url('fonts/icons.svg?rp8q0h#icons') format('svg');
+  src:  url('fonts/icons.eot?wb37gu');
+  src:  url('fonts/icons.eot?wb37gu#iefix') format('embedded-opentype'),
+    url('fonts/icons.ttf?wb37gu') format('truetype'),
+    url('fonts/icons.woff?wb37gu') format('woff'),
+    url('fonts/icons.svg?wb37gu#icons') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -30,6 +30,12 @@
 }
 .ic-image:before {
   content: "\e90d";
+}
+.ic-undo:before {
+  content: "\e967";
+}
+.ic-redo:before {
+  content: "\e968";
 }
 .ic-olist:before {
   content: "\e9b9";
