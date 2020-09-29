@@ -1,3 +1,5 @@
+$nodes: "audio", "body", "data", "dd", "desc", "dl", "dlentry", "dt", "document", "fig", "fn", "image", "media-source", "media-track", "li", "note", "ol", "p", "ph", "pre", "prolog", "section", "simpletable", "shortdesc", "stentry", "sthead", "strow", "title", "topic", "ul", "video", "xref";
+
 html {
   height: 100%;
   max-height: 100%;
@@ -119,9 +121,6 @@ body {
           padding: 1em;
         }
 
-        $nodes: "audio", "body", "data", "dd", "desc", "dl", "dlentry", "dt", "document", "fig", "fn", "image", "media-source",
-          "media-track", "li", "note", "ol", "p", "ph", "pre", "prolog", "section", "simpletable", "shortdesc", "stentry",
-          "sthead", "strow", "title", "topic", "ul", "video", "xref";
         @each $node in $nodes {
           .debug & [data-j-type="#{$node}"] {
             border: 2px solid rgba(blue, 0.05);
@@ -152,6 +151,19 @@ body {
         }
         [data-j-type="image"] {
           max-width: 100%;
+        }
+        [data-j-type="p"] {
+          min-height: 1em;
+        }
+        [data-j-type="li"] {
+          > [data-j-type="p"] {
+            &:first-child {
+              margin-block-start: 0;
+            }
+            &:last-child {
+              margin-block-end: 0;
+            }
+          }
         }
       }
     }
