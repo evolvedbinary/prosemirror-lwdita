@@ -88,10 +88,8 @@ export function insertImage(type: NodeType<Schema>, input: InputContainer): Comm
         reader.onload = () => {
           if (dispatch && typeof reader.result === 'string') {
             const node = createNode(type, { src: reader.result });
-            const tr = state.tr.insert(state.selection.$to.end(), node);
-            const pos = tr.selection.$to.doc.resolve(tr.selection.$to.pos + 3);
-            const newSelection = new TextSelection(pos, pos);
-            dispatch(tr.setSelection(newSelection).scrollIntoView());
+            const tr = state.tr.insert(state.selection.$to.pos, node);
+            dispatch(tr.scrollIntoView());
           }
         };
       } else {
