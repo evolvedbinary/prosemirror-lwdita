@@ -70,7 +70,10 @@ function simpleCommand(callbacks: SimpleItemCallbacks | (() => void), props: Par
   }
   return new MenuItem({
     ...props,
-    run: callbacks.call,
+    run: (state, dispatch) => {
+      (callbacks as SimpleItemCallbacks).call();
+      dispatch(state.tr);
+    },
     enable: callbacks.enable,
     active: callbacks.active,
   });
@@ -121,6 +124,7 @@ function insertImageItem(type: NodeType, props: Partial<MenuItemSpec> = {}): Men
 export function menu(schema: Schema) {
   return menuBar({ content: [
     [
+      separator(),
       commandItem(undo, { icon: {}, title: 'Undo', class: 'ic-undo' }),
       commandItem(redo, { icon: {}, title: 'Redo', class: 'ic-redo' }),
     ], [
@@ -137,7 +141,7 @@ export function menu(schema: Schema) {
       simpleCommand({
         call: () => document.body.classList.toggle('debug'),
         active: () => document.body.classList.contains('debug'),
-      }, { icon: {}, title: 'Show debug info', class: 'ic-bug' }),
+      }, { icon: {}, title: 'Show debug info', class: 'ic-bug', css: 'color: #c81200' }),
     ]
   ] });
 }
