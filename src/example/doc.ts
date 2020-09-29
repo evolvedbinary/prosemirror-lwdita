@@ -8,15 +8,6 @@ xml = `<?xml version="1.0" encoding="UTF-8"?>
   <shortdesc>You can program one or more light bulbs to a lighting group to operate that group
     with your remote control.</shortdesc>
   <body>
-    <video width="640" height="360">
-      <desc>Your browser does not support the video tag.</desc>
-      <video-poster value="movie.jpg" />
-      <media-controls />
-      <media-autoplay />
-      <media-muted />
-      <media-source value="movie.mp4" />
-      <media-source value="movie.ogg" />
-    </video>
     <section id="context">
       <p>Your <ph keyref="product-name"/> remote control can manage up to 250 network light bulbs on the same lighting
         network. When you add a light bulb to the network, you can program it to one or more
@@ -25,17 +16,27 @@ xml = `<?xml version="1.0" encoding="UTF-8"?>
         lighting group will still operate when controlling all network light bulbs from
         the remote control.</p>
     </section>
+    <section id="demo">
+      <video width="640" height="360">
+        <desc>Your browser does not support the video tag.</desc>
+        <video-poster value="movie.jpg" />
+        <media-controls />
+        <media-autoplay />
+        <media-muted />
+        <media-source value="movie.mp4" />
+        <media-source value="movie.ogg" />
+      </video>
+    </section>
     <section id="steps">
-    <ol>
-      <li><p>Make sure your <b>remote control</b> is in range of the <i>light bulbs</i> you are
+   <ol>
+     <li><p>Make sure your remote control is in range of the light bulbs you are
         adding.</p></li>
-      <li><p>If a network <u>light bulb</u> is new, you must install it by performing the following
+     <li><p>If a network light bulb is new, you must install it by performing the following
           steps:</p>
           <ol>
-            <li><p>Make sure <sup>power</sup> to the <sub>fixture</sub> where you are installing the light bulb
-              is turned OFF.
-              <image><alt>alt text</alt></image>
-              <image></image></p>
+            <li><p>Make sure power to the fixture where you are installing the light bulb
+              is turned OFF.</p>
+
               <p conref="intro-product.dita#intro-product/warning" />
 
             </li>
@@ -67,27 +68,5 @@ xml = `<?xml version="1.0" encoding="UTF-8"?>
   </body>
 </topic>
 `;
-xml = `<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE topic PUBLIC "-//OASIS//DTD LIGHTWEIGHT DITA Topic//EN" "lw-topic.dtd">
-<topic id="program-bulbs-to-groups">
-  <title>Programming Light Bulbs to a Lighting Group</title>
-  <shortdesc>You can program one or more light bulbs to a lighting group to operate that group
-    with your remote control.</shortdesc>
-  <body>
-    <section>
-      <title>Programming Light Bulbs to a Lighting Group</title>
-      <p>Programming Light Bulbs to a Lighting Group</p>
-      <note>
-        <p>Programming Light Bulbs to a Lighting Group</p>
-      </note>
-    </section>
-  </body>
-</topic>
-`;
-const doc = xditaToJson(xml).then(json => {
-  console.log('jdita:', json);
-  json = document(json);
-  console.log('document:', json);
-  return json;
-});
+const doc = xditaToJson(xml).then(json => document(json)).catch(e => console.log(e)) as Promise<Record<string, any>>;
 export default doc;

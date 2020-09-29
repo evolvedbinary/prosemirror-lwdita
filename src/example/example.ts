@@ -3,8 +3,8 @@ import { EditorView } from "prosemirror-view";
 import { Node } from "prosemirror-model";
 import { schema } from "../schema";
 import jsonDocLoader from "./doc";
-import { keymap } from "prosemirror-keymap";
-import { newLine } from "../commands";
+import { menu, shortcuts } from "../plugin";
+import { history } from "prosemirror-history";
 
 const schemaObject = schema();
 
@@ -15,12 +15,14 @@ jsonDocLoader.then(jsonDoc => {
     const doc = Node.fromJSON(schemaObject, jsonDoc);
     const state = EditorState.create({
       doc,
-      plugins: [keymap({ Enter: newLine(schemaObject) })]
+      plugins: [
+        history(),
+        shortcuts(schemaObject),
+        menu(schemaObject),
+      ]
     })
-    console.log(doc);
-    console.log(state);
     new EditorView(domEl, {
       state,
     });
   }
-});
+}).catch(e => console.error(e));

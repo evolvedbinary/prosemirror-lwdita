@@ -21,7 +21,6 @@ export function insertNode(type: NodeType<Schema>): Command {
   return function (state, dispatch) {
     try {
       if (!state.selection.empty) {
-        console.log('Wrapping and replacing not implemented yet');
         return false;
       }
       if (dispatch) {
@@ -57,8 +56,6 @@ export class InputContainer {
   change(event: Event) {
     if (this._el) {
       const el = this._el;
-      Object.keys(this.listeners)
-        .forEach(key => console.log('firing event for:', key));
       Object.keys(this.listeners)
         .filter(key => typeof this.listeners[key] === 'function')
         .forEach(key => this.listeners[key].bind(el)(event));
@@ -98,7 +95,6 @@ export function insertImage(type: NodeType<Schema>, input: InputContainer): Comm
     }
     try {
       if (!state.selection.empty) {
-        console.log('Wrapping and replacing not implemented yet');
         return false;
       }
       if (dispatch) {

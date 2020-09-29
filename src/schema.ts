@@ -212,7 +212,5 @@ export function schema(): Schema {
   browse(DocumentNode, DocumentNode);
   (spec.nodes as any).topic.content = 'title shortdesc? prolog? body?';
   (spec.nodes as any).doc.content = 'topic+';
-  console.log('nodes:', spec.nodes);
-  console.log('marks:', spec.marks);
   return new Schema(spec);
 }

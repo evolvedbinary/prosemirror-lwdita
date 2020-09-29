@@ -126,7 +126,7 @@ export function travel(value: JDita, parent: JDita): any {
 }
 
 
-export function document(jdita: JDita) {
+export function document(jdita: JDita): Record<string, any> {
   if (jdita.nodeName === 'document') {
     jdita.nodeName = 'doc';
     return travel(jdita, jdita);
