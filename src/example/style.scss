@@ -119,6 +119,9 @@ body {
         > * {
           background-color: white;
           padding: 1em;
+          max-width: 960px;
+          margin-left: auto;
+          margin-right: auto;
         }
 
         @each $node in $nodes {
@@ -149,8 +152,21 @@ body {
           content: "[" attr(data-j-keyref) "]";
           background-color: khaki;
         }
+        [data-j-type="video"],
+        [data-j-type="figure"] {
+          max-width: 100%;
+          margin-left: auto;
+          margin-right: auto;
+          display: block;
+        }
         [data-j-type="image"] {
           max-width: 100%;
+          display: inline-block;
+          &:first-child:last-child {
+            margin-left: auto;
+            margin-right: auto;
+            display: block;
+          }
         }
         [data-j-type="p"] {
           min-height: 1em;

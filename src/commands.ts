@@ -88,8 +88,10 @@ export function insertImage(type: NodeType<Schema>, input: InputContainer): Comm
         reader.onload = () => {
           if (dispatch && typeof reader.result === 'string') {
             const node = createNode(type, { src: reader.result });
-            const tr = state.tr.insert(state.selection.$to.end() + 1, node);
-            dispatch(tr.scrollIntoView());
+            const tr = state.tr.insert(state.selection.$to.end(), node);
+            const pos = tr.selection.$to.doc.resolve(tr.selection.$to.pos + 3);
+            const newSelection = new TextSelection(pos, pos);
+            dispatch(tr.setSelection(newSelection).scrollIntoView());
           }
         };
       } else {
@@ -159,7 +161,6 @@ export function newLine(schema: Schema): Command {
       if (dispatch) {
         const EOL = $to.end() === $to.pos;
         if (!deleteParent && EOL) {
-          let content: Fragment | undefined;
           tr = tr.insert($to.pos + 1, createNode(parent.type));
           const pos = tr.selection.$to.doc.resolve(tr.selection.$to.pos + 2 * depth);
           const newSelection = new TextSelection(pos, pos);
