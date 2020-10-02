@@ -9,8 +9,8 @@ xml = `<?xml version="1.0" encoding="UTF-8"?>
     with your remote control.</shortdesc>
   <body>
     <section id="context">
-      <p>Your <ph keyref="product-name"/> remote control can manage up to 250 network light bulbs on the same lighting
-        network. When you add a light bulb to the network, you can program it to one or more
+      <p>Your <ph keyref="product-name"/> remote control can manage up to <data>250 network light bulbs on the same lighting
+      network</data>. When you add a light bulb to the network, you can program it to one or more
         lighting groups. You must assign a light bulb to at least one lighting group to
         operate that light bulb  A network light bulb that is not programmed to a
         lighting group will still operate when controlling all network light bulbs from
@@ -19,7 +19,7 @@ xml = `<?xml version="1.0" encoding="UTF-8"?>
     <section id="demo">
       <video width="640" height="360">
         <desc>Your browser does not support the video tag.</desc>
-        <video-poster value="movie.jpg" />
+        <video-poster value="bulb.webp" />
         <media-controls />
         <media-autoplay />
         <media-muted />
@@ -36,9 +36,6 @@ xml = `<?xml version="1.0" encoding="UTF-8"?>
           <ol>
             <li><p>Make sure power to the fixture where you are installing the light bulb
               is turned OFF.</p>
-
-              <p conref="intro-product.dita#intro-product/warning" />
-
             </li>
               <li><p>Remove any existing light bulb from the light fixture.</p></li>
               <li><p>Install the network light bulb into the light fixture as you would any
@@ -60,8 +57,8 @@ xml = `<?xml version="1.0" encoding="UTF-8"?>
           seconds if programming fails.</p>
       </li>
       <li><p>Leave the light fixture switches ON so that power is available when using your
-          remote control to turn the light bulbs on and off. Also remember to turn on any
-          excluded fixtures that you turned off.</p></li>
+          remote control to turn the light bulbs on and off.</p></li>
+      <li><p>remember to turn on any excluded fixtures that you turned off.</p></li>
     </ol>
     </section>
 

@@ -9,6 +9,7 @@ import { history } from "prosemirror-history";
 const schemaObject = schema();
 
 jsonDocLoader.then(jsonDoc => {
+  console.log(jsonDoc);
   const domEl = document.querySelector("#editor") as HTMLElement;
   domEl.innerHTML = '';
   if (domEl) {
