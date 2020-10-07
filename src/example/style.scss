@@ -58,6 +58,10 @@ body {
               line-height: 36px;
               height: 36px;
               min-width: 36px;
+              white-space: nowrap;
+              &.separator {
+                min-width: auto;
+              }
               &[class^="ic-"], &[class*=" ic-"] {
                 font-family: inherit !important;
                 &:before {
