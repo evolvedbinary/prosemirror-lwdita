@@ -1,10 +1,8 @@
 export { toggleMark } from 'prosemirror-commands';
 import { canSplit } from 'prosemirror-transform';
 import { Command } from 'prosemirror-commands';
-import { Fragment, MarkType, Node, NodeType, Schema } from 'prosemirror-model';
+import { MarkType, Node, NodeType, Schema } from 'prosemirror-model';
 import { TextSelection, EditorState } from 'prosemirror-state';
-import { schema } from '../lib/example/schema';
-import { document } from '../lib';
 
 export function createNode(type: NodeType<Schema>, args: Record<string, any> = {}): Node {
   switch (type.name) {

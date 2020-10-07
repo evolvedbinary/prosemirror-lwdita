@@ -1,7 +1,7 @@
 import { keymap } from "prosemirror-keymap";
 import { MarkType, NodeType, Schema } from "prosemirror-model";
 import { menuBar, MenuElement, MenuItem, MenuItemSpec } from "prosemirror-menu";
-import { toggleMark, newLine, hasMark, insertNode, insertImage, InputContainer, goHome, goEnd } from "./commands";
+import { toggleMark, newLine, hasMark, insertNode, insertImage, InputContainer } from "./commands";
 import { Command } from "prosemirror-commands";
 import { redo, undo } from "prosemirror-history";
 
@@ -101,7 +101,7 @@ function insertImageItem(type: NodeType, props: Partial<MenuItemSpec> = {}): Men
     enable: command,
     render(editorView) {
       const el = document.createElement('div');
-      el.classList.add('ProseMirror-menuitem-image');
+      el.classList.add('ProseMirror-menuitem-file');
       input.el = document.createElement('input');
       input.el.type = 'file';
       input.el.title = typeof props.title === 'function' ? props.title(editorView.state) : props.title || '';
@@ -121,27 +121,62 @@ function insertImageItem(type: NodeType, props: Partial<MenuItemSpec> = {}): Men
   });
 }
 
-export function menu(schema: Schema) {
+interface Additions {
+  start?: MenuElement[][];
+  before?: MenuElement[][];
+  after?: MenuElement[][];
+  end?: MenuElement[][];
+}
+
+export function menu(schema: Schema, { start, before, after, end}: Additions = {}) {
+  const debug = [
+    separator(),
+    simpleCommand({
+      call: () => document.body.classList.toggle('debug'),
+      active: () => document.body.classList.contains('debug'),
+    }, { label: 'Show debug info', class: 'ic-bug', css: 'color: #c81200' }),
+  ];
+  const toolbar:MenuElement[][] = [[
+    commandItem(undo, { icon: {}, title: 'Undo', class: 'ic-undo' }),
+    commandItem(redo, { icon: {}, title: 'Redo', class: 'ic-redo' }),
+  ], [
+    markItem(schema.marks.b, { icon: {}, title: 'Bold', class: 'ic-bold' }),
+    markItem(schema.marks.u, { icon: {}, title: 'Underlined', class: 'ic-underline' }),
+    markItem(schema.marks.i, { icon: {}, title: 'Italic', class: 'ic-italic' }),
+    markItem(schema.marks.sub, { icon: {}, title: 'Subscript', class: 'ic-subscript' }),
+    markItem(schema.marks.sup, { icon: {}, title: 'Superscript', class: 'ic-superscript' }),
+  ], [
+    insertItem(schema.nodes.ol, { icon: {}, title: 'Ordered list', class: 'ic-olist' }),
+    insertItem(schema.nodes.ul, { icon: {}, title: 'Unordered list', class: 'ic-ulist' }),
+    insertImageItem(schema.nodes.image, { icon: {}, title: 'Insert image', class: 'ic-image' }),
+  ]];
+  if (!start) {
+    start = [];
+  }
+  if (!before) {
+    before = [];
+  }
+  if (!after) {
+    after = [];
+  }
+  if (!end) {
+    end = [];
+  }
+  if (after.length > 0) {
+    after[after.length - 1] = [...after[after.length - 1], ...debug];
+  } else {
+    toolbar[toolbar.length - 1] = toolbar[toolbar.length - 1].concat(debug);
+  }
+  if (before.length > 0) {
+    before[before.length - 1] = [separator(), ...before[before.length - 1]];
+  } else {
+    toolbar[0].unshift(separator());
+  }
   return menuBar({ content: [
-    [
-      separator(),
-      commandItem(undo, { icon: {}, title: 'Undo', class: 'ic-undo' }),
-      commandItem(redo, { icon: {}, title: 'Redo', class: 'ic-redo' }),
-    ], [
-      markItem(schema.marks.b, { icon: {}, title: 'Bold', class: 'ic-bold' }),
-      markItem(schema.marks.u, { icon: {}, title: 'Underlined', class: 'ic-underline' }),
-      markItem(schema.marks.i, { icon: {}, title: 'Italic', class: 'ic-italic' }),
-      markItem(schema.marks.sub, { icon: {}, title: 'Subscript', class: 'ic-subscript' }),
-      markItem(schema.marks.sup, { icon: {}, title: 'Superscript', class: 'ic-superscript' }),
-    ], [
-      insertItem(schema.nodes.ol, { icon: {}, title: 'Ordered list', class: 'ic-olist' }),
-      insertItem(schema.nodes.ul, { icon: {}, title: 'Unordered list', class: 'ic-ulist' }),
-      insertImageItem(schema.nodes.image, { icon: {}, title: 'Insert image', class: 'ic-image' }),
-      separator(),
-      simpleCommand({
-        call: () => document.body.classList.toggle('debug'),
-        active: () => document.body.classList.contains('debug'),
-      }, { icon: {}, title: 'Show debug info', class: 'ic-bug', css: 'color: #c81200' }),
-    ]
+    ...start,
+    ...before,
+    ...toolbar,
+    ...after,
+    ...end,
   ] });
 }

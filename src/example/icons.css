@@ -1,10 +1,10 @@
 @font-face {
-  font-family: 'icons';
-  src:  url('fonts/icons.eot?wb37gu');
-  src:  url('fonts/icons.eot?wb37gu#iefix') format('embedded-opentype'),
-    url('fonts/icons.ttf?wb37gu') format('truetype'),
-    url('fonts/icons.woff?wb37gu') format('woff'),
-    url('fonts/icons.svg?wb37gu#icons') format('svg');
+  font-family: 'petal';
+  src:  url('fonts/petal.eot?7etgz5');
+  src:  url('fonts/petal.eot?7etgz5#iefix') format('embedded-opentype'),
+    url('fonts/petal.ttf?7etgz5') format('truetype'),
+    url('fonts/petal.woff?7etgz5') format('woff'),
+    url('fonts/petal.svg?7etgz5#petal') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -12,7 +12,7 @@
 
 [class^="ic-"], [class*=" ic-"] {
   /* use !important to prevent issues with browser extensions that change fonts */
-  font-family: 'icons' !important;
+  font-family: 'petal' !important;
   speak: never;
   font-style: normal;
   font-weight: normal;
@@ -30,6 +30,9 @@
 }
 .ic-image:before {
   content: "\e90d";
+}
+.ic-open:before {
+  content: "\e930";
 }
 .ic-undo:before {
   content: "\e967";
@@ -57,4 +60,7 @@
 }
 .ic-subscript:before {
   content: "\ea6a";
+}
+.ic-github:before {
+  content: "\eab0";
 }

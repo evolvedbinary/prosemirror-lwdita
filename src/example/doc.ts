@@ -19,7 +19,7 @@ xml = `<?xml version="1.0" encoding="UTF-8"?>
     <section id="demo">
       <video width="640" height="360">
         <desc>Your browser does not support the video tag.</desc>
-        <video-poster value="bulb.webp" />
+        <video-poster value="https://img.gkbcdn.com/p/2018-11-14/xiaomi-yeelight-yldp06yl-smart-light-bulb-white-1574132915782._w500_.jpg" />
         <media-controls />
         <media-autoplay />
         <media-muted />
@@ -65,5 +65,9 @@ xml = `<?xml version="1.0" encoding="UTF-8"?>
   </body>
 </topic>
 `;
-const doc = xditaToJson(xml).then(json => document(json)).catch(e => console.log(e)) as Promise<Record<string, any>>;
-export default doc;
+const file = localStorage.getItem('file');
+if (file) {
+  xml = file;
+  localStorage.setItem('file', '');
+}
+export default xditaToJson(xml, true).then(json => document(json)) as Promise<Record<string, any>>;

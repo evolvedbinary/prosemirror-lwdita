@@ -7,9 +7,9 @@
   "scripts": {
     "lint": "eslint src --ext .ts",
     "lint:fix": "eslint src --ext .ts --fix",
-    "start:dev": "nodemon",
+    "start:dev": "parcel ./src/example/index.html",
     "build": "rimraf ./lib && tsc",
-    "start": "parcel ./src/example/index.html",
+    "build:example": "parcel build ./src/example/index.html",
     "test": "mocha",
     "test:watch": "mocha -w",
     "coverage": "rimraf coverage && nyc yarn mocha"
