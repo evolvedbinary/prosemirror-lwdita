@@ -40,9 +40,13 @@ build/Release
 # Dependency directories
 node_modules/
 jspm_packages/
+lib/
+dist/
 
 # TypeScript v1 declaration files
 typings/
+lib/
+package-lock.json
 
 # TypeScript cache
 *.tsbuildinfo
@@ -102,3 +106,6 @@ dist
 
 # TernJS port file
 .tern-port
+.vscode/
+.cache/
+yarn-error.log
