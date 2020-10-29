@@ -1,17 +1,19 @@
 export { toggleMark } from 'prosemirror-commands';
 import { canSplit } from 'prosemirror-transform';
 import { chainCommands, Command } from 'prosemirror-commands';
-import { ContentMatch, Fragment, MarkType, Node, NodeType, Schema } from 'prosemirror-model';
+import { ContentMatch, Fragment, MarkType, Node, NodeType, ResolvedPos, Schema } from 'prosemirror-model';
 import { TextSelection, EditorState, Transaction, NodeSelection } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 
 export function createNode(type: NodeType<Schema>, args: Record<string, any> = {}): Node {
   switch (type.name) {
     case 'p': return type.createAndFill() as Node;
+    case 'data': return type.createAndFill({}, type.schema.text('text')) as Node;
     case 'li': return type.createAndFill({}, createNode(type.schema.nodes['p'])) as Node;
     case 'stentry': return type.createAndFill({}, createNode(type.schema.nodes['p'])) as Node;
     case 'ul':
     case 'ol': return type.createAndFill({}, createNode(type.schema.nodes['li'])) as Node;
+    case 'section': return type.createAndFill({}, createNode(type.schema.nodes['ul'])) as Node;
     case 'strow': return type.createAndFill({}, createNode(type.schema.nodes['stentry'])) as Node;
     case 'image': return type.createAndFill({ href: args.src }) as Node;
   }
@@ -32,9 +34,7 @@ export function insertNode(type: NodeType<Schema>): Command {
         dispatch(tr.setSelection(newSelection).scrollIntoView());
       }
       return true;
-    } catch(e) {
-      console.info('Error inserting: ' + type.name);
-      console.error(e);
+    } catch (e) {
       return false;
     }
   }
@@ -68,7 +68,7 @@ export class InputContainer {
   }
   off(key: string) {
     if (this.listeners[key]) {
-      delete(this.listeners[key]);
+      delete (this.listeners[key]);
     }
   }
 }
@@ -81,7 +81,6 @@ export function insertImage(type: NodeType<Schema>, input: InputContainer): Comm
         const reader = new FileReader();
         reader.readAsDataURL(file);
         reader.onerror = () => {
-          console.log('an error reading while reading the image');
         };
         reader.onload = () => {
           if (dispatch && typeof reader.result === 'string') {
@@ -91,7 +90,6 @@ export function insertImage(type: NodeType<Schema>, input: InputContainer): Comm
           }
         };
       } else {
-        console.log('can not add image:', input.el?.files?.length);
       }
     }
     try {
@@ -100,7 +98,6 @@ export function insertImage(type: NodeType<Schema>, input: InputContainer): Comm
       }
       if (dispatch) {
         if (!input.el) {
-          console.log('no input found');
           return false;
         }
         input.el.value = '';
@@ -108,73 +105,85 @@ export function insertImage(type: NodeType<Schema>, input: InputContainer): Comm
         return true;
       }
       return true;
-    } catch(e) {
-      console.info('Error inserting: ' + type.name);
-      console.error(e);
+    } catch (e) {
       return false;
     }
   }
 }
 
 function canCreateIndex(type: NodeType) {
-  return ['p'].indexOf(type.name);
+  return ['data', 'ul', 'li', 'p', 'section'].indexOf(type.name);
 }
 
 function canCreate(type: NodeType) {
   return canCreateIndex(type) > -1;
 }
 
-function defaultBlockAt(match: ContentMatch) {
+function defaultBlocks(pos: ResolvedPos, depth = 0) {
+  const match = pos.node(-depth - 1).contentMatchAt(pos.indexAfter(-depth - 1));
   let index = -1;
-  let type: NodeType | null = null;
+  const result: NodeType[] = [];
   for (let i = 0; i < match.edgeCount; i++) {
-
     let edge = match.edge(i)
-    const newIndex = canCreateIndex(edge.type);
-    if (newIndex > index) {
-      index = newIndex;
-      type = edge.type;
+    if (canCreate(edge.type)) {
+      result.push(edge.type);
     }
   }
-  console.log('type to create:', type?.name)
+  return result;
+}
+
+function defaultBlockAt(pos: ResolvedPos, depth = 0, prefered?: NodeType) {
+  let index = -1;
+  let type: NodeType = null as any;
+  const blocks = defaultBlocks(pos, depth || undefined);
+  if (prefered && blocks.find(block => block.name === prefered.name)) {
+    return prefered;
+  }
+  blocks.forEach(newType => {
+    const newIndex = canCreateIndex(newType);
+    if (newIndex > index) {
+      index = newIndex;
+      type = newType;
+    }
+  });
   return type;
 }
 
-export function enterEOL(state: EditorState, dispatch?: (tr: Transaction) => void, view?: EditorView) {
-  let {$from, $to, empty} = state.selection
+export function enterEOL(state: EditorState, dispatch?: (tr: Transaction) => void, view?: EditorView, depth = 0) {
+  let { $from, $to, empty } = state.selection
   if (dispatch) {
     let tr = state.tr;
-    const depth = 0;
-    const parent = $to.node(depth || undefined);
+    const parent = $to.node(-depth || undefined);
     const grandParent = $to.node(-depth - 1);
-    const type = defaultBlockAt(grandParent.contentMatchAt($to.indexAfter(-1)));
+    const type = defaultBlockAt($to, depth, parent.type);
     if (type) {
       if (!empty) {
         tr = tr.deleteSelection();
         $from = tr.selection.$from;
         $to = tr.selection.$to;
       }
-      let side = (!$from.parentOffset && $to.index() < parent.childCount ? $from : $to).pos
+      let side = (!$from.parentOffset && $to.index() < parent.childCount ? $from : $to).pos + depth + 1;
       tr = tr.insert(side, createNode(type))
-      tr.setSelection(TextSelection.create(tr.doc, side + 2))
+      tr = tr.setSelection(TextSelection.create(tr.doc, side + depth + 1));
       dispatch(tr.scrollIntoView());
     }
   }
   return false;
 }
-export function enterEmpty(state: EditorState, dispatch?: (tr: Transaction) => void, view?: EditorView) {
-  let {$from, $to, empty} = state.selection;
-  const depth = 0;
-  const parent = $to.node(depth || undefined);
-  const grandParent = $to.node(-depth - 1);
-  let tr = state.tr;
-  let side = (!$from.parentOffset && $to.index() < parent.childCount ? $from : $to).pos
-  tr.setSelection(TextSelection.create(tr.doc, side, side + 2));
-  return true;
+export function enterEmpty(state: EditorState, dispatch?: (tr: Transaction) => void, view?: EditorView, depth = 0) {
+  // let {$from, $to, empty} = state.selection;
+  // const depth = 0;
+  // const parent = $to.node(depth || undefined);
+  // const grandParent = $to.node(-depth - 1);
+  // let tr = state.tr;
+  // let side = (!$from.parentOffset && $to.index() < parent.childCount ? $from : $to).pos
+  // tr.setSelection(TextSelection.create(tr.doc, side, side + 2));
+  // return true;
+  return enterEOL(state, dispatch, view, depth);
 }
-export function enterSplit(state: EditorState, dispatch?: (tr: Transaction) => void, view?: EditorView) {
-  console.log('split');
-  let {$from, $to} = state.selection;
+export function enterSplit(state: EditorState, dispatch?: (tr: Transaction) => void, view?: EditorView, depth = 0) {
+  depth++;
+  let { $from, $to } = state.selection;
   // TODO: node selection
   // if (state.selection instanceof NodeSelection) {
   //   if (!$from.parentOffset || !canSplit(state.doc, $from.pos)) return false
@@ -186,17 +195,18 @@ export function enterSplit(state: EditorState, dispatch?: (tr: Transaction) => v
     let atEnd = $to.parentOffset == $to.parent.content.size;
     let tr = state.tr;
     if (state.selection instanceof TextSelection) tr.deleteSelection();
-    let defaultType = $from.depth == 0 ? null : defaultBlockAt($from.node(-1).contentMatchAt($from.indexAfter(-1)));
+    const parent = $to.node(-depth || undefined);
+    let defaultType = $from.depth == 0 ? null : defaultBlockAt($from, depth, parent.type);
     if (defaultType) {
       let types = atEnd ? [{ type: defaultType }] : null;
-      let can = canSplit(tr.doc, tr.mapping.map($from.pos), 1, types as any);
-      if (!types && !can && canSplit(tr.doc, tr.mapping.map($from.pos), 1, [{ type: defaultType }])) {
+      let can = canSplit(tr.doc, tr.mapping.map($from.pos), depth, types as any);
+      if (!types && !can && canSplit(tr.doc, tr.mapping.map($from.pos), depth, [{ type: defaultType }])) {
         types = [{ type: defaultType }];
         can = true;
       }
       if (can) {
-        tr.split(tr.mapping.map($from.pos), 1, types as any);
-        if (!atEnd && !$from.parentOffset && $from.parent.type != defaultType && $from.node(-1).canReplace($from.index(-1), $from.indexAfter(-1), Fragment.from([ (defaultType as NodeType).create(), $from.parent ]))) {
+        tr.split(tr.mapping.map($from.pos), depth, types as any);
+        if (!atEnd && !$from.parentOffset && $from.parent.type != defaultType && $from.node(-depth).canReplace($from.index(-depth), $from.indexAfter(-depth), Fragment.from([(defaultType as NodeType).create(), $from.parent]))) {
           tr.setNodeMarkup(tr.mapping.map($from.before()), defaultType);
         }
       }
@@ -206,95 +216,58 @@ export function enterSplit(state: EditorState, dispatch?: (tr: Transaction) => v
   return true
 }
 
-export function enterPressed(state: EditorState, dispatch?: (tr: Transaction) => void, view?: EditorView) {
-  let {$from, $to, empty} = state.selection;
-  const depth = 0;
-  const parent = $to.node(depth || undefined);
-  const grandParent = $to.node(-depth - 1);
-  const type = defaultBlockAt(grandParent.contentMatchAt($to.indexAfter(-1)))
+export function isEOL(state: EditorState, depth = 0) {
+  const { $to } = state.selection;
+  let parent = $to.parent;
   if ($to.parentOffset < parent.content.size) {
-    return enterSplit(state, dispatch, view);
+    return false;
+  }
+  for (let i = 1; i <= depth; i++) {
+    const grandParent = $to.node(-i);
+    if (grandParent.childCount !== 1 + $to.index(-i)) {
+      return false;
+    }
+    parent = grandParent;
+  }
+  return true;
+}
+export function isEmpty(state: EditorState, depth = 0) {
+  const { $to } = state.selection;
+  let parent = $to.parent;
+  if (parent.content.size) {
+    return false;
+  }
+  for (let i = 1; i <= depth; i++) {
+    const grandParent = $to.node(-i);
+    if (parent.childCount > 1) {
+      return false;
+    }
+    parent = grandParent;
+  }
+  return true;
+}
+
+export function enterPressed(state: EditorState, dispatch?: (tr: Transaction) => void, view?: EditorView) {
+  let { $from } = state.selection;
+  let depth = 0;
+  while(isEmpty(state, depth + 1)) {
+    depth++;
+  }
+  if (!isEOL(state, depth)) {
+    return enterSplit(state, dispatch, view, depth);
   }
   // end of line
   if ($from.parentOffset === 0) {
-    return enterEmpty(state, dispatch, view);
-    return false;
+    return enterEmpty(state, dispatch, view, depth);
   }
   // not start of line
   // const type = state.schema.nodes.p;
-  return enterEOL(state, dispatch, view);
+  return enterEOL(state, dispatch, view, depth);
 }
 
 export const newLine = chainCommands(enterPressed);
-export function onewLine(schema: Schema): Command {
-  const allowedNodes: Record<string, number> = {
-    p: 1,
-    li: 2,
-    stentry: 2,
-    strow: 2,
-    // simpletable: 3,
-    dd: 2,
-  };
-  return function (state, dispatch) {
-    let { $from, $to } = state.selection;
-    let parent: Node | null = null;
-    let grandParent: Node | null = null;
-    let depth = 0;
-    let deletionDepth = 0;
-    let deleteParent = '';
-    for (let i = $from.depth; i > 0; i--) {
-      parent = $from.node(i);
-      console.log('level:', i);
-      console.log('  parent:', parent.type.name);
-      if (allowedNodes[parent.type.name]) {
-        grandParent = $from.node(i - 1);
-        console.log('  grandParent:', grandParent.type.name);
-        depth = $from.depth - i + 1;
-        if (parent.content.size + deletionDepth * 2 == 0 && grandParent.childCount == $from.indexAfter(deletionDepth - 1)) {
-          deletionDepth--;
-          deleteParent = parent.type.name;
-          continue;
-        }
-        break;
-      }
-    }
-    if (!parent || !grandParent) {
-      return false;
-    }
-    if (allowedNodes[parent.type.name]) {
-      let tr = state.tr.delete($from.pos, $to.pos);
-      if (!canSplit(tr.doc, $from.pos - (deleteParent ? 1 : 0))) {
-        return false;
-      }
-      if (deleteParent && depth === allowedNodes[deleteParent]) {
-        return false;
-      }
-      if (dispatch) {
-        const EOL = $to.end() === $to.pos;
-        if (!deleteParent && EOL) {
-          tr = tr.insert($to.pos + 1, createNode(parent.type));
-          const pos = tr.selection.$to.doc.resolve(tr.selection.$to.pos + 2 * depth);
-          const newSelection = new TextSelection(pos, pos);
-          dispatch(tr.setSelection(newSelection).scrollIntoView());
-        } else {
-          if (deleteParent) {
-            // const table = $from.node(deletionDepth - 2);
-            console.log('need to delete:', deleteParent, deletionDepth);
-            tr = tr.delete($from.pos + deletionDepth, $from.pos);
-            tr = tr.insert($from.pos, createNode(parent.type));
-            dispatch(tr);
-            // dispatch(tr.delete($from.pos - 1, $from.pos));
-          } else {
-            dispatch(tr.split($from.pos, depth).scrollIntoView());
-          }
-        }
-      }
-      return true;
-    } else {
-      return false;
-    }
-  }
-}
+// export const newParent = chainCommands(enterPressed);
+// export const newGrandParent = chainCommands(enterPressed);
 
 export function hasMark(state: EditorState, mark: MarkType): boolean {
   return state.selection.empty
