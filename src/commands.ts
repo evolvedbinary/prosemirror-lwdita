@@ -9,6 +9,9 @@ export function createNode(type: NodeType<Schema>, args: Record<string, any> = {
   switch (type.name) {
     case 'p': return type.createAndFill() as Node;
     case 'data': return type.createAndFill({}, type.schema.text('text')) as Node;
+    case 'stentry': return type.createAndFill({}, createNode(type.schema.nodes['p'])) as Node;
+    case 'strow': return type.createAndFill({}, createNode(type.schema.nodes['stentry'])) as Node;
+    case 'simpletable': return type.createAndFill({}, createNode(type.schema.nodes['strow'])) as Node;
     case 'li': return type.createAndFill({}, createNode(type.schema.nodes['p'])) as Node;
     case 'stentry': return type.createAndFill({}, createNode(type.schema.nodes['p'])) as Node;
     case 'ul':
@@ -112,7 +115,7 @@ export function insertImage(type: NodeType<Schema>, input: InputContainer): Comm
 }
 
 function canCreateIndex(type: NodeType) {
-  return ['data', 'ul', 'li', 'p', 'section'].indexOf(type.name);
+  return ['data', 'ul', 'li', 'p', 'section', 'stentry', 'strow', 'simpletable'].indexOf(type.name);
 }
 
 function canCreate(type: NodeType) {
@@ -166,25 +169,11 @@ export function enterEOL(tr: Transaction, dispatch = false, depth = 0): Transact
   return false;
 }
 export function enterEmpty(tr: Transaction, dispatch = false, depth = 0): Transaction | false {
-  // let {$from, $to, empty} = state.selection;
-  // const depth = 0;
-  // const parent = $to.node(depth || undefined);
-  // const grandParent = $to.node(-depth - 1);
-  // let tr = state.tr;
-  // let side = (!$from.parentOffset && $to.index() < parent.childCount ? $from : $to).pos
-  // tr.setSelection(TextSelection.create(tr.doc, side, side + 2));
-  // return true;
   return enterEOL(tr, dispatch, depth);
 }
 export function enterSplit(tr: Transaction, dispatch = false, depth = 0): Transaction | false {
   depth++;
   let { $from, $to } = tr.selection;
-  // TODO: node selection
-  // if (state.selection instanceof NodeSelection) {
-  //   if (!$from.parentOffset || !canSplit(state.doc, $from.pos)) return false
-  //   if (dispatch) dispatch(state.tr.split($from.pos).scrollIntoView())
-  //   return true
-  // }
 
   if (dispatch) {
     let atEnd = $to.parentOffset == $to.parent.content.size;
@@ -271,8 +260,6 @@ export function enterPressed(state: EditorState, dispatch?: (tr: Transaction) =>
 }
 
 export const newLine = chainCommands(enterPressed);
-// export const newParent = chainCommands(enterPressed);
-// export const newGrandParent = chainCommands(enterPressed);
 
 export function hasMark(state: EditorState, mark: MarkType): boolean {
   return state.selection.empty
