@@ -29,7 +29,7 @@ if (targetNode) {
 
 export function shortcuts(schema: Schema) {
   return keymap({
-    Enter: newLine(schema),
+    'Enter': newLine,
     'Ctrl-b': toggleMark(schema.marks.b),
     'Ctrl-u': toggleMark(schema.marks.u),
     'Ctrl-i': toggleMark(schema.marks.i),
