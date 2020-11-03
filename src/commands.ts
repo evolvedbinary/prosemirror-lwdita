@@ -169,6 +169,10 @@ export function enterEOL(tr: Transaction, dispatch = false, depth = 0): Transact
   return false;
 }
 export function enterEmpty(tr: Transaction, dispatch = false, depth = 0): Transaction | false {
+  if (depth > 0) {
+    tr = tr.setSelection(TextSelection.create(tr.doc, tr.selection.anchor - depth * 2, tr.selection.anchor));
+    tr = tr.deleteSelection();
+  }
   return enterEOL(tr, dispatch, depth);
 }
 export function enterSplit(tr: Transaction, dispatch = false, depth = 0): Transaction | false {
