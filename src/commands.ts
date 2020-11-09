@@ -23,6 +23,14 @@ export function createNode(type: NodeType<Schema>, args: Record<string, any> = {
   throw new Error('unkown node type: ' + type.name);
 }
 
+export function createNodesTree(tree: NodeType<Schema>[]): Node {
+  let result: Node | undefined;
+  tree.forEach(type => {
+    result = type.createAndFill({}, result) as Node;
+  });
+  return result as Node;
+}
+
 export function insertNode(type: NodeType<Schema>): Command {
   return function (state, dispatch) {
     try {
@@ -160,7 +168,7 @@ export function enterEOL(tr: Transaction, dispatch = false, depth = 0): Transact
   if (dispatch) {
     if (type) {
       let side = (!$from.parentOffset && $to.index() < parent.childCount ? $from : $to).pos + depth + 1;
-      tr = tr.insert(side, createNode(type))
+      tr = tr.insert(side, createNodesTree(getTree($from, depth)));
       tr = tr.setSelection(TextSelection.create(tr.doc, side + depth + 1));
       return tr.scrollIntoView();
     }
@@ -168,19 +176,40 @@ export function enterEOL(tr: Transaction, dispatch = false, depth = 0): Transact
   }
   return false;
 }
+export function deleteEmptyLine(tr: Transaction, depth = 0, shift = 0): Transaction {
+  return tr.setSelection(TextSelection.create(tr.doc, tr.selection.anchor - depth * 2 + shift, tr.selection.anchor + shift)).deleteSelection();
+}
 export function enterEmpty(tr: Transaction, dispatch = false, depth = 0): Transaction | false {
   if (depth > 0) {
-    tr = tr.setSelection(TextSelection.create(tr.doc, tr.selection.anchor - depth * 2, tr.selection.anchor));
-    tr = tr.deleteSelection();
+    deleteEmptyLine(tr, depth);
   }
   return enterEOL(tr, dispatch, depth);
 }
 export function enterSplit(tr: Transaction, dispatch = false, depth = 0): Transaction | false {
   depth++;
   let { $from, $to } = tr.selection;
-
+  
   if (dispatch) {
     let atEnd = $to.parentOffset == $to.parent.content.size;
+    const prevDepth = getPrevDepth(tr);
+    if (prevDepth > 0) {
+      $from = tr.selection.$from;
+      $to = tr.selection.$to;
+      depth++;
+      tr = tr.split(tr.mapping.map($from.pos), depth);
+      const pos = tr.selection.from;
+      const selStart = pos - prevDepth * 2 - 2;
+      const selEnd = selStart - prevDepth * 2 - 2;
+      tr.setSelection(TextSelection.create(tr.doc, selStart, selEnd));
+      tr = tr.deleteSelection();
+      tr.setSelection(TextSelection.create(tr.doc, tr.mapping.map(pos - depth * 2)));
+      return tr;
+    }
+    if (atEnd && depth > 1 && $from.depth - depth > 2) {
+      const defaultType = $from.node(-depth + 1).type;
+      return deleteEmptyLine(tr, depth - 1)
+        .split(tr.mapping.map($from.pos), depth, [{ type: defaultType }] as any);
+    }
     if (tr.selection instanceof TextSelection) tr.deleteSelection();
     const parent = $to.node(-depth || undefined);
     let defaultType = $from.depth == 0 ? null : defaultBlockAt($from, depth, parent.type);
@@ -203,8 +232,8 @@ export function enterSplit(tr: Transaction, dispatch = false, depth = 0): Transa
   return false;
 }
 
-export function isEOL(state: EditorState, depth = 0) {
-  const { $to } = state.selection;
+export function isEOL(tr: Transaction, depth = 0) {
+  const { $to } = tr.selection;
   let parent = $to.parent;
   if ($to.parentOffset < parent.content.size) {
     return false;
@@ -218,8 +247,8 @@ export function isEOL(state: EditorState, depth = 0) {
   }
   return true;
 }
-export function isEmpty(state: EditorState, depth = 0) {
-  const { $to } = state.selection;
+export function isEmpty(tr: Transaction, depth = 0) {
+  const { $to } = tr.selection;
   let parent = $to.parent;
   if (parent.content.size) {
     return false;
@@ -233,25 +262,54 @@ export function isEmpty(state: EditorState, depth = 0) {
   }
   return true;
 }
+export function isPrevEmpty(tr: Transaction, depth = 0) {
+  const pos = tr.doc.resolve(tr.selection.to - 2);
+  let parent = pos.parent;
+  if (parent.content.size) {
+    return false;
+  }
+  for (let i = 1; i <= depth; i++) {
+    const grandParent = pos.node(-i);
+    if (parent.childCount > 1) {
+      return false;
+    }
+    parent = grandParent;
+  }
+  return true;
+}
 
-export function getDepth(state: EditorState, empty = false) {
+export function getDepth(tr: Transaction, empty = false) {
   let depth = 0;
-  while((empty ? isEmpty : isEOL)(state, depth + 1)) {
+  while((empty ? isEmpty : isEOL)(tr, depth + 1)) {
     depth++;
   }
   return depth;
 }
+export function getPrevDepth(tr: Transaction) {
+  let depth = 0;
+  while(isPrevEmpty(tr, depth + 1)) {
+    depth++;
+  }
+  return depth;
+}
+export function getTree(pos: ResolvedPos, depth = 0) {
+  const result: NodeType<Schema>[] = [pos.parent.type];
+  for (let i = 1; i <= depth; i++) {
+    result.push(pos.node(-i).type);
+  }
+  return result;
+}
 
 export function enterPressed(state: EditorState, dispatch?: (tr: Transaction) => void, view?: EditorView) {
   let { $from, empty } = state.selection;
-  const depth = getDepth(state, true);
+  const depth = getDepth(state.tr, true);
   let resultTr: false | Transaction;
   let tr = state.tr;
   if (dispatch && !empty) {
     tr = tr.deleteSelection();
     $from = tr.selection.$from;
   }
-  resultTr = isEOL(state, depth)
+  resultTr = isEOL(state.tr, depth)
     ? $from.parentOffset === 0
       ? enterEmpty(tr, !!dispatch, depth)
       : enterEOL(tr, !!dispatch, depth)
