@@ -1,0 +1,19 @@
+{
+  "name": "prosemirror-jdita-example",
+  "version": "0.1.0",
+  "description": "Example for Prosemirror plugin",
+  "main": "index.js",
+  "repository": "https://github.com/ccheraa/prosemirror-jdita.git",
+  "author": "Charafeddine Cheraa <ccheraa@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "build": "parcel build ./index.html",
+    "start": "parcel ./index.html"
+  },
+  "devDependencies": {
+    "parcel": "^1.12.4",
+    "prosemirror-jdita": "^0.1.0",
+    "sass": "^1.26.10",
+    "static-server": "^2.2.1"
+  }
+}

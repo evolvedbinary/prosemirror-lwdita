@@ -1,9 +1,9 @@
 import { EditorState } from "prosemirror-state";
 import { EditorView } from "prosemirror-view";
 import { Node } from "prosemirror-model";
-import { schema } from "../schema";
+import { schema } from "prosemirror-jdita";
 import jsonDocLoader from "./doc";
-import { menu, shortcuts } from "../plugin";
+import { menu, shortcuts } from "prosemirror-jdita";
 import { githubMenuItem, openFileMenuItem } from "./demo-plugin";
 import { history } from "prosemirror-history";
 

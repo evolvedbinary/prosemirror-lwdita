@@ -1,5 +1,5 @@
 import { xditaToJson } from "jdita";
-import { document } from "../document";
+import { document } from "prosemirror-jdita";
 let xml: string;
 xml = `<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE topic PUBLIC "-//OASIS//DTD LIGHTWEIGHT DITA Topic//EN" "lw-topic.dtd">
