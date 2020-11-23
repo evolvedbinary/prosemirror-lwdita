@@ -9,15 +9,13 @@
   "scripts": {
     "build": "parcel build ./index.html",
     "start:dev": "parcel ./index.html",
-    "docker": "node pack",
-    "start": "node server"
+    "docker": "node build"
   },
-  "dependencies": {},
+  "dependencies": {
+    "prosemirror-jdita": "^0.0.5"
+  },
   "devDependencies": {
     "parcel": "^1.12.4",
-    "prosemirror-jdita": "^0.0.5",
-    "rollup": "^2.33.3",
-    "sass": "^1.26.10",
-    "static-server": "^2.2.1"
+    "sass": "^1.26.10"
   }
 }
