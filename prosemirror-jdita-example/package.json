@@ -12,11 +12,11 @@
     "docker": "node pack",
     "start": "node server"
   },
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "parcel": "^1.12.4",
-    "prosemirror-jdita": "^0.1.0",
+    "prosemirror-jdita": "^0.0.5",
+    "rollup": "^2.33.3",
     "sass": "^1.26.10",
     "static-server": "^2.2.1"
   }
