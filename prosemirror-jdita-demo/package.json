@@ -1,7 +1,7 @@
 {
-  "name": "prosemirror-jdita-example",
+  "name": "prosemirror-jdita-demo",
   "version": "0.1.1",
-  "description": "Example for Prosemirror plugin",
+  "description": "Demo for Prosemirror JDita plugin",
   "main": "index.js",
   "repository": {
     "type": "git",
