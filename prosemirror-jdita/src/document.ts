@@ -117,7 +117,7 @@ function defaultTravel(value: JDita, parent: JDita): any {
   }
   return result;
 }
-export function travel(value: JDita, parent: JDita): any {
+function travel(value: JDita, parent: JDita): any {
   const result = (NODES[value.nodeName] || defaultTravel)(value, parent);
   if (value.nodeName !== 'doc' && result.attrs) {
     result.attrs.parent = parent.nodeName;

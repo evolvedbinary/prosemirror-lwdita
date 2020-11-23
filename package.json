@@ -8,8 +8,11 @@
   "license": "MIT",
   "private": true,
   "scripts": {
+    "docker": "yarn workspace prosemirror-jdita-example docker",
+    "dev:example": "yarn workspace prosemirror-jdita-example start:dev",
     "start:example": "yarn workspace prosemirror-jdita-example start",
-    "build:example": "yarn workspace prosemirror-jdita-example build"
+    "build:example": "yarn workspace prosemirror-jdita-example build",
+    "build": "yarn workspace prosemirror-jdita build"
   },
   "workspaces": [
     "prosemirror-jdita",

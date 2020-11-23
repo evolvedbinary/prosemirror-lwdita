@@ -1,6 +1,6 @@
 {
   "name": "prosemirror-jdita",
-  "version": "0.1.0",
+  "version": "0.0.3",
   "description": "Use JDita in prosemirror",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -10,6 +10,7 @@
     "lint": "eslint src --ext .ts",
     "lint:fix": "eslint src --ext .ts --fix",
     "build": "rimraf ./lib && tsc",
+    "prepublishOnly": "yarn build",
     "test": "mocha",
     "test:watch": "mocha -w",
     "coverage": "rimraf coverage && nyc yarn mocha"
@@ -35,7 +36,8 @@
     "test": "./test"
   },
   "files": [
-    "lib"
+    "lib",
+    "fix.js"
   ],
   "dependencies": {
     "@types/chai-as-promised": "^7.1.3",

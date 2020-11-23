@@ -1,0 +1,1 @@
+{"name":"prosemirror-jdita-example","version":"0.1.0","description":"Example for Prosemirror plugin","main":"index.js","repository":"https://github.com/ccheraa/prosemirror-jdita.git","author":"Charafeddine Cheraa <ccheraa@gmail.com>","license":"MIT","scripts":{"start":"node server"},"dependencies":{},"devDependencies":{"static-server":"^2.2.1"}}
