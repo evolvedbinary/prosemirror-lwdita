@@ -91,9 +91,3 @@ export function githubMenuItem(props: Partial<MenuItemSpec & { url: string }> = 
     run: () => {},
   });
 }
-
-
-// run: () => {
-//   window.open('https://github.com/ccheraa/jdita');
-//   window.open('https://github.com/ccheraa/prosemirror-jdita');
-// },

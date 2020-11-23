@@ -3,9 +3,24 @@
   "version": "0.1.1",
   "description": "Prosemirror plugin to edit JDita documents",
   "main": "index.js",
-  "repository": "https://github.com/ccheraa/prosemirror-jdita.git",
-  "author": "Charafeddine Cheraa <ccheraa@gmail.com>",
-  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/evolvedbinary/prosemirror-jdita.git"
+  },
+  "keywords": [	
+    "ProseMirror",
+    "Docker",
+    "LwDITA",	
+    "DITA",	
+    "XML",	
+    "JSON"	
+  ],	
+  "author": "Evolved Binary",	
+  "license": "AGPL-3.0",	
+  "bugs": {	
+    "url": "https://github.com/evolvedbinary/prosemirror-jdita/issues"	
+  },
+  "homepage": "https://github.com/evolvedbinary/prosemirror-jdita#readme",
   "private": true,
   "scripts": {
     "docker": "yarn workspace prosemirror-jdita-example docker",

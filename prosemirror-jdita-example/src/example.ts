@@ -22,8 +22,8 @@ jsonDocLoader.then(jsonDoc => {
         shortcuts(schemaObject),
         menu(schemaObject, {
           end: [[
-            githubMenuItem({ label: 'jdita', url: 'https://github.com/ccheraa/jdita' }),
-            githubMenuItem({ label: 'prosemirror-jdita', url: 'https://github.com/ccheraa/prosemirror-jdita' }),
+            githubMenuItem({ label: 'jdita', url: 'https://github.com/evolvedbinary/jdita' }),
+            githubMenuItem({ label: 'prosemirror-jdita', url: 'https://github.com/evolvedbinary/prosemirror-jdita' }),
           ]],
           start: [[ openFileMenuItem() ]],
         }),
