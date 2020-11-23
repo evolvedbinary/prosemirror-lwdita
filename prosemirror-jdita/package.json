@@ -1,6 +1,6 @@
 {
   "name": "prosemirror-jdita",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Use JDita in prosemirror",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -38,7 +38,8 @@
   },
   "files": [
     "lib",
-    "scripts"
+    "scripts",
+    "index.js"
   ],
   "dependencies": {
     "@types/chai-as-promised": "^7.1.3",
