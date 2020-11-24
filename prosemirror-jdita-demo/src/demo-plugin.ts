@@ -1,6 +1,6 @@
 import { Command } from "prosemirror-commands";
 import { MenuElement, MenuItem, MenuItemSpec } from "prosemirror-menu";
-import { InputContainer } from "../commands";
+import { InputContainer } from "prosemirror-jdita";
 
 function openFile(input: InputContainer): Command {
   return (state, dispatch) => {
@@ -91,9 +91,3 @@ export function githubMenuItem(props: Partial<MenuItemSpec & { url: string }> = 
     run: () => {},
   });
 }
-
-
-// run: () => {
-//   window.open('https://github.com/ccheraa/jdita');
-//   window.open('https://github.com/ccheraa/prosemirror-jdita');
-// },

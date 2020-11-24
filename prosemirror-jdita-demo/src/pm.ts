@@ -1,7 +1,7 @@
 import { EditorState } from "prosemirror-state";
 import { EditorView } from "prosemirror-view";
 import { Node, Schema, DOMParser } from "prosemirror-model";
-import { schema } from "../schema";
+import { schema } from "../package/src/schema";
 import jsonDocLoader from "./doc";
 
 const starSchema = new Schema({

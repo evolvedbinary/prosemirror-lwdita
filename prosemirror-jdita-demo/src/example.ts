@@ -1,9 +1,9 @@
 import { EditorState } from "prosemirror-state";
 import { EditorView } from "prosemirror-view";
 import { Node } from "prosemirror-model";
-import { schema } from "../schema";
+import { schema } from "prosemirror-jdita";
 import jsonDocLoader from "./doc";
-import { menu, shortcuts } from "../plugin";
+import { menu, shortcuts } from "prosemirror-jdita";
 import { githubMenuItem, openFileMenuItem } from "./demo-plugin";
 import { history } from "prosemirror-history";
 
@@ -22,8 +22,8 @@ jsonDocLoader.then(jsonDoc => {
         shortcuts(schemaObject),
         menu(schemaObject, {
           end: [[
-            githubMenuItem({ label: 'jdita', url: 'https://github.com/ccheraa/jdita' }),
-            githubMenuItem({ label: 'prosemirror-jdita', url: 'https://github.com/ccheraa/prosemirror-jdita' }),
+            githubMenuItem({ label: 'jdita', url: 'https://github.com/evolvedbinary/jdita' }),
+            githubMenuItem({ label: 'prosemirror-jdita', url: 'https://github.com/evolvedbinary/prosemirror-jdita' }),
           ]],
           start: [[ openFileMenuItem() ]],
         }),

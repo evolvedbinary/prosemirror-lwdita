@@ -1,7 +1,7 @@
 {
-  "name": "prosemirror-jdita-package",
+  "name": "prosemirror-jdita-demo",
   "version": "0.1.1",
-  "description": "Prosemirror plugin to edit JDita documents",
+  "description": "Demo for Prosemirror JDita plugin",
   "main": "index.js",
   "repository": {
     "type": "git",
@@ -21,15 +21,16 @@
     "url": "https://github.com/evolvedbinary/prosemirror-jdita/issues"	
   },
   "homepage": "https://github.com/evolvedbinary/prosemirror-jdita#readme",
-  "private": true,
   "scripts": {
-    "docker": "yarn workspace prosemirror-jdita-example docker",
-    "start:example": "yarn workspace prosemirror-jdita-example start",
-    "build:example": "yarn workspace prosemirror-jdita-example build",
-    "build": "yarn workspace prosemirror-jdita build"
+    "build": "parcel build ./index.html",
+    "start": "parcel ./index.html",
+    "docker": "yarn build && node docker"
   },
-  "workspaces": [
-    "prosemirror-jdita",
-    "prosemirror-jdita-example"
-  ]
+  "dependencies": {
+    "prosemirror-jdita": "^0.1.0"
+  },
+  "devDependencies": {
+    "parcel": "^1.12.4",
+    "sass": "^1.26.10"
+  }
 }

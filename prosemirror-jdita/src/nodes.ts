@@ -1,4 +1,4 @@
-export const NODES = {
+export const NODES: Record<string, string> = {
   document: 'doc',
 };
 
