@@ -23,13 +23,13 @@
   "homepage": "https://github.com/evolvedbinary/prosemirror-jdita#readme",
   "private": true,
   "scripts": {
-    "docker": "yarn workspace prosemirror-jdita-example docker",
-    "start:example": "yarn workspace prosemirror-jdita-example start",
-    "build:example": "yarn workspace prosemirror-jdita-example build",
+    "docker": "yarn workspace prosemirror-jdita-demo docker",
+    "start:demo": "yarn workspace prosemirror-jdita-demo start",
+    "build:demo": "yarn workspace prosemirror-jdita-demo build",
     "build": "yarn workspace prosemirror-jdita build"
   },
   "workspaces": [
     "prosemirror-jdita",
-    "prosemirror-jdita-example"
+    "prosemirror-jdita-demo"
   ]
 }
