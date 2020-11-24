@@ -26,7 +26,10 @@
     "docker": "yarn workspace prosemirror-jdita-demo docker",
     "start:demo": "yarn workspace prosemirror-jdita-demo start",
     "build:demo": "yarn workspace prosemirror-jdita-demo build",
-    "build": "yarn workspace prosemirror-jdita build"
+    "build": "yarn workspace prosemirror-jdita build",
+    "test": "yarn workspace prosemirror-jdita test",
+    "coverage": "yarn workspace prosemirror-jdita coverage",
+    "coveralls": "yarn workspace prosemirror-jdita coveralls"
   },
   "workspaces": [
     "prosemirror-jdita",
