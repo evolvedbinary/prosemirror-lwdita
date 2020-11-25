@@ -1,6 +1,0 @@
-yarn workspace v1.22.10
-yarn run v1.22.10
-$ node fix
-Patching "prosemirror-view"...
-Done in 0.08s.
-Done in 0.26s.
