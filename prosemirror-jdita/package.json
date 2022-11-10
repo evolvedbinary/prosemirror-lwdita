@@ -60,14 +60,14 @@
     "prosemirror-view": "^1.16.2"
   },
   "devDependencies": {
-    "@types/chai": "^4.2.11",
+    "@types/chai": "^4.3.4",
     "@types/mocha": "^7.0.2",
     "@types/prosemirror-model": "^1.7.2",
     "@types/prosemirror-state": "^1.2.5",
     "@types/prosemirror-view": "^1.15.1",
     "@typescript-eslint/eslint-plugin": "^2.30.0",
     "@typescript-eslint/parser": "^2.30.0",
-    "chai": "^4.2.0",
+    "chai": "^4.3.7",
     "coveralls": "^3.1.0",
     "eslint": "^6.8.0",
     "mocha": "^8.1.3",
