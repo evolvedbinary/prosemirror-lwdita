@@ -2,7 +2,7 @@ version: 2.1
 orbs:
   node: circleci/node@5.1.0
 jobs:
-  clone-and-install:
+  build-and-test:
     docker:
      - image: cimg/node:12.13.1
     steps:
@@ -10,14 +10,11 @@ jobs:
       - node/install-yarn:
         version: 1.22.21
       - node/install-packages:
-          pkg-manager: yarn 
+          pkg-manager: yarn
+      - run: yarn build
+      - run: yarn build:demo
+      - run: yarn coverage
 workflows:
   build-and-test:
     jobs:
-      - clone-and-install
-      - node/run:
-        yarn-run: build
-      - node/run:
-        yarn-run: build:demo
-      - node/run:
-        yarn-run: coverage
+      - build-and-test
