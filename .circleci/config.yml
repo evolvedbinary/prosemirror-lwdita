@@ -1,14 +1,24 @@
 version: 2.1
+
+parameters:
+  node-image-tag:
+    type: string
+    default: "12.13.1"
+  yarn-version:
+    type: string
+    default: "1.22.21"
+
 orbs:
-  node: circleci/node@5.1.0
+  node: circleci/node@5.1.1
+
 jobs:
   clone-and-install:
     docker:
-     - image: cimg/node:12.13.1
+     - image: cimg/node:<< pipeline.parameters.node-image-tag >>
     steps:
       - checkout
       - node/install-yarn:
-        version: 1.22.21
+          version: << pipeline.parameters.yarn-version >>
       - node/install-packages:
           pkg-manager: yarn 
 workflows:
@@ -16,8 +26,32 @@ workflows:
     jobs:
       - clone-and-install
       - node/run:
-        yarn-run: build
+          name: build
+          requires:
+            - clone-and-install
+          version: << pipeline.parameters.node-image-tag >>
+          pkg-manager: yarn
+          setup:
+            - node/install-yarn:
+                version: << pipeline.parameters.yarn-version >>
+          yarn-run: build
       - node/run:
-        yarn-run: build:demo
+          name: build:demo
+          requires:
+            - clone-and-install
+          version: << pipeline.parameters.node-image-tag >>
+          pkg-manager: yarn
+          setup:
+            - node/install-yarn:
+                version: << pipeline.parameters.yarn-version >>
+          yarn-run: build:demo
       - node/run:
-        yarn-run: coverage
+          name: coverage
+          requires:
+            - clone-and-install
+          version: << pipeline.parameters.node-image-tag >>
+          pkg-manager: yarn
+          setup:
+            - node/install-yarn:
+                version: << pipeline.parameters.yarn-version >>
+          yarn-run: coverage
