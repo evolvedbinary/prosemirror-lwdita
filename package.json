@@ -31,6 +31,10 @@
     "coverage": "yarn workspace prosemirror-jdita coverage",
     "coveralls": "yarn workspace prosemirror-jdita coveralls"
   },
+  "engines": {
+    "node": ">=12.13.1 <13",
+    "yarn": ">=1.22.21 <2"
+  },
   "workspaces": [
     "prosemirror-jdita",
     "prosemirror-jdita-demo"
