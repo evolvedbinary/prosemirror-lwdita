@@ -1,6 +1,7 @@
 # Prosemirror JDita
 [![Node.js Version](https://img.shields.io/node/v-lts/prosemirror-jdita)](https://nodejs.org)
 [![Npm Package Version](https://img.shields.io/npm/v/prosemirror-jdita)](https://www.npmjs.com/package/prosemirror-jdita)
+[![Build Status](https://circleci.com/gh/evolvedbinary/prosemirror-jdita.svg?style=svg)](https://circleci.com/gh/evolvedbinary/prosemirror-jdita)
 [![Coverage Status](https://coveralls.io/repos/github/evolvedbinary/prosemirror-jdita/badge.svg?branch=main)](https://coveralls.io/github/evolvedbinary/prosemirror-jdita?branch=main)
 
 This tool generates Prosemirror documents from JDita objects. It also provides Schema Definition for proper display and editing of JDita data.
