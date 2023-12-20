@@ -2,8 +2,8 @@ import { keymap } from "prosemirror-keymap";
 import { MarkType, NodeType, Schema } from "prosemirror-model";
 import { menuBar, MenuElement, MenuItem, MenuItemSpec } from "prosemirror-menu";
 import { toggleMark, newLine, hasMark, insertNode, insertImage, InputContainer } from "./commands";
-import { Command } from "prosemirror-commands";
 import { redo, undo } from "prosemirror-history";
+import { Command } from "prosemirror-state";
 
 const targetNode = document.getElementById('editor');
 if (targetNode) {
@@ -82,7 +82,6 @@ function simpleCommand(callbacks: SimpleItemCallbacks | (() => void), props: Par
 function separator(): MenuElement {
   return new MenuItem({
     run: () => {},
-    icon: {},
     enable: () => false,
     class: 'separator',
   });
@@ -137,18 +136,18 @@ export function menu(schema: Schema, { start, before, after, end}: Additions = {
     }, { label: 'Show debug info', class: 'ic-bug', css: 'color: #c81200' }),
   ];
   const toolbar:MenuElement[][] = [[
-    commandItem(undo, { icon: {}, title: 'Undo', class: 'ic-undo' }),
-    commandItem(redo, { icon: {}, title: 'Redo', class: 'ic-redo' }),
+    commandItem(undo, {title: 'Undo', class: 'ic-undo' }),
+    commandItem(redo, {title: 'Redo', class: 'ic-redo' }),
   ], [
-    markItem(schema.marks.b, { icon: {}, title: 'Bold', class: 'ic-bold' }),
-    markItem(schema.marks.u, { icon: {}, title: 'Underlined', class: 'ic-underline' }),
-    markItem(schema.marks.i, { icon: {}, title: 'Italic', class: 'ic-italic' }),
-    markItem(schema.marks.sub, { icon: {}, title: 'Subscript', class: 'ic-subscript' }),
-    markItem(schema.marks.sup, { icon: {}, title: 'Superscript', class: 'ic-superscript' }),
+    markItem(schema.marks.b, {title: 'Bold', class: 'ic-bold' }),
+    markItem(schema.marks.u, {title: 'Underlined', class: 'ic-underline' }),
+    markItem(schema.marks.i, {title: 'Italic', class: 'ic-italic' }),
+    markItem(schema.marks.sub, {title: 'Subscript', class: 'ic-subscript' }),
+    markItem(schema.marks.sup, {title: 'Superscript', class: 'ic-superscript' }),
   ], [
-    insertItem(schema.nodes.ol, { icon: {}, title: 'Ordered list', class: 'ic-olist' }),
-    insertItem(schema.nodes.ul, { icon: {}, title: 'Unordered list', class: 'ic-ulist' }),
-    insertImageItem(schema.nodes.image, { icon: {}, title: 'Insert image', class: 'ic-image' }),
+    insertItem(schema.nodes.ol, {title: 'Ordered list', class: 'ic-olist' }),
+    insertItem(schema.nodes.ul, {title: 'Unordered list', class: 'ic-ulist' }),
+    insertImageItem(schema.nodes.image, {title: 'Insert image', class: 'ic-image' }),
   ]];
   if (!start) {
     start = [];

@@ -99,8 +99,12 @@ function getChildren(type: ChildTypes): string[] {
   return (type.isGroup ? nodeGroups[type.name] : [ type.name ]);
 }
 
-export function travel(node: typeof BaseNode, next: (nodeName: string) => void): SchemaNode {
-  return (SCHEMAS[node.nodeName] || defaultTravel)(node, next);
+export function travel(node: typeof BaseNode, next: (nodeName: string) => void): any {
+  if(SCHEMAS[node.nodeName]) {
+    return SCHEMAS[node.nodeName](node, next);
+  } else {
+    return defaultTravel(node, node, next);
+  }
 }
 
 export function defaultToDom(node: typeof BaseNode, attrs: any): (node: Node) => DOMOutputSpec {
@@ -196,7 +200,7 @@ export function schema(): Schema {
       const result = defaultTravel(NodeClass, parent, browse);
       if (result) {
         if (IS_MARK.indexOf(nodeName) > -1) {
-          (spec.marks as Record<string, MarkSpec>)[defaultNodeName(nodeName)] = result as MarkSpec;
+          (spec.marks as Record<string, MarkSpec>)[defaultNodeName(nodeName)] = result as any;
         } else {
           (spec.nodes as Record<string, NodeSpec>)[defaultNodeName(nodeName)] = result;
         }
