@@ -20,13 +20,6 @@ jsonDocLoader.then(jsonDoc => {
       plugins: [
         history(),
         shortcuts(schemaObject),
-        menu(schemaObject, {
-          end: [[
-            githubMenuItem({ label: 'jdita', url: 'https://github.com/evolvedbinary/jdita' }),
-            githubMenuItem({ label: 'prosemirror-jdita', url: 'https://github.com/evolvedbinary/prosemirror-jdita' }),
-          ]],
-          start: [[ openFileMenuItem() ]],
-        }),
       ]
     })
     new EditorView(domEl, {
