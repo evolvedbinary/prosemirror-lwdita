@@ -3,7 +3,7 @@ version: 2.1
 parameters:
   node-image-tag:
     type: string
-    default: "12.13.1"
+    default: "20.10.0"
   yarn-version:
     type: string
     default: "1.22.21"
