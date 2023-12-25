@@ -1,11 +1,11 @@
 export { toggleMark } from 'prosemirror-commands';
 import { canSplit } from 'prosemirror-transform';
-import { chainCommands, Command } from 'prosemirror-commands';
-import { ContentMatch, Fragment, MarkType, Node, NodeType, ResolvedPos, Schema } from 'prosemirror-model';
-import { TextSelection, EditorState, Transaction, NodeSelection } from 'prosemirror-state';
+import { chainCommands} from 'prosemirror-commands';
+import { Fragment, MarkType, Node, NodeType, ResolvedPos } from 'prosemirror-model';
+import { TextSelection, EditorState, Transaction, Command } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 
-export function createNode(type: NodeType<Schema>, args: Record<string, any> = {}): Node {
+export function createNode(type: NodeType, args: Record<string, any> = {}): Node {
   switch (type.name) {
     case 'p': return type.createAndFill() as Node;
     case 'data': return type.createAndFill({}, type.schema.text('text')) as Node;
@@ -23,7 +23,7 @@ export function createNode(type: NodeType<Schema>, args: Record<string, any> = {
   throw new Error('unkown node type: ' + type.name);
 }
 
-export function createNodesTree(tree: NodeType<Schema>[]): Node {
+export function createNodesTree(tree: NodeType[]): Node {
   let result: Node | undefined;
   tree.forEach(type => {
     result = type.createAndFill({}, result) as Node;
@@ -31,7 +31,7 @@ export function createNodesTree(tree: NodeType<Schema>[]): Node {
   return result as Node;
 }
 
-export function insertNode(type: NodeType<Schema>): Command {
+export function insertNode(type: NodeType): Command {
   return function (state, dispatch) {
     try {
       if (!state.selection.empty) {
@@ -84,7 +84,7 @@ export class InputContainer {
   }
 }
 
-export function insertImage(type: NodeType<Schema>, input: InputContainer): Command {
+export function insertImage(type: NodeType, input: InputContainer): Command {
   return function (state, dispatch) {
     function fileSelected(this: HTMLInputElement, event: Event) {
       if (input.el?.files?.length === 1) {
@@ -293,7 +293,7 @@ export function getPrevDepth(tr: Transaction) {
   return depth;
 }
 export function getTree(pos: ResolvedPos, depth = 0) {
-  const result: NodeType<Schema>[] = [pos.parent.type];
+  const result: NodeType[] = [pos.parent.type];
   for (let i = 1; i <= depth; i++) {
     result.push(pos.node(-i).type);
   }
