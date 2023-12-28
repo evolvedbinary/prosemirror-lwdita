@@ -6,6 +6,7 @@
     "marmoure",
     "plutonik-a",
     "dependabot-preview",
-    "dependabot-preview[bot]"
+    "dependabot-preview[bot]",
+    "dependabot[bot]"
   ]
 }
