@@ -41,6 +41,7 @@ export const NODES: Record<string, (value: JDita, parent: JDita) => any> = {
       });
     }
     const result = { type: value.nodeName, attrs, content: content.map(child => travel(child, value)) };
+    // why are we setting attrs here again. It's already set above?
     if (attrs && Object.keys(attrs).length) {
       result.attrs = attrs;
     }
@@ -101,9 +102,12 @@ function defaultTravel(value: JDita, parent: JDita): any {
   deleteUndefined(attrs);
   const type = defaultNodeName(value.nodeName);
   let result: any;
+  // is the value.nodeName a member of IS_MARK?
   if (IS_MARK.indexOf(value.nodeName) > -1) {
+    // why exactly 1? content can't have more then 1 element?
     if (content?.length === 1) {
       result = content[0];
+      // find out what .marks is and why are we setting?
       result.marks = [{ type }]
     }
   } else {
@@ -111,12 +115,14 @@ function defaultTravel(value: JDita, parent: JDita): any {
       type,
       attrs,
     };
+
     if (content) {
       result.content = content;
     }
   }
   return result;
 }
+
 function travel(value: JDita, parent: JDita): any {
   const result = (NODES[value.nodeName] || defaultTravel)(value, parent);
   if (value.nodeName !== 'doc' && result.attrs) {
