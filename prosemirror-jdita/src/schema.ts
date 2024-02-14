@@ -78,6 +78,11 @@ export const SCHEMA_CHILDREN: Record<string, (type: ChildTypes) => string[]> = {
   video: type => ['media-source', 'media-track', 'desc'],
   audio: type => ['media-source', 'media-track', 'desc'],
 }
+
+// these elements show text representation 
+// show how the font should be displayed
+// bold, italic, underline, subscript, superscript
+// IS_MARK short hand for is markups
 export const IS_MARK = ['b', 'i', 'u', 'sub', 'sup'];
 
 export interface SchemaNode {
