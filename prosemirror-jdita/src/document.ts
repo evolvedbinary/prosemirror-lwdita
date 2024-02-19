@@ -1,6 +1,11 @@
 import { JDita } from "jdita";
 import { IS_MARK, defaultNodeName } from "./schema";
 
+/**
+ * deleteUndefined removes undefined attributes from an object
+ * @param object 
+ * @returns object - the object with undefined attributes removed
+ */
 function deleteUndefined(object?: any) {
   if (object) {
     for (let key in object) {
@@ -12,6 +17,11 @@ function deleteUndefined(object?: any) {
   return object;
 }
 
+// the special nodes that need to be handled differently
+/**
+ * NODES is a map of special nodes that need to be handled differently.
+ * instead of using the defaultTravel function, we use the special node function
+ */
 export const NODES: Record<string, (value: JDita, parent: JDita) => any> = {
   audio: (value, parent) => {
     const attrs: any = deleteUndefined({ ...value.attributes });
@@ -96,13 +106,23 @@ export const NODES: Record<string, (value: JDita, parent: JDita) => any> = {
   text: (value: JDita) => ({ type: 'text', text: value.content, attrs: {} }),
 };
 
+/**
+ * defaultTravel transforms the JDita document into ?? TODO: why are we doing this?
+ * 
+ * @param value - the JDita node
+ * @param parent - the parent JDita node
+ * @returns transformed JDita node
+ */
 function defaultTravel(value: JDita, parent: JDita): any {
+  // children will become content
   const content = value.children?.map(child => travel(child, value));
+  // attributes will become attrs
   const attrs =  value.attributes || {};
+  // remove undefined attributes
   deleteUndefined(attrs);
+  // node name will become type
   const type = defaultNodeName(value.nodeName);
   let result: any;
-  // is the value.nodeName a member of IS_MARK?
   if (IS_MARK.indexOf(value.nodeName) > -1) {
     // why exactly 1? content can't have more then 1 element?
     if (content?.length === 1) {
@@ -123,8 +143,17 @@ function defaultTravel(value: JDita, parent: JDita): any {
   return result;
 }
 
+/**
+ * Travel function is a recursive function that traverses the JDita document and generates a ProseMirror document
+ * 
+ * @param value 
+ * @param parent 
+ * @returns 
+ */
 function travel(value: JDita, parent: JDita): any {
+  //if it's a spacial node, use the special node function, otherwise use the default travel function
   const result = (NODES[value.nodeName] || defaultTravel)(value, parent);
+  // if the node is not a document and has attributes, set the parent attribute
   if (value.nodeName !== 'doc' && result.attrs) {
     result.attrs.parent = parent.nodeName;
   }
@@ -132,6 +161,7 @@ function travel(value: JDita, parent: JDita): any {
 }
 
 
+// generate a prosemirror document from a jdita document
 export function document(jdita: JDita): Record<string, any> {
   if (jdita.nodeName === 'document') {
     jdita.nodeName = 'doc';
