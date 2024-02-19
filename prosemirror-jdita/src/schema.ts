@@ -4,7 +4,7 @@ import { ChildTypes } from 'jdita';
 import { NodeSpec, Schema, SchemaSpec, Node, MarkSpec, DOMOutputSpec } from 'prosemirror-model';
 
 
-// what is this?
+// this constant usage is not clear
 export const NODE_NAMES: Record<string, string> = {
   document: 'doc',
 }
@@ -19,7 +19,9 @@ export const NODE_ATTRS: Record<string, (attrs: string[]) => any> = {
   audio: node => defaultNodeAttrs([...node, 'controls', 'autoplay', 'loop', 'muted']),
 }
 
-
+/**
+ * NODE_ATTR_NAMES is a map of attributes for special nodes
+ */
 export const NODE_ATTR_NAMES: Record<string, Record<string, string>> = {
   video: {
     _: '*',
@@ -37,7 +39,9 @@ export const NODE_ATTR_NAMES: Record<string, Record<string, string>> = {
     href: 'src',
   },
 }
-//
+/**
+ * This is not used anywhere and not clear what it does
+ */
 export const SCHEMAS: Record<string, (node: typeof BaseNode, next: (nodeName: string) => void) => SchemaNode> = {
   'text': (node: typeof BaseNode, next: (nodeName: string) => void): SchemaNode => {
     const result: SchemaNode = {
@@ -48,8 +52,10 @@ export const SCHEMAS: Record<string, (node: typeof BaseNode, next: (nodeName: st
     return result;
   },
 }
-//lwdita xdita schema!!??
-// Why is this SCHEMA_CONTENT needed when have the AST?
+/**
+ * SCHEMA_CONTENT is the lwdita schema 
+ * it's being used to get nodes allowed children
+ */
 export const SCHEMA_CONTENT: Record<string, [content: string, groups: string]> = {
   audio: ['desc? media_source* media_track*', 'simple_blocks fig_blocks list_blocks all_blocks'],
   body: ['list_blocks* section* fn*', ''],
@@ -85,7 +91,9 @@ export const SCHEMA_CONTENT: Record<string, [content: string, groups: string]> =
   xref: ['common_inline*', 'all_inline'],
 }
 
-//
+/**
+ * SCHEMA_CHILDREN is a map of special children for some nodes
+ */
 export const SCHEMA_CHILDREN: Record<string, (type: ChildTypes) => string[]> = {
   video: type => ['media-source', 'media-track', 'desc'],
   audio: type => ['media-source', 'media-track', 'desc'],
@@ -97,6 +105,9 @@ export const SCHEMA_CHILDREN: Record<string, (type: ChildTypes) => string[]> = {
 // IS_MARK short hand for is markups
 export const IS_MARK = ['b', 'i', 'u', 'sub', 'sup'];
 
+/**
+ * SchemaNode is a representation of a node in the schema
+ */
 export interface SchemaNode {
   inline?: boolean;
   content?: string;
@@ -109,7 +120,11 @@ export interface SchemaNodes {
 }
 
 
-// does this get the children of the node instance or the class?
+/**
+ * Get node children
+ * @param type - children of the node
+ * @returns - the children of the node
+ */
 function getChildren(type: ChildTypes): string[] {
   if (Array.isArray(type)) {
     return type.map(subType => getChildren(subType)).reduce((result, children) =>
@@ -117,11 +132,19 @@ function getChildren(type: ChildTypes): string[] {
   }
   return (type.isGroup ? nodeGroups[type.name] : [ type.name ]);
 }
-
+/**
+ * This function is not used anywhere
+ */
 export function travel(node: typeof BaseNode, next: (nodeName: string) => void): SchemaNode {
   return (SCHEMAS[node.nodeName] || defaultTravel)(node, next);
 }
 
+/**
+ * //TODO
+ * @param node 
+ * @param attrs 
+ * @returns 
+ */
 export function defaultToDom(node: typeof BaseNode, attrs: any): (node: Node) => DOMOutputSpec {
   return function(pmNode: Node) {
     return [getDomNode(node.nodeName, pmNode.attrs?.parent), attrs
@@ -136,6 +159,12 @@ export function defaultToDom(node: typeof BaseNode, attrs: any): (node: Node) =>
   }
 }
 
+/**
+ * getDomAttr returns the dom attribute name
+ * @param nodeName - the name of the node
+ * @param attr - the name of the attribute
+ * @returns Dom attribute 
+ */
 export function getDomAttr(nodeName: string, attr: string): string {
   return NODE_ATTR_NAMES[nodeName]
     ? NODE_ATTR_NAMES[nodeName]._
@@ -146,6 +175,11 @@ export function getDomAttr(nodeName: string, attr: string): string {
     : 'data-j-' + attr;
 }
 
+/**
+ * create a default node attributes
+ * @param attrs - the attributes of the node
+ * @returns map of the attributes with default values
+ */
 export function defaultNodeAttrs(attrs: string[]): any {
   return attrs.reduce((result, field) => {
     result[field] = { default: '' };
@@ -167,7 +201,6 @@ function defaultTravel(
   // get the attributes of the node
   const attrs = (NODE_ATTRS[node.nodeName] || defaultNodeAttrs)(['parent', ...node.fields]);
   // create the node spec
-  // what is a node spec?
   // check https://prosemirror.net/docs/ref/#model.NodeSpec for more info
   const result: NodeSpec = {
     attrs,
@@ -209,6 +242,7 @@ export function defaultNodeName(nodeName: string): string {
 
 /**
  * schema creates a schema for the prosemirror editor
+ * based on the jdita nodes
  * @returns Schema Object
  */
 export function schema(): Schema {
