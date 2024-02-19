@@ -3,7 +3,7 @@ import { IS_MARK, defaultNodeName } from "./schema";
 
 /**
  * deleteUndefined removes undefined attributes from an object
- * @param object 
+ * @param object
  * @returns object - the object with undefined attributes removed
  */
 function deleteUndefined(object?: any) {
@@ -21,6 +21,9 @@ function deleteUndefined(object?: any) {
 /**
  * NODES is a map of special nodes that need to be handled differently.
  * instead of using the defaultTravel function, we use the special node function
+ * The following 4 nodes (audio, video, image, text) are
+ * treated in a customized way instead of applying the defaultTravel() function:
+ * Apply and rename the xdita attribute strings from the AST into HTML-complying strings (?).
  */
 export const NODES: Record<string, (value: JDita, parent: JDita) => any> = {
   audio: (value, parent) => {
@@ -108,7 +111,7 @@ export const NODES: Record<string, (value: JDita, parent: JDita) => any> = {
 
 /**
  * defaultTravel transforms the JDita document into ?? TODO: why are we doing this?
- * 
+ *
  * @param value - the JDita node
  * @param parent - the parent JDita node
  * @returns transformed JDita node
@@ -123,6 +126,7 @@ function defaultTravel(value: JDita, parent: JDita): any {
   // node name will become type
   const type = defaultNodeName(value.nodeName);
   let result: any;
+  // IS_MARK is the array  `u, s, b, sup, sub`
   if (IS_MARK.indexOf(value.nodeName) > -1) {
     // why exactly 1? content can't have more then 1 element?
     if (content?.length === 1) {
@@ -145,13 +149,13 @@ function defaultTravel(value: JDita, parent: JDita): any {
 
 /**
  * Travel function is a recursive function that traverses the JDita document and generates a ProseMirror document
- * 
- * @param value 
- * @param parent 
- * @returns 
+ *
+ * @param value
+ * @param parent
+ * @returns
  */
 function travel(value: JDita, parent: JDita): any {
-  //if it's a spacial node, use the special node function, otherwise use the default travel function
+  //if it's a special node, use the special node function, otherwise use the default travel function
   const result = (NODES[value.nodeName] || defaultTravel)(value, parent);
   // if the node is not a document and has attributes, set the parent attribute
   if (value.nodeName !== 'doc' && result.attrs) {
