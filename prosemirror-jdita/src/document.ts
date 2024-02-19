@@ -17,7 +17,6 @@ function deleteUndefined(object?: any) {
   return object;
 }
 
-// the special nodes that need to be handled differently
 /**
  * NODES is a map of special nodes that need to be handled differently.
  * instead of using the defaultTravel function, we use the special node function
@@ -110,7 +109,7 @@ export const NODES: Record<string, (value: JDita, parent: JDita) => any> = {
 };
 
 /**
- * defaultTravel transforms the JDita document into ?? TODO: why are we doing this?
+ * defaultTravel transforms the JDita document into a proper ProseMirror document
  *
  * @param value - the JDita node
  * @param parent - the parent JDita node
@@ -149,10 +148,10 @@ function defaultTravel(value: JDita, parent: JDita): any {
 
 /**
  * Travel function is a recursive function that traverses the JDita document and generates a ProseMirror document
- *
- * @param value
- * @param parent
- * @returns
+ * 
+ * @param value - the JDita node
+ * @param parent - the parent JDita node
+ * @returns transformed JDita node
  */
 function travel(value: JDita, parent: JDita): any {
   //if it's a special node, use the special node function, otherwise use the default travel function
@@ -164,8 +163,12 @@ function travel(value: JDita, parent: JDita): any {
   return result;
 }
 
-
-// generate a prosemirror document from a jdita document
+/**
+ * document transforms the JDita document into a proper ProseMirror document
+ * //TODO put a sample in here
+ * @param jdita - the JDita document
+ * @returns transformed JDita document
+ */
 export function document(jdita: JDita): Record<string, any> {
   if (jdita.nodeName === 'document') {
     jdita.nodeName = 'doc';
