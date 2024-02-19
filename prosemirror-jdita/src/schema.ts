@@ -4,15 +4,22 @@ import { ChildTypes } from 'jdita';
 import { NodeSpec, Schema, SchemaSpec, Node, MarkSpec, DOMOutputSpec } from 'prosemirror-model';
 
 
+// what is this?
 export const NODE_NAMES: Record<string, string> = {
   document: 'doc',
 }
+//this is empty?
 export const TO_DOM: Record<string, (node: typeof BaseNode, attrs: any) => (node: Node) => DOMOutputSpec> = {
 }
+
+// some nodes have special attributes
+// this is a list of those nodes and their special attributes
 export const NODE_ATTRS: Record<string, (attrs: string[]) => any> = {
   video: node => defaultNodeAttrs([...node, 'controls', 'autoplay', 'loop', 'muted', 'poster']),
   audio: node => defaultNodeAttrs([...node, 'controls', 'autoplay', 'loop', 'muted']),
 }
+
+
 export const NODE_ATTR_NAMES: Record<string, Record<string, string>> = {
   video: {
     _: '*',
@@ -30,6 +37,7 @@ export const NODE_ATTR_NAMES: Record<string, Record<string, string>> = {
     href: 'src',
   },
 }
+//
 export const SCHEMAS: Record<string, (node: typeof BaseNode, next: (nodeName: string) => void) => SchemaNode> = {
   'text': (node: typeof BaseNode, next: (nodeName: string) => void): SchemaNode => {
     const result: SchemaNode = {
@@ -40,6 +48,7 @@ export const SCHEMAS: Record<string, (node: typeof BaseNode, next: (nodeName: st
     return result;
   },
 }
+//lwdita xdita schema!!??
 export const SCHEMA_CONTENT: Record<string, [content: string, groups: string]> = {
   audio: ['desc? media_source* media_track*', 'simple_blocks fig_blocks list_blocks all_blocks'],
   body: ['list_blocks* section* fn*', ''],
@@ -96,6 +105,8 @@ export interface SchemaNodes {
   [key: string]: SchemaNode;
 }
 
+
+// does this get the children of the node instance or the class?
 function getChildren(type: ChildTypes): string[] {
   if (Array.isArray(type)) {
     return type.map(subType => getChildren(subType)).reduce((result, children) =>
@@ -139,11 +150,19 @@ export function defaultNodeAttrs(attrs: string[]): any {
   }, {} as Record<string, { default: string }>);
 }
 
+// travel all of the nodes classes and create the schema
 function defaultTravel(node: typeof BaseNode, parent: typeof BaseNode, next: (nodeName: string, parent: typeof BaseNode) => void): NodeSpec {
+  // get the children of the node
   const children = (SCHEMA_CHILDREN[node.nodeName] || getChildren)(node.childTypes);
+  // make the distinction between a node and a mark
   const isNode = IS_MARK.indexOf(node.nodeName) < 0;
+  // get the content and group of the node
   const [content, group] = isNode ? SCHEMA_CONTENT[node.nodeName] : [undefined, undefined];
+  // get the attributes of the node
   const attrs = (NODE_ATTRS[node.nodeName] || defaultNodeAttrs)(['parent', ...node.fields]);
+  // create the node spec 
+  // what is a node spec?
+  // check https://prosemirror.net/docs/ref/#model.NodeSpec for more info
   const result: NodeSpec = {
     attrs,
     inline: !(typeof group === 'string' && (group.indexOf('block') > -1 || group === '')),
@@ -172,12 +191,23 @@ function defaultTravel(node: typeof BaseNode, parent: typeof BaseNode, next: (no
   return result;
 }
 
+/**
+ * defaultNodeName transforms the node name 
+ * replacing dashes with underscores
+ * @param nodeName - the name of the node
+ * @returns the transformed node name
+ */
 export function defaultNodeName(nodeName: string): string {
   return NODE_NAMES[nodeName] || nodeName.replace(/-/g, '_');
 }
 
+/**
+ * schema creates a schema for the prosemirror editor
+ * @returns Schema Object
+ */
 export function schema(): Schema {
   const done: string[] = [];
+  // the schema spec are the nodes and marks 
   const spec: SchemaSpec = {
     nodes: {
       text: {
@@ -187,19 +217,28 @@ export function schema(): Schema {
     },
     marks: {},
   }
+  // populate the schema spec using the jdita nodes
   function browse(node: string | typeof BaseNode, parent: typeof BaseNode): void {
+    // get the node name
     const nodeName = typeof node === 'string' ? node : node.nodeName;
+    // if we have already done this node then no need to process it again
     if (done.indexOf(nodeName) > -1) {
       return;
     }
+    // add the node to the list of done nodes
     done.push(nodeName);
+    // do not process the alt or text nodes
+    // shouldn't this be done using the node name?
     if (['alt', 'text'].indexOf(node as string) > -1) {
       return;
     }
     try {
+      // get the class of the node
       const NodeClass = typeof node === 'string' ? getNodeClassType(node) : node;
+      // travel the node class and generate the node spec
       const result = defaultTravel(NodeClass, parent, browse);
       if (result) {
+        // set the node spec based on the node type
         if (IS_MARK.indexOf(nodeName) > -1) {
           (spec.marks as Record<string, MarkSpec>)[defaultNodeName(nodeName)] = result as MarkSpec;
         } else {
@@ -214,8 +253,13 @@ export function schema(): Schema {
       }
     }
   }
+
+  // calling browse on the document node!!
+  // Document node is a class not an instance 
   browse(DocumentNode, DocumentNode);
+  // set the content of the topic and doc nodes
   (spec.nodes as any).topic.content = 'title shortdesc? prolog? body?';
   (spec.nodes as any).doc.content = 'topic+';
+  // build the new schema and return it
   return new Schema(spec);
 }
