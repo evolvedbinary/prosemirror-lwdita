@@ -49,6 +49,7 @@ export const SCHEMAS: Record<string, (node: typeof BaseNode, next: (nodeName: st
   },
 }
 //lwdita xdita schema!!??
+// Why is this SCHEMA_CONTENT needed when have the AST?
 export const SCHEMA_CONTENT: Record<string, [content: string, groups: string]> = {
   audio: ['desc? media_source* media_track*', 'simple_blocks fig_blocks list_blocks all_blocks'],
   body: ['list_blocks* section* fn*', ''],
@@ -83,12 +84,14 @@ export const SCHEMA_CONTENT: Record<string, [content: string, groups: string]> =
   video: ['desc? media_source* media_track*', 'simple_blocks fig_blocks list_blocks all_blocks'],
   xref: ['common_inline*', 'all_inline'],
 }
+
+//
 export const SCHEMA_CHILDREN: Record<string, (type: ChildTypes) => string[]> = {
   video: type => ['media-source', 'media-track', 'desc'],
   audio: type => ['media-source', 'media-track', 'desc'],
 }
 
-// these elements show text representation 
+// these elements show text representation
 // show how the font should be displayed
 // bold, italic, underline, subscript, superscript
 // IS_MARK short hand for is markups
@@ -151,7 +154,10 @@ export function defaultNodeAttrs(attrs: string[]): any {
 }
 
 // travel all of the nodes classes and create the schema
-function defaultTravel(node: typeof BaseNode, parent: typeof BaseNode, next: (nodeName: string, parent: typeof BaseNode) => void): NodeSpec {
+function defaultTravel(
+  node: typeof BaseNode,
+  parent: typeof BaseNode,
+  next: (nodeName: string, parent: typeof BaseNode) => void): NodeSpec {
   // get the children of the node
   const children = (SCHEMA_CHILDREN[node.nodeName] || getChildren)(node.childTypes);
   // make the distinction between a node and a mark
@@ -160,7 +166,7 @@ function defaultTravel(node: typeof BaseNode, parent: typeof BaseNode, next: (no
   const [content, group] = isNode ? SCHEMA_CONTENT[node.nodeName] : [undefined, undefined];
   // get the attributes of the node
   const attrs = (NODE_ATTRS[node.nodeName] || defaultNodeAttrs)(['parent', ...node.fields]);
-  // create the node spec 
+  // create the node spec
   // what is a node spec?
   // check https://prosemirror.net/docs/ref/#model.NodeSpec for more info
   const result: NodeSpec = {
@@ -192,7 +198,7 @@ function defaultTravel(node: typeof BaseNode, parent: typeof BaseNode, next: (no
 }
 
 /**
- * defaultNodeName transforms the node name 
+ * defaultNodeName transforms the node name
  * replacing dashes with underscores
  * @param nodeName - the name of the node
  * @returns the transformed node name
@@ -207,7 +213,7 @@ export function defaultNodeName(nodeName: string): string {
  */
 export function schema(): Schema {
   const done: string[] = [];
-  // the schema spec are the nodes and marks 
+  // the schema spec are the nodes and marks
   const spec: SchemaSpec = {
     nodes: {
       text: {
@@ -255,7 +261,7 @@ export function schema(): Schema {
   }
 
   // calling browse on the document node!!
-  // Document node is a class not an instance 
+  // Document node is a class not an instance
   browse(DocumentNode, DocumentNode);
   // set the content of the topic and doc nodes
   (spec.nodes as any).topic.content = 'title shortdesc? prolog? body?';
