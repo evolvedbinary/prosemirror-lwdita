@@ -164,7 +164,8 @@ function travel(value: JDita, parent: JDita): any {
 }
 
 /**
- * Document transforms the JDita document into a proper ProseMirror document
+ * Document transforms the JDita document into a Schema compliant JDita document
+ * Please refer to ./schema.ts for the schema definition
  * 
  * @param jdita - the JDita document
  * @returns transformed JDita document
