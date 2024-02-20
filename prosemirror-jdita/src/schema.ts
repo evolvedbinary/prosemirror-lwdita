@@ -3,24 +3,26 @@ import { getDomNode } from './dom';
 import { ChildTypes } from 'jdita';
 import { NodeSpec, Schema, SchemaSpec, Node, MarkSpec, DOMOutputSpec } from 'prosemirror-model';
 
-
-// this constant usage is not clear
+// TODO: This constant usage is not clear
 export const NODE_NAMES: Record<string, string> = {
   document: 'doc',
 }
-//this is empty?
-export const TO_DOM: Record<string, (node: typeof BaseNode, attrs: any) => (node: Node) => DOMOutputSpec> = {
-}
 
-// some nodes have special attributes
-// this is a list of those nodes and their special attributes
+// TODO: Why is this is empty?
+export const TO_DOM: Record<string, (node: typeof BaseNode, attrs: any)
+  => (node: Node) => DOMOutputSpec> = {}
+
+/**
+ * Some nodes have special attributes.
+ * This is a list of those nodes and their special attributes
+ */
 export const NODE_ATTRS: Record<string, (attrs: string[]) => any> = {
   video: node => defaultNodeAttrs([...node, 'controls', 'autoplay', 'loop', 'muted', 'poster']),
   audio: node => defaultNodeAttrs([...node, 'controls', 'autoplay', 'loop', 'muted']),
 }
 
 /**
- * NODE_ATTR_NAMES is a map of attributes for special nodes
+ * `NODE_ATTR_NAMES` is a map of attributes for special nodes
  */
 export const NODE_ATTR_NAMES: Record<string, Record<string, string>> = {
   video: {
@@ -40,7 +42,7 @@ export const NODE_ATTR_NAMES: Record<string, Record<string, string>> = {
   },
 }
 /**
- * This is not used anywhere and not clear what it does
+ * TODO: This constant is not used anywhere and it's not clear what it does
  */
 export const SCHEMAS: Record<string, (node: typeof BaseNode, next: (nodeName: string) => void) => SchemaNode> = {
   'text': (node: typeof BaseNode, next: (nodeName: string) => void): SchemaNode => {
@@ -52,8 +54,9 @@ export const SCHEMAS: Record<string, (node: typeof BaseNode, next: (nodeName: st
     return result;
   },
 }
+
 /**
- * SCHEMA_CONTENT is the lwdita schema 
+ * `SCHEMA_CONTENT` is the LwDita schema
  * it's being used to get nodes allowed children
  */
 export const SCHEMA_CONTENT: Record<string, [content: string, groups: string]> = {
@@ -92,21 +95,21 @@ export const SCHEMA_CONTENT: Record<string, [content: string, groups: string]> =
 }
 
 /**
- * SCHEMA_CHILDREN is a map of special children for some nodes
+ * `SCHEMA_CHILDREN` is a map of special children for certain media nodes
  */
 export const SCHEMA_CHILDREN: Record<string, (type: ChildTypes) => string[]> = {
   video: type => ['media-source', 'media-track', 'desc'],
   audio: type => ['media-source', 'media-track', 'desc'],
 }
 
-// these elements show text representation
-// show how the font should be displayed
-// bold, italic, underline, subscript, superscript
-// IS_MARK short hand for is markups
+/**
+ * `IS_MARK` is containing an array of inline markup
+ * bold, italic, underline, subscript, superscript
+ */
 export const IS_MARK = ['b', 'i', 'u', 'sub', 'sup'];
 
 /**
- * SchemaNode is a representation of a node in the schema
+ * `SchemaNode` is a representation of a node in the schema
  */
 export interface SchemaNode {
   inline?: boolean;
@@ -115,15 +118,19 @@ export interface SchemaNode {
   domNodeName?: string;
   attrs?: Record<string, { default: string }>;
 }
+
+/**
+ * TODO
+ */
 export interface SchemaNodes {
   [key: string]: SchemaNode;
 }
 
-
 /**
  * Get node children
- * @param type - children of the node
- * @returns - the children of the node
+ *
+ * @param type - Type of the Child nodes
+ * @returns - The children of the node
  */
 function getChildren(type: ChildTypes): string[] {
   if (Array.isArray(type)) {
@@ -132,20 +139,22 @@ function getChildren(type: ChildTypes): string[] {
   }
   return (type.isGroup ? nodeGroups[type.name] : [ type.name ]);
 }
+
 /**
- * This function is not used anywhere
+ * TODO: This function is not used anywhere
  */
 export function travel(node: typeof BaseNode, next: (nodeName: string) => void): SchemaNode {
   return (SCHEMAS[node.nodeName] || defaultTravel)(node, next);
 }
 
 /**
- * defaultToDom returns a function that generates the dom spec for a node
- * check https://prosemirror.net/docs/ref/#model.DOMOutputSpec for more info
- * 
- * @param node - node class
- * @param attrs - the attributes of the node
- * @returns function that 
+ * `defaultToDom` returns a function that generates the dom spec for a node
+ *
+ * @see {@link https://prosemirror.net/docs/ref/#model.DOMOutputSpec} for more info
+ *
+ * @param node - JDita node
+ * @param attrs - The attributes of the node
+ * @returns A function that generates the DOM spec
  */
 export function defaultToDom(node: typeof BaseNode, attrs: any): (node: Node) => DOMOutputSpec {
   return function(pmNode: Node) {
@@ -162,10 +171,11 @@ export function defaultToDom(node: typeof BaseNode, attrs: any): (node: Node) =>
 }
 
 /**
- * getDomAttr returns the dom attribute name
- * @param nodeName - the name of the node
- * @param attr - the name of the attribute
- * @returns Dom attribute 
+ * `getDomAttr` returns the dom attribute name
+ *
+ * @param nodeName - The name of the node
+ * @param attr - The name of the attribute
+ * @returns The DOM attribute
  */
 export function getDomAttr(nodeName: string, attr: string): string {
   return NODE_ATTR_NAMES[nodeName]
@@ -178,9 +188,10 @@ export function getDomAttr(nodeName: string, attr: string): string {
 }
 
 /**
- * create a default node attributes
- * @param attrs - the attributes of the node
- * @returns map of the attributes with default values
+ * Create default node attributes
+ *
+ * @param attrs - The attributes of the node
+ * @returns A map of the attributes with default values
  */
 export function defaultNodeAttrs(attrs: string[]): any {
   return attrs.reduce((result, field) => {
@@ -191,9 +202,14 @@ export function defaultNodeAttrs(attrs: string[]): any {
 
 /**
  * Travel the node and generate the node spec
- * @param nodeName - the name of the node
- * @param parent - the parent of the node 
- * @param next - next travel function
+ *
+ * @remarks
+ * NodeSpec is a description of a node type, used when defining a schema.
+ * @see {@link https://prosemirror.net/docs/ref/#model.NodeSpec} for more info
+ *
+ * @param nodeName - The name of the node
+ * @param parent - The parent of the node
+ * @param next - Next travel function
  * @returns NodeSpec
  */
 function defaultTravel(
@@ -209,7 +225,6 @@ function defaultTravel(
   // get the attributes of the node
   const attrs = (NODE_ATTRS[node.nodeName] || defaultNodeAttrs)(['parent', ...node.fields]);
   // create the node spec
-  // check https://prosemirror.net/docs/ref/#model.NodeSpec for more info
   const result: NodeSpec = {
     attrs,
     inline: !(typeof group === 'string' && (group.indexOf('block') > -1 || group === '')),
@@ -239,24 +254,26 @@ function defaultTravel(
 }
 
 /**
- * defaultNodeName transforms the node name
- * replacing dashes with underscores
- * @param nodeName - the name of the node
- * @returns the transformed node name
+ * `defaultNodeName` transforms the node `nodeName`
+ * by replacing dashes with underscores
+ * @param nodeName - The name of the node
+ * @returns A string with the transformed node name
  */
 export function defaultNodeName(nodeName: string): string {
   return NODE_NAMES[nodeName] || nodeName.replace(/-/g, '_');
 }
 
 /**
- * schema creates a schema for the prosemirror editor
+ * `schema` creates a schema for the prosemirror editor
  * based on the jdita nodes
+ *
+ * @see {@link https://prosemirror.net/docs/ref/#model.SchemaSpec}.
+ *
  * @returns Schema Object
  */
 export function schema(): Schema {
   const done: string[] = [];
   // the schema spec are the nodes and marks
-  // for more info check https://prosemirror.net/docs/ref/#model.SchemaSpec.
   const spec: SchemaSpec = {
     nodes: {
       text: {
@@ -270,14 +287,14 @@ export function schema(): Schema {
   function browse(node: string | typeof BaseNode, parent: typeof BaseNode): void {
     // get the node name
     const nodeName = typeof node === 'string' ? node : node.nodeName;
-    // if we have already done this node then no need to process it again
+    // if we have already processed this node then there's no need to process it again
     if (done.indexOf(nodeName) > -1) {
       return;
     }
     // add the node to the list of done nodes
     done.push(nodeName);
     // do not process the alt or text nodes
-    // shouldn't this be done using the node name?
+    // TODO: Shouldn't this be done using the node name?
     if (['alt', 'text'].indexOf(node as string) > -1) {
       return;
     }
@@ -303,8 +320,8 @@ export function schema(): Schema {
     }
   }
 
-  // calling browse on the document node!!
-  // Document node is a class not an instance
+  // TODO: calling browse() on the document node!!
+  // TODO: Document node is a class not an instance
   browse(DocumentNode, DocumentNode);
   // set the content of the topic and doc nodes
   (spec.nodes as any).topic.content = 'title shortdesc? prolog? body?';
