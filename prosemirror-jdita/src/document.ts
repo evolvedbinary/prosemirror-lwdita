@@ -164,14 +164,78 @@ function travel(value: JDita, parent: JDita): any {
 }
 
 /**
- * document transforms the JDita document into a proper ProseMirror document
- * //TODO put a sample in here
+ * Document transforms the JDita document into a proper ProseMirror document
+ * 
  * @param jdita - the JDita document
  * @returns transformed JDita document
  */
 export function document(jdita: JDita): Record<string, any> {
+  /**
+   * Example input:
+  {
+    "nodeName": "document",
+    "children": [
+      {
+        "nodeName": "topic",
+        "attributes": {
+          "id": "intro-product"
+        },
+        "children": [
+          {
+            "nodeName": "title",
+            "attributes": {},
+            "children": [
+              {
+                "nodeName": "text",
+                "content": "Overview"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+  */
+  
+  /**
+   * Example output of the transformation `travel(jdita, jdita)`:
+  {
+    "type": "doc",
+    "attrs": {},
+    "content": [
+      {
+        "type": "topic",
+        "attrs": {
+          "id": "intro-product",
+          "parent": "doc"
+        },
+        "content": [
+          {
+            "type": "title",
+            "attrs": {
+              "parent": "topic"
+            },
+            "content": [
+              {
+                "type": "text",
+                "text": "Overview",
+                "attrs": {
+                  "parent": "title"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+  */
+
   if (jdita.nodeName === 'document') {
     jdita.nodeName = 'doc';
+    // `jdita` is the root of JDita document
+    // We pass in the root node and since it's the root node, it's also the parent node
+    // this is the output of this function
     return travel(jdita, jdita);
   }
   throw new Error('jdita must be a document');
