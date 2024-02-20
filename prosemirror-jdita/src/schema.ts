@@ -140,10 +140,12 @@ export function travel(node: typeof BaseNode, next: (nodeName: string) => void):
 }
 
 /**
- * //TODO
- * @param node 
- * @param attrs 
- * @returns 
+ * defaultToDom returns a function that generates the dom spec for a node
+ * check https://prosemirror.net/docs/ref/#model.DOMOutputSpec for more info
+ * 
+ * @param node - node class
+ * @param attrs - the attributes of the node
+ * @returns function that 
  */
 export function defaultToDom(node: typeof BaseNode, attrs: any): (node: Node) => DOMOutputSpec {
   return function(pmNode: Node) {
@@ -187,7 +189,13 @@ export function defaultNodeAttrs(attrs: string[]): any {
   }, {} as Record<string, { default: string }>);
 }
 
-// travel all of the nodes classes and create the schema
+/**
+ * Travel the node and generate the node spec
+ * @param nodeName - the name of the node
+ * @param parent - the parent of the node 
+ * @param next - next travel function
+ * @returns NodeSpec
+ */
 function defaultTravel(
   node: typeof BaseNode,
   parent: typeof BaseNode,
@@ -248,6 +256,7 @@ export function defaultNodeName(nodeName: string): string {
 export function schema(): Schema {
   const done: string[] = [];
   // the schema spec are the nodes and marks
+  // for more info check https://prosemirror.net/docs/ref/#model.SchemaSpec.
   const spec: SchemaSpec = {
     nodes: {
       text: {
