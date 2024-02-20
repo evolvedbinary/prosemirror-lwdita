@@ -2,9 +2,10 @@ import { JDita } from "jdita";
 import { IS_MARK, defaultNodeName } from "./schema";
 
 /**
- * deleteUndefined removes undefined attributes from an object
+ * `deleteUndefined` removes undefined attributes from an object
+ *
  * @param object
- * @returns object - the object with undefined attributes removed
+ * @returns object - The object with undefined attributes removed
  */
 function deleteUndefined(object?: any) {
   if (object) {
@@ -18,11 +19,12 @@ function deleteUndefined(object?: any) {
 }
 
 /**
- * NODES is a map of special nodes that need to be handled differently.
- * instead of using the defaultTravel function, we use the special node function
+ * `NODES` is a map of special nodes that need to be handled differently.
+ * Instead of using the defaultTravel function, we use the special node function
  * The following 4 nodes (audio, video, image, text) are
  * treated in a customized way instead of applying the defaultTravel() function:
- * Apply and rename the xdita attribute strings from the AST into HTML-complying strings (?).
+ *
+ * TODO: Revise this comment: "Apply and rename the xdita attribute strings from the AST into HTML-complying strings".
  */
 export const NODES: Record<string, (value: JDita, parent: JDita) => any> = {
   audio: (value, parent) => {
@@ -53,7 +55,7 @@ export const NODES: Record<string, (value: JDita, parent: JDita) => any> = {
       });
     }
     const result = { type: value.nodeName, attrs, content: content.map(child => travel(child, value)) };
-    // why are we setting attrs here again. It's already set above?
+    // TODO: Why are we setting attrs here again. It's already set above?
     if (attrs && Object.keys(attrs).length) {
       result.attrs = attrs;
     }
@@ -109,11 +111,11 @@ export const NODES: Record<string, (value: JDita, parent: JDita) => any> = {
 };
 
 /**
- * defaultTravel transforms the JDita document into a proper ProseMirror document
+ * `defaultTravel` transforms the JDita document into a proper ProseMirror document
  *
- * @param value - the JDita node
- * @param parent - the parent JDita node
- * @returns transformed JDita node
+ * @param value - The JDita node
+ * @param parent - The parent JDita node
+ * @returns The transformed JDita node
  */
 function defaultTravel(value: JDita, parent: JDita): any {
   // children will become content
@@ -127,10 +129,10 @@ function defaultTravel(value: JDita, parent: JDita): any {
   let result: any;
   // IS_MARK is the array  `u, s, b, sup, sub`
   if (IS_MARK.indexOf(value.nodeName) > -1) {
-    // why exactly 1? content can't have more then 1 element?
+    // TODO: why exactly 1? content can't have more then 1 element?
     if (content?.length === 1) {
       result = content[0];
-      // find out what .marks is and why are we setting?
+      // TODO: find out what .marks is and why are we setting?
       result.marks = [{ type }]
     }
   } else {
@@ -147,14 +149,16 @@ function defaultTravel(value: JDita, parent: JDita): any {
 }
 
 /**
- * Travel function is a recursive function that traverses the JDita document and generates a ProseMirror document
- * 
- * @param value - the JDita node
- * @param parent - the parent JDita node
- * @returns transformed JDita node
+ * `travel` is a recursive function that traverses
+ * the JDita document and generates a ProseMirror document
+ *
+ * @param value - The JDita node
+ * @param parent - The parent JDita node
+ * @returns The transformed JDita node
  */
 function travel(value: JDita, parent: JDita): any {
-  //if it's a special node, use the special node function, otherwise use the default travel function
+  // if it's a special node, use the special node function,
+  // otherwise use the default travel function
   const result = (NODES[value.nodeName] || defaultTravel)(value, parent);
   // if the node is not a document and has attributes, set the parent attribute
   if (value.nodeName !== 'doc' && result.attrs) {
@@ -164,9 +168,10 @@ function travel(value: JDita, parent: JDita): any {
 }
 
 /**
- * Document transforms the JDita document into a Schema compliant JDita document
- * Please refer to ./schema.ts for the schema definition
- * 
+ * `document` transforms the JDita document
+ * into a Schema compliant JDita document
+ * Please refer to {@link ./schema.ts} for the schema definition
+ *
  * @param jdita - the JDita document
  * @returns transformed JDita document
  */
@@ -197,7 +202,7 @@ export function document(jdita: JDita): Record<string, any> {
     ]
   }
   */
-  
+
   /**
    * Example output of the transformation `travel(jdita, jdita)`:
   {
@@ -234,9 +239,12 @@ export function document(jdita: JDita): Record<string, any> {
 
   if (jdita.nodeName === 'document') {
     jdita.nodeName = 'doc';
-    // `jdita` is the root of JDita document
-    // We pass in the root node and since it's the root node, it's also the parent node
-    // this is the output of this function
+    /*
+    Parameter `jdita` is representing the root of JDita document.
+    We pass in the root node as the first parameter, and since it's the root node,
+    it's also the parent node, which is passed as the second parameter.
+    This will return the output of the transformation.
+    */
     return travel(jdita, jdita);
   }
   throw new Error('jdita must be a document');
