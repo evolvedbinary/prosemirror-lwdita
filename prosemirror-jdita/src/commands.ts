@@ -300,7 +300,15 @@ export function getTree(pos: ResolvedPos, depth = 0) {
   return result;
 }
 
+/**
+ * Handle the enter key press in the editor
+ * @param state 
+ * @param dispatch 
+ * @param view 
+ * @returns 
+ */
 export function enterPressed(state: EditorState, dispatch?: (tr: Transaction) => void, view?: EditorView) {
+  console.log('enterPressed');
   let { $from, empty } = state.selection;
   const depth = getDepth(state.tr, true);
   let resultTr: false | Transaction;
@@ -321,6 +329,9 @@ export function enterPressed(state: EditorState, dispatch?: (tr: Transaction) =>
   return false;
 }
 
+/**
+ * newLine command 
+ */
 export const newLine = chainCommands(enterPressed);
 
 export function hasMark(state: EditorState, mark: MarkType): boolean {
