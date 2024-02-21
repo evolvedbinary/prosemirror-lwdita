@@ -5,28 +5,45 @@ import { toggleMark, newLine, hasMark, insertNode, insertImage, InputContainer }
 import { Command } from "prosemirror-commands";
 import { redo, undo } from "prosemirror-history";
 
+// run on the start of render of the demo
 const targetNode = document.getElementById('editor');
+// make sure the editor element exists
 if (targetNode) {
   const config = { attributes: false, childList: true, subtree: true };
+  // create the callback for the observer
+  // check https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver for more info.
   const callback: MutationCallback = function(mutationsList) {
+    // loop through the mutations
     for(const mutation of mutationsList) {
+      // if the mutation happened on one of the children of the editor
       if (mutation.type === 'childList') {
+        // if the mutation happened on the menubar
         if((mutation.target as HTMLElement).classList.contains('ProseMirror-menubar')){
           let separators: HTMLElement[] = [];
+          // loop through the added nodes
           mutation.addedNodes.forEach(node => {
+            // if the node is a separator, add it to the separators array
             if (node.childNodes[0] && (node.childNodes[0] as HTMLElement).classList.contains('separator')) {
               separators.push(node as HTMLElement);
             }
           });
+          // set the flex of the separators to 1
           separators.forEach(separator => separator.style.flex = '1');
         }
       }
     }
   };
+  // create the observer
   const observer = new MutationObserver(callback);
+  // observe the editor element
   observer.observe(targetNode, config);
 }
 
+/**
+ * 
+ * @param schema 
+ * @returns 
+ */
 export function shortcuts(schema: Schema) {
   return keymap({
     'Enter': newLine,
