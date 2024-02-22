@@ -40,9 +40,10 @@ if (targetNode) {
 }
 
 /**
+ * Provide keyborad shortcuts for the editor
  * 
- * @param schema 
- * @returns 
+ * @param schema - generated schema from JDITA 
+ * @returns - keymap object of shortcuts
  */
 export function shortcuts(schema: Schema) {
   return keymap({
