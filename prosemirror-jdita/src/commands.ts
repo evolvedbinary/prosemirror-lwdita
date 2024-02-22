@@ -181,8 +181,17 @@ export function deleteEmptyLine(tr: Transaction, depth = 0, shift = 0): Transact
   return tr.setSelection(TextSelection.create(tr.doc, tr.selection.anchor - depth * 2 + shift, tr.selection.anchor + shift)).deleteSelection();
 }
 
+/**
+ * Enter an empty line
+ * @param tr - The Transaction object
+ * @param dispatch - A boolean, set to `false`
+ * @param depth - A number, set to `0`
+ * @returns 
+ */
 export function enterEmpty(tr: Transaction, dispatch = false, depth = 0): Transaction | false {
+  // if the depth //TODO what is depth?
   if (depth > 0) {
+    // delete the empty line
     deleteEmptyLine(tr, depth);
   }
   return enterEOL(tr, dispatch, depth);
@@ -243,21 +252,17 @@ export function enterSplit(tr: Transaction, dispatch = false, depth = 0): Transa
  * @returns
  */
 export function isEOL(tr: Transaction, depth = 0) {
-  console.log('isEOL ---');
   const { $to } = tr.selection;
   let parent = $to.parent;
   if ($to.parentOffset < parent.content.size) {
-    console.log('isEOL, parent.content.size=', parent.content.size);
     return false;
   }
   for (let i = 1; i <= depth; i++) {
     const grandParent = $to.node(-i);
-    console.log('isEOL, grandParent=', grandParent);
     if (grandParent.childCount !== 1 + $to.index(-i)) {
       return false;
     }
     parent = grandParent;
-    console.log('isEOL, parent=', parent);
   }
   return true;
 }
@@ -270,7 +275,6 @@ export function isEOL(tr: Transaction, depth = 0) {
  * @returns Boolean
  */
 export function isEmpty(tr: Transaction, depth = 0) {
-  console.log('isEmpty ----');
   const { $to } = tr.selection;
   let parent = $to.parent;
   if (parent.content.size) {
@@ -282,7 +286,6 @@ export function isEmpty(tr: Transaction, depth = 0) {
       return false;
     }
     parent = grandParent;
-    console.log('isEmpty, parent=', parent);
   }
   return true;
 }
@@ -298,7 +301,7 @@ export function isEmpty(tr: Transaction, depth = 0) {
  */
 export function isPrevEmpty(tr: Transaction, depth = 0) {
   const pos = tr.doc.resolve(tr.selection.to - 2);
-  console.log('isPrevEmpty, pos=', pos);
+  
   let parent = pos.parent;
   if (parent.content.size) {
     return false;
@@ -309,7 +312,7 @@ export function isPrevEmpty(tr: Transaction, depth = 0) {
       return false;
     }
     parent = grandParent;
-    console.log('isPrevEmpty, parent=', parent);
+    
   }
   return true;
 }
@@ -327,11 +330,11 @@ export function isPrevEmpty(tr: Transaction, depth = 0) {
  * @returns A number containing the depth of the tested
  */
 export function getDepth(tr: Transaction, empty = false) {
-  console.log('getDepth ---');
+  
   let depth = 0;
   while((empty ? isEmpty : isEOL)(tr, depth + 1)) {
     depth++;
-    console.log('getDepth, depth=', depth);
+    
   }
   return depth;
 }
@@ -343,11 +346,11 @@ export function getDepth(tr: Transaction, empty = false) {
  * @returns A number containing the previous depth
  */
 export function getPrevDepth(tr: Transaction) {
-  console.log('getPrevDepth ---');
+  
   let depth = 0;
   while(isPrevEmpty(tr, depth + 1)) {
     depth++;
-    console.log('getPrevDepth, depth=', depth);
+    
   }
   return depth;
 }
@@ -360,8 +363,8 @@ export function getPrevDepth(tr: Transaction) {
  * @returns
  */
 export function getTree(pos: ResolvedPos, depth = 0) {
-  console.log('getTree, Position=', pos);
-  console.log('getTree, depth=', depth);
+  
+  
   const result: NodeType<Schema>[] = [pos.parent.type];
   for (let i = 1; i <= depth; i++) {
     result.push(pos.node(-i).type);
@@ -370,20 +373,29 @@ export function getTree(pos: ResolvedPos, depth = 0) {
 }
 
 /**
- * Handle pressing the `enter` key in the editor
+ * Handle pressing the `enter` key in the editor.
+ * This contains an editor state, an optional `dispatch`
+ * function that it can use to dispatch a transaction and
+ * an `EditorView` instance. It returns a boolean that indicates
+ * whether it could perform any action.
+ * When no `dispatch` callback is
+ * passed, the newLine command should do a 'dry run', determining whether it is
+ * applicable, but not actually doing anything.
  *
  * @param state - The EditorState object
- * @param dispatch - The EditorState transaction
+ * @param dispatch - A function to be used to dispatch a transaction
  * @param view - The EditorView object
- * @returns Void
+ * @returns Boolean
  */
 export function enterPressed(state: EditorState, dispatch?: (tr: Transaction) => void, view?: EditorView) {
   let { $from, empty } = state.selection;
-  //console.log('view=', view);
-  //console.log('state=', state);
+  // get the depth of the cursor position
   const depth = getDepth(state.tr, true);
+  // prepare the transaction
+  // if false do nothing
   let resultTr: false | Transaction;
   let tr = state.tr;
+  // if the cursor selection is not empty, delete the selection
   if (dispatch && !empty) {
     tr = tr.deleteSelection();
     $from = tr.selection.$from;
@@ -395,23 +407,17 @@ export function enterPressed(state: EditorState, dispatch?: (tr: Transaction) =>
       : enterEOL(tr, !!dispatch, depth)   // when the cursor is not at the beginning of parent node, the cursor can be at the end text node, then enterEOL is triggered
     : enterSplit(tr, !!dispatch, depth);  // when the cursor is not at the end of the line, then enterSplit is triggered
 
-  if (dispatch && resultTr !== false) {
+  if (dispatch && resultTr !== false) {    
     dispatch(resultTr);
-    //console.log('resultTr=', resultTr);
     return true;
   }
+  
   return false;
 }
 
 /**
- * The `newLine` command function takes a parameter function `enterPressed`,
- * which contains an editor state, an optional `dispatch`
- * function that it can use to dispatch a transaction and
- * an `EditorView` instance. It returns a boolean that indicates
- * whether it could perform any action.
- * When no `dispatch` callback is
- * passed, the newLine command should do a 'dry run', determining whether it is
- * applicable, but not actually doing anything.
+ * The `newLine` is a chain of commands that are triggered on each "press Enter" key event in the editor.
+ * in this instance it's only representing the `enterPressed` command.
  */
 export const newLine = chainCommands(enterPressed);
 
@@ -430,10 +436,6 @@ export const newLine = chainCommands(enterPressed);
  * @returns Boolean
  */
 export function hasMark(state: EditorState, mark: MarkType): boolean {
-  //console.log('state.storedMarks', state.storedMarks);
-  //console.log('state.selection.empty=', state.selection.empty);
-  //console.log("if =>", !!mark.isInSet(state.storedMarks || state.selection.$from.marks()));
-  //console.log("else =>", state.doc.rangeHasMark(state.selection.from, state.selection.to, mark));
   return state.selection.empty
     ? !!mark.isInSet(state.storedMarks || state.selection.$from.marks())
     : state.doc.rangeHasMark(state.selection.from, state.selection.to, mark);
