@@ -388,11 +388,13 @@ export function enterPressed(state: EditorState, dispatch?: (tr: Transaction) =>
     tr = tr.deleteSelection();
     $from = tr.selection.$from;
   }
-  resultTr = isEOL(state.tr, depth)
-    ? $from.parentOffset === 0
-      ? enterEmpty(tr, !!dispatch, depth)
-      : enterEOL(tr, !!dispatch, depth)
-    : enterSplit(tr, !!dispatch, depth);
+
+  resultTr = isEOL(state.tr, depth)       // when the cursor is at the end of the line
+    ? $from.parentOffset === 0            // when the cursor is at the beginning of parent node
+      ? enterEmpty(tr, !!dispatch, depth) // then enterEmpty is triggered
+      : enterEOL(tr, !!dispatch, depth)   // when the cursor is not at the beginning of parent node, the cursor can be at the end text node, then enterEOL is triggered
+    : enterSplit(tr, !!dispatch, depth);  // when the cursor is not at the end of the line, then enterSplit is triggered
+
   if (dispatch && resultTr !== false) {
     dispatch(resultTr);
     //console.log('resultTr=', resultTr);
