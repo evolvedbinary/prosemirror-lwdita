@@ -5,8 +5,15 @@ import { toggleMark, newLine, hasMark, insertNode, insertImage, InputContainer }
 import { Command } from "prosemirror-commands";
 import { redo, undo } from "prosemirror-history";
 
+/**
+ * TODO: Documentation
+ */
 // run on the start of render of the demo
 const targetNode = document.getElementById('editor');
+
+/**
+ * TODO: Documentation
+ */
 // make sure the editor element exists
 if (targetNode) {
   const config = { attributes: false, childList: true, subtree: true };
@@ -33,16 +40,24 @@ if (targetNode) {
       }
     }
   };
+
+  /**
+   * TODO: Documentation
+   */
   // create the observer
   const observer = new MutationObserver(callback);
+
+  /**
+   * TODO: Documentation
+   */
   // observe the editor element
   observer.observe(targetNode, config);
 }
 
 /**
  * Provide keyborad shortcuts for the editor
- * 
- * @param schema - generated schema from JDITA 
+ *
+ * @param schema - generated schema from JDITA
  * @returns - keymap object of shortcuts
  */
 export function shortcuts(schema: Schema) {
@@ -59,6 +74,13 @@ export function shortcuts(schema: Schema) {
   });
 }
 
+/**
+ * TODO: Documentation
+ *
+ * @param command - TODO
+ * @param props - TODO
+ * @returns TODO
+ */
 function commandItem(command: Command, props: Partial<MenuItemSpec> = {}) {
   return new MenuItem({
     ...props,
@@ -67,6 +89,13 @@ function commandItem(command: Command, props: Partial<MenuItemSpec> = {}) {
   });
 }
 
+/**
+ * TODO: Documentation
+ *
+ * @param mark - TODO
+ * @param props - TODO
+ * @returns TODO
+ */
 function markItem(mark: MarkType, props: Partial<MenuItemSpec> = {}): MenuElement {
   const command = toggleMark(mark);
   return commandItem(command, {
@@ -76,12 +105,22 @@ function markItem(mark: MarkType, props: Partial<MenuItemSpec> = {}): MenuElemen
   });
 }
 
+/**
+ * TODO: Documentation
+ */
 interface SimpleItemCallbacks {
   call: () => void;
   enable?: () => boolean;
   active?: () => boolean;
 }
 
+/**
+ * TODO: Documentation
+ *
+ * @param callbacks - TODO
+ * @param props - TODO
+ * @returns TODO
+ */
 function simpleCommand(callbacks: SimpleItemCallbacks | (() => void), props: Partial<MenuItemSpec> = {}): MenuElement {
   if (typeof callbacks === 'function') {
     callbacks = { call: callbacks };
@@ -97,6 +136,11 @@ function simpleCommand(callbacks: SimpleItemCallbacks | (() => void), props: Par
   });
 }
 
+/**
+ * TODO: Documentation
+ *
+ * @returns TODO
+ */
 function separator(): MenuElement {
   return new MenuItem({
     run: () => {},
@@ -106,11 +150,26 @@ function separator(): MenuElement {
   });
 }
 
+/**
+ * TODO: Documentation
+ *
+ * @param type - TODO
+ * @param props - TODO
+ * @returns TODO
+ */
 function insertItem(type: NodeType, props: Partial<MenuItemSpec> = {}): MenuElement {
   return commandItem(insertNode(type), {
     ...props,
   });
 }
+
+/**
+ * TODO: Documentation
+ *
+ * @param type - TODO
+ * @param props - TODO
+ * @returns TODO
+ */
 function insertImageItem(type: NodeType, props: Partial<MenuItemSpec> = {}): MenuElement {
   const input = new InputContainer();
   const command = insertImage(type, input);
@@ -139,6 +198,9 @@ function insertImageItem(type: NodeType, props: Partial<MenuItemSpec> = {}): Men
   });
 }
 
+/**
+ * TODO: Documentation
+ */
 interface Additions {
   start?: MenuElement[][];
   before?: MenuElement[][];
@@ -146,6 +208,13 @@ interface Additions {
   end?: MenuElement[][];
 }
 
+/**
+ * TODO: Documentation
+ *
+ * @param schema - TODO
+ * @param param1 - TODO
+ * @returns TODO
+ */
 export function menu(schema: Schema, { start, before, after, end}: Additions = {}) {
   const debug = [
     separator(),
