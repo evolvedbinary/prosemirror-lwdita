@@ -45,6 +45,7 @@ jsonDocLoader.then(jsonDoc => {
     });
   }
 }).catch(e => {
+  // TODO: Document with inline comments
   console.error(e);
   const h2 = document.createElement('h2');
   h2.innerText = 'Failed to load the file';

@@ -1,6 +1,9 @@
 import { Schema, NodeSpec, MarkSpec, DOMOutputSpec } from "prosemirror-model";
 import { schema } from "../schema";
 
+/**
+ * TODO: Documentation
+ */
 const
   pDOM: DOMOutputSpec = ["p", 0],
   blockquoteDOM: DOMOutputSpec = ["blockquote", 0],
@@ -8,6 +11,9 @@ const
   preDOM: DOMOutputSpec = ["pre", ["code", 0]],
   brDOM: DOMOutputSpec = ["br"];
 
+/**
+ * TODO: Documentation
+ */
 // :: Object
 // [Specs](#model.NodeSpec) for the nodes defined in this schema.
 export const nodes: Record<string, NodeSpec> = {
@@ -108,11 +114,17 @@ export const nodes: Record<string, NodeSpec> = {
   }
 }
 
+/**
+ * TODO: Documentation
+ */
 const
   emDOM: DOMOutputSpec = ["em", 0],
   strongDOM: DOMOutputSpec = ["strong", 0],
   codeDOM: DOMOutputSpec = ["code", 0];
 
+/**
+ * TODO: Documentation
+ */
 // :: Object [Specs](#model.MarkSpec) for the marks in the schema.
 export const marks: Record<string, MarkSpec> = {
   // :: MarkSpec A link. Has `href` and `title` attributes. `title`
@@ -156,6 +168,9 @@ export const marks: Record<string, MarkSpec> = {
   }
 }
 
+/**
+ * TODO: Documentation
+ */
 // :: Schema
 // This schema roughly corresponds to the document schema used by
 // [CommonMark](http://commonmark.org/), minus the list elements,

@@ -3,11 +3,17 @@ import { getDomNode } from './dom';
 import { ChildTypes } from 'jdita';
 import { NodeSpec, Schema, SchemaSpec, Node, MarkSpec, DOMOutputSpec } from 'prosemirror-model';
 
+/**
+ * TODO: Documentation
+ */
 // TODO: This constant usage is not clear
 export const NODE_NAMES: Record<string, string> = {
   document: 'doc',
 }
 
+/**
+ * TODO: Documentation
+ */
 // TODO: Why is this is empty?
 export const TO_DOM: Record<string, (node: typeof BaseNode, attrs: any)
   => (node: Node) => DOMOutputSpec> = {}
@@ -42,6 +48,7 @@ export const NODE_ATTR_NAMES: Record<string, Record<string, string>> = {
   },
 }
 /**
+ * TODO: Documentation
  * TODO: This constant is not used anywhere and it's not clear what it does
  */
 export const SCHEMAS: Record<string, (node: typeof BaseNode, next: (nodeName: string) => void) => SchemaNode> = {
@@ -120,7 +127,7 @@ export interface SchemaNode {
 }
 
 /**
- * TODO
+ * TODO: Documentation
  */
 export interface SchemaNodes {
   [key: string]: SchemaNode;
@@ -141,6 +148,7 @@ function getChildren(type: ChildTypes): string[] {
 }
 
 /**
+ * TODO: Documentation
  * TODO: This function is not used anywhere
  */
 export function travel(node: typeof BaseNode, next: (nodeName: string) => void): SchemaNode {

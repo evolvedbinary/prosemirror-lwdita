@@ -65,14 +65,14 @@ xml = `<?xml version="1.0" encoding="UTF-8"?>
   </body>
 </topic>
 `;
-// this code seems wrong.
+
+// TODO: Check if this code is still valid or used.
 const file = localStorage.getItem('file');
 if (file) {
   xml = file;
   localStorage.setItem('file', '');
 }
 
-
-// transform the xml to Jdita object 
+// transform the xml to Jdita object
 // then transform the Jdita object to Prosemirror schema
 export default xditaToJson(xml, true).then(json => document(json)) as Promise<Record<string, any>>;

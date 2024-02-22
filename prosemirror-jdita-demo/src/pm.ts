@@ -4,6 +4,9 @@ import { Node, Schema, DOMParser } from "prosemirror-model";
 import { schema } from "../package/src/schema";
 import jsonDocLoader from "./doc";
 
+/**
+ * TODO: Documentation
+ */
 const starSchema = new Schema({
   nodes: {
     text: {
@@ -45,10 +48,25 @@ const starSchema = new Schema({
     }
   }
 })
+
+/**
+ * TODO: Documentation
+ */
 const editor = document.querySelector("#editor") as HTMLElement;
+
+/**
+ * TODO: Documentation
+ */
 const doc = DOMParser.fromSchema(starSchema).parse(editor);
+
+/**
+ * TODO: Documentation
+ */
 editor.innerHTML = '';
 
+/**
+ * TODO: Documentation
+ */
 jsonDocLoader.then(jsonDoc => {
   const domEl = document.querySelector("#editor");
   if (domEl) {

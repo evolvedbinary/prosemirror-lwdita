@@ -4,7 +4,7 @@ import { IS_MARK, defaultNodeName } from "./schema";
 /**
  * `deleteUndefined` removes undefined attributes from an object
  *
- * @param object
+ * @param object  - TODO
  * @returns object - The object with undefined attributes removed
  */
 function deleteUndefined(object?: any) {

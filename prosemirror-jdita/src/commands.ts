@@ -5,6 +5,13 @@ import { ContentMatch, Fragment, MarkType, Node, NodeType, ResolvedPos, Schema }
 import { TextSelection, EditorState, Transaction, NodeSelection } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 
+/**
+ * TODO: Documentation
+ *
+ * @param type - TODO
+ * @param args - TODO
+ * @returns
+ */
 export function createNode(type: NodeType<Schema>, args: Record<string, any> = {}): Node {
   switch (type.name) {
     case 'p': return type.createAndFill() as Node;
@@ -23,6 +30,12 @@ export function createNode(type: NodeType<Schema>, args: Record<string, any> = {
   throw new Error('unkown node type: ' + type.name);
 }
 
+/**
+ * TODO: Documentation
+ *
+ * @param tree - TODO
+ * @returns TODO
+ */
 export function createNodesTree(tree: NodeType<Schema>[]): Node {
   let result: Node | undefined;
   tree.forEach(type => {
@@ -31,6 +44,12 @@ export function createNodesTree(tree: NodeType<Schema>[]): Node {
   return result as Node;
 }
 
+/**
+ * TODO: Documentation
+ *
+ * @param type - TODO
+ * @returns TODO
+ */
 export function insertNode(type: NodeType<Schema>): Command {
   return function (state, dispatch) {
     try {
@@ -51,7 +70,14 @@ export function insertNode(type: NodeType<Schema>): Command {
   }
 }
 
+/**
+ * TODO: Documentation
+ */
 export type InputContainerListener = (this: HTMLInputElement, event: Event) => void;
+
+/**
+ * TODO: Documentation
+ */
 export class InputContainer {
   _el?: HTMLInputElement;
   listeners: Record<string, InputContainerListener> = {};
@@ -84,6 +110,13 @@ export class InputContainer {
   }
 }
 
+/**
+ * TODO: Documentation
+ *
+ * @param type - TODO
+ * @param input - TODO
+ * @returns TODO
+ */
 export function insertImage(type: NodeType<Schema>, input: InputContainer): Command {
   return function (state, dispatch) {
     function fileSelected(this: HTMLInputElement, event: Event) {
@@ -122,14 +155,33 @@ export function insertImage(type: NodeType<Schema>, input: InputContainer): Comm
   }
 }
 
+/**
+ * TODO: Documentation
+ *
+ * @param type - TODO
+ * @returns TODO
+ */
 function canCreateIndex(type: NodeType) {
   return ['data', 'ul', 'li', 'p', 'section', 'stentry', 'strow', 'simpletable'].indexOf(type.name);
 }
 
+/**
+ * TODO: Documentation
+ *
+ * @param type - TODO
+ * @returns TODO
+ */
 function canCreate(type: NodeType) {
   return canCreateIndex(type) > -1;
 }
 
+/**
+ * TODO: Documentation
+ *
+ * @param pos - TODO
+ * @param depth - TODO
+ * @returns TODO
+ */
 function defaultBlocks(pos: ResolvedPos, depth = 0) {
   const match = pos.node(-depth - 1).contentMatchAt(pos.indexAfter(-depth - 1));
   let index = -1;
@@ -143,6 +195,14 @@ function defaultBlocks(pos: ResolvedPos, depth = 0) {
   return result;
 }
 
+/**
+ * TODO: Documentation
+ *
+ * @param pos - TODO
+ * @param depth - TODO
+ * @param prefered - TODO
+ * @returns TODO
+ */
 function defaultBlockAt(pos: ResolvedPos, depth = 0, prefered?: NodeType) {
   let index = -1;
   let type: NodeType = null as any;
@@ -160,6 +220,14 @@ function defaultBlockAt(pos: ResolvedPos, depth = 0, prefered?: NodeType) {
   return type;
 }
 
+/**
+ * TODO: Documentation
+ *
+ * @param tr - TODO
+ * @param dispatch - TODO
+ * @param depth - TODO
+ * @returns TODO
+ */
 export function enterEOL(tr: Transaction, dispatch = false, depth = 0): Transaction | false {
   let { $from, $to, empty } = tr.selection
   const parent = $to.node(-depth || undefined);
@@ -177,16 +245,26 @@ export function enterEOL(tr: Transaction, dispatch = false, depth = 0): Transact
   return false;
 }
 
+/**
+ * TODO: Documentation
+ *
+ * @param tr - TODO
+ * @param depth - TODO
+ * @param shift - TODO
+ * @returns TODO
+ */
 export function deleteEmptyLine(tr: Transaction, depth = 0, shift = 0): Transaction {
   return tr.setSelection(TextSelection.create(tr.doc, tr.selection.anchor - depth * 2 + shift, tr.selection.anchor + shift)).deleteSelection();
 }
 
 /**
  * Enter an empty line
+ * TODO: Elaborate
+ *
  * @param tr - The Transaction object
  * @param dispatch - A boolean, set to `false`
  * @param depth - A number, set to `0`
- * @returns 
+ * @returns TODO
  */
 export function enterEmpty(tr: Transaction, dispatch = false, depth = 0): Transaction | false {
   // if the depth //TODO what is depth?
@@ -197,6 +275,14 @@ export function enterEmpty(tr: Transaction, dispatch = false, depth = 0): Transa
   return enterEOL(tr, dispatch, depth);
 }
 
+/**
+ * TODO: Documentation
+ *
+ * @param tr - TODO
+ * @param dispatch - TODO
+ * @param depth - TODO
+ * @returns TODO
+ */
 export function enterSplit(tr: Transaction, dispatch = false, depth = 0): Transaction | false {
   depth++;
   let { $from, $to } = tr.selection;
@@ -246,10 +332,11 @@ export function enterSplit(tr: Transaction, dispatch = false, depth = 0): Transa
 
 /**
  * `isEOL` is triggered on each "press Enter" key event in the editor.
+ * TODO: Elaborate
  *
  * @param tr - The Transaction object
  * @param depth - The default depth 0
- * @returns
+ * @returns TODO
  */
 export function isEOL(tr: Transaction, depth = 0) {
   const { $to } = tr.selection;
@@ -269,6 +356,7 @@ export function isEOL(tr: Transaction, depth = 0) {
 
 /**
  * `isEmpty` is triggered on each "press Enter" key event in the editor.
+ * TODO: Elaborate
  *
  * @param tr - The Transaction object
  * @param depth - The default depth 0
@@ -301,7 +389,6 @@ export function isEmpty(tr: Transaction, depth = 0) {
  */
 export function isPrevEmpty(tr: Transaction, depth = 0) {
   const pos = tr.doc.resolve(tr.selection.to - 2);
-  
   let parent = pos.parent;
   if (parent.content.size) {
     return false;
@@ -312,7 +399,6 @@ export function isPrevEmpty(tr: Transaction, depth = 0) {
       return false;
     }
     parent = grandParent;
-    
   }
   return true;
 }
@@ -330,41 +416,39 @@ export function isPrevEmpty(tr: Transaction, depth = 0) {
  * @returns A number containing the depth of the tested
  */
 export function getDepth(tr: Transaction, empty = false) {
-  
   let depth = 0;
   while((empty ? isEmpty : isEOL)(tr, depth + 1)) {
     depth++;
-    
   }
   return depth;
 }
 
 /**
  * `getPrevDepth` is triggered on each "press Enter" key event in the editor.
+ * TODO: Elaborate
  *
  * @param tr - The Transaction object
  * @returns A number containing the previous depth
  */
 export function getPrevDepth(tr: Transaction) {
-  
+
   let depth = 0;
   while(isPrevEmpty(tr, depth + 1)) {
     depth++;
-    
+
   }
   return depth;
 }
 
 /**
  * `getTree` is triggered on each "press Enter" key event in the editor.
+ * TODO: Elaborate
  *
  * @param pos - The ResolvedPos object containing position, path, depth and parentOffset
- * @param depth -
- * @returns
+ * @param depth - TODO
+ * @returns TODO
  */
 export function getTree(pos: ResolvedPos, depth = 0) {
-  
-  
   const result: NodeType<Schema>[] = [pos.parent.type];
   for (let i = 1; i <= depth; i++) {
     result.push(pos.node(-i).type);
@@ -407,11 +491,10 @@ export function enterPressed(state: EditorState, dispatch?: (tr: Transaction) =>
       : enterEOL(tr, !!dispatch, depth)   // when the cursor is not at the beginning of parent node, the cursor can be at the end text node, then enterEOL is triggered
     : enterSplit(tr, !!dispatch, depth);  // when the cursor is not at the end of the line, then enterSplit is triggered
 
-  if (dispatch && resultTr !== false) {    
+  if (dispatch && resultTr !== false) {
     dispatch(resultTr);
     return true;
   }
-  
   return false;
 }
 
