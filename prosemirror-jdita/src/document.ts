@@ -129,10 +129,8 @@ function defaultTravel(value: JDita, parent: JDita): any {
   let result: any;
   // IS_MARK is the array  `u, s, b, sup, sub`
   if (IS_MARK.indexOf(value.nodeName) > -1) {
-    // TODO: why exactly 1? content can't have more then 1 element?
     if (content?.length === 1) {
       result = content[0];
-      // TODO: find out what .marks is and why are we setting?
       result.marks = [{ type }]
     }
   } else {
