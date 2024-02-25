@@ -51,7 +51,6 @@ export const DOM_NODES: Record<string, string | ((parent?: string) => string)> =
  */
 export function getDomNode(node: string, parent?: string): string {
   const domName = DOM_NODES[node];
-  // TODO: Check this code, as it is still unclear
   return domName
     ? typeof domName === 'string' ? domName : domName(parent)
     : 'jdita-node-' + node;
