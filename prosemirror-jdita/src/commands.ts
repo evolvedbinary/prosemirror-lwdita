@@ -6,13 +6,15 @@ import { TextSelection, EditorState, Transaction, NodeSelection } from 'prosemir
 import { EditorView } from 'prosemirror-view';
 
 /**
- * TODO: Documentation
+ * Create a new Node and fill it with the args as attributes.
+ * Fill the node with the content if it's a block node.
  *
- * @param type - TODO
- * @param args - TODO
- * @returns
+ * @param type - NodeType
+ * @param args - Node attributes
+ * @returns a new Node
  */
 export function createNode(type: NodeType<Schema>, args: Record<string, any> = {}): Node {
+  debugger;
   switch (type.name) {
     case 'p': return type.createAndFill() as Node;
     case 'data': return type.createAndFill({}, type.schema.text('text')) as Node;
@@ -45,10 +47,10 @@ export function createNodesTree(tree: NodeType<Schema>[]): Node {
 }
 
 /**
- * TODO: Documentation
+ * Creates a command to insert a new node at the current cursor position.
  *
- * @param type - TODO
- * @returns TODO
+ * @param type - NodeType
+ * @returns Command
  */
 export function insertNode(type: NodeType<Schema>): Command {
   return function (state, dispatch) {
@@ -111,11 +113,11 @@ export class InputContainer {
 }
 
 /**
- * TODO: Documentation
+ * Creates a command to insert a new Image node at the current cursor position.
  *
- * @param type - TODO
- * @param input - TODO
- * @returns TODO
+ * @param type - NodeType
+ * @param input - InputContainer
+ * @returns Command
  */
 export function insertImage(type: NodeType<Schema>, input: InputContainer): Command {
   return function (state, dispatch) {
@@ -156,20 +158,20 @@ export function insertImage(type: NodeType<Schema>, input: InputContainer): Comm
 }
 
 /**
- * TODO: Documentation
+ * Check if the node can be created or not.
  *
- * @param type - TODO
- * @returns TODO
+ * @param type - NodeType or nodeName
+ * @returns node index from the list of nodes
  */
 function canCreateIndex(type: NodeType) {
   return ['data', 'ul', 'li', 'p', 'section', 'stentry', 'strow', 'simpletable'].indexOf(type.name);
 }
 
 /**
- * TODO: Documentation
+ * Check if the node can be created or not.
  *
- * @param type - TODO
- * @returns TODO
+ * @param type - NodeType or nodeName
+ * @returns Boolean of whether the node can be created or not
  */
 function canCreate(type: NodeType) {
   return canCreateIndex(type) > -1;
@@ -246,20 +248,22 @@ export function enterEOL(tr: Transaction, dispatch = false, depth = 0): Transact
 }
 
 /**
- * TODO: Documentation
+ * Deletes the empty line in the current cursor position
  *
- * @param tr - TODO
- * @param depth - TODO
- * @param shift - TODO
- * @returns TODO
+ * @param tr - the transaction object
+ * @param depth - // TODO
+ * @param shift - // TODO
+ * @returns deleteSelection transaction object
  */
 export function deleteEmptyLine(tr: Transaction, depth = 0, shift = 0): Transaction {
+  // select the empty line and delete it
   return tr.setSelection(TextSelection.create(tr.doc, tr.selection.anchor - depth * 2 + shift, tr.selection.anchor + shift)).deleteSelection();
 }
 
 /**
- * Enter an empty line
- * TODO: Elaborate
+ * Enter an empty enter press
+ * this function only triggers when the cursor is at the end of the line and the parent node is empty
+ * in this case, the function will delete the empty line and create a new line.
  *
  * @param tr - The Transaction object
  * @param dispatch - A boolean, set to `false`
@@ -267,7 +271,7 @@ export function deleteEmptyLine(tr: Transaction, depth = 0, shift = 0): Transact
  * @returns TODO
  */
 export function enterEmpty(tr: Transaction, dispatch = false, depth = 0): Transaction | false {
-  // if the depth //TODO what is depth?
+  // if we are trying to go deeper in a empty node.
   if (depth > 0) {
     // delete the empty line
     deleteEmptyLine(tr, depth);
@@ -331,12 +335,11 @@ export function enterSplit(tr: Transaction, dispatch = false, depth = 0): Transa
 }
 
 /**
- * `isEOL` is triggered on each "press Enter" key event in the editor.
- * TODO: Elaborate
+ * Check if the cursor is at the end of the line.
  *
  * @param tr - The Transaction object
- * @param depth - The default depth 0
- * @returns TODO
+ * @param depth - // TODO
+ * @returns Boolean - true if the cursor is at the end of the line
  */
 export function isEOL(tr: Transaction, depth = 0) {
   const { $to } = tr.selection;
@@ -355,8 +358,7 @@ export function isEOL(tr: Transaction, depth = 0) {
 }
 
 /**
- * `isEmpty` is triggered on each "press Enter" key event in the editor.
- * TODO: Elaborate
+ * `isEmpty` Checks whether the cursor is at an empty line or not.
  *
  * @param tr - The Transaction object
  * @param depth - The default depth 0
@@ -379,9 +381,7 @@ export function isEmpty(tr: Transaction, depth = 0) {
 }
 
 /**
- * `isPrevEmpty` is triggered on each "press Enter" key event in the editor
- * and check if the previous parent is empty or not
- * by checking the Transaction object.
+ * `isPrevEmpty` If the cursor is at the beginning of the line, this function checks if the previous node is empty or not.
  *
  * @param tr - The Transaction object
  * @param depth - The default depth 0
@@ -410,6 +410,10 @@ export function isPrevEmpty(tr: Transaction, depth = 0) {
  *
  * @privateRemarks
  * TODO: Check if this value really returns the correct number!
+ * 
+ * @remarks Younes:
+ * This does not mean cursor depth, it's always 0. it only returns 1 if the node is empty.
+ * more like are you trying to go deeper in a empty node. this function will let you know.
  *
  * @param tr - The Transaction object
  * @param empty - A Boolean, set to `false`
@@ -424,11 +428,12 @@ export function getDepth(tr: Transaction, empty = false) {
 }
 
 /**
- * `getPrevDepth` is triggered on each "press Enter" key event in the editor.
- * TODO: Elaborate
+ * `getPrevDepth` Does not refer to the node depth nor the cursor depth nor the previous node depth.
+ * It refers to the previous node if it's empty or not.
+ * //TODO this needs a sanity check
  *
  * @param tr - The Transaction object
- * @returns A number containing the previous depth
+ * @returns number - 1 or 0 if the previous node is empty or not
  */
 export function getPrevDepth(tr: Transaction) {
 
@@ -441,8 +446,8 @@ export function getPrevDepth(tr: Transaction) {
 }
 
 /**
- * `getTree` is triggered on each "press Enter" key event in the editor.
- * TODO: Elaborate
+ * `getTree` Get the tree of nodes starting from the current cursor position, and going up to ?? node.
+ * //TODO needs further testing
  *
  * @param pos - The ResolvedPos object containing position, path, depth and parentOffset
  * @param depth - TODO
@@ -473,11 +478,12 @@ export function getTree(pos: ResolvedPos, depth = 0) {
  */
 export function enterPressed(state: EditorState, dispatch?: (tr: Transaction) => void, view?: EditorView) {
   let { $from, empty } = state.selection;
-  // get the depth of the cursor position
+  // check if the node is empty.
+  // if the node is empty, then the depth is 1
   const depth = getDepth(state.tr, true);
   // prepare the transaction
-  // if false do nothing
   let resultTr: false | Transaction;
+  // get the current transaction
   let tr = state.tr;
   // if the cursor selection is not empty, delete the selection
   if (dispatch && !empty) {
@@ -495,6 +501,7 @@ export function enterPressed(state: EditorState, dispatch?: (tr: Transaction) =>
     dispatch(resultTr);
     return true;
   }
+  // return false if the transaction is not triggered
   return false;
 }
 
