@@ -171,6 +171,9 @@ export function insertImage(type: NodeType<Schema>, input: InputContainer): Comm
 /**
  * Check if the node can be created or not.
  *
+ * @privateRemarks
+ * TODO: This has the same comment as `canCreate` and is not precisely describing the function I think
+ *
  * @param type - NodeType or nodeName
  * @returns node index from the list of nodes
  */
