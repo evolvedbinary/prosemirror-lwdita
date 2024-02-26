@@ -395,7 +395,8 @@ export function isEmpty(tr: Transaction, depth = 0) {
 }
 
 /**
- * `isPrevEmpty` If the cursor is at the beginning of the line, this function checks if the previous node is empty or not.
+ * `isPrevEmpty` - If the cursor is at the beginning of the line,
+ * this function checks if the previous node is empty or not.
  *
  * @param tr - The Transaction object
  * @param depth - The default depth 0
@@ -419,12 +420,12 @@ export function isPrevEmpty(tr: Transaction, depth = 0) {
 
 /**
  * `getDepth` is triggered on each "press Enter" key event in the editor
- * and check the depth of the cursor position
+ * and checks the depth of the cursor position
  * by checking the Transaction object.
  *
  * @privateRemarks
- * TODO: Check if this value really returns the correct number!
- * 
+ * TODO: Rename this function, as it doesn't reflect its purpose and is confusing.
+ *
  * @remarks Younes:
  * This does not mean cursor depth, it's always 0. it only returns 1 if the node is empty.
  * more like are you trying to go deeper in a empty node. this function will let you know.
