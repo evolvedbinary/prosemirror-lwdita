@@ -14,7 +14,6 @@ import { EditorView } from 'prosemirror-view';
  * @returns a new Node
  */
 export function createNode(type: NodeType<Schema>, args: Record<string, any> = {}): Node {
-  debugger;
   switch (type.name) {
     case 'p': return type.createAndFill() as Node;
     case 'data': return type.createAndFill({}, type.schema.text('text')) as Node;
@@ -436,7 +435,6 @@ export function getDepth(tr: Transaction, empty = false) {
  * @returns number - 1 or 0 if the previous node is empty or not
  */
 export function getPrevDepth(tr: Transaction) {
-
   let depth = 0;
   while(isPrevEmpty(tr, depth + 1)) {
     depth++;
@@ -447,6 +445,8 @@ export function getPrevDepth(tr: Transaction) {
 
 /**
  * `getTree` Get the tree of nodes starting from the current cursor position, and going up to ?? node.
+ * @remarks Younes: 
+ * this function does not get the current tree but returns the new tree of elements that will be created.
  * //TODO needs further testing
  *
  * @param pos - The ResolvedPos object containing position, path, depth and parentOffset
