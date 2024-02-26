@@ -372,11 +372,11 @@ export function isEOL(tr: Transaction, depth = 0) {
 }
 
 /**
- * `isEmpty` Checks whether the cursor is at an empty line or not.
+ * `isEmpty` checks whether the cursor is at an empty line or not.
  *
  * @param tr - The Transaction object
  * @param depth - The default depth 0
- * @returns Boolean
+ * @returns Boolean, e.g. true, if the the parent node has no content
  */
 export function isEmpty(tr: Transaction, depth = 0) {
   const { $to } = tr.selection;
