@@ -465,10 +465,11 @@ export function getPrevDepth(tr: Transaction) {
 }
 
 /**
- * `getTree` Get the tree of nodes starting from the current cursor position, and going up to ?? node.
- * @remarks Younes: 
- * this function does not get the current tree but returns the new tree of elements that will be created.
- * //TODO needs further testing
+ * `getTree` - Get the tree of nodes starting from the current cursor position, and going up to ?? node.
+ *
+ * @privateRemarks Younes:
+ * TODO: this function does not get the current tree but returns the new tree of elements that will be created.
+ * TODO: needs further testing
  *
  * @param pos - The ResolvedPos object containing position, path, depth and parentOffset
  * @param depth - TODO
