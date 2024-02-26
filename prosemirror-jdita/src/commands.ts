@@ -264,7 +264,7 @@ export function enterEOL(tr: Transaction, dispatch = false, depth = 0): Transact
 /**
  * Deletes the empty line in the current cursor position
  *
- * @param tr - the transaction object
+ * @param tr - The transaction object
  * @param depth - // TODO
  * @param shift - // TODO
  * @returns deleteSelection transaction object
