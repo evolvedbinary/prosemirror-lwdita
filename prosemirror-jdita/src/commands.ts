@@ -123,6 +123,9 @@ export class InputContainer {
 /**
  * Creates a command to insert a new Image node at the current cursor position.
  *
+ * @privateRemarks
+ * TODO: Error handling should be improved in `reader.onerror = () => {};`
+ *
  * @param type - NodeType
  * @param input - InputContainer
  * @returns Command
