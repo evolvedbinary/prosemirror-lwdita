@@ -276,8 +276,8 @@ export function deleteEmptyLine(tr: Transaction, depth = 0, shift = 0): Transact
 
 /**
  * Enter an empty enter press
- * this function only triggers when the cursor is at the end of the line and the parent node is empty
- * in this case, the function will delete the empty line and create a new line.
+ * This function is only triggered when the cursor is at the end of the line and the parent node is empty.
+ * In this case, the function will delete the empty line and create a new line.
  *
  * @param tr - The Transaction object
  * @param dispatch - A boolean, set to `false`
