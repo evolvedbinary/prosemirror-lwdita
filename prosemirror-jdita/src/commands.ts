@@ -52,6 +52,11 @@ export function createNodesTree(tree: NodeType<Schema>[]): Node {
 /**
  * Creates a command to insert a new node at the current cursor position.
  *
+ * @privateRemarks
+ * TODO: Elaborate what happens in the
+ * 1. `!state.selection.empty` block and
+ * 2. `in the dispatch block`
+ *
  * @param type - NodeType
  * @returns Command
  */
