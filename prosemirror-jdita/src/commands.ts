@@ -443,9 +443,14 @@ export function getDepth(tr: Transaction, empty = false) {
 }
 
 /**
- * `getPrevDepth` Does not refer to the node depth nor the cursor depth nor the previous node depth.
+ * `getPrevDepth` - TODO Documentation
+ *
+ * @remarks
+ * Does not refer to the node depth nor the cursor depth nor the previous node depth.
  * It refers to the previous node if it's empty or not.
- * //TODO this needs a sanity check
+ *
+ * @privateRemarks
+ * TODO: This needs a sanity check
  *
  * @param tr - The Transaction object
  * @returns number - 1 or 0 if the previous node is empty or not
