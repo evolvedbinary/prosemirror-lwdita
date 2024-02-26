@@ -9,6 +9,10 @@ import { EditorView } from 'prosemirror-view';
  * Create a new Node and fill it with the args as attributes.
  * Fill the node with the content if it's a block node.
  *
+ * @privateRemarks
+ * 1. An image node is only getting the `href` attribute, what about `alt`, is this not implemented yet?
+ * 2. What about `case 'ul':` This is suddenly empty?
+ *
  * @param type - NodeType
  * @param args - Node attributes
  * @returns a new Node
