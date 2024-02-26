@@ -18,6 +18,8 @@ import { EditorView } from 'prosemirror-view';
  * @returns a new Node
  */
 export function createNode(type: NodeType<Schema>, args: Record<string, any> = {}): Node {
+  console.log('createNode, type.name=', type.name);
+  console.log('createNode, args=', args);
   switch (type.name) {
     case 'p': return type.createAndFill() as Node;
     case 'data': return type.createAndFill({}, type.schema.text('text')) as Node;
@@ -61,6 +63,7 @@ export function createNodesTree(tree: NodeType<Schema>[]): Node {
  * @returns Command
  */
 export function insertNode(type: NodeType<Schema>): Command {
+  console.log('insertNode, type=', type);
   return function (state, dispatch) {
     try {
       if (!state.selection.empty) {
@@ -68,6 +71,7 @@ export function insertNode(type: NodeType<Schema>): Command {
       }
       if (dispatch) {
         const node = createNode(type);
+        console.log('insertNode, dispatch=', dispatch);
         const tr = state.tr.insert(state.selection.$to.end() + 1, node);
         const pos = tr.selection.$to.doc.resolve(tr.selection.$to.pos + 2);
         const newSelection = new TextSelection(pos, pos);
@@ -222,10 +226,20 @@ function defaultBlocks(pos: ResolvedPos, depth = 0) {
 function defaultBlockAt(pos: ResolvedPos, depth = 0, prefered?: NodeType) {
   let index = -1;
   let type: NodeType = null as any;
+  // Gives an array of NodeTypes
+  /* This is returned when clicking "return" e.g. at the end of a list item
+  NodeType {name: 'data', schema: Schema, spec: {…}, groups: Array(7), attrs: {…}, …}
+  NodeType {name: 'p', schema: Schema, spec: {…}, groups: Array(5), attrs: {…}, …}
+  NodeType {name: 'simpletable', schema: Schema, spec: {…}, groups: Array(3), attrs: {…}, …}
+  NodeType {name: 'ul', schema: Schema, spec: {…}, groups: Array(5), attrs: {…}, …}
+  */
   const blocks = defaultBlocks(pos, depth || undefined);
+
+  // if the current node is contained in the default blocks, the return the current node
   if (prefered && blocks.find(block => block.name === prefered.name)) {
     return prefered;
   }
+
   blocks.forEach(newType => {
     const newIndex = canCreateIndex(newType);
     if (newIndex > index) {
@@ -303,12 +317,16 @@ export function enterEmpty(tr: Transaction, dispatch = false, depth = 0): Transa
  */
 export function enterSplit(tr: Transaction, dispatch = false, depth = 0): Transaction | false {
   depth++;
+  console.log('enterSplit, depth++ ', depth)
   let { $from, $to } = tr.selection;
 
   if (dispatch) {
+    console.log('enterSplit, dispatch', dispatch);
+    console.log('enterSplit,   $from',   $from);
     let atEnd = $to.parentOffset == $to.parent.content.size;
     const prevDepth = getPrevDepth(tr);
     if (prevDepth > 0) {
+      console.log('enterSplit, prevDepth > 0');
       $from = tr.selection.$from;
       $to = tr.selection.$to;
       depth++;
@@ -322,23 +340,36 @@ export function enterSplit(tr: Transaction, dispatch = false, depth = 0): Transa
       return tr;
     }
     if (atEnd && depth > 1 && $from.depth - depth > 2) {
+      console.log('enterSplit, atEnd...');
       const defaultType = $from.node(-depth + 1).type;
       return deleteEmptyLine(tr, depth - 1)
         .split(tr.mapping.map($from.pos), depth, [{ type: defaultType }] as any);
     }
     if (tr.selection instanceof TextSelection) tr.deleteSelection();
+    // Object containing the information about parent (and name of grand-parent)
+    // `parent` is returning the parent level (in this case `-depth` = -1)
     const parent = $to.node(-depth || undefined);
+    // "$from": https://prosemirror.net/docs/ref/#state.Selection.$from
+    // `parent.type`: It's giving us the current NodeType, where the cursor has been set to split the lines
+    // @see {@link https://prosemirror.net/docs/ref/#model.NodeType}
     let defaultType = $from.depth == 0 ? null : defaultBlockAt($from, depth, parent.type);
     if (defaultType) {
+      //console.log('enterSplit, defaultType', defaultType);
       let types = atEnd ? [{ type: defaultType }] : null;
+      // "can": Check whether splitting at the given position is allowed
       let can = canSplit(tr.doc, tr.mapping.map($from.pos), depth, types as any);
+      //console.log('enterSplit, case "defaultType" - depth=', depth);
       if (!types && !can && canSplit(tr.doc, tr.mapping.map($from.pos), depth, [{ type: defaultType }])) {
+        console.log('enterSplit, defaultType');
         types = [{ type: defaultType }];
         can = true;
       }
       if (can) {
+        console.log('enterSplit, can', can);
+        console.log('enterSplit, case "can" - depth=', depth);
         tr.split(tr.mapping.map($from.pos), depth, types as any);
         if (!atEnd && !$from.parentOffset && $from.parent.type != defaultType && $from.node(-depth).canReplace($from.index(-depth), $from.indexAfter(-depth), Fragment.from([(defaultType as NodeType).create(), $from.parent]))) {
+          console.log('enterSplit, !atEnd');
           tr.setNodeMarkup(tr.mapping.map($from.before()), defaultType);
         }
       }
