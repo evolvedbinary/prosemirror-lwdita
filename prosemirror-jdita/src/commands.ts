@@ -75,29 +75,50 @@ export function createNodesTree(tree: NodeType<Schema>[]): Node {
 }
 
 /**
- * Creates a command to insert a new node at the current cursor position.
+ * `insertNode` creates a command to insert a new node at the current cursor position.
+ *
+ * @remarks
+ * This function will be called by `insertItem()` which again will be called by `menu()`.
+ * `insertNode` will help to create editor buttons in the editor menu bar,
+ * currently these are the buttons for creating new ordered and unordered lists.
  *
  * @privateRemarks
  * TODO: Elaborate what happens in the
- * 1. `!state.selection.empty` block and
- * 2. `in the dispatch block`
+ * `!state.selection.empty` block and
  *
  * @param type - NodeType
  * @returns Command
  */
 export function insertNode(type: NodeType<Schema>): Command {
-  console.log('insertNode, type=', type);
+  // type = the NodeTypes that have been initialized in the menu,
+  // currently the types are `ol` and `ul` nodes (that can be inserted via the menu buttons)
+  // state = the current EditorState
+  // dispatch = without any interaction it will be undefined at runtime, but if triggered by clicking one of the
+  // buttons with the according `type`, the Prosemirror `dispatch` function will be called:
+  // this will dispatch a transaction
   return function (state, dispatch) {
     try {
+      // TODO: Check the correct meaning of this condition
+      // If the value for key "selection" in the EditorState object is not empty?
+      // Cannot be confirmed by logging:
+      // console.log('insertNode, state.selection=', state.selection);
       if (!state.selection.empty) {
         return false;
       }
+      // "dispatch" becomes "true" when a button in the menu
+      // has been clicked that matches the required NodeType, e.g. "ol" or "ul"
       if (dispatch) {
+        // create a new node for the according type
         const node = createNode(type);
-        console.log('insertNode, dispatch=', dispatch);
+        // update the the transaction object and thus the EditorState
         const tr = state.tr.insert(state.selection.$to.end() + 1, node);
+        // with the information about exact position and selection
         const pos = tr.selection.$to.doc.resolve(tr.selection.$to.pos + 2);
+        // create a new text section at the given position info
         const newSelection = new TextSelection(pos, pos);
+        // and update the transaction's current selection - it will determine the
+        // selection that the editor gets when the transaction is applied.
+        // Scroll to the updated node in the browser's editor window.
         dispatch(tr.setSelection(newSelection).scrollIntoView());
       }
       return true;
