@@ -219,6 +219,9 @@ function defaultBlocks(pos: ResolvedPos, depth = 0) {
 /**
  * Get the default block Node at the current cursor position.
  *
+ * @privateRemarks
+ * TODO: We should elaborate on "preferred NodeType" and on "default blocks" (function above), it's just not clear what it means.
+ *
  * @param pos - ResolvedPos current cursor position
  * @param depth - TODO
  * @param prefered - preferred NodeType
