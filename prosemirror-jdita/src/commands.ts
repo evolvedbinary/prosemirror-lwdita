@@ -38,16 +38,40 @@ export function createNode(type: NodeType<Schema>, args: Record<string, any> = {
 }
 
 /**
- * TODO: Documentation
+ * `createNodesTree` will return the node object for a node tree that has been passed an an argument.
  *
- * @param tree - TODO
- * @returns TODO
+ * @remarks
+ * It is called by function `enterEOL`, which itself will be called on each `return key` event in the editor
+ * when the cursor is placed at the end of a line. This creates a new node and needs this helper function to
+ * update the transaction object and the view.
+ *
+ * @example excerpt of a `tree` array:
+ * NodeType {name: 'p', schema: Schema, spec: {…}, groups: Array(5), attrs: {…}, …}
+ * NodeType {name: 'section', schema: Schema, spec: {…}, groups: Array(0), attrs: {…}, …}
+ *
+ * @example of a returned node object:
+ * Node {type: NodeType, attrs: {…}, content: Fragment, marks: Array(0)}
+ *   attrs: {parent: '', props: '', dir: '', xml:lang: '', translate: '', …}
+ *   content: Fragment {content: Array(0), size: 0}
+ *   marks: []
+ *   type : NodeType {name: 'p', schema: Schema, spec: {…}, groups: Array(5), attrs: {…}, …} ...
+ *
+ * @param tree - The node tree of type `NodeType` that has been passed
+ * @returns The node object
  */
 export function createNodesTree(tree: NodeType<Schema>[]): Node {
   let result: Node | undefined;
+  // Go through the NodeType array ("tree")
+  // and call `createAndFill()` on each item.
   tree.forEach(type => {
+    // Create a node object.
+    // If needed, create a new one to the start or
+    // end of the given fragment to make it fit the node.
+    // If no fitting wrapping can be found, return null.
+    // Assign the result to variable "result".
     result = type.createAndFill({}, result) as Node;
   });
+  // Return the node object
   return result as Node;
 }
 
