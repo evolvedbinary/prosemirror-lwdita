@@ -174,6 +174,7 @@ export function insertImage(type: NodeType<Schema>, input: InputContainer): Comm
 
 /**
  * Check if the node can be created or not.
+ * This function also ensures that the order of the nodes is correct.
  *
  * @privateRemarks
  * TODO: This has the same comment as `canCreate` and is not precisely describing the function I think
@@ -216,30 +217,23 @@ function defaultBlocks(pos: ResolvedPos, depth = 0) {
 }
 
 /**
- * TODO: Documentation
+ * Get the default block Node at the current cursor position.
  *
- * @param pos - TODO
+ * @param pos - ResolvedPos current cursor position
  * @param depth - TODO
- * @param prefered - TODO
- * @returns TODO
+ * @param prefered - preferred NodeType
+ * @returns NodeType
  */
 function defaultBlockAt(pos: ResolvedPos, depth = 0, prefered?: NodeType) {
   let index = -1;
   let type: NodeType = null as any;
-  // Gives an array of NodeTypes
-  /* This is returned when clicking "return" e.g. at the end of a list item
-  NodeType {name: 'data', schema: Schema, spec: {…}, groups: Array(7), attrs: {…}, …}
-  NodeType {name: 'p', schema: Schema, spec: {…}, groups: Array(5), attrs: {…}, …}
-  NodeType {name: 'simpletable', schema: Schema, spec: {…}, groups: Array(3), attrs: {…}, …}
-  NodeType {name: 'ul', schema: Schema, spec: {…}, groups: Array(5), attrs: {…}, …}
-  */
   const blocks = defaultBlocks(pos, depth || undefined);
 
   // if the current node is contained in the default blocks, the return the current node
   if (prefered && blocks.find(block => block.name === prefered.name)) {
     return prefered;
   }
-
+  // loop through the default blocks and return the first block that can be created
   blocks.forEach(newType => {
     const newIndex = canCreateIndex(newType);
     if (newIndex > index) {
@@ -247,6 +241,7 @@ function defaultBlockAt(pos: ResolvedPos, depth = 0, prefered?: NodeType) {
       type = newType;
     }
   });
+  // return the newly created nodetype
   return type;
 }
 
@@ -317,30 +312,33 @@ export function enterEmpty(tr: Transaction, dispatch = false, depth = 0): Transa
  */
 export function enterSplit(tr: Transaction, dispatch = false, depth = 0): Transaction | false {
   depth++;
-  console.log('enterSplit, depth++ ', depth)
   let { $from, $to } = tr.selection;
-
+  // if the transaction is triggered from the last function call
   if (dispatch) {
-    console.log('enterSplit, dispatch', dispatch);
-    console.log('enterSplit,   $from',   $from);
+    // check if the cursor is at the end of the line
     let atEnd = $to.parentOffset == $to.parent.content.size;
+    // check if the previous node is empty
     const prevDepth = getPrevDepth(tr);
     if (prevDepth > 0) {
-      console.log('enterSplit, prevDepth > 0');
+      debugger;
+      // setting $from and $to is not necessary here, as they are already set above
       $from = tr.selection.$from;
       $to = tr.selection.$to;
+
       depth++;
+      // split the parent node
       tr = tr.split(tr.mapping.map($from.pos), depth);
       const pos = tr.selection.from;
       const selStart = pos - prevDepth * 2 - 2;
       const selEnd = selStart - prevDepth * 2 - 2;
       tr.setSelection(TextSelection.create(tr.doc, selStart, selEnd));
+      // delete the empty node
       tr = tr.deleteSelection();
       tr.setSelection(TextSelection.create(tr.doc, tr.mapping.map(pos - depth * 2)));
+      // complete the transaction
       return tr;
     }
     if (atEnd && depth > 1 && $from.depth - depth > 2) {
-      console.log('enterSplit, atEnd...');
       const defaultType = $from.node(-depth + 1).type;
       return deleteEmptyLine(tr, depth - 1)
         .split(tr.mapping.map($from.pos), depth, [{ type: defaultType }] as any);
@@ -354,28 +352,27 @@ export function enterSplit(tr: Transaction, dispatch = false, depth = 0): Transa
     // @see {@link https://prosemirror.net/docs/ref/#model.NodeType}
     let defaultType = $from.depth == 0 ? null : defaultBlockAt($from, depth, parent.type);
     if (defaultType) {
-      //console.log('enterSplit, defaultType', defaultType);
       let types = atEnd ? [{ type: defaultType }] : null;
       // "can": Check whether splitting at the given position is allowed
       let can = canSplit(tr.doc, tr.mapping.map($from.pos), depth, types as any);
-      //console.log('enterSplit, case "defaultType" - depth=', depth);
+      // this if statement is redendant, as we are already checking if we can split above with the same conditions.
       if (!types && !can && canSplit(tr.doc, tr.mapping.map($from.pos), depth, [{ type: defaultType }])) {
-        console.log('enterSplit, defaultType');
         types = [{ type: defaultType }];
         can = true;
       }
+      // if we can split, then split the node
       if (can) {
-        console.log('enterSplit, can', can);
-        console.log('enterSplit, case "can" - depth=', depth);
         tr.split(tr.mapping.map($from.pos), depth, types as any);
         if (!atEnd && !$from.parentOffset && $from.parent.type != defaultType && $from.node(-depth).canReplace($from.index(-depth), $from.indexAfter(-depth), Fragment.from([(defaultType as NodeType).create(), $from.parent]))) {
-          console.log('enterSplit, !atEnd');
+          // update the previous node markups
           tr.setNodeMarkup(tr.mapping.map($from.before()), defaultType);
         }
       }
+      // complete the transaction and scroll into view
       return tr.scrollIntoView();
     }
   }
+  // return false if the transaction is not triggered.
   return false;
 }
 
