@@ -140,32 +140,55 @@ export type InputContainerListener = (this: HTMLInputElement, event: Event) => v
 
 /**
  * TODO: Documentation
+ * currently used in `insertImageItem()` as a new instance
  */
 export class InputContainer {
+  // class fields:
+  // optional, type HTMLInputElement
   _el?: HTMLInputElement;
+  // Type parameters for Record are string and HTMLInputElement + Event,
+  // both by default set to an empty object
   listeners: Record<string, InputContainerListener> = {};
+  // bind object property "_el" to a function of type HTMLInputElement
+  // or undefined that will be called when that property is looked up
+
+  // class methods:
   get el(): HTMLInputElement | undefined {
+    // will return the element of type HTMLInputElement
     return this._el;
   }
+
+  // setter function with arguments of type HTMLInputElement or undefined
   set el(value: HTMLInputElement | undefined) {
+    // will not do anything, if the the current HTML input element equals the to-be-set element
     if (this._el === value) {
       return;
     }
     this._el = value;
+    // append an event listener for 'change' events on optional element "_el"
+    // TODO: Figure out, what the listener exactly does (this.change.bind(this)?)
     this._el?.addEventListener('change', this.change.bind(this));
   }
+
+  // TODO: Check if following description is correct
   change(event: Event) {
+    // if field "_el" is available
     if (this._el) {
       const el = this._el;
+      // method "keys" returns the names of the enumerable string properties and methods of object "this.listeners"
       Object.keys(this.listeners)
+        // and returns the keys of the listeners array with value "function"
         .filter(key => typeof this.listeners[key] === 'function')
+        // and binds those to the change event
         .forEach(key => this.listeners[key].bind(el)(event));
     }
   }
+  // TODO: Deccribe method "on"
   on(key: string, listener: InputContainerListener) {
     this.off(key);
     this.listeners[key] = listener;
   }
+  // TODO: Deccribe method "off"
   off(key: string) {
     if (this.listeners[key]) {
       delete (this.listeners[key]);
