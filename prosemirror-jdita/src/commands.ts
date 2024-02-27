@@ -18,8 +18,7 @@ import { EditorView } from 'prosemirror-view';
  * @returns a new Node
  */
 export function createNode(type: NodeType<Schema>, args: Record<string, any> = {}): Node {
-  console.log('createNode, type.name=', type.name);
-  console.log('createNode, args=', args);
+  console.log('createNode, type.name=', type.name,  ', args=', args);
   switch (type.name) {
     case 'p': return type.createAndFill() as Node;
     case 'data': return type.createAndFill({}, type.schema.text('text')) as Node;
