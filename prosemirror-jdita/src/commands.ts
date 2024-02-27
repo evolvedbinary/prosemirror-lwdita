@@ -129,8 +129,13 @@ export function insertNode(type: NodeType<Schema>): Command {
 }
 
 /**
- * TODO: Documentation
+ * Construct a type alias `InputContainerListener`
+ *
+ * TODO: Finish description, figure out syntax
  */
+// Interface `HTMLInputElement` provides special properties and
+// methods for manipulating the options, layout, and presentation of elements.
+// Interface `Event` takes place in the DOM.
 export type InputContainerListener = (this: HTMLInputElement, event: Event) => void;
 
 /**
