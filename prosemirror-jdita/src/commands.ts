@@ -183,12 +183,12 @@ export class InputContainer {
         .forEach(key => this.listeners[key].bind(el)(event));
     }
   }
-  // TODO: Deccribe method "on"
+  // TODO: Describe method "on"
   on(key: string, listener: InputContainerListener) {
     this.off(key);
     this.listeners[key] = listener;
   }
-  // TODO: Deccribe method "off"
+  // TODO: Describe method "off"
   off(key: string) {
     if (this.listeners[key]) {
       delete (this.listeners[key]);
@@ -199,6 +199,9 @@ export class InputContainer {
 /**
  * Creates a command to insert a new Image node at the current cursor position.
  *
+ * @remarks
+ * Will be triggered onload via function menu() in example.ts
+ *
  * @privateRemarks
  * TODO: Error handling should be improved in `reader.onerror = () => {};`
  *
@@ -207,6 +210,7 @@ export class InputContainer {
  * @returns Command
  */
 export function insertImage(type: NodeType<Schema>, input: InputContainer): Command {
+  console.log('insertImage, type=', type, 'input=', input);
   return function (state, dispatch) {
     function fileSelected(this: HTMLInputElement, event: Event) {
       if (input.el?.files?.length === 1) {
@@ -338,34 +342,36 @@ function canCreate(type: NodeType) {
 }
 
 /**
- * TODO: Documentation
+ * Create an array of NodeTypes that are "allowed" nodes to be
+ * added at the current curser position in the editor when pressing key "enter"
  *
  * @remarks
  * `defaultBlocks` will be triggered on key "press enter", function `enterEOL()`
  * which calls `defaultBlocksAt()`, in which `defaultBlocks()` is finally called.
+ *
  *
  * @param pos - TODO
  * @param depth - The level of the newly created node within the document tree, type number
  * @returns TODO
  */
 function defaultBlocks(pos: ResolvedPos, depth = 0) {
-  // depth: number, it will show the level of the newly created element at the new cursor position
-  // which is read from the ResolvedPos object
-  // e.g. in this tree doc [0] / topic [1] / body [2] / section [3] / p [4]
-  // the p node has the depths "4"
-  // console.log('defaultBlocks, pos=', pos, ', depth=', depth);
   const match = pos.node(-depth - 1).contentMatchAt(pos.indexAfter(-depth - 1));
+  //console.log('defaultBlocks, match=', match,);
   let index = -1;
+  // create an empty array of NodeTypes
   const result: NodeType[] = [];
   for (let i = 0; i < match.edgeCount; i++) {
     let edge = match.edge(i)
+    //console.log('defaultBlocks, edge=', edge);
+    // check, if a new node can be added after
+    // hitting "enter" at the current cursor position
     if (canCreate(edge.type)) {
+      console.log('defaultBlocks, added NodeType', edge.type.name);
+      // if success, then add new NodeType object to the empty array of NodeTypes
       result.push(edge.type);
     }
   }
-  console.log('defaultBlocks, match=', match,);
-  console.log('defaultBlocks, depth=', depth,);
-  console.log('defaultBlocks, result=', result,);
+  //console.log('defaultBlocks, result=', result);
   return result;
 }
 
@@ -377,27 +383,28 @@ function defaultBlocks(pos: ResolvedPos, depth = 0) {
  *
  * @param pos - ResolvedPos current cursor position
  * @param depth - TODO
- * @param prefered - preferred NodeType
+ * @param preferred - preferred NodeType
  * @returns NodeType
  */
-function defaultBlockAt(pos: ResolvedPos, depth = 0, prefered?: NodeType) {
+function defaultBlockAt(pos: ResolvedPos, depth = 0, preferred?: NodeType) {
   let index = -1;
   let type: NodeType = null as any;
+  // assign all allowed NodeType objects to variable `blocks`
   const blocks = defaultBlocks(pos, depth || undefined);
 
-  // if the current node is contained in the default blocks, the return the current node
-  if (prefered && blocks.find(block => block.name === prefered.name)) {
-    return prefered;
+  // if the current node is contained in the default node blocks, then return the current node
+  if (preferred && blocks.find(block => block.name === preferred.name)) {
+    return preferred;
+    console.log('defaultBlockAt, preferred=', preferred);
   }
   // loop through the default blocks and return the first block that can be created
   blocks.forEach(newType => {
     const newIndex = canCreateIndex(newType);
-    console.log('defaultBlockAt, pos=', pos, ', depth=', depth, ', prefered=', prefered);
-    console.log('defaultBlockAt, newType=', newType);
+    console.log('defaultBlockAt, pos=', pos, ', depth=', depth, ', preferred=', preferred, ', newIndex=', newIndex, ', newType=', newType);
     if (newIndex > index) {
       index = newIndex;
       type = newType;
-      console.log('defaultBlockAt, index=', index, ', type=', type);
+      console.log('defaultBlockAt, if newIndex', newIndex, '> than current index', index, ', return the type ', type);
     }
   });
   // return the newly created nodetype
@@ -485,8 +492,16 @@ export function enterSplit(tr: Transaction, dispatch = false, depth = 0): Transa
       $to = tr.selection.$to;
 
       depth++;
+
+      // TODO: Move following depth description to appropriate location
+      // depth: number, it will show the level of the newly created element at the new cursor position
+      // which is read from the ResolvedPos object
+      // e.g. in this tree, beginning with root element doc [0] / topic [1] / body [2] / section [3] / p [4]
+      // the p node has the depth/level "4"
+
       // split the parent node
       tr = tr.split(tr.mapping.map($from.pos), depth);
+      console.log('enterSplit, depth=', depth);
       const pos = tr.selection.from;
       const selStart = pos - prevDepth * 2 - 2;
       const selEnd = selStart - prevDepth * 2 - 2;
