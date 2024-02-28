@@ -257,7 +257,7 @@ export function insertImage(type: NodeType<Schema>, input: InputContainer): Comm
  */
 function canCreateIndex(type: NodeType) {
   //console.log('canCreateIndex, type=', type); // e.g. 4
-  //console.log('canCreateIndex, type.name=', type.name); // e.g, "fn" ????? This is not even in the source XML!
+  //console.log('canCreateIndex, type.name=', type.name); // e.g, "fn" ?
   //console.log("canCreateIndex, return value=", ['data', 'ul', 'li', 'p', 'section', 'stentry', 'strow', 'simpletable'].indexOf(type.name)); // e.g.NodeType {name: 'fn', schema: Schema, spec: {…}, groups: Array(2), attrs: {…}, …}
   return ['data', 'ul', 'li', 'p', 'section', 'stentry', 'strow', 'simpletable'].indexOf(type.name);
 }
@@ -266,8 +266,7 @@ function canCreateIndex(type: NodeType) {
  * Check if the node can be created or not.
  *
  * @remarks
- * Will be triggered on key "press enter" and evaluates, if the new element that
- * pressing "enter" is creating,
+ * Will be triggered on key "press enter" and evaluates
  *
  * @param type - NodeType object, contains the node name
  * @returns Boolean of whether the node can be created or not
@@ -275,7 +274,10 @@ function canCreateIndex(type: NodeType) {
 function canCreate(type: NodeType) {
   // TODO: Review, if following debug output makes sense in regard to
   // my conclusion, that the list of returned NodeTypes is a list of allowed nodes?
-  // I specifically wonder about the "fn" and "section" couple within a p tag that is wrapped in a section...
+  // My suspicion is that this check must be related to the Node groups, because the groups seem
+  // to share the group `all_blocks`. So a schema check might be implicitly done here.
+  // But the list of nodes in canCreateIndex is not quite matching the below output...
+  // I specifically wonder about the "fn" and "section" couple within a topic/body/section/p tag...
 
   //console.log('canCreate, NodeType=', type.name, ', index=', canCreateIndex(type), ', return', canCreateIndex(type) > -1);
   /**
