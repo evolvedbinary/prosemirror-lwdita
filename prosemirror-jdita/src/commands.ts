@@ -18,7 +18,7 @@ import { EditorView } from 'prosemirror-view';
  * @returns a new Node
  */
 export function createNode(type: NodeType<Schema>, args: Record<string, any> = {}): Node {
-  console.log('createNode, type.name=', type.name,  ', args=', args);
+  //console.log('createNode, type.name=', type.name,  ', args=', args);
   switch (type.name) {
     case 'p': return type.createAndFill() as Node;
     case 'data': return type.createAndFill({}, type.schema.text('text')) as Node;
@@ -247,6 +247,7 @@ export function insertImage(type: NodeType<Schema>, input: InputContainer): Comm
 /**
  * Check if the node can be created or not.
  * This function also ensures that the order of the nodes is correct.
+ * Will be called on key event "enter pressed".
  *
  * @privateRemarks
  * TODO: This has the same comment as `canCreate` and is not precisely describing the function I think
@@ -255,27 +256,102 @@ export function insertImage(type: NodeType<Schema>, input: InputContainer): Comm
  * @returns node index from the list of nodes
  */
 function canCreateIndex(type: NodeType) {
+  //console.log('canCreateIndex, type=', type); // e.g. 4
+  //console.log('canCreateIndex, type.name=', type.name); // e.g, "fn" ????? This is not even in the source XML!
+  //console.log("canCreateIndex, return value=", ['data', 'ul', 'li', 'p', 'section', 'stentry', 'strow', 'simpletable'].indexOf(type.name)); // e.g.NodeType {name: 'fn', schema: Schema, spec: {…}, groups: Array(2), attrs: {…}, …}
   return ['data', 'ul', 'li', 'p', 'section', 'stentry', 'strow', 'simpletable'].indexOf(type.name);
 }
 
 /**
  * Check if the node can be created or not.
  *
- * @param type - NodeType or nodeName
+ * @remarks
+ * Will be triggered on key "press enter" and evaluates, if the new element that
+ * pressing "enter" is creating,
+ *
+ * @param type - NodeType object, contains the node name
  * @returns Boolean of whether the node can be created or not
  */
 function canCreate(type: NodeType) {
+  // TODO: Review, if following debug output makes sense in regard to
+  // my conclusion, that the list of returned NodeTypes is a list of allowed nodes?
+  // I specifically wonder about the "fn" and "section" couple within a p tag that is wrapped in a section...
+
+  //console.log('canCreate, NodeType=', type.name, ', index=', canCreateIndex(type), ', return', canCreateIndex(type) > -1);
+  /**
+   * Debug outputs when pressing "enter":
+   * 1. Cursor at beginning of line in title node:
+   *    NodeType topic       index -1 return false
+   *
+   * 2. Cursor at end of line in title node:
+   *    NodeType body        index -1 return false
+   *    NodeType prolog      index -1 return false
+   *    NodeType shortdesc   index -1 return false
+   *
+   * 3. Cursor at beginning of line shortdesc:
+   *    NodeType topic       index -1 return false
+   *
+   * 4. Cursor at end of line sortdesc:
+   *    NodeType body        index -1 return false
+   *    NodeType prolog      index -1 return false
+   *
+   * 5. Cursor anywhere in body/section/p, except for end of p:
+   *    NodeType fn          index -1 return false
+   *    NodeType section     index 4  return true
+   *
+   * 6. Cursor at end of topic/body/section/p:
+   *    NodeType data        index 0  return true
+   *    NodeType p           index 3  return true
+   *    NodeType ol          index -1 return false
+   *    NodeType pre         index -1 return false
+   *    NodeType audio       index -1 return false
+   *    NodeType video       index -1 return false
+   *    NodeType fn          index -1 return false
+   *    NodeType note        index -1 return false
+   *    NodeType simpletable index 7  return true
+   *    NodeType fig         index -1 return false
+   *    NodeType dl          index -1 return false
+   *    NodeType ul          index 1  return true
+   *
+   * 7. Cursor anywhere in topic/body/section/ol/li, except for end of li:
+   *    NodeType li          index 2  return true
+   *
+   * 8. Cursor at end of topic/body/section/ol/li:
+   *    NodeType data        index 0  return true
+   *    NodeType p           index 3  return true
+   *    NodeType ol          index -1 return false
+   *    NodeType pre         index -1 return false
+   *    NodeType audio       index -1 return false
+   *    NodeType video       index -1 return false
+   *    NodeType note        index -1 return false
+   *    NodeType simpletable index 7  return true
+   *    NodeType fig         index -1 return false
+   *    NodeType dl          index -1 return false
+   *    NodeType ul          index 1  return true
+   */
+
+  // check each node-"index" in list of allowed nodes and return evaluation of
+  // "index" >= 0 (true | false)
   return canCreateIndex(type) > -1;
 }
 
 /**
  * TODO: Documentation
  *
+ * @remarks
+ * `defaultBlocks` will be triggered on key "press enter", function `enterEOL()`
+ * which calls `defaultBlocksAt()`, in which `defaultBlocks()` is finally called.
+ *
  * @param pos - TODO
- * @param depth - TODO
+ * @param depth - The level of the newly created node within the document tree, type number
  * @returns TODO
  */
 function defaultBlocks(pos: ResolvedPos, depth = 0) {
+  // depth: number, it will show the level of the newly created element at the new cursor position
+  // which is read from the ResolvedPos object
+  // e.g. in this tree doc [0] / topic [1] / body [2] / section [3] / p [4]
+  // the p node has the depths "4"
+  // console.log('defaultBlocks, pos=', pos, ', depth=', depth);
   const match = pos.node(-depth - 1).contentMatchAt(pos.indexAfter(-depth - 1));
   let index = -1;
   const result: NodeType[] = [];
@@ -285,6 +361,9 @@ function defaultBlocks(pos: ResolvedPos, depth = 0) {
       result.push(edge.type);
     }
   }
+  console.log('defaultBlocks, match=', match,);
+  console.log('defaultBlocks, depth=', depth,);
+  console.log('defaultBlocks, result=', result,);
   return result;
 }
 
@@ -311,9 +390,12 @@ function defaultBlockAt(pos: ResolvedPos, depth = 0, prefered?: NodeType) {
   // loop through the default blocks and return the first block that can be created
   blocks.forEach(newType => {
     const newIndex = canCreateIndex(newType);
+    console.log('defaultBlockAt, pos=', pos, ', depth=', depth, ', prefered=', prefered);
+    console.log('defaultBlockAt, newType=', newType);
     if (newIndex > index) {
       index = newIndex;
       type = newType;
+      console.log('defaultBlockAt, index=', index, ', type=', type);
     }
   });
   // return the newly created nodetype
