@@ -10,15 +10,13 @@ import { EditorView } from 'prosemirror-view';
  * Fill the node with the content if it's a block node.
  *
  * @privateRemarks
- * 1. An image node is only getting the `href` attribute, what about `alt`, is this not implemented yet?
- * 2. What about `case 'ul':` This is suddenly empty?
+ * An image node is only retrieving the `href` attribute from the source, the according `alt` tag is not implemented yet.
  *
  * @param type - NodeType
  * @param args - Node attributes
  * @returns a new Node
  */
 export function createNode(type: NodeType<Schema>, args: Record<string, any> = {}): Node {
-  //console.log('createNode, type.name=', type.name,  ', args=', args);
   switch (type.name) {
     case 'p': return type.createAndFill() as Node;
     case 'data': return type.createAndFill({}, type.schema.text('text')) as Node;
