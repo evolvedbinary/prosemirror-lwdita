@@ -202,7 +202,7 @@ export class InputContainer {
  * Will be triggered onload via function menu() in example.ts
  *
  * @privateRemarks
- * TODO: Error handling should be improved in `reader.onerror = () => {};`
+ * Error handling should be improved in `reader.onerror = () => {};`
  *
  * @param type - NodeType
  * @param input - InputContainer
@@ -295,7 +295,7 @@ function canCreate(type: NodeType) {
    * 3. Cursor at beginning of line shortdesc:
    *    NodeType topic       index -1 return false
    *
-   * 4. Cursor at end of line sortdesc:
+   * 4. Cursor at end of line shortdesc:
    *    NodeType body        index -1 return false
    *    NodeType prolog      index -1 return false
    *
