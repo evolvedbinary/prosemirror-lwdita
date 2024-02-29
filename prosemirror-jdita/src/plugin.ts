@@ -6,19 +6,22 @@ import { Command } from "prosemirror-commands";
 import { redo, undo } from "prosemirror-history";
 
 /**
- * TODO: Documentation
+ * Retrieve the DOM element with ID "editor" and assign it to a constant targetNode
+ * This is the entire DOM node of the Prosemirror editor that will be observed for DOM mutations
  */
-// run on the start of render of the demo
 const targetNode = document.getElementById('editor');
 
 /**
- * TODO: Documentation
+ * Set the Observer to watch for changes being made to the editor DOM tree
+ *
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver}
+ * for more info on the MutationObserver interface
  */
 // make sure the editor element exists
 if (targetNode) {
+  // Options for the observer (which mutations to observe)
   const config = { attributes: false, childList: true, subtree: true };
-  // create the callback for the observer
-  // check https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver for more info.
+  // Callback function to execute when mutations are observed
   const callback: MutationCallback = function(mutationsList) {
     // loop through the mutations
     for(const mutation of mutationsList) {
@@ -34,7 +37,7 @@ if (targetNode) {
               separators.push(node as HTMLElement);
             }
           });
-          // set the flex of the separators to 1
+          // set the CSS `flex grow` rule of the separators to 1
           separators.forEach(separator => separator.style.flex = '1');
         }
       }
@@ -42,20 +45,25 @@ if (targetNode) {
   };
 
   /**
-   * TODO: Documentation
+   * Create an observer instance linked to the callback function
+   *
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver}
+   * for more info on the MutationObserver interface
    */
-  // create the observer
   const observer = new MutationObserver(callback);
 
   /**
-   * TODO: Documentation
+   * Start observing the target node for configured mutations
    */
-  // observe the editor element
   observer.observe(targetNode, config);
 }
 
 /**
- * Provide keyborad shortcuts for the editor
+ * Provide keyboard shortcuts for the editor
+ *
+ * @remarks
+ * The `newLine` is a custom command and is representing the `enterPressed` command
+ * `toggleMark`, `undo`, and `redo` are Prosemirror functions
  *
  * @param schema - generated schema from JDITA
  * @returns - keymap object of shortcuts
@@ -75,26 +83,38 @@ export function shortcuts(schema: Schema) {
 }
 
 /**
- * TODO: Documentation
+ * Create a new instance of MenuItem and attach a command
  *
- * @param command - TODO
- * @param props - TODO
- * @returns TODO
+ * @example of the returned MenuItem
+ * MenuItem {spec: {class: "ic-undo", enable: undo(state, dispatch), icon:{}, run: undo(state, dispatch), title: "Undo"}}
+ *
+ * @param command - The command associated with the menu item
+ * @param props - The properties of the menu item
+ * @returns A new MenuItem instance
  */
 function commandItem(command: Command, props: Partial<MenuItemSpec> = {}) {
+  // MenuItem: An icon or label that, when clicked, executes a command.
   return new MenuItem({
     ...props,
+    // run: Function to execute when the menu item is activated
     run: command,
+    // enable: Function that is used to determine if the item is enabled.
     enable: command,
   });
 }
 
 /**
- * TODO: Documentation
+ * `markItem` processes MarkTypes and mark properties
+ * and returns a MenuItem containing information about all active
+ * and enabled menu mark items and their properties and binds them to a command.
  *
- * @param mark - TODO
- * @param props - TODO
- * @returns TODO
+ * @remarks
+ * Will be called and populated by menu() to bind mark item commands in the editor menu
+ *
+ * @param mark - MarkType object containing all values of the instance, e.g. name: 'b', rank: '4' (order in menu)
+ * @param props - The properties of the mark item (MenuElement) that will be inserted as HTML attributes
+ *  to the menu element in the editor, e.g. title: 'Bold', class: 'ic-bold'
+ * @returns The MenuItem object
  */
 function markItem(mark: MarkType, props: Partial<MenuItemSpec> = {}): MenuElement {
   const command = toggleMark(mark);
@@ -106,7 +126,9 @@ function markItem(mark: MarkType, props: Partial<MenuItemSpec> = {}): MenuElemen
 }
 
 /**
- * TODO: Documentation
+ * Define interface ` SimpleItemCallbacks`
+ * to provide menu item callback return types
+ * with fixed and optional properties
  */
 interface SimpleItemCallbacks {
   call: () => void;
@@ -115,11 +137,22 @@ interface SimpleItemCallbacks {
 }
 
 /**
- * TODO: Documentation
+ * Creates a custom instance of class MenuItem
+ * when clicked, executes a command
  *
- * @param callbacks - TODO
- * @param props - TODO
- * @returns TODO
+ * @remarks
+ * This instance of MenuItem is used for the "Debug Info" icon button in the menu
+ *
+ * @example of the MenuItem object
+ * MenuItem {spec: {label: 'Show debug info', class: 'ic-bug', css: 'color: #c81200', enable: undefined, run}}
+ *
+ * @example of the callback functions
+ * active:() => document.body.classList.contains('debug')
+ * call:() => document.body.classList.toggle('debug')
+ *
+ * @param callbacks - callbacks `active`, `call`, e.g.
+ * @param props - MenuItem properties, e.g. {label: 'Show debug info', class: 'ic-bug', css: 'color: #c81200'}
+ * @returns The MenuItem object
  */
 function simpleCommand(callbacks: SimpleItemCallbacks | (() => void), props: Partial<MenuItemSpec> = {}): MenuElement {
   if (typeof callbacks === 'function') {
@@ -137,9 +170,12 @@ function simpleCommand(callbacks: SimpleItemCallbacks | (() => void), props: Par
 }
 
 /**
- * TODO: Documentation
+ * Create a new instance of class MenuItem and provide a classname "separator"
  *
- * @returns TODO
+ * @remarks
+ * This is used for a simple vertical line as a visual seperator for the items in the menu bar
+ *
+ * @returns The new instance of MenuItem
  */
 function separator(): MenuElement {
   return new MenuItem({
