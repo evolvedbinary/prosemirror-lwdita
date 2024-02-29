@@ -79,6 +79,7 @@ export function createNodesTree(tree: NodeType<Schema>[]): Node {
  * This function will be called by `insertItem()` which again will be called by `menu()`.
  * `insertNode` will help to create editor buttons in the editor menu bar,
  * currently these are the buttons for creating new ordered and unordered lists.
+ * menu() -> insertItem() -> insertNode()
  *
  * @privateRemarks
  * TODO: Elaborate what happens in the
