@@ -4,9 +4,11 @@ import { ChildTypes } from 'jdita';
 import { NodeSpec, Schema, SchemaSpec, Node, MarkSpec, DOMOutputSpec } from 'prosemirror-model';
 
 /**
- * TODO: Documentation
+ * Set the root node `document` to string "doc"
+ *
+ * @remarks
+ * Will be used in `defaultNodeName()`.
  */
-// TODO: This constant usage is not clear
 export const NODE_NAMES: Record<string, string> = {
   document: 'doc',
 }
@@ -15,6 +17,7 @@ export const NODE_NAMES: Record<string, string> = {
  * TODO: Documentation
  */
 // TODO: Why is this is empty?
+// It will also never be populated later.
 export const TO_DOM: Record<string, (node: typeof BaseNode, attrs: any)
   => (node: Node) => DOMOutputSpec> = {}
 
@@ -264,6 +267,14 @@ function defaultTravel(
 /**
  * `defaultNodeName` transforms the node `nodeName`
  * by replacing dashes with underscores
+ *
+ * @remarks
+ * defaultNodeName will return all nodeNames retrieved by `schema()`
+ * and document()
+ *
+ * @example
+ * `media-track` will be transformed to `media_track`
+ *
  * @param nodeName - The name of the node
  * @returns A string with the transformed node name
  */
