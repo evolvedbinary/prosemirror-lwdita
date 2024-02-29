@@ -208,7 +208,6 @@ export class InputContainer {
  * @returns Command
  */
 export function insertImage(type: NodeType<Schema>, input: InputContainer): Command {
-  console.log('insertImage, type=', type, 'input=', input);
   return function (state, dispatch) {
     function fileSelected(this: HTMLInputElement, event: Event) {
       if (input.el?.files?.length === 1) {
