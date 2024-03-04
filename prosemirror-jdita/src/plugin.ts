@@ -200,24 +200,30 @@ function insertItem(type: NodeType, props: Partial<MenuItemSpec> = {}): MenuElem
 }
 
 /**
- * TODO: Documentation
+ * Create a menu button for uploading an image
  *
- * @param type - TODO
- * @param props - TODO
- * @returns TODO
+ * @param type - The NodeType object
+ * @param props - The icon object containing the title and the class of the icon
+ * @returns A MenuElement containing the HTML node of the entire button element bound to its command
  */
 function insertImageItem(type: NodeType, props: Partial<MenuItemSpec> = {}): MenuElement {
+  // create a new instance of class InputContainer to handle uploading of images
   const input = new InputContainer();
   const command = insertImage(type, input);
+  // return
   return commandItem(command, {
     ...props,
     enable: command,
+    // Prosemirror method `render`: Renders the icon according to its MenuItemSpec.display, and adds an event handler which
+    // executes the command when the representation is clicked.
     render(editorView) {
       const el = document.createElement('div');
+      // create a button containing the "Open XDITA file" option
       el.classList.add('ProseMirror-menuitem-file');
       input.el = document.createElement('input');
       input.el.type = 'file';
       input.el.title = typeof props.title === 'function' ? props.title(editorView.state) : props.title || '';
+      // create the label for the button and add a CSS class according to the EditorState
       const label = document.createElement('span');
       label.innerHTML = props.label || '';
       el.appendChild(input.el);
@@ -229,6 +235,7 @@ function insertImageItem(type: NodeType, props: Partial<MenuItemSpec> = {}): Men
         el.classList.add('ProseMirror-menu-disabled');
         input.el.disabled = true;
       }
+      // return the HTML node containing the "insert Image" button
       return el;
     },
   });
