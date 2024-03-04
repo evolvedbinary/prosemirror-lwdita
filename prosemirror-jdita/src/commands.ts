@@ -36,8 +36,6 @@ export function createNode(type: NodeType<Schema>, args: Record<string, any> = {
 
 /**
  * `createNodesTree` will create a node tree from the given NodeType array.
- * 
- * //TODO add an example
  *
  * @param tree - The node tree of type `NodeType` that has been passed
  * @returns The node object
@@ -67,10 +65,6 @@ export function createNodesTree(tree: NodeType<Schema>[]): Node {
  * currently these are the buttons for creating new ordered and unordered lists.
  * menu() -> insertItem() -> insertNode()
  *
- * @privateRemarks
- * TODO: Elaborate what happens in the
- * `!state.selection.empty` block and
- *
  * @param type - NodeType
  * @returns Command
  */
@@ -84,8 +78,6 @@ export function insertNode(type: NodeType<Schema>): Command {
   return function (state, dispatch) {
     try {
       // If the cursors selection is not empty, return false
-      //TODO sanity check
-      // the object  selection does not have empty property.
       if (!state.selection.empty) {
         return false;
       }
@@ -149,7 +141,6 @@ export class InputContainer {
     this._el?.addEventListener('change', this.change.bind(this));
   }
 
-  // TODO: Check if following description is correct
   change(event: Event) {
     // if field "_el" is available
     if (this._el) {
@@ -244,12 +235,6 @@ function canCreateIndex(type: NodeType) {
  * @returns Boolean of whether the node can be created or not
  */
 function canCreate(type: NodeType) {
-  // TODO: Review, if following debug output makes sense in regard to
-  // my conclusion, that the list of returned NodeTypes is a list of allowed nodes?
-  // My suspicion is that this check must be related to the Node groups, because the groups seem
-  // to share the group `all_blocks`. So a schema check might be implicitly done here.
-  // But the list of nodes in canCreateIndex is not quite matching the below output...
-  // I specifically wonder about the "fn" and "section" couple within a topic/body/section/p tag...
   return canCreateIndex(type) > -1;
 }
 
@@ -263,7 +248,7 @@ function canCreate(type: NodeType) {
  *
  *
  * @param pos - Cursor position
- * @param depth - How many levels after an empty node
+ * @param depth - distance from the current cursor position to the closest parent Node with children
  * @returns List of NodeTypes that can be created
  */
 function defaultBlocks(pos: ResolvedPos, depth = 0) {
@@ -275,7 +260,7 @@ function defaultBlocks(pos: ResolvedPos, depth = 0) {
 
   for (let i = 0; i < match.edgeCount; i++) {
     let edge = match.edge(i)
-    // TODO Explain match
+    // TODO Explain match 5 min
     if (canCreate(edge.type)) {
       // if success, then add new NodeType object to the array
       result.push(edge.type);
@@ -288,8 +273,8 @@ function defaultBlocks(pos: ResolvedPos, depth = 0) {
  * Get the Node that can be created at the current cursor position.
  *
  * @param pos - ResolvedPos current cursor position
- * @param depth - Levels after an empty node
- * @param preferred - preferred NodeType  TODO explain why do we have this
+ * @param depth - distance from the current cursor position to the closest parent Node with children
+ * @param preferred - preferred NodeType
  * @returns NodeType
  */
 function defaultBlockAt(pos: ResolvedPos, depth = 0, preferred?: NodeType) {
@@ -319,11 +304,11 @@ function defaultBlockAt(pos: ResolvedPos, depth = 0, preferred?: NodeType) {
  * 
  * @param tr - The transaction object
  * @param dispatch - dispatch function
- * @param depth - TODO
+ * @param depth - distance from the current cursor position to the closest parent Node with children
  * @returns Boolean - true if the transaction is triggered
  */
 export function enterEOL(tr: Transaction, dispatch = false, depth = 0): Transaction | false {
-  //TODO add inline comments
+  //TODO add inline comments 30 min
   let { $from, $to, empty } = tr.selection
   const parent = $to.node(-depth || undefined);
   const grandParent = $to.node(-depth - 1);
@@ -344,8 +329,8 @@ export function enterEOL(tr: Transaction, dispatch = false, depth = 0): Transact
  * Deletes the empty line in the current cursor position
  *
  * @param tr - The transaction object
- * @param depth - // TODO
- * @param shift - // TODO
+ * @param depth - distance from the current cursor position to the closest parent Node with children
+ * @param shift - cursor shift value to sleect the empty line
  * @returns deleteSelection transaction object
  */
 export function deleteEmptyLine(tr: Transaction, depth = 0, shift = 0): Transaction {
@@ -358,8 +343,8 @@ export function deleteEmptyLine(tr: Transaction, depth = 0, shift = 0): Transact
  *
  * @param tr - The Transaction object
  * @param dispatch - A boolean, set to `false`
- * @param depth - A number, set to `0`
- * @returns TODO
+ * @param depth - distance from the current cursor position to the closest parent Node with children
+ * @returns transaction of EnterEOL or false
  */
 export function enterEmpty(tr: Transaction, dispatch = false, depth = 0): Transaction | false {
   // if we are trying to go deeper in a empty node.
@@ -373,10 +358,10 @@ export function enterEmpty(tr: Transaction, dispatch = false, depth = 0): Transa
 /**
  * Handle the enter key event when the cursor is in the middle of a node.
  *
- * @param tr - TODO
- * @param dispatch - TODO
- * @param depth - TODO
- * @returns TODO
+ * @param tr - transaction object
+ * @param dispatch - dispatch function
+ * @param depth - distance from the current cursor position to the closest parent Node with children
+ * @returns boolean - true if the transaction is triggered
  */
 export function enterSplit(tr: Transaction, dispatch = false, depth = 0): Transaction | false {
   depth++;
@@ -393,13 +378,6 @@ export function enterSplit(tr: Transaction, dispatch = false, depth = 0): Transa
       $to = tr.selection.$to;
 
       depth++;
-
-      // TODO: Move following depth description to appropriate location
-      // depth: number, it will show the level of the newly created element at the new cursor position
-      // which is read from the ResolvedPos object
-      // e.g. in this tree, beginning with root element doc [0] / topic [1] / body [2] / section [3] / p [4]
-      // the p node has the depth/level "4"
-
       // split the parent node
       tr = tr.split(tr.mapping.map($from.pos), depth);
       const pos = tr.selection.from;
@@ -454,7 +432,7 @@ export function enterSplit(tr: Transaction, dispatch = false, depth = 0): Transa
  * Check if the cursor is at the end of the line.
  *
  * @param tr - The Transaction object
- * @param depth - // TODO
+ * @param depth - distance from the current cursor position to the closest parent Node with children
  * @returns Boolean - true if the cursor is at the end of the line
  */
 export function isEOL(tr: Transaction, depth = 0) {
@@ -477,7 +455,7 @@ export function isEOL(tr: Transaction, depth = 0) {
  * `isEmpty` checks whether the cursor is at an empty line or not.
  *
  * @param tr - The Transaction object
- * @param depth - The default depth 0
+ * @param depth - distance from the current cursor position to the closest parent Node with children
  * @returns Boolean, e.g. true, if the the parent node has no content
  */
 export function isEmpty(tr: Transaction, depth = 0) {
@@ -501,7 +479,7 @@ export function isEmpty(tr: Transaction, depth = 0) {
  * this function checks if the previous node is empty or not.
  *
  * @param tr - The Transaction object
- * @param depth - The default depth 0
+ * @param depth - distance from the current cursor position to the closest parent Node with children
  * @returns Boolean
  */
 export function isPrevEmpty(tr: Transaction, depth = 0) {
@@ -521,43 +499,31 @@ export function isPrevEmpty(tr: Transaction, depth = 0) {
 }
 
 /**
- * `getDepth` - Get the distance from the current cursor position to the closest populated Node.
- * If none was found it will return the distance from root.
+ * `getDepth` - Get the distance from the current cursor position to the closest parent Node with children.
  *
  * @privateRemarks
  * TODO: Rename this function, as it doesn't reflect its purpose and is confusing.
  * 
- * 
- * @privateRemarks
- * TODO: This needs a sanity check
- *
  * @param tr - The Transaction object
  * @param empty - A Boolean, set to `false`
  * @returns A number containing the depth of the tested
  */
 export function getDepth(tr: Transaction, empty = false) {
   let depth = 0;
+  debugger;
+
   while((empty ? isEmpty : isEOL)(tr, depth + 1)) {
     depth++;
   }
-  
-  console.log('depth', depth);
-  
+
   return depth;
 }
 
 /**
- * `getPrevDepth` - Get the previous node distance from it's father.
- *
- * @remarks
- * Does not refer to the node depth nor the cursor depth nor the previous node depth.
- * It refers to the previous node if it's empty or not.
- *
- * @privateRemarks
- * TODO: This needs a sanity check
+ * `getPrevDepth` - Get the previous node distance from the first parent with children.
  *
  * @param tr - The Transaction object
- * @returns number - 1 or 0 if the previous node is empty or not
+ * @returns number - the depth of the previous node
  */
 export function getPrevDepth(tr: Transaction) {
   let depth = 0;
@@ -569,15 +535,11 @@ export function getPrevDepth(tr: Transaction) {
 }
 
 /**
- * `getTree` - Get the tree of nodes starting from the current cursor position, and going up to ?? node.
- *
- * @privateRemarks Younes:
- * TODO: this function does not get the current tree but returns the new tree of elements that will be created.
- * TODO: needs further testing
+ * `getTree` - Get the tree of nodes starting from the current cursor position, and going up to first parent node with children.
  *
  * @param pos - The ResolvedPos object containing position, path, depth and parentOffset
- * @param depth - TODO
- * @returns TODO
+ * @param depth - distance from the current cursor position to the closest parent Node with children
+ * @returns NodeType array
  */
 export function getTree(pos: ResolvedPos, depth = 0) {
   const result: NodeType<Schema>[] = [pos.parent.type];
@@ -647,6 +609,7 @@ export const newLine = chainCommands(enterPressed);
  *
  * @privateRemarks
  * TODO: Check plausability of returned booleans with logs below, they didn't seem to be reliable.
+ * 20 min
  *
  * @param state - The EditorState object
  * @param mark - The MarkType object
