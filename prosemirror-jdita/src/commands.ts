@@ -7,7 +7,7 @@ import { EditorView } from 'prosemirror-view';
 
 /**
  * Create a new Node and fill it with the args as attributes.
- * Fill the node with the content if it's a block node.
+ * Fill the node with children nodes if they're required.
  *
  * @privateRemarks
  * An image node is only retrieving the `href` attribute from the source, the according `alt` tag is not implemented yet.
@@ -35,23 +35,7 @@ export function createNode(type: NodeType<Schema>, args: Record<string, any> = {
 }
 
 /**
- * `createNodesTree` will return the node object for a node tree that has been passed an an argument.
- *
- * @remarks
- * It is called by function `enterEOL`, which itself will be called on each `return key` event in the editor
- * when the cursor is placed at the end of a line. This creates a new node and needs this helper function to
- * update the transaction object and the view.
- *
- * @example excerpt of a `tree` array:
- * NodeType {name: 'p', schema: Schema, spec: {…}, groups: Array(5), attrs: {…}, …}
- * NodeType {name: 'section', schema: Schema, spec: {…}, groups: Array(0), attrs: {…}, …}
- *
- * @example of a returned node object:
- * Node {type: NodeType, attrs: {…}, content: Fragment, marks: Array(0)}
- *   attrs: {parent: '', props: '', dir: '', xml:lang: '', translate: '', …}
- *   content: Fragment {content: Array(0), size: 0}
- *   marks: []
- *   type : NodeType {name: 'p', schema: Schema, spec: {…}, groups: Array(5), attrs: {…}, …} ...
+ * `createNodesTree` will create a node tree from the given NodeType array.
  *
  * @param tree - The node tree of type `NodeType` that has been passed
  * @returns The node object
@@ -100,7 +84,6 @@ export function insertNode(type: NodeType<Schema>): Command {
       // TODO: Check the correct meaning of this condition
       // If the value for key "selection" in the EditorState object is not empty?
       // Cannot be confirmed by logging:
-      // console.log('insertNode, state.selection=', state.selection);
       if (!state.selection.empty) {
         return false;
       }
@@ -128,9 +111,8 @@ export function insertNode(type: NodeType<Schema>): Command {
 }
 
 /**
- * Construct a type alias `InputContainerListener`
+ * Construct a type alias `InputContainerListener`.
  *
- * TODO: Finish description, figure out syntax
  */
 // Interface `HTMLInputElement` provides special properties and
 // methods for manipulating the options, layout, and presentation of elements.
@@ -138,7 +120,7 @@ export function insertNode(type: NodeType<Schema>): Command {
 export type InputContainerListener = (this: HTMLInputElement, event: Event) => void;
 
 /**
- * TODO: Documentation
+ * Create a new class `InputContainer` To handle Uploading of images
  * currently used in `insertImageItem()` as a new instance
  */
 export class InputContainer {
@@ -163,9 +145,9 @@ export class InputContainer {
     if (this._el === value) {
       return;
     }
+    // set the new HTML input element
     this._el = value;
-    // append an event listener for 'change' events on optional element "_el"
-    // TODO: Figure out, what the listener exactly does (this.change.bind(this)?)
+    // update the event listener
     this._el?.addEventListener('change', this.change.bind(this));
   }
 
@@ -182,12 +164,12 @@ export class InputContainer {
         .forEach(key => this.listeners[key].bind(el)(event));
     }
   }
-  // TODO: Describe method "on"
+  // enable the input container to listen to events
   on(key: string, listener: InputContainerListener) {
     this.off(key);
     this.listeners[key] = listener;
   }
-  // TODO: Describe method "off"
+  // disable the input container events
   off(key: string) {
     if (this.listeners[key]) {
       delete (this.listeners[key]);
@@ -247,140 +229,60 @@ export function insertImage(type: NodeType<Schema>, input: InputContainer): Comm
 }
 
 /**
- * Check if the node can be created or not.
+ * Check the node in allowed nodes list and return the index of the node.
  * This function also ensures that the order of the nodes is correct.
- * Will be called on key event "enter pressed".
- *
- * @privateRemarks
- * TODO: This has the same comment as `canCreate` and is not precisely describing the function I think
  *
  * @param type - NodeType or nodeName
  * @returns node index from the list of nodes
  */
 function canCreateIndex(type: NodeType) {
-  //console.log('canCreateIndex, type=', type); // e.g. 4
-  //console.log('canCreateIndex, type.name=', type.name); // e.g, "fn" ?
-  //console.log("canCreateIndex, return value=", ['data', 'ul', 'li', 'p', 'section', 'stentry', 'strow', 'simpletable'].indexOf(type.name)); // e.g.NodeType {name: 'fn', schema: Schema, spec: {…}, groups: Array(2), attrs: {…}, …}
   return ['data', 'ul', 'li', 'p', 'section', 'stentry', 'strow', 'simpletable'].indexOf(type.name);
 }
 
 /**
  * Check if the node can be created or not.
  *
- * @remarks
- * Will be triggered on key "press enter" and evaluates
- *
  * @param type - NodeType object, contains the node name
  * @returns Boolean of whether the node can be created or not
  */
 function canCreate(type: NodeType) {
-  // TODO: Review, if following debug output makes sense in regard to
-  // my conclusion, that the list of returned NodeTypes is a list of allowed nodes?
-  // My suspicion is that this check must be related to the Node groups, because the groups seem
-  // to share the group `all_blocks`. So a schema check might be implicitly done here.
-  // But the list of nodes in canCreateIndex is not quite matching the below output...
-  // I specifically wonder about the "fn" and "section" couple within a topic/body/section/p tag...
-
-  //console.log('canCreate, NodeType=', type.name, ', index=', canCreateIndex(type), ', return', canCreateIndex(type) > -1);
-  /**
-   * Debug outputs when pressing "enter":
-   * 1. Cursor at beginning of line in title node:
-   *    NodeType topic       index -1 return false
-   *
-   * 2. Cursor at end of line in title node:
-   *    NodeType body        index -1 return false
-   *    NodeType prolog      index -1 return false
-   *    NodeType shortdesc   index -1 return false
-   *
-   * 3. Cursor at beginning of line shortdesc:
-   *    NodeType topic       index -1 return false
-   *
-   * 4. Cursor at end of line shortdesc:
-   *    NodeType body        index -1 return false
-   *    NodeType prolog      index -1 return false
-   *
-   * 5. Cursor anywhere in body/section/p, except for end of p:
-   *    NodeType fn          index -1 return false
-   *    NodeType section     index 4  return true
-   *
-   * 6. Cursor at end of topic/body/section/p:
-   *    NodeType data        index 0  return true
-   *    NodeType p           index 3  return true
-   *    NodeType ol          index -1 return false
-   *    NodeType pre         index -1 return false
-   *    NodeType audio       index -1 return false
-   *    NodeType video       index -1 return false
-   *    NodeType fn          index -1 return false
-   *    NodeType note        index -1 return false
-   *    NodeType simpletable index 7  return true
-   *    NodeType fig         index -1 return false
-   *    NodeType dl          index -1 return false
-   *    NodeType ul          index 1  return true
-   *
-   * 7. Cursor anywhere in topic/body/section/ol/li, except for end of li:
-   *    NodeType li          index 2  return true
-   *
-   * 8. Cursor at end of topic/body/section/ol/li:
-   *    NodeType data        index 0  return true
-   *    NodeType p           index 3  return true
-   *    NodeType ol          index -1 return false
-   *    NodeType pre         index -1 return false
-   *    NodeType audio       index -1 return false
-   *    NodeType video       index -1 return false
-   *    NodeType note        index -1 return false
-   *    NodeType simpletable index 7  return true
-   *    NodeType fig         index -1 return false
-   *    NodeType dl          index -1 return false
-   *    NodeType ul          index 1  return true
-   */
-
-  // check each node-"index" in list of allowed nodes and return evaluation of
-  // "index" >= 0 (true | false)
   return canCreateIndex(type) > -1;
 }
 
 /**
  * Create an array of NodeTypes that are "allowed" nodes to be
- * added at the current curser position in the editor when pressing key "enter"
+ * added at the current curser position.
  *
  * @remarks
  * `defaultBlocks` will be triggered on key "press enter", function `enterEOL()`
  * which calls `defaultBlocksAt()`, in which `defaultBlocks()` is finally called.
  *
  *
- * @param pos - TODO
- * @param depth - The level of the newly created node within the document tree, type number
- * @returns TODO
+ * @param pos - Cursor position
+ * @param depth - How many levels after an empty node
+ * @returns List of NodeTypes that can be created
  */
 function defaultBlocks(pos: ResolvedPos, depth = 0) {
   const match = pos.node(-depth - 1).contentMatchAt(pos.indexAfter(-depth - 1));
-  //console.log('defaultBlocks, match=', match,);
   let index = -1;
-  // create an empty array of NodeTypes
+
   const result: NodeType[] = [];
   for (let i = 0; i < match.edgeCount; i++) {
     let edge = match.edge(i)
-    //console.log('defaultBlocks, edge=', edge);
-    // check, if a new node can be added after
-    // hitting "enter" at the current cursor position
+    // TODO Explain match
     if (canCreate(edge.type)) {
-      console.log('defaultBlocks, added NodeType', edge.type.name);
-      // if success, then add new NodeType object to the empty array of NodeTypes
+      // if success, then add new NodeType object to the array
       result.push(edge.type);
     }
   }
-  //console.log('defaultBlocks, result=', result);
   return result;
 }
 
 /**
- * Get the default block Node at the current cursor position.
- *
- * @privateRemarks
- * TODO: We should elaborate on "preferred NodeType" and on "default blocks" (function above), it's just not clear what it means.
+ * Get the Node that can be created at the current cursor position.
  *
  * @param pos - ResolvedPos current cursor position
- * @param depth - TODO
+ * @param depth - Levels after an empty node
  * @param preferred - preferred NodeType
  * @returns NodeType
  */
@@ -390,19 +292,16 @@ function defaultBlockAt(pos: ResolvedPos, depth = 0, preferred?: NodeType) {
   // assign all allowed NodeType objects to variable `blocks`
   const blocks = defaultBlocks(pos, depth || undefined);
 
-  // if the current node is contained in the default node blocks, then return the current node
+  // if the preferred node is contained in the default node blocks, then return the current node
   if (preferred && blocks.find(block => block.name === preferred.name)) {
     return preferred;
-    console.log('defaultBlockAt, preferred=', preferred);
   }
-  // loop through the default blocks and return the first block that can be created
+  // loop through the allowed blocks and return the first block that can be created
   blocks.forEach(newType => {
     const newIndex = canCreateIndex(newType);
-    console.log('defaultBlockAt, pos=', pos, ', depth=', depth, ', preferred=', preferred, ', newIndex=', newIndex, ', newType=', newType);
     if (newIndex > index) {
       index = newIndex;
       type = newType;
-      console.log('defaultBlockAt, if newIndex', newIndex, '> than current index', index, ', return the type ', type);
     }
   });
   // return the newly created nodetype
@@ -410,12 +309,12 @@ function defaultBlockAt(pos: ResolvedPos, depth = 0, preferred?: NodeType) {
 }
 
 /**
- * TODO: Documentation
- *
- * @param tr - TODO
- * @param dispatch - TODO
+ * Handle the enter key event when the cursor is at the end of the line.
+ * 
+ * @param tr - The transaction object
+ * @param dispatch - dispatch function
  * @param depth - TODO
- * @returns TODO
+ * @returns Boolean - true if the transaction is triggered
  */
 export function enterEOL(tr: Transaction, dispatch = false, depth = 0): Transaction | false {
   let { $from, $to, empty } = tr.selection
@@ -448,9 +347,7 @@ export function deleteEmptyLine(tr: Transaction, depth = 0, shift = 0): Transact
 }
 
 /**
- * Enter an empty enter press
- * This function is only triggered when the cursor is at the end of the line and the parent node is empty.
- * In this case, the function will delete the empty line and create a new line.
+ * Handle the enter key event when the cursor is at empty line.
  *
  * @param tr - The Transaction object
  * @param dispatch - A boolean, set to `false`
@@ -467,7 +364,7 @@ export function enterEmpty(tr: Transaction, dispatch = false, depth = 0): Transa
 }
 
 /**
- * TODO: Documentation
+ * Handle the enter key event when the cursor is in the middle of a node.
  *
  * @param tr - TODO
  * @param dispatch - TODO
@@ -484,7 +381,6 @@ export function enterSplit(tr: Transaction, dispatch = false, depth = 0): Transa
     // check if the previous node is empty
     const prevDepth = getPrevDepth(tr);
     if (prevDepth > 0) {
-      debugger;
       // setting $from and $to is not necessary here, as they are already set above
       $from = tr.selection.$from;
       $to = tr.selection.$to;
@@ -499,7 +395,6 @@ export function enterSplit(tr: Transaction, dispatch = false, depth = 0): Transa
 
       // split the parent node
       tr = tr.split(tr.mapping.map($from.pos), depth);
-      console.log('enterSplit, depth=', depth);
       const pos = tr.selection.from;
       const selStart = pos - prevDepth * 2 - 2;
       const selEnd = selStart - prevDepth * 2 - 2;
@@ -619,16 +514,15 @@ export function isPrevEmpty(tr: Transaction, depth = 0) {
 }
 
 /**
- * `getDepth` is triggered on each "press Enter" key event in the editor
- * and checks the depth of the cursor position
- * by checking the Transaction object.
+ * `getDepth` - Get the distance from the current cursor position to the clostest populated Node.
+ * If none was found it will return the distance from root.
  *
  * @privateRemarks
  * TODO: Rename this function, as it doesn't reflect its purpose and is confusing.
- *
- * @remarks Younes:
- * This does not mean cursor depth, it's always 0. it only returns 1 if the node is empty.
- * more like are you trying to go deeper in a empty node. this function will let you know.
+ * 
+ * 
+ * @privateRemarks
+ * TODO: This needs a sanity check
  *
  * @param tr - The Transaction object
  * @param empty - A Boolean, set to `false`
@@ -639,11 +533,14 @@ export function getDepth(tr: Transaction, empty = false) {
   while((empty ? isEmpty : isEOL)(tr, depth + 1)) {
     depth++;
   }
+  
+  console.log('depth', depth);
+  
   return depth;
 }
 
 /**
- * `getPrevDepth` - TODO Documentation
+ * `getPrevDepth` - Get the previous node distance from it's father.
  *
  * @remarks
  * Does not refer to the node depth nor the cursor depth nor the previous node depth.
@@ -660,7 +557,7 @@ export function getPrevDepth(tr: Transaction) {
   while(isPrevEmpty(tr, depth + 1)) {
     depth++;
 
-  }
+  }  
   return depth;
 }
 
@@ -719,6 +616,7 @@ export function enterPressed(state: EditorState, dispatch?: (tr: Transaction) =>
       : enterEOL(tr, !!dispatch, depth)   // when the cursor is not at the beginning of parent node, the cursor can be at the end text node, then enterEOL is triggered
     : enterSplit(tr, !!dispatch, depth);  // when the cursor is not at the end of the line, then enterSplit is triggered
 
+  // if the transaction is triggered, then dispatch the transaction
   if (dispatch && resultTr !== false) {
     dispatch(resultTr);
     return true;
