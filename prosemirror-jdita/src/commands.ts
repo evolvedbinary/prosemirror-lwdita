@@ -36,6 +36,8 @@ export function createNode(type: NodeType<Schema>, args: Record<string, any> = {
 
 /**
  * `createNodesTree` will create a node tree from the given NodeType array.
+ * 
+ * //TODO add an example
  *
  * @param tree - The node tree of type `NodeType` that has been passed
  * @returns The node object
@@ -81,9 +83,9 @@ export function insertNode(type: NodeType<Schema>): Command {
   // this will dispatch a transaction
   return function (state, dispatch) {
     try {
-      // TODO: Check the correct meaning of this condition
-      // If the value for key "selection" in the EditorState object is not empty?
-      // Cannot be confirmed by logging:
+      // If the cursors selection is not empty, return false
+      //TODO sanity check
+      // the object  selection does not have empty property.
       if (!state.selection.empty) {
         return false;
       }
@@ -112,15 +114,11 @@ export function insertNode(type: NodeType<Schema>): Command {
 
 /**
  * Construct a type alias `InputContainerListener`.
- *
  */
-// Interface `HTMLInputElement` provides special properties and
-// methods for manipulating the options, layout, and presentation of elements.
-// Interface `Event` takes place in the DOM.
 export type InputContainerListener = (this: HTMLInputElement, event: Event) => void;
 
 /**
- * Create a new class `InputContainer` To handle Uploading of images
+ * Create a new class `InputContainer` to handle uploading of images
  * currently used in `insertImageItem()` as a new instance
  */
 export class InputContainer {
@@ -246,6 +244,12 @@ function canCreateIndex(type: NodeType) {
  * @returns Boolean of whether the node can be created or not
  */
 function canCreate(type: NodeType) {
+  // TODO: Review, if following debug output makes sense in regard to
+  // my conclusion, that the list of returned NodeTypes is a list of allowed nodes?
+  // My suspicion is that this check must be related to the Node groups, because the groups seem
+  // to share the group `all_blocks`. So a schema check might be implicitly done here.
+  // But the list of nodes in canCreateIndex is not quite matching the below output...
+  // I specifically wonder about the "fn" and "section" couple within a topic/body/section/p tag...
   return canCreateIndex(type) > -1;
 }
 
@@ -265,8 +269,10 @@ function canCreate(type: NodeType) {
 function defaultBlocks(pos: ResolvedPos, depth = 0) {
   const match = pos.node(-depth - 1).contentMatchAt(pos.indexAfter(-depth - 1));
   let index = -1;
-
+  
+  // Create an empty array of NodeTypes.
   const result: NodeType[] = [];
+
   for (let i = 0; i < match.edgeCount; i++) {
     let edge = match.edge(i)
     // TODO Explain match
@@ -283,7 +289,7 @@ function defaultBlocks(pos: ResolvedPos, depth = 0) {
  *
  * @param pos - ResolvedPos current cursor position
  * @param depth - Levels after an empty node
- * @param preferred - preferred NodeType
+ * @param preferred - preferred NodeType  TODO explain why do we have this
  * @returns NodeType
  */
 function defaultBlockAt(pos: ResolvedPos, depth = 0, preferred?: NodeType) {
@@ -317,6 +323,7 @@ function defaultBlockAt(pos: ResolvedPos, depth = 0, preferred?: NodeType) {
  * @returns Boolean - true if the transaction is triggered
  */
 export function enterEOL(tr: Transaction, dispatch = false, depth = 0): Transaction | false {
+  //TODO add inline comments
   let { $from, $to, empty } = tr.selection
   const parent = $to.node(-depth || undefined);
   const grandParent = $to.node(-depth - 1);
@@ -514,7 +521,7 @@ export function isPrevEmpty(tr: Transaction, depth = 0) {
 }
 
 /**
- * `getDepth` - Get the distance from the current cursor position to the clostest populated Node.
+ * `getDepth` - Get the distance from the current cursor position to the closest populated Node.
  * If none was found it will return the distance from root.
  *
  * @privateRemarks
