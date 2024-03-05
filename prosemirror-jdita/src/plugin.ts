@@ -187,11 +187,11 @@ function separator(): MenuElement {
 }
 
 /**
- * TODO: Documentation
+ * Insert a new item into the menu
  *
- * @param type - TODO
- * @param props - TODO
- * @returns TODO
+ * @param type - NodeType object
+ * @param props - MenuItem Configuration object
+ * @returns MenuElement
  */
 function insertItem(type: NodeType, props: Partial<MenuItemSpec> = {}): MenuElement {
   return commandItem(insertNode(type), {
@@ -242,7 +242,7 @@ function insertImageItem(type: NodeType, props: Partial<MenuItemSpec> = {}): Men
 }
 
 /**
- * TODO: Documentation
+ * Interface `Additions` to provide menu item placement
  */
 interface Additions {
   start?: MenuElement[][];
@@ -252,11 +252,11 @@ interface Additions {
 }
 
 /**
- * TODO: Documentation
+ * Create a menu bar for the editor
  *
- * @param schema - TODO
- * @param param1 - TODO
- * @returns TODO
+ * @param schema - Node schema
+ * @param param1 - Object that contains the placement of the menu items
+ * @returns menuBar
  */
 export function menu(schema: Schema, { start, before, after, end}: Additions = {}) {
   const debug = [
