@@ -252,15 +252,16 @@ function canCreate(type: NodeType) {
  * @returns List of NodeTypes that can be created
  */
 function defaultBlocks(pos: ResolvedPos, depth = 0) {
+  // Get the content match at the current cursor position
   const match = pos.node(-depth - 1).contentMatchAt(pos.indexAfter(-depth - 1));
   let index = -1;
   
   // Create an empty array of NodeTypes.
   const result: NodeType[] = [];
-
+  // loop through the possible content matches
   for (let i = 0; i < match.edgeCount; i++) {
     let edge = match.edge(i)
-    // TODO Explain match 5 min
+    // check if the node can be created
     if (canCreate(edge.type)) {
       // if success, then add new NodeType object to the array
       result.push(edge.type);
@@ -308,16 +309,25 @@ function defaultBlockAt(pos: ResolvedPos, depth = 0, preferred?: NodeType) {
  * @returns Boolean - true if the transaction is triggered
  */
 export function enterEOL(tr: Transaction, dispatch = false, depth = 0): Transaction | false {
-  //TODO add inline comments 30 min
   let { $from, $to, empty } = tr.selection
+  // get the parent
   const parent = $to.node(-depth || undefined);
+  // get the grand parent
   const grandParent = $to.node(-depth - 1);
+  // get the allowed node types that can be created at the current cursor position
   const type = defaultBlockAt($to, depth, parent.type);
+
+  // if the transaction is triggered from the last function call
   if (dispatch) {
+    //if we have a possible node type to create
     if (type) {
+      // get the new cursor position
       let side = (!$from.parentOffset && $to.index() < parent.childCount ? $from : $to).pos + depth + 1;
+      // create and insert the new node
       tr = tr.insert(side, createNodesTree(getTree($from, depth)));
+      // select the new node
       tr = tr.setSelection(TextSelection.create(tr.doc, side + depth + 1));
+      // complete the transaction
       return tr.scrollIntoView();
     }
     return false;
@@ -510,7 +520,6 @@ export function isPrevEmpty(tr: Transaction, depth = 0) {
  */
 export function getDepth(tr: Transaction, empty = false) {
   let depth = 0;
-  debugger;
 
   while((empty ? isEmpty : isEOL)(tr, depth + 1)) {
     depth++;
@@ -605,11 +614,7 @@ export const newLine = chainCommands(enterPressed);
  * list of all marks in the editor menu
  * This function will be triggered on any key event in the editor to run the check.
  * Returns a boolean, if there is a mark of this type in the given set, or
- * if a given mark or mark type occurs in this document between the two given positions.
- *
- * @privateRemarks
- * TODO: Check plausability of returned booleans with logs below, they didn't seem to be reliable.
- * 20 min
+ * if a given mark or mark type occurs in the selected text1.
  *
  * @param state - The EditorState object
  * @param mark - The MarkType object
