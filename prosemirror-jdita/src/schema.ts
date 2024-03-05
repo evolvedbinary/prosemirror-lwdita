@@ -14,7 +14,7 @@ export const NODE_NAMES: Record<string, string> = {
 }
 
 /**
- * TODO: Documentation
+ * Provide a map of special nodes to their corresponding DOM node
  */
 // TODO: Why is this is empty?
 // It will also never be populated later.
@@ -51,8 +51,7 @@ export const NODE_ATTR_NAMES: Record<string, Record<string, string>> = {
   },
 }
 /**
- * TODO: Documentation
- * TODO: This constant is not used anywhere and it's not clear what it does
+ * Provide a map of special nodes to their corresponding Schema
  */
 export const SCHEMAS: Record<string, (node: typeof BaseNode, next: (nodeName: string) => void) => SchemaNode> = {
   'text': (node: typeof BaseNode, next: (nodeName: string) => void): SchemaNode => {
@@ -130,7 +129,7 @@ export interface SchemaNode {
 }
 
 /**
- * TODO: Documentation
+ * `SchemaNodes` is a map of nodes in the schema
  */
 export interface SchemaNodes {
   [key: string]: SchemaNode;
@@ -151,8 +150,11 @@ function getChildren(type: ChildTypes): string[] {
 }
 
 /**
- * TODO: Documentation
- * TODO: This function is not used anywhere
+ * Travel the node and generate the node spec
+ * 
+ * @param node - JDita node
+ * @param next - Next travel function
+ * @returns SchemaNode
  */
 export function travel(node: typeof BaseNode, next: (nodeName: string) => void): SchemaNode {
   return (SCHEMAS[node.nodeName] || defaultTravel)(node, next);
@@ -345,9 +347,8 @@ export function schema(): Schema {
       }
     }
   }
-
-  // TODO: calling browse() on the document node!!
-  // TODO: Document node is a class not an instance
+  
+  // start the process of populating the schema spec using the jdita nodes from the document node
   browse(DocumentNode, DocumentNode);
 
   // Set the content of the topic and doc nodes
