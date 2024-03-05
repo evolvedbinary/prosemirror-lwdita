@@ -47,8 +47,12 @@ const doc = Node.fromJSON(schemaObject, jsonDoc);
 
 // create a new prosemirror state check https://prosemirror.net/docs/ref/#state for more info
 const state = EditorState.create({
-      doc
-    });
+  doc,
+  plugins: [
+    shortcuts(schemaObject),
+    menu(schemaObject, {}),
+  ]
+})
 //Grab the HTML Dom element to render the editor in
 const domEl = document.querySelector("#editor");
 
