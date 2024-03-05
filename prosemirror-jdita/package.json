@@ -14,7 +14,8 @@
     "test": "mocha",
     "test:watch": "mocha -w",
     "coverage": "rimraf coverage && nyc yarn mocha",
-    "coveralls": "nyc --reporter=text-lcov report | coveralls"
+    "coveralls": "nyc --reporter=text-lcov report | coveralls",
+    "generate-docs": "typedoc --treatWarningsAsErrors --out generated-docs src --plugin typedoc-plugin-missing-exports"
   },
   "repository": {
     "type": "git",
@@ -75,6 +76,12 @@
     "nyc": "^15.1.0",
     "rimraf": "^3.0.2",
     "ts-node": "^8.10.2",
+    "@typescript-eslint/eslint-plugin": "^2.30.0",
+    "@typescript-eslint/parser": "^2.30.0",
+    "eslint": "^6.8.0",
+    "eslint-plugin-tsdoc": "^0.2.17",
+    "typedoc": "^0.25.7",
+    "typedoc-plugin-missing-exports": "^2.2.0",
     "typescript": "4.6.3"
   }
 }
