@@ -2,6 +2,11 @@ import { Command } from "prosemirror-commands";
 import { MenuElement, MenuItem, MenuItemSpec } from "prosemirror-menu";
 import { InputContainer } from "prosemirror-jdita";
 
+/**
+ * TODO: Documentation
+ * @param input - The input element
+ * @returns - TODO
+ */
 function openFile(input: InputContainer): Command {
   return (state, dispatch) => {
   function fileSelected(this: HTMLInputElement, event: Event) {
@@ -45,6 +50,10 @@ function openFile(input: InputContainer): Command {
 }
 }
 
+/**
+ * TODO: Documentation
+ * @returns A MenuElement
+ */
 export function openFileMenuItem(): MenuElement {
   const input = new InputContainer();
   return new MenuItem({
@@ -67,6 +76,11 @@ export function openFileMenuItem(): MenuElement {
   });
 }
 
+/**
+ * TODO: Documentation
+ * @param props - TODO
+ * @returns - TODO
+ */
 export function githubMenuItem(props: Partial<MenuItemSpec & { url: string }> = {}): MenuElement {
   return new MenuItem({
     enable: () => true,
