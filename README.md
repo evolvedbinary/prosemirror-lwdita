@@ -1,4 +1,5 @@
 # Prosemirror JDita
+
 [![Node.js Version](https://img.shields.io/node/v-lts/prosemirror-jdita)](https://nodejs.org)
 [![Npm Package Version](https://img.shields.io/npm/v/prosemirror-jdita)](https://www.npmjs.com/package/prosemirror-jdita)
 [![Build Status](https://circleci.com/gh/evolvedbinary/prosemirror-jdita.svg?style=svg)](https://circleci.com/gh/evolvedbinary/prosemirror-jdita)
@@ -6,7 +7,8 @@
 
 This tool generates Prosemirror documents from JDita objects. It also provides Schema Definition for proper display and editing of JDita data.
 
-# Usage
+## Usage
+
 Add the library to your project using npm or yarn
 
 ```shell
@@ -17,7 +19,8 @@ npm install prosemirror-jdita
 yarn add prosemirror-jdita
 ```
 
-Include the Library 
+Include the Library
+
 ```javascript
 // SCHEMA builder
 import { schema } from "prosemirror-jdita";
@@ -28,9 +31,13 @@ import { xditaToJson } from "jdita";
 import { document } from "prosemirror-jdita";
 ```
 
-A minimal example of usage, you can check the demo for a full example.
+This is a minimal example of usagehow to use Prosemirror-JDita.
+You can check the [included demo](prosemirror-jdita-demo/src/) for a full example.
+
 ```javascript
-let xdita = `Sample xdita input` // please use a valid xdita sample
+// Please use a valid XDita sample,
+// e.g. pick one from https://github.com/oasis-tcs/dita-lwdita/tree/spec/org.oasis.xdita/samples/xdita
+let xdita = `Insert your XDita example here`
 xditaToJson(xdita, true)
   .then(json => document(json))
 
@@ -53,6 +60,7 @@ const state = EditorState.create({
     menu(schemaObject, {}),
   ]
 })
+
 //Grab the HTML Dom element to render the editor in
 const domEl = document.querySelector("#editor");
 
@@ -62,50 +70,86 @@ new EditorView(domEl, {
 });
 ```
 
-# Demo 
-We provide a Small demo to showcase features and as playground to test all of the features.
+## Demo
+
+We provide a [small demo](prosemirror-jdita-demo/src/) to showcase features and as a playground to test all of the features.
 
 ```shell
-yarn build:demo # build the demo
+# clone project and install dependencies
+git clone https://github.com/evolvedbinary/prosemirror-jdita.git
+cd prosemirror-jdita
+yarn install
 
-yarn start:demo # start the demo 
+# start the demo
+yarn start:demo
 ```
 
-This will start a demo on `http://localhost:1234`
+This will start a demo on `http://localhost:1234`.
+If this port is already in use, `parcel` will assign a random port that you can see in the terminal logs.
 
-
-We also provide a diagram that can help track the library inner workings.
+We also provide a diagram that can help understanding the library and the internal flow.
 
 //TODO link the diagram
 
-# Development
+## Development
+
+### Prerequisites
+
 For development, you will need Node.js and a node package manager, like Yarn, to be installed in your environment.
 
 * Minimal Node version: v20.10.0
 * Optional: This project uses Yarn as its build system. Although we don't support it, if you prefer, it should also be possible to use npm instead of Yarn. The version of Yarn that we have used is v1.22.21.
 
-## install dependencies
+### Installation
+
+Clone the Prosemirror-JDita repository:
+
+```shell
+git clone https://github.com/evolvedbinary/prosemirror-jdita.git
+```
+
+Change to the Prosemirror-JDita directory:
+
+```shell
+cd prosemirror-jdita
+```
+
+Install all packages:
+
 ```shell
 yarn install
 ```
 
-## Build the library
+### Build
+
+#### Build the Project
 
 ```shell
 yarn build
 ```
 
-## Testing
+#### Build the Demo
+
+```shell
+yarn build:demo
+```
+
+### Generate the TSDoc Documentation
+
+```shell
+yarn run generate-docs
+```
+
+This will generate a new folder `docs` containing an HTML file with the entire TSDoc Prosemirror-JDita documentation.
+Open this file in a browser to navigate through the documentation.
+
+### Test
+
+This project also has tests which are written using the Mocha framework.
+To execute the test suite and view the code coverage, run:
 
 ```shell
 yarn test # run unit tests
 
 yarn coverage # get coverage
 ```
-
-## Generate the documentation
-
-```shell
-yarn run generate-docs
-```
-
