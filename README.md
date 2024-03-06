@@ -87,7 +87,7 @@ If this port is already in use, `parcel` will assign a random port that you can 
 
 We also provide a diagram that can help understanding the library and the internal flow:
 
-//TODO link the diagram
+![Diagram of the Prosemirror-JDita application flow](diagrams/prosemirror-jdita-app-flow.svg "Diagram of the Prosemirror-JDita application flow")
 
 ## Development
 
