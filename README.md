@@ -85,10 +85,6 @@ yarn start:demo
 This will start a demo on `http://localhost:1234`.
 If this port is already in use, `parcel` will assign a random port that you can see in the terminal logs.
 
-We also provide a diagram that can help understanding the library and the internal flow:
-
-![Diagram of the Prosemirror-JDita application flow](diagrams/prosemirror-jdita-app-flow.svg "Diagram of the Prosemirror-JDita application flow")
-
 ## Development
 
 ### Prerequisites
@@ -151,3 +147,9 @@ yarn test # run unit tests
 
 yarn coverage # get coverage
 ```
+
+## Flow Diagram of Prosemirror-JDita
+
+This diagram demonstrates the library and the internal flow:
+
+![Diagram of the Prosemirror-JDita application flow](diagrams/prosemirror-jdita-app-flow.svg "Diagram of the Prosemirror-JDita application flow")
