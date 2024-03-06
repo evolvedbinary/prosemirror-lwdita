@@ -4,7 +4,7 @@ import { IS_MARK, defaultNodeName } from "./schema";
 /**
  * `deleteUndefined` removes undefined attributes from an object
  *
- * @param object  - TODO
+ * @param object  - Generic object
  * @returns object - The object with undefined attributes removed
  */
 function deleteUndefined(object?: any) {
@@ -23,8 +23,6 @@ function deleteUndefined(object?: any) {
  * Instead of using the defaultTravel function, we use the special node function
  * The following 4 nodes (audio, video, image, text) are
  * treated in a customized way instead of applying the defaultTravel() function:
- *
- * TODO: Revise this comment: "Apply and rename the xdita attribute strings from the AST into HTML-complying strings".
  */
 export const NODES: Record<string, (value: JDita, parent: JDita) => any> = {
   audio: (value, parent) => {

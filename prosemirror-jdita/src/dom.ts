@@ -1,6 +1,5 @@
 /**
  * DOM nodes mapping from JDITA to HTML
- * TODO: Elaborate
  */
 export const DOM_NODES: Record<string, string | ((parent?: string) => string)> = {
   audio: 'audio',
