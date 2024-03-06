@@ -19,7 +19,7 @@ npm install prosemirror-jdita
 yarn add prosemirror-jdita
 ```
 
-Include the Library
+Include the Library:
 
 ```javascript
 // SCHEMA builder
@@ -32,14 +32,12 @@ import { document } from "prosemirror-jdita";
 ```
 
 This is a minimal example of usagehow to use Prosemirror-JDita.
-You can check the [included demo](prosemirror-jdita-demo/src/) for a full example.
+You can check the [included demo](prosemirror-jdita-demo/src/) for a full example:
 
 ```javascript
 // Please use a valid XDita sample,
 // e.g. pick one from https://github.com/oasis-tcs/dita-lwdita/tree/spec/org.oasis.xdita/samples/xdita
 let xdita = `Insert your XDita example here`
-xditaToJson(xdita, true)
-  .then(json => document(json))
 
 // Transform the XDita to jdita
 let jDita = await xditaToJson(xdita,true);
@@ -87,7 +85,7 @@ yarn start:demo
 This will start a demo on `http://localhost:1234`.
 If this port is already in use, `parcel` will assign a random port that you can see in the terminal logs.
 
-We also provide a diagram that can help understanding the library and the internal flow.
+We also provide a diagram that can help understanding the library and the internal flow:
 
 //TODO link the diagram
 
