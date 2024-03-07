@@ -1,6 +1,7 @@
 import { JDita } from "jdita";
 import { IS_MARK, defaultNodeName } from "./schema";
 
+// TODO: Unit Test
 /**
  * Removes undefined attributes from an object
  *
@@ -108,7 +109,7 @@ export const NODES: Record<string, (value: JDita, parent: JDita) => any> = {
   text: (value: JDita) => ({ type: 'text', text: value.content, attrs: {} }),
 };
 
-// NEEDS testing
+// TODO: Unit Test
 /**
  * Transforms the JDita document into a proper ProseMirror document
  *
@@ -164,7 +165,7 @@ function travel(value: JDita, parent: JDita): any {
   return result;
 }
 
-// THIS IS UNIT tested
+// TODO: Unit Test
 /**
  * Transforms the JDita document
  * into a Schema compliant JDita document
