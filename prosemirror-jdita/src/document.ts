@@ -108,6 +108,7 @@ export const NODES: Record<string, (value: JDita, parent: JDita) => any> = {
   text: (value: JDita) => ({ type: 'text', text: value.content, attrs: {} }),
 };
 
+// NEEDS testing
 /**
  * Transforms the JDita document into a proper ProseMirror document
  *
@@ -144,6 +145,7 @@ function defaultTravel(value: JDita, parent: JDita): any {
   return result;
 }
 
+// NEEDS testing
 /**
  * Traverses the JDita document and generates a ProseMirror document
  *
@@ -162,6 +164,7 @@ function travel(value: JDita, parent: JDita): any {
   return result;
 }
 
+// THIS IS UNIT tested
 /**
  * Transforms the JDita document
  * into a Schema compliant JDita document
