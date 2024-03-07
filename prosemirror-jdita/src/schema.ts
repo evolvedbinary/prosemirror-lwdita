@@ -131,6 +131,9 @@ export interface SchemaNodes {
   [key: string]: SchemaNode;
 }
 
+// TODO: Unit Test
+// estimation 30 min
+// this needs to be tested for group node and normal node
 /**
  * Get node children
  *
@@ -145,6 +148,10 @@ function getChildren(type: ChildTypes): string[] {
   return (type.isGroup ? nodeGroups[type.name] : [ type.name ]);
 }
 
+// TODO: Unit Test
+// estimation 1h min
+// we can test this by generating node spec for some nodes and make sure we get the correct output
+// we should test for a special node and a normal node
 /**
  * Travel the node and generate the node spec
  *
@@ -156,6 +163,11 @@ export function travel(node: typeof BaseNode, next: (nodeName: string) => void):
   return (SCHEMAS[node.nodeName] || defaultTravel)(node, next);
 }
 
+// TODO: Unit Test
+// estimation 50 min
+// this returns a function and that function needs to be tested
+// we should test the output of the function and the inner function as well
+// we can do enough with 3 tests
 /**
  * Returns a function that generates the dom spec for a node
  *
@@ -179,6 +191,8 @@ export function defaultToDom(node: typeof BaseNode, attrs: any): (node: Node) =>
   }
 }
 
+// TODO: Unit Test
+// estimation 30 min
 /**
  * Returns the dom attribute name
  *
@@ -195,7 +209,9 @@ export function getDomAttr(nodeName: string, attr: string): string {
       : NODE_ATTR_NAMES[nodeName][attr] ? NODE_ATTR_NAMES[nodeName][attr] : 'data-j-' + attr
     : 'data-j-' + attr;
 }
-
+// TODO: Unit Test
+// estimation 30 min
+// generate an object and test against it
 /**
  * Create default node attributes
  *
@@ -208,6 +224,13 @@ export function defaultNodeAttrs(attrs: string[]): any {
     return result;
   }, {} as Record<string, { default: string }>);
 }
+
+// TODO: Unit Test
+// estimation 1h
+// we can test this by generating node spec for some nodes and make sure we get the correct output
+// we can do enough with 3 tests
+// text, topic and body
+// we need to test inner functions as well like `toDOM`
 
 /**
  * Travel the node and generate the node spec
@@ -258,6 +281,12 @@ function defaultTravel(
   return result;
 }
 
+// TODO: Unit Test
+// estimation 30 min
+// this needs to be tested for special nodes and normal nodes
+// we can do enough with 2 tests
+// get a special node and check the output name
+// get a normal node and check the output name
 /**
  * Transforms the node `nodeName`
  * by replacing dashes with underscores
@@ -276,6 +305,12 @@ export function defaultNodeName(nodeName: string): string {
   return NODE_NAMES[nodeName] || nodeName.replace(/-/g, '_');
 }
 
+// TODO: Unit Test
+// estimation 1h
+// we can test this using document node and check if the schema is created
+// steps: 
+// get the generated schema object
+// write unit test that make sure that schema is created each time.
 /**
  * Creates a schema for the prosemirror editor
  * based on the jdita nodes
