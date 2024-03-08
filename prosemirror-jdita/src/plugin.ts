@@ -244,7 +244,7 @@ function insertImageItem(type: NodeType, props: Partial<MenuItemSpec> = {}): Men
 /**
  * Interface `Additions` to provide menu item placement
  */
-interface Additions {
+export interface Additions {
   start?: MenuElement[][];
   before?: MenuElement[][];
   after?: MenuElement[][];
