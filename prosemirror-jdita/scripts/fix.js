@@ -7,7 +7,7 @@ const fs = require('fs');
 const path = require('path');
 
 const filenames = [
-  'prosemirror-view/dist/index.es.js',
+  'prosemirror-view/dist/index.cjs',
   'prosemirror-view/dist/index.js',
 ];
 let dir = path.join(__dirname, '../..');
