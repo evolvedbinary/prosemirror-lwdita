@@ -16,7 +16,7 @@ import { EditorView } from 'prosemirror-view';
  * @param args - Node attributes
  * @returns a new Node
  */
-export function createNode(type: NodeType<Schema>, args: Record<string, any> = {}): Node {
+export function createNode(type: NodeType, args: Record<string, any> = {}): Node {
   switch (type.name) {
     case 'p': return type.createAndFill() as Node;
     case 'data': return type.createAndFill({}, type.schema.text('text')) as Node;
@@ -40,7 +40,7 @@ export function createNode(type: NodeType<Schema>, args: Record<string, any> = {
  * @param tree - The node tree of type `NodeType` that has been passed
  * @returns The node object
  */
-export function createNodesTree(tree: NodeType<Schema>[]): Node {
+export function createNodesTree(tree: NodeType[]): Node {
   let result: Node | undefined;
   // Go through the NodeType array ("tree")
   // and call `createAndFill()` on each item.
@@ -68,7 +68,7 @@ export function createNodesTree(tree: NodeType<Schema>[]): Node {
  * @param type - NodeType
  * @returns Command
  */
-export function insertNode(type: NodeType<Schema>): Command {
+export function insertNode(type: NodeType): Command {
   // type = the NodeTypes that have been initialized in the menu,
   // currently the types are `ol` and `ul` nodes (that can be inserted via the menu buttons)
   // state = the current EditorState
@@ -179,7 +179,7 @@ export class InputContainer {
  * @param input - InputContainer
  * @returns Command
  */
-export function insertImage(type: NodeType<Schema>, input: InputContainer): Command {
+export function insertImage(type: NodeType, input: InputContainer): Command {
   return function (state, dispatch) {
     function fileSelected(this: HTMLInputElement, event: Event) {
       if (input.el?.files?.length === 1) {
@@ -551,7 +551,7 @@ export function getPrevDepth(tr: Transaction) {
  * @returns NodeType array
  */
 export function getTree(pos: ResolvedPos, depth = 0) {
-  const result: NodeType<Schema>[] = [pos.parent.type];
+  const result: NodeType[] = [pos.parent.type];
   for (let i = 1; i <= depth; i++) {
     result.push(pos.node(-i).type);
   }
