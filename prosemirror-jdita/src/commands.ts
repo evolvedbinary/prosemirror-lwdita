@@ -500,7 +500,7 @@ export function isPrevEmpty(tr: Transaction, depth = 0) {
 }
 
 /**
- * `getDepth` - Get the distance from the current cursor position to the closest parent Node with children.
+ * Get the distance from the current cursor position to the closest parent Node with children.
  *
  * @privateRemarks
  * TODO: Rename this function, as it doesn't reflect its purpose and is confusing.
@@ -520,7 +520,7 @@ export function getDepth(tr: Transaction, empty = false) {
 }
 
 /**
- * `getPrevDepth` - Get the previous node distance from the first parent with children.
+ * Get the previous node distance from the first parent with children.
  *
  * @param tr - The Transaction object
  * @returns number - the depth of the previous node
@@ -535,7 +535,7 @@ export function getPrevDepth(tr: Transaction) {
 }
 
 /**
- * `getTree` - Get the tree of nodes starting from the current cursor position, and going up to first parent node with children.
+ * Get the tree of nodes starting from the current cursor position, and going up to first parent node with children.
  *
  * @param pos - The ResolvedPos object containing position, path, depth and parentOffset
  * @param depth - distance from the current cursor position to the closest parent Node with children
@@ -595,13 +595,13 @@ export function enterPressed(state: EditorState, dispatch?: (tr: Transaction) =>
 }
 
 /**
- * The `newLine` is a chain of commands that are triggered on each "press Enter" key event in the editor.
+ * A chain of commands that are triggered on each "press Enter" key event in the editor.
  * in this instance it's only representing the `enterPressed` command.
  */
 export const newLine = chainCommands(enterPressed);
 
 /**
- * `hasMark` checks the state of any mark against the
+ * Checks the state of any mark against the
  * list of all marks in the editor menu
  * This function will be triggered on any key event in the editor to run the check.
  * Returns a boolean, if there is a mark of this type in the given set, or
