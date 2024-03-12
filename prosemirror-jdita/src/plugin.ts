@@ -22,14 +22,12 @@ if (targetNode) {
   const config = { attributes: false, childList: true, subtree: true };
   // Callback function to execute when mutations are observed
   const callback: MutationCallback = function(mutationsList) {
-    // loop through the mutations
     for(const mutation of mutationsList) {
       // if the mutation happened on one of the children of the editor
       if (mutation.type === 'childList') {
         // if the mutation happened on the menubar
         if((mutation.target as HTMLElement).classList.contains('ProseMirror-menubar')){
           let separators: HTMLElement[] = [];
-          // loop through the added nodes
           mutation.addedNodes.forEach(node => {
             // if the node is a separator, add it to the separators array
             if (node.childNodes[0] && (node.childNodes[0] as HTMLElement).classList.contains('separator')) {
@@ -92,12 +90,9 @@ export function shortcuts(schema: Schema) {
  * @returns A new MenuItem instance
  */
 function commandItem(command: Command, props: Partial<MenuItemSpec> = {}) {
-  // MenuItem: An icon or label that, when clicked, executes a command.
   return new MenuItem({
     ...props,
-    // run: Function to execute when the menu item is activated
     run: command,
-    // enable: Function that is used to determine if the item is enabled.
     enable: command,
   });
 }
@@ -206,10 +201,8 @@ function insertItem(type: NodeType, props: Partial<MenuItemSpec> = {}): MenuElem
  * @returns A MenuElement containing the HTML node of the entire button element bound to its command
  */
 function insertImageItem(type: NodeType, props: Partial<MenuItemSpec> = {}): MenuElement {
-  // create a new instance of class InputContainer to handle uploading of images
   const input = new InputContainer();
   const command = insertImage(type, input);
-  // return
   return commandItem(command, {
     ...props,
     enable: command,
