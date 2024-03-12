@@ -31,7 +31,7 @@ import { xditaToJson } from "jdita";
 import { document } from "prosemirror-jdita";
 ```
 
-This is a minimal example of usagehow to use Prosemirror-JDita.
+This is a minimal example of how to use Prosemirror-JDita.
 You can check the [included demo](prosemirror-jdita-demo/src/) for a full example:
 
 ```javascript
