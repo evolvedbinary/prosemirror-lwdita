@@ -53,7 +53,7 @@ export const NODES: Record<string, (value: JDita, parent: JDita) => any> = {
       });
     }
     const result = { type: value.nodeName, attrs, content: content.map(child => travel(child, value)) };
-    // TODO: Why are we setting attrs here again. It's already set above?
+    
     if (attrs && Object.keys(attrs).length) {
       result.attrs = attrs;
     }
