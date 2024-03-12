@@ -35,7 +35,7 @@ export function createNode(type: NodeType<Schema>, args: Record<string, any> = {
 }
 
 /**
- * `createNodesTree` will create a node tree from the given NodeType array.
+ * Creates a node tree from the given NodeType array.
  *
  * @param tree - The node tree of type `NodeType` that has been passed
  * @returns The node object
