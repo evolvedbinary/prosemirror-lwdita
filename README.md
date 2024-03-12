@@ -134,7 +134,7 @@ yarn build:demo
 yarn run generate-docs
 ```
 
-This will generate a new folder `docs` containing an HTML file with the entire TSDoc Prosemirror-JDita documentation.
+This will generate a new folder `generated-docs` containing an HTML file with the entire TSDoc Prosemirror-JDita documentation.
 Open this file in a browser to navigate through the documentation.
 
 ### Test
