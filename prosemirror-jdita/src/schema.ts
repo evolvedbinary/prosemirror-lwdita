@@ -16,8 +16,6 @@ export const NODE_NAMES: Record<string, string> = {
 /**
  * Provide a map of special nodes to their corresponding DOM node
  */
-// TODO: Why is this is empty?
-// It will also never be populated later.
 export const TO_DOM: Record<string, (node: typeof BaseNode, attrs: any)
   => (node: Node) => DOMOutputSpec> = {}
 
