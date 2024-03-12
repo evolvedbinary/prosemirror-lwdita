@@ -63,8 +63,7 @@ export const SCHEMAS: Record<string, (node: typeof BaseNode, next: (nodeName: st
 }
 
 /**
- * `SCHEMA_CONTENT` is the LwDita schema
- * it's being used to get nodes allowed children
+ * The LwDITA Schema. Describes parent-child relationships.
  */
 export const SCHEMA_CONTENT: Record<string, [content: string, groups: string]> = {
   audio: ['desc? media_source* media_track*', 'simple_blocks fig_blocks list_blocks all_blocks'],
@@ -110,8 +109,7 @@ export const SCHEMA_CHILDREN: Record<string, (type: ChildTypes) => string[]> = {
 }
 
 /**
- * `IS_MARK` is containing an array of inline markup
- * bold, italic, underline, subscript, superscript
+ * The inline markup elements bold, italic, underline, subscript, superscript
  */
 export const IS_MARK = ['b', 'i', 'u', 'sub', 'sup'];
 
