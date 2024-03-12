@@ -15,7 +15,6 @@ function openFile(input: InputContainer): Command {
       const reader = new FileReader();
       reader.readAsBinaryString(file);
       reader.onerror = () => {
-        // TODO this output should cover cases other then image
         console.log('an error reading while reading the image');
       };
       reader.onload = () => {
@@ -26,7 +25,6 @@ function openFile(input: InputContainer): Command {
         }
       };
     } else {
-      // TODO this output should cover cases other then image
       console.log('can not add image:', input.el?.files?.length);
     }
   }

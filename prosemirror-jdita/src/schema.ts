@@ -317,7 +317,6 @@ export function schema(): Schema {
     done.push(nodeName);
 
     // do not process the alt or text nodes
-    // TODO: Shouldn't this be done using the node name?
     if (['alt', 'text'].indexOf(node as string) > -1) {
       return;
     }

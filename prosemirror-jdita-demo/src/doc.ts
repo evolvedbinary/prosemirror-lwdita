@@ -66,7 +66,6 @@ xml = `<?xml version="1.0" encoding="UTF-8"?>
 </topic>
 `;
 
-// TODO: Check if this code is still valid or used.
 const file = localStorage.getItem('file');
 if (file) {
   xml = file;
