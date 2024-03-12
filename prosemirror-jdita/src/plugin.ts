@@ -98,7 +98,7 @@ function commandItem(command: Command, props: Partial<MenuItemSpec> = {}) {
 }
 
 /**
- * `markItem` processes MarkTypes and mark properties
+ * Processes MarkTypes and mark properties
  * and returns a MenuItem containing information about all active
  * and enabled menu mark items and their properties and binds them to a command.
  *
@@ -233,7 +233,7 @@ function insertImageItem(type: NodeType, props: Partial<MenuItemSpec> = {}): Men
 }
 
 /**
- * Interface `Additions` to provide menu item placement
+ * Supports Menu Item placement
  */
 export interface Additions {
   start?: MenuElement[][];
