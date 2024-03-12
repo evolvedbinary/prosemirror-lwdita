@@ -3,9 +3,9 @@ import { MenuElement, MenuItem, MenuItemSpec } from "prosemirror-menu";
 import { InputContainer } from "prosemirror-jdita";
 
 /**
- * TODO: Documentation
+ * Open file selection dialog and select and file to insert into the local storage.
  * @param input - The input element
- * @returns - TODO
+ * @returns - Command
  */
 function openFile(input: InputContainer): Command {
   return (state, dispatch) => {
@@ -15,6 +15,7 @@ function openFile(input: InputContainer): Command {
       const reader = new FileReader();
       reader.readAsBinaryString(file);
       reader.onerror = () => {
+        // TODO this output should cover cases other then image
         console.log('an error reading while reading the image');
       };
       reader.onload = () => {
@@ -25,6 +26,7 @@ function openFile(input: InputContainer): Command {
         }
       };
     } else {
+      // TODO this output should cover cases other then image
       console.log('can not add image:', input.el?.files?.length);
     }
   }
@@ -51,7 +53,7 @@ function openFile(input: InputContainer): Command {
 }
 
 /**
- * TODO: Documentation
+ * Create a menu item to open a file selection dialog to upload a file into the local storage.
  * @returns A MenuElement
  */
 export function openFileMenuItem(): MenuElement {
@@ -77,9 +79,9 @@ export function openFileMenuItem(): MenuElement {
 }
 
 /**
- * TODO: Documentation
- * @param props - TODO
- * @returns - TODO
+ * Create a menu item to redirect to the github page of the project.
+ * @param props - Menu item properties
+ * @returns - MenuItem
  */
 export function githubMenuItem(props: Partial<MenuItemSpec & { url: string }> = {}): MenuElement {
   return new MenuItem({
