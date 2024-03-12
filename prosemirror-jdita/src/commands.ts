@@ -409,7 +409,7 @@ export function enterSplit(tr: Transaction, dispatch = false, depth = 0): Transa
       let types = atEnd ? [{ type: defaultType }] : null;
       // "can": Check whether splitting at the given position is allowed
       let can = canSplit(tr.doc, tr.mapping.map($from.pos), depth, types as any);
-      // this 'if' statement is redundant, as we are already checking if we can split above with the same conditions.
+      // TODO: This 'if' statement is redundant, as we are already checking if we can split above with the same conditions. Can be removed entirely.
       if (!types && !can && canSplit(tr.doc, tr.mapping.map($from.pos), depth, [{ type: defaultType }])) {
         types = [{ type: defaultType }];
         can = true;
