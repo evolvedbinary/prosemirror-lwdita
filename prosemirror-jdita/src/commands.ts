@@ -477,8 +477,7 @@ export function isEmpty(tr: Transaction, depth = 0) {
 }
 
 /**
- * `isPrevEmpty` - If the cursor is at the beginning of the line,
- * this function checks if the previous node is empty or not.
+ * Checks if the previous node is empty or not when the cursor is at the beginning of the line.
  *
  * @param tr - The Transaction object
  * @param depth - distance from the current cursor position to the closest parent Node with children
