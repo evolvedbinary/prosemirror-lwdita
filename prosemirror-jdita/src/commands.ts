@@ -7,7 +7,7 @@ import { EditorView } from 'prosemirror-view';
 
 /**
  * Create a new Node and fill it with the args as attributes.
- * Fill the node with children nodes if they're required.
+ * Fill the node with child nodes if they're required.
  *
  * @privateRemarks
  * An image node is only retrieving the `href` attribute from the source, the according `alt` tag is not implemented yet.
@@ -255,7 +255,7 @@ function defaultBlocks(pos: ResolvedPos, depth = 0) {
   // Get the content match at the current cursor position
   const match = pos.node(-depth - 1).contentMatchAt(pos.indexAfter(-depth - 1));
   let index = -1;
-  
+
   // Create an empty array of NodeTypes.
   const result: NodeType[] = [];
   // loop through the possible content matches
@@ -302,7 +302,7 @@ function defaultBlockAt(pos: ResolvedPos, depth = 0, preferred?: NodeType) {
 
 /**
  * Handle the enter key event when the cursor is at the end of the line.
- * 
+ *
  * @param tr - The transaction object
  * @param dispatch - dispatch function
  * @param depth - distance from the current cursor position to the closest parent Node with children
@@ -513,7 +513,7 @@ export function isPrevEmpty(tr: Transaction, depth = 0) {
  *
  * @privateRemarks
  * TODO: Rename this function, as it doesn't reflect its purpose and is confusing.
- * 
+ *
  * @param tr - The Transaction object
  * @param empty - A Boolean, set to `false`
  * @returns A number containing the depth of the tested
@@ -539,7 +539,7 @@ export function getPrevDepth(tr: Transaction) {
   while(isPrevEmpty(tr, depth + 1)) {
     depth++;
 
-  }  
+  }
   return depth;
 }
 
