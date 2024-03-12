@@ -125,7 +125,6 @@ export class InputContainer {
 
   // class methods:
   get el(): HTMLInputElement | undefined {
-    // will return the element of type HTMLInputElement
     return this._el;
   }
 
@@ -135,14 +134,11 @@ export class InputContainer {
     if (this._el === value) {
       return;
     }
-    // set the new HTML input element
     this._el = value;
-    // update the event listener
     this._el?.addEventListener('change', this.change.bind(this));
   }
 
   change(event: Event) {
-    // if field "_el" is available
     if (this._el) {
       const el = this._el;
       // method "keys" returns the names of the enumerable string properties and methods of object "this.listeners"
@@ -256,7 +252,6 @@ function defaultBlocks(pos: ResolvedPos, depth = 0) {
   const match = pos.node(-depth - 1).contentMatchAt(pos.indexAfter(-depth - 1));
   let index = -1;
 
-  // Create an empty array of NodeTypes.
   const result: NodeType[] = [];
   // loop through the possible content matches
   for (let i = 0; i < match.edgeCount; i++) {
@@ -296,7 +291,6 @@ function defaultBlockAt(pos: ResolvedPos, depth = 0, preferred?: NodeType) {
       type = newType;
     }
   });
-  // return the newly created nodetype
   return type;
 }
 
@@ -310,9 +304,7 @@ function defaultBlockAt(pos: ResolvedPos, depth = 0, preferred?: NodeType) {
  */
 export function enterEOL(tr: Transaction, dispatch = false, depth = 0): Transaction | false {
   let { $from, $to, empty } = tr.selection
-  // get the parent
   const parent = $to.node(-depth || undefined);
-  // get the grand parent
   const grandParent = $to.node(-depth - 1);
   // get the allowed node types that can be created at the current cursor position
   const type = defaultBlockAt($to, depth, parent.type);
