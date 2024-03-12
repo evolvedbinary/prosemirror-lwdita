@@ -6,7 +6,6 @@ import { Command } from "prosemirror-commands";
 import { redo, undo } from "prosemirror-history";
 
 /**
- * Retrieve the DOM element with ID "editor" and assign it to a constant targetNode
  * This is the entire DOM node of the Prosemirror editor that will be observed for DOM mutations
  */
 const targetNode = document.getElementById('editor');
