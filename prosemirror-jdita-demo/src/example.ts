@@ -10,8 +10,8 @@ import { history } from "prosemirror-history";
 const schemaObject = schema();
 
 /**
- * Load the json document and create a new EditorView
- * the json document is transformed jdita to prosemirror schema
+ * Load the json document and create a new EditorView.
+ * The json document is transformed from JDita to ProseMirror Schema
  */
 jsonDocLoader.then(jsonDoc => {
   // get the editor element from the DOM
