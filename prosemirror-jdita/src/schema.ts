@@ -226,11 +226,8 @@ function defaultTravel(
   parent: typeof BaseNode,
   next: (nodeName: string, parent: typeof BaseNode) => void): NodeSpec {
   const children = (SCHEMA_CHILDREN[node.nodeName] || getChildren)(node.childTypes);
-  // make the distinction between a node and a mark
   const isNode = IS_MARK.indexOf(node.nodeName) < 0;
-  // get the content and group of the node
   const [content, group] = isNode ? SCHEMA_CONTENT[node.nodeName] : [undefined, undefined];
-  // get the attributes of the node
   const attrs = (NODE_ATTRS[node.nodeName] || defaultNodeAttrs)(['parent', ...node.fields]);
   // create the node spec
   const result: NodeSpec = {
