@@ -1,5 +1,5 @@
 import { Schema, NodeSpec, MarkSpec, DOMOutputSpec } from "prosemirror-model";
-import { schema } from "../schema";
+// import { schema } from "../schema";
 
 /**
  * TODO: Documentation

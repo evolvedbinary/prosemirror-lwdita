@@ -1,8 +1,8 @@
 export { toggleMark } from 'prosemirror-commands';
 import { canSplit } from 'prosemirror-transform';
-import { chainCommands, Command } from 'prosemirror-commands';
-import { ContentMatch, Fragment, MarkType, Node, NodeType, ResolvedPos, Schema } from 'prosemirror-model';
-import { TextSelection, EditorState, Transaction, NodeSelection } from 'prosemirror-state';
+import { chainCommands } from 'prosemirror-commands';
+import { Fragment, MarkType, Node, NodeType, ResolvedPos, Schema } from 'prosemirror-model';
+import { TextSelection, EditorState, Transaction, Command } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 
 /**

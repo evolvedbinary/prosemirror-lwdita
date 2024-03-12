@@ -2,8 +2,8 @@ import { keymap } from "prosemirror-keymap";
 import { MarkType, NodeType, Schema } from "prosemirror-model";
 import { menuBar, MenuElement, MenuItem, MenuItemSpec } from "prosemirror-menu";
 import { toggleMark, newLine, hasMark, insertNode, insertImage, InputContainer } from "./commands";
-import { Command } from "prosemirror-commands";
 import { redo, undo } from "prosemirror-history";
+import { Command } from "prosemirror-state";
 
 /**
  * Retrieve the DOM element with ID "editor" and assign it to a constant targetNode
