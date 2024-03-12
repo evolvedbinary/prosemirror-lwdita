@@ -120,8 +120,7 @@ function markItem(mark: MarkType, props: Partial<MenuItemSpec> = {}): MenuElemen
 }
 
 /**
- * Define interface ` SimpleItemCallbacks`
- * to provide menu item callback return types
+ * Define interface to provide menu item callback return types
  * with fixed and optional properties
  */
 interface SimpleItemCallbacks {
