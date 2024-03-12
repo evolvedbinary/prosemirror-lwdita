@@ -2,8 +2,8 @@ import { keymap } from "prosemirror-keymap";
 import { MarkType, NodeType, Schema } from "prosemirror-model";
 import { menuBar, MenuElement, MenuItem, MenuItemSpec } from "prosemirror-menu";
 import { toggleMark, newLine, hasMark, insertNode, insertImage, InputContainer } from "./commands";
-import { Command } from "prosemirror-commands";
 import { redo, undo } from "prosemirror-history";
+import { Command } from "prosemirror-state";
 
 /**
  * This is the entire DOM node of the Prosemirror editor that will be observed for DOM mutations
