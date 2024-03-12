@@ -29,7 +29,7 @@ export const NODE_ATTRS: Record<string, (attrs: string[]) => any> = {
 }
 
 /**
- * `NODE_ATTR_NAMES` is a map of attributes for special nodes
+ * A map of attributes for special nodes
  */
 export const NODE_ATTR_NAMES: Record<string, Record<string, string>> = {
   video: {
@@ -102,7 +102,7 @@ export const SCHEMA_CONTENT: Record<string, [content: string, groups: string]> =
 }
 
 /**
- * `SCHEMA_CHILDREN` is a map of special children for certain media nodes
+ * A map of special children for certain media nodes
  */
 export const SCHEMA_CHILDREN: Record<string, (type: ChildTypes) => string[]> = {
   video: type => ['media-source', 'media-track', 'desc'],
@@ -116,7 +116,7 @@ export const SCHEMA_CHILDREN: Record<string, (type: ChildTypes) => string[]> = {
 export const IS_MARK = ['b', 'i', 'u', 'sub', 'sup'];
 
 /**
- * `SchemaNode` is a representation of a node in the schema
+ * A representation of a node in the schema
  */
 export interface SchemaNode {
   inline?: boolean;
@@ -149,7 +149,7 @@ function getChildren(type: ChildTypes): string[] {
 
 /**
  * Travel the node and generate the node spec
- * 
+ *
  * @param node - JDita node
  * @param next - Next travel function
  * @returns SchemaNode
@@ -159,7 +159,7 @@ export function travel(node: typeof BaseNode, next: (nodeName: string) => void):
 }
 
 /**
- * `defaultToDom` returns a function that generates the dom spec for a node
+ * Returns a function that generates the dom spec for a node
  *
  * @see {@link https://prosemirror.net/docs/ref/#model.DOMOutputSpec} for more info
  *
@@ -182,7 +182,7 @@ export function defaultToDom(node: typeof BaseNode, attrs: any): (node: Node) =>
 }
 
 /**
- * `getDomAttr` returns the dom attribute name
+ * Returns the dom attribute name
  *
  * @param nodeName - The name of the node
  * @param attr - The name of the attribute
@@ -265,7 +265,7 @@ function defaultTravel(
 }
 
 /**
- * `defaultNodeName` transforms the node `nodeName`
+ * Transforms the node `nodeName`
  * by replacing dashes with underscores
  *
  * @remarks
@@ -283,7 +283,7 @@ export function defaultNodeName(nodeName: string): string {
 }
 
 /**
- * `schema` creates a schema for the prosemirror editor
+ * Creates a schema for the prosemirror editor
  * based on the jdita nodes
  *
  * @see {@link https://prosemirror.net/docs/ref/#model.SchemaSpec}.
@@ -345,7 +345,7 @@ export function schema(): Schema {
       }
     }
   }
-  
+
   // start the process of populating the schema spec using the jdita nodes from the document node
   browse(DocumentNode, DocumentNode);
 
