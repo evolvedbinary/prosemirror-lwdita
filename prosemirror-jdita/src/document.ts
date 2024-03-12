@@ -2,7 +2,7 @@ import { JDita } from "jdita";
 import { IS_MARK, defaultNodeName } from "./schema";
 
 /**
- * `deleteUndefined` removes undefined attributes from an object
+ * Removes undefined attributes from an object
  *
  * @param object  - Generic object
  * @returns object - The object with undefined attributes removed
@@ -19,7 +19,7 @@ function deleteUndefined(object?: any) {
 }
 
 /**
- * `NODES` is a map of special nodes that need to be handled differently.
+ * A map of special nodes that need to be handled differently.
  * Instead of using the defaultTravel function, we use the special node function
  * The following 4 nodes (audio, video, image, text) are
  * treated in a customized way instead of applying the defaultTravel() function:
@@ -109,7 +109,7 @@ export const NODES: Record<string, (value: JDita, parent: JDita) => any> = {
 };
 
 /**
- * `defaultTravel` transforms the JDita document into a proper ProseMirror document
+ * Transforms the JDita document into a proper ProseMirror document
  *
  * @param value - The JDita node
  * @param parent - The parent JDita node
@@ -145,8 +145,7 @@ function defaultTravel(value: JDita, parent: JDita): any {
 }
 
 /**
- * `travel` is a recursive function that traverses
- * the JDita document and generates a ProseMirror document
+ * Traverses the JDita document and generates a ProseMirror document
  *
  * @param value - The JDita node
  * @param parent - The parent JDita node
@@ -164,7 +163,7 @@ function travel(value: JDita, parent: JDita): any {
 }
 
 /**
- * `document` transforms the JDita document
+ * Transforms the JDita document
  * into a Schema compliant JDita document
  *
  * @param jdita - the JDita document
