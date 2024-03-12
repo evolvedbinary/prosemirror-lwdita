@@ -225,7 +225,6 @@ function defaultTravel(
   node: typeof BaseNode,
   parent: typeof BaseNode,
   next: (nodeName: string, parent: typeof BaseNode) => void): NodeSpec {
-  // get the children of the node
   const children = (SCHEMA_CHILDREN[node.nodeName] || getChildren)(node.childTypes);
   // make the distinction between a node and a mark
   const isNode = IS_MARK.indexOf(node.nodeName) < 0;
@@ -322,7 +321,6 @@ export function schema(): Schema {
     }
 
     try {
-      // get the class of the node
       const NodeClass = typeof node === 'string' ? getNodeClassType(node) : node;
       // travel the node class and generate the node spec
       const result = defaultTravel(NodeClass, parent, browse);
@@ -346,10 +344,8 @@ export function schema(): Schema {
   // start the process of populating the schema spec using the jdita nodes from the document node
   browse(DocumentNode, DocumentNode);
 
-  // Set the content of the topic and doc nodes
   (spec.nodes as any).topic.content = 'title shortdesc? prolog? body?';
   (spec.nodes as any).doc.content = 'topic+';
 
-  // build the new schema and return it
   return new Schema(spec);
 }
