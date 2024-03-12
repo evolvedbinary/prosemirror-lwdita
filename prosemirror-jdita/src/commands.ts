@@ -454,7 +454,7 @@ export function isEOL(tr: Transaction, depth = 0) {
 }
 
 /**
- * `isEmpty` checks whether the cursor is at an empty line or not.
+ * Checks whether the cursor is at an empty line or not.
  *
  * @param tr - The Transaction object
  * @param depth - distance from the current cursor position to the closest parent Node with children
