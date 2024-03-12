@@ -57,7 +57,7 @@ export function createNodesTree(tree: NodeType<Schema>[]): Node {
 }
 
 /**
- * `insertNode` creates a command to insert a new node at the current cursor position.
+ * Creates a command to insert a new node at the current cursor position.
  *
  * @remarks
  * This function will be called by `insertItem()` which again will be called by `menu()`.
