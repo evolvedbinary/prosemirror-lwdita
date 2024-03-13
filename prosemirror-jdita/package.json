@@ -15,7 +15,7 @@
     "test:watch": "mocha -w",
     "coverage": "rimraf coverage && nyc yarn mocha",
     "coveralls": "nyc --reporter=text-lcov report | coveralls",
-    "generate-docs": "typedoc --treatWarningsAsErrors --out generated-docs src/index.ts"
+    "generate-docs": "typedoc"
   },
   "repository": {
     "type": "git",
