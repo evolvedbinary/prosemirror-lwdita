@@ -145,13 +145,14 @@ export function getChildren(type: ChildTypes): string[] {
   return (type.isGroup ? nodeGroups[type.name] : [ type.name ]);
 }
 
-// TODO: Unit Test
-// estimation 1h min
-// we can test this by generating node spec for some nodes and make sure we get the correct output
-// we should test for a special node and a normal node
+
+// TODO if we have abundant time we can write unit tests for this function
 /**
  * Travel the node and generate the node spec
- *
+ * 
+ * @privateRemarks
+ * This function is not being used anywhere in the code.
+ * 
  * @param node - JDita node
  * @param next - Next travel function
  * @returns SchemaNode
@@ -175,7 +176,7 @@ export function travel(node: typeof BaseNode, next: (nodeName: string) => void):
  * @returns A function that generates the DOM spec
  */
 export function defaultToDom(node: typeof BaseNode, attrs: any): (node: Node) => DOMOutputSpec {
-  return function(pmNode: Node) {
+  return function(pmNode: Node) {     
     return [getDomNode(node.nodeName, pmNode.attrs?.parent), attrs
       ? Object.keys(attrs).reduce((newAttrs, attr) => {
         if (pmNode.attrs[attr]) {
