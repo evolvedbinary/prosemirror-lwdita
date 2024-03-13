@@ -549,7 +549,7 @@ export function getPrevDepth(tr: Transaction) {
     depth++;
 
   }
-  }
+
   return depth;
 }
 
