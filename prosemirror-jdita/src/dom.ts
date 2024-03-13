@@ -41,7 +41,6 @@ export const DOM_NODES: Record<string, string | ((parent?: string) => string)> =
   xref: 'a',
 }
 
-// TODO: Unit Test
 /**
  * Get the HTML node name for a JDITA node
  *
