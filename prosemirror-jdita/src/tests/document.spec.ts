@@ -3,7 +3,7 @@ import { use } from 'chai';
 import { expect, assert } from 'chai';
 import { xditaToJson } from 'jdita';
 import { document } from '../document';
-import { XML, PMJSON } from './xml';
+import { XML, PMJSON, JDITA_OBJECT, TRANSFORMED_JDITA_OBJECT } from './xml';
 
 use(ChaiPromised);
 
@@ -38,5 +38,10 @@ travel()
 */
 // Pass a JDita object
 // and test against expected JDita transformation output
-// document()
+describe.skip('document()', () => {
+  it('returns a transformed Prosemirror object', () => {
+    let jdita = document(JSON.parse(JDITA_OBJECT));
+    assert.equal(jdita, JSON.parse(TRANSFORMED_JDITA_OBJECT));
+  });
+});
 
