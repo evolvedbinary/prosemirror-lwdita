@@ -189,8 +189,6 @@ export function defaultToDom(node: typeof BaseNode, attrs: any): (node: Node) =>
   }
 }
 
-// TODO: Unit Test
-// estimation 30 min
 /**
  * Returns the dom attribute name
  *
@@ -207,9 +205,7 @@ export function getDomAttr(nodeName: string, attr: string): string {
       : NODE_ATTR_NAMES[nodeName][attr] ? NODE_ATTR_NAMES[nodeName][attr] : 'data-j-' + attr
     : 'data-j-' + attr;
 }
-// TODO: Unit Test
-// estimation 30 min
-// generate an object and test against it
+
 /**
  * Create default node attributes
  *
@@ -279,12 +275,6 @@ function defaultTravel(
   return result;
 }
 
-// TODO: Unit Test
-// estimation 30 min
-// this needs to be tested for special nodes and normal nodes
-// we can do enough with 2 tests
-// get a special node and check the output name
-// get a normal node and check the output name
 /**
  * Transforms the node `nodeName`
  * by replacing dashes with underscores
