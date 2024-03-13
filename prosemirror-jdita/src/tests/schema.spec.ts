@@ -1,5 +1,5 @@
 import { assert } from 'chai';
-import { getChildren, travel } from './schema';
+import { getChildren, travel } from '../schema';
 import { TextNode, BaseNode, TopicNode, DdNode } from 'jdita';
 
 /**
