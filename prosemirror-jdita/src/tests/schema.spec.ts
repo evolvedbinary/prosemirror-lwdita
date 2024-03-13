@@ -1,6 +1,7 @@
-import { assert } from 'chai';
-import { defaultNodeAttrs, defaultNodeName, defaultToDom, getChildren, getDomAttr, travel } from '../schema';
+import { assert, expect } from 'chai';
+import { defaultNodeAttrs, defaultNodeName, defaultToDom, getChildren, getDomAttr, schema, travel } from '../schema';
 import { TextNode, BaseNode, TopicNode, DdNode, nodeGroups } from 'jdita';
+import { Schema } from 'prosemirror-model';
 
 /**
  * Unit test for `travel()`
@@ -97,4 +98,26 @@ describe('defaultNodeName', () => {
     const expected = 'media_autoplay';
     assert.equal(result, expected);
   });
+});
+
+describe('schema', () => {
+  it('should return a valid schema', () => {
+    const result = schema();
+    assert.instanceOf(result, Schema);
+  });
+  
+  it('should generate schema with marks property', () => {
+    const result = schema();
+    expect(result).to.have.property('marks');
+  });
+
+
+  it('should generate schema with nodes property', () => {
+    const result = schema();
+        
+    expect(result).to.have.property('nodes');
+  });
+
+  //TODO add more tests for schema
+
 });
