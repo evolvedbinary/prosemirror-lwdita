@@ -131,16 +131,13 @@ export interface SchemaNodes {
   [key: string]: SchemaNode;
 }
 
-// TODO: Unit Test
-// estimation 30 min
-// this needs to be tested for group node and normal node
 /**
  * Get node children
  *
  * @param type - Type of the Child nodes
  * @returns - The children of the node
  */
-function getChildren(type: ChildTypes): string[] {
+export function getChildren(type: ChildTypes): string[] {
   if (Array.isArray(type)) {
     return type.map(subType => getChildren(subType)).reduce((result, children) =>
     result.concat(children.filter(child => result.indexOf(child) < 0)), [] as string[]);
