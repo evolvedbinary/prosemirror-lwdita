@@ -1,6 +1,6 @@
 import { assert } from 'chai';
-import { getChildren, travel } from '../schema';
-import { TextNode, BaseNode, TopicNode, DdNode } from 'jdita';
+import { defaultToDom, getChildren, getDomAttr, travel } from '../schema';
+import { TextNode, BaseNode, TopicNode, DdNode, nodeGroups } from 'jdita';
 
 /**
  * Unit test for `travel()`
@@ -27,6 +27,24 @@ describe('getChildren', () => {
     const type = DdNode.childTypes;
     const children = getChildren(type);
     // %list-blocks are p  ul  ol  dl  pre  audio  video  simpletable  fig  note  data
-    assert.deepEqual(children, ["p","ul","ol","dl","pre","audio","video","simpletable","fig","note","data"]);
+    assert.deepEqual(children, nodeGroups['%list-blocks']);
+  });
+});
+
+describe('defaultToDom', () => {
+  it('should get dom node', () => {
+    const toDom = defaultToDom(TopicNode, {});
+    // TODO mock up a prosemirror node 
+    // console.log(toDom());
+    
+  });
+});
+
+describe('getDomAttr', () => {
+  it.only('Id dom attribute for topic', () => {
+    const nodeName = 'topic';
+    const attrs = "id";
+    const domAttrs = getDomAttr(nodeName, attrs);
+    assert.equal(domAttrs, "data-j-id");
   });
 });
