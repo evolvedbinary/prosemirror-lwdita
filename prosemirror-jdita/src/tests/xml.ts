@@ -27,7 +27,7 @@ export const XML = `<?xml version="1.0" encoding="UTF-8"?>
     </video>
     <section id="context">
       <p>Your <ph keyref="product-name"/> remote control can manage up to 250 network light bulbs on the same lighting
-network. When you add a light bulb to the network, you can program it to one or more
+        network. When you add a light bulb to the network, you can program it to one or more
         lighting groups. You must assign a light bulb to at least one lighting group to
         operate that light bulb  A network light bulb that is not programmed to a
         lighting group will still operate when controlling all network light bulbs from
@@ -42,7 +42,7 @@ network. When you add a light bulb to the network, you can program it to one or 
           <ol>
             <li><p>Make sure <sup>power</sup> to the <sub>fixture</sub> where you are installing the light bulb
               is turned OFF.
-              <image><alt>alt text</alt></image>
+<image><alt>alt text</alt></image>
               <image></image></p>
               <p conref="intro-product.dita#intro-product/warning" />
 
