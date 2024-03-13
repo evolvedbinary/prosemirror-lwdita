@@ -1,5 +1,5 @@
 import { assert } from 'chai';
-import { defaultNodeAttrs, defaultToDom, getChildren, getDomAttr, travel } from '../schema';
+import { defaultNodeAttrs, defaultNodeName, defaultToDom, getChildren, getDomAttr, travel } from '../schema';
 import { TextNode, BaseNode, TopicNode, DdNode, nodeGroups } from 'jdita';
 
 /**
@@ -80,5 +80,21 @@ describe('defaultNodeAttrs', () => {
       attr3: { default: '' },
     };
     assert.deepEqual(result, expected);
+  });
+});
+
+describe('defaultNodeName', () => {
+  it('should return default node name', () => {
+    const nodeName = 'topic';
+    const result = defaultNodeName(nodeName);
+    const expected = 'topic';
+    assert.equal(result, expected);
+  });
+
+  it('should return default node name with hyphen', () => {
+    const nodeName = 'media-autoplay';
+    const result = defaultNodeName(nodeName);
+    const expected = 'media_autoplay';
+    assert.equal(result, expected);
   });
 });
