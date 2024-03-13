@@ -33,10 +33,31 @@ describe('getChildren', () => {
 
 describe('defaultToDom', () => {
   it('should get dom node', () => {
-    const toDom = defaultToDom(TopicNode, {});
-    // TODO mock up a prosemirror node 
-    // console.log(toDom());
-    
+    const node = {
+      nodeName: 'topic',
+      attrs: {
+        parent: 'parentValue',
+        attr1: 'attr1Value',
+        attr2: 'attr2Value',
+      },
+    };
+    const attrs = {
+      attr1: 'data-attr1',
+      attr2: 'data-attr2',
+    };
+    const toDom = defaultToDom(BaseNode, attrs);
+    const result = toDom(node as any);
+    const expected = [
+      'jdita-node-node',
+      {
+        'data-j-type': 'node',
+        'data-attr1': 'attr1Value',
+        'data-attr2': 'attr2Value',
+      },
+      0,
+    ];
+    // TODO correct this assertion
+    // assert.deepEqual(result, expected as DOMOutputSpec);
   });
 });
 
