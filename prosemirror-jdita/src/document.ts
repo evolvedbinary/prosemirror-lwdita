@@ -1,7 +1,6 @@
 import { JDita } from "jdita";
 import { IS_MARK, defaultNodeName } from "./schema";
 
-// TODO: Unit Test
 /**
  * Removes undefined attributes from an object
  *
