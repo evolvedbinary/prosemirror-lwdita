@@ -17,13 +17,13 @@ describe('Schema', () => {
 });
 
 describe('getChildren', () => {
-  it('Should return children for regular node', () => {
+  it('regular node children', () => {
     const type = TopicNode.childTypes;
     const children = getChildren(type);
     assert.deepEqual(children, ["title","shortdesc","prolog","body"]);
   });
 
-  it('Should return children for node with group children', () => {
+  it('group node children', () => {
     // DD node children are %list-blocks
     const type = DdNode.childTypes;
     const children = getChildren(type);
@@ -63,7 +63,7 @@ describe('defaultToDom', () => {
 });
 
 describe('getDomAttr', () => {
-  it('Id dom attribute for topic', () => {
+  it('topic Id dom attribute', () => {
     const nodeName = 'topic';
     const attrs = "id";
     const domAttrs = getDomAttr(nodeName, attrs);
@@ -72,7 +72,7 @@ describe('getDomAttr', () => {
 });
 
 describe('defaultNodeAttrs', () => {
-  it('should return default node attributes', () => {
+  it('adds default node attributes', () => {
     const attrs = ['attr1', 'attr2', 'attr3'];
     const result = defaultNodeAttrs(attrs);
     const expected = {
@@ -85,14 +85,14 @@ describe('defaultNodeAttrs', () => {
 });
 
 describe('defaultNodeName', () => {
-  it('should return default node name', () => {
+  it('regular name', () => {
     const nodeName = 'topic';
     const result = defaultNodeName(nodeName);
     const expected = 'topic';
     assert.equal(result, expected);
   });
 
-  it('should return default node name with hyphen', () => {
+  it('name with hyphen', () => {
     const nodeName = 'media-autoplay';
     const result = defaultNodeName(nodeName);
     const expected = 'media_autoplay';
@@ -106,21 +106,21 @@ describe('schema', () => {
     result = schema();
   });
 
-  it('should return a valid schema', () => {
+  it('typeof Schema', () => {
     assert.instanceOf(result, Schema);
   });
   
-  it('should generate schema with marks property', () => {
+  it('contains marks property', () => {
     expect(result).to.have.property('marks');
   });
 
 
-  it('should generate schema with nodes property', () => {
+  it('contains nodes property', () => {
         
     expect(result).to.have.property('nodes');
   });
 
-  it('should have the schema for all jdita nodes', () => {
+  it('all jdita nodes', () => {
     const nodes = result.spec.nodes as any; //orderedMap does not have content property so we had to cast it to any
     // nodeNames are strings in the content array 
     const nodeNames = nodes.content.filter((node: any) => typeof node === 'string')
@@ -141,7 +141,7 @@ describe('schema', () => {
     
   });
 
-  it('should generate the schema with correct content for nodes', () => {
+  it('nodes content', () => {
     const nodes = result.spec.nodes as any;
     const nodesObject = {} as any;
     for(let i=0; i<nodes.content.length; i+=2) {
@@ -158,7 +158,7 @@ describe('schema', () => {
     expect(nodesObject['title'].content).to.equal('common_inline*');
   });
 
-  it('should generate the schema with correct inline for nodes', () => {
+  it('inline nodes', () => {
     const nodes = result.spec.nodes as any;
     const nodesObject = {} as any;
     for(let i=0; i<nodes.content.length; i+=2) {
@@ -178,7 +178,7 @@ describe('schema', () => {
     expect(nodesObject['text'].inline).to.equal(true);
   });
 
-  it('should generate the schema with correct attributes for nodes', () => {
+  it('nodes attributes', () => {
     const nodes = result.spec.nodes as any;
     const nodesObject = {} as any;
     for(let i=0; i<nodes.content.length; i+=2) {
@@ -221,7 +221,7 @@ describe('schema', () => {
   });
 
 
-  it('should have the schema for all marks', () => {
+  it('all marks', () => {
     const marks = result.spec.marks as any;
     const specMarks = marks.content.filter((node: any) => typeof node === 'string')
     const expectedMarks = [ 'sup', 'sub', 'u', 'i', 'b' ];
