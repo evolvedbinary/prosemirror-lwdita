@@ -108,7 +108,6 @@ export const NODES: Record<string, (value: JDita, parent: JDita) => any> = {
   text: (value: JDita) => ({ type: 'text', text: value.content, attrs: {} }),
 };
 
-// TODO: Unit Test
 /**
  * Transforms the JDita document into a proper ProseMirror document
  *
@@ -116,7 +115,7 @@ export const NODES: Record<string, (value: JDita, parent: JDita) => any> = {
  * @param parent - The parent JDita node
  * @returns The transformed JDita node
  */
-function defaultTravel(value: JDita, parent: JDita): any {
+export function defaultTravel(value: JDita, parent: JDita): any {
   // children will become content
   const content = value.children?.map(child => travel(child, value));
   // attributes will become attrs
