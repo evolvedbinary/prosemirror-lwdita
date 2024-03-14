@@ -1,10 +1,10 @@
 import { assert, expect } from 'chai';
-import { defaultNodeAttrs, defaultNodeName, defaultToDom, getChildren, getDomAttr, schema, travel } from '../schema';
+import { defaultNodeAttrs, defaultNodeName, defaultToDom, getChildren, getDomAttr, schema, travel1 } from '../schema';
 import { TextNode, BaseNode, TopicNode, DdNode, nodeGroups } from 'jdita';
 import { Schema } from 'prosemirror-model';
 
 /**
- * Unit test for `travel()`
+ * Unit test for `travel1()`
  * on `TextNode`
  *
  * @privateRemarks
@@ -12,7 +12,7 @@ import { Schema } from 'prosemirror-model';
  */
 describe('Schema', () => {
   it('Text node', () => {
-    assert.deepEqual(travel(TextNode as unknown as typeof BaseNode, console.log), { attrs: { parent: { default: '' } }} as any);
+    assert.deepEqual(travel1(TextNode as unknown as typeof BaseNode, console.log), { attrs: { parent: { default: '' } }} as any);
   });
 });
 
@@ -116,13 +116,13 @@ describe('schema', () => {
 
 
   it('contains nodes property', () => {
-        
+
     expect(result).to.have.property('nodes');
   });
 
   it('all jdita nodes', () => {
     const nodes = result.spec.nodes as any; //orderedMap does not have content property so we had to cast it to any
-    // nodeNames are strings in the content array 
+    // nodeNames are strings in the content array
     const nodeNames = nodes.content.filter((node: any) => typeof node === 'string')
     const expectedNodes = [
       'text',         'image',       'data',
@@ -138,7 +138,7 @@ describe('schema', () => {
       'body',         'topic',       'doc'
     ];
     expect(nodeNames).to.have.members(expectedNodes);
-    
+
   });
 
   it('nodes content', () => {
@@ -226,7 +226,7 @@ describe('schema', () => {
     const specMarks = marks.content.filter((node: any) => typeof node === 'string')
     const expectedMarks = [ 'sup', 'sub', 'u', 'i', 'b' ];
     expect(specMarks).to.have.members(expectedMarks);
-    
+
   });
 
 });
