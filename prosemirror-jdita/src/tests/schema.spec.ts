@@ -101,23 +101,132 @@ describe('defaultNodeName', () => {
 });
 
 describe('schema', () => {
+  let result: Schema;
+  before(() => {
+    result = schema();
+  });
+
   it('should return a valid schema', () => {
-    const result = schema();
     assert.instanceOf(result, Schema);
   });
   
   it('should generate schema with marks property', () => {
-    const result = schema();
     expect(result).to.have.property('marks');
   });
 
 
   it('should generate schema with nodes property', () => {
-    const result = schema();
         
     expect(result).to.have.property('nodes');
   });
 
-  //TODO add more tests for schema
+  it('should have the schema for all jdita nodes', () => {
+    const nodes = result.spec.nodes as any; //orderedMap does not have content property so we had to cast it to any
+    // nodeNames are strings in the content array 
+    const nodeNames = nodes.content.filter((node: any) => typeof node === 'string')
+    const expectedNodes = [
+      'text',         'image',       'data',
+      'xref',         'ph',          'title',
+      'shortdesc',    'prolog',      'p',
+      'ol',           'dt',          'pre',
+      'media_source', 'media_track', 'desc',
+      'audio',        'video',       'fn',
+      'note',         'stentry',     'sthead',
+      'strow',        'simpletable', 'fig',
+      'dd',           'dlentry',     'dl',
+      'li',           'ul',          'section',
+      'body',         'topic',       'doc'
+    ];
+    expect(nodeNames).to.have.members(expectedNodes);
+    
+  });
+
+  it('should generate the schema with correct content for nodes', () => {
+    const nodes = result.spec.nodes as any;
+    const nodesObject = {} as any;
+    for(let i=0; i<nodes.content.length; i+=2) {
+      nodesObject[nodes.content[i]] = nodes.content[i+1];
+    }
+
+    // topic node
+    expect(nodesObject['topic'].content).to.equal('title shortdesc? prolog? body?');
+
+    // dd node
+    expect(nodesObject['dd'].content).to.equal('list_blocks*');
+
+    // title node
+    expect(nodesObject['title'].content).to.equal('common_inline*');
+  });
+
+  it('should generate the schema with correct inline for nodes', () => {
+    const nodes = result.spec.nodes as any;
+    const nodesObject = {} as any;
+    for(let i=0; i<nodes.content.length; i+=2) {
+      nodesObject[nodes.content[i]] = nodes.content[i+1];
+    }
+
+    // topic node
+    expect(nodesObject['topic'].inline).to.equal(true);
+
+    // dd node
+    expect(nodesObject['dd'].inline).to.equal(true);
+
+    // title node
+    expect(nodesObject['title'].inline).to.equal(true);
+
+    // text node
+    expect(nodesObject['text'].inline).to.equal(true);
+  });
+
+  it('should generate the schema with correct attributes for nodes', () => {
+    const nodes = result.spec.nodes as any;
+    const nodesObject = {} as any;
+    for(let i=0; i<nodes.content.length; i+=2) {
+      nodesObject[nodes.content[i]] = nodes.content[i+1];
+    }
+
+    // topic node
+    expect(nodesObject['topic'].attrs).to.have.keys(
+      'id',
+      'domains',
+      'outputclass',
+      'translate',
+      'dir',
+      'parent',
+      'class',
+      'xml:lang',
+      'xmlns:ditaarch',
+      'ditaarch:DITAArchVersion'
+    );
+
+    // body node
+    expect(nodesObject['body'].attrs).to.have.keys(
+      'parent',
+      'dir',
+      'xml:lang',
+      'translate',
+      'outputclass',
+      'class'
+    );
+
+    // title node
+    expect(nodesObject['title'].attrs).to.have.keys(
+      'parent',
+      'dir',
+      'xml:lang',
+      'translate',
+      'outputclass',
+      'class'
+    );
+  });
+
+
+  it('should have the schema for all marks', () => {
+    const marks = result.spec.marks as any;
+    const specMarks = marks.content.filter((node: any) => typeof node === 'string')
+    const expectedMarks = [ 'sup', 'sub', 'u', 'i', 'b' ];
+    expect(specMarks).to.have.members(expectedMarks);
+    
+  });
 
 });
