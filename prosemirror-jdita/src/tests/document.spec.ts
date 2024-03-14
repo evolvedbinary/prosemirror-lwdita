@@ -2,8 +2,17 @@ import ChaiPromised from 'chai-as-promised';
 import { use } from 'chai';
 import { expect, assert } from 'chai';
 import { xditaToJson } from 'jdita';
-import { document, deleteUndefined } from '../document';
-import { XML, PMJSON, JDITA_OBJECT, TRANSFORMED_JDITA_OBJECT } from './test-utils';
+import { document, deleteUndefined, defaultTravel } from '../document';
+import {
+  XML,
+  PMJSON,
+  JDITA_OBJECT,
+  TRANSFORMED_JDITA_OBJECT,
+  JDITA_NODE,
+  JDITA_PARENT_NODE,
+  JDITA_TRANFORMED_RESULT1,
+  JDITA_TRANFORMED_RESULT2
+} from './test-utils';
 
 use(ChaiPromised);
 
@@ -44,11 +53,28 @@ describe('deleteUndefined()', () => {
   });
 });
 
-/*
 // Pass a JDita document node
 // and test against expected Prosemirror document output
-defaultTravel()
+// defaultTravel()
+// case IS_MARK
+// case other
+// case content
+describe('defaultTravel()', () => {
+  describe('when passed a JDITA node and its JDITA parent node', () => {
+    it('returns athe transformed ProseMirror objects', () => {
+      const node = JSON.parse(JDITA_NODE),
+            parent = JSON.parse(JDITA_PARENT_NODE),
+            expected = defaultTravel(node, parent),
+            result = (
+              JSON.parse(JDITA_TRANFORMED_RESULT1),
+              JSON.parse(JDITA_TRANFORMED_RESULT2)
+            )
+      assert.deepEqual(result, expected);
+    });
+  });
+});
 
+/*
 // Pass a JDita node
 // and test against expected Prosemirror output
 travel()

@@ -13,6 +13,11 @@ export function title(attrs: Record<string, string> = {}, content: string = ''):
   return topic({}, node('title', attrs, content))
 }
 
+export const JDITA_NODE               = '{"nodeName":"title","attributes":{},"children":[{"nodeName":"text","content":"Programming Light Bulbs to a Lighting Group"}]}';
+export const JDITA_PARENT_NODE        = '{"nodeName":"topic","attributes":{"id":"program"},"children":[{"nodeName":"title","attributes":{},"children":[{"nodeName":"text","content":"Programming Light Bulbs to a Lighting Group"}]},{"nodeName":"body","attributes":{},"children":[{"nodeName":"section","attributes":{},"children":[{"nodeName":"p","attributes":{},"children":[{"nodeName":"text","content":"You must assign a light bulb to at least one lighting group to operate that light bulb."}]}]}]}]}';
+export const JDITA_TRANFORMED_RESULT1 = '{"type":"title","attrs":{}}';
+export const JDITA_TRANFORMED_RESULT2 = '{"type":"title","attrs":{},"content":[{"type":"text","text":"Programming Light Bulbs to a Lighting Group","attrs":{"parent":"title"}}]}';
+
 export const XML = `<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE topic PUBLIC "-//OASIS//DTD LIGHTWEIGHT DITA Topic//EN" "lw-topic.dtd">
 <topic id="program-bulbs-to-groups">
