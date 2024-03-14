@@ -53,7 +53,7 @@ export const NODES: Record<string, (value: JDita, parent: JDita) => any> = {
       });
     }
     const result = { type: value.nodeName, attrs, content: content.map(child => travel(child, value)) };
-    
+
     if (attrs && Object.keys(attrs).length) {
       result.attrs = attrs;
     }
@@ -144,7 +144,6 @@ export function defaultTravel(value: JDita, parent: JDita): any {
   return result;
 }
 
-// NEEDS testing
 /**
  * Traverses the JDita document and generates a ProseMirror document
  *
@@ -152,7 +151,7 @@ export function defaultTravel(value: JDita, parent: JDita): any {
  * @param parent - The parent JDita node
  * @returns The transformed JDita node
  */
-function travel(value: JDita, parent: JDita): any {
+export function travel(value: JDita, parent: JDita): any {
   // if it's a special node, use the special node function,
   // otherwise use the default travel function
   const result = (NODES[value.nodeName] || defaultTravel)(value, parent);
@@ -163,7 +162,6 @@ function travel(value: JDita, parent: JDita): any {
   return result;
 }
 
-// TODO: Unit Test
 /**
  * Transforms the JDita document
  * into a Schema compliant JDita document
