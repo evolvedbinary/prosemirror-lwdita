@@ -7,7 +7,7 @@ import { IS_MARK, defaultNodeName } from "./schema";
  * @param object  - Generic object
  * @returns object - The object with undefined attributes removed
  */
-function deleteUndefined(object?: any) {
+export function deleteUndefined(object?: any) {
   if (object) {
     for (let key in object) {
       if (typeof object[key] === 'undefined') {
