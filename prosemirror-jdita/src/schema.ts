@@ -157,7 +157,7 @@ export function getChildren(type: ChildTypes): string[] {
  * @param next - Next travel function
  * @returns SchemaNode
  */
-export function travel(node: typeof BaseNode, next: (nodeName: string) => void): SchemaNode {
+export function travel1(node: typeof BaseNode, next: (nodeName: string) => void): SchemaNode {
   return (SCHEMAS[node.nodeName] || defaultTravel)(node, next);
 }
 
