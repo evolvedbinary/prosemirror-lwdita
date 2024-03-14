@@ -25,7 +25,7 @@ describe('Prosemirror objects', () => {
 // Pass an object with undefined attributes
 // and test against expected object
 describe('deleteUndefined()', () => {
-  it.only('removes undefined attributes from a passed object', () => {
+  it('removes undefined attributes from a passed object', () => {
     const attrs = {
       'dir': undefined,
       'xml:lang': undefined,
