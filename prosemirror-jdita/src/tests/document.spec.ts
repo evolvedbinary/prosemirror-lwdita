@@ -38,10 +38,10 @@ travel()
 */
 // Pass a JDita object
 // and test against expected JDita transformation output
-describe.skip('document()', () => {
+describe('document()', () => {
   it('returns a transformed Prosemirror object', () => {
-    let jdita = document(JSON.parse(JDITA_OBJECT));
-    assert.equal(jdita, JSON.parse(TRANSFORMED_JDITA_OBJECT));
+    let transformedJdita = document(JSON.parse(JDITA_OBJECT));
+    expect(transformedJdita).to.deep.equal(JSON.parse(TRANSFORMED_JDITA_OBJECT));
   });
 });
 
