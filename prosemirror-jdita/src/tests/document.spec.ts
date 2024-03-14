@@ -2,7 +2,7 @@ import ChaiPromised from 'chai-as-promised';
 import { use } from 'chai';
 import { expect, assert } from 'chai';
 import { xditaToJson } from 'jdita';
-import { document, deleteUndefined, defaultTravel } from '../document';
+import { document, deleteUndefined, defaultTravel, travel } from '../document';
 import {
   XML,
   PMJSON,
@@ -11,7 +11,9 @@ import {
   JDITA_NODE,
   JDITA_PARENT_NODE,
   JDITA_TRANFORMED_RESULT1,
-  JDITA_TRANFORMED_RESULT2
+  JDITA_TRANFORMED_RESULT2,
+  JDITA_TRANFORMED_RESULT3,
+  JDITA_TRANFORMED_RESULT4
 } from './test-utils';
 
 use(ChaiPromised);
@@ -55,13 +57,9 @@ describe('deleteUndefined()', () => {
 
 // Pass a JDita document node
 // and test against expected Prosemirror document output
-// defaultTravel()
-// case IS_MARK
-// case other
-// case content
 describe('defaultTravel()', () => {
-  describe('when passed a JDITA node and its JDITA parent node', () => {
-    it('returns athe transformed ProseMirror objects', () => {
+  describe('when passed a JDITA node "title" and its parent node "topic"', () => {
+    it('returns the transformed ProseMirror objects', () => {
       const node = JSON.parse(JDITA_NODE),
             parent = JSON.parse(JDITA_PARENT_NODE),
             expected = defaultTravel(node, parent),
@@ -74,12 +72,30 @@ describe('defaultTravel()', () => {
   });
 });
 
-/*
 // Pass a JDita node
 // and test against expected Prosemirror output
-travel()
+describe('travel()', () => {
+  describe('when passed a JDITA "text" node and its parent node "title"', () => {
+    it('returns a transformed ProseMirror object', () => {
+      const node = JSON.parse('{"nodeName":"text","content":"Programming Light Bulbs to a Lighting Group"}'),
+        parent = JSON.parse('{"nodeName":"title","attributes":{},"children":[{"nodeName":"text","content":"Programming Light Bulbs to a Lighting Group"}]}'),
+        expected = travel(node, parent),
+        result = JSON.parse('{"type":"text","text":"Programming Light Bulbs to a Lighting Group","attrs":{"parent":"title"}}');
+      assert.deepEqual(result, expected);
+    });
+  });
 
-*/
+  describe('when passed a JDITA "topic" node and its parent node "doc"', () => {
+    it('returns a transformed ProseMirror object', () => {
+      const node = JSON.parse('{"nodeName":"topic","attributes":{"id":"program"},"children":[{"nodeName":"title","attributes":{},"children":[{"nodeName":"text","content":"Programming Light Bulbs to a Lighting Group"}]},{"nodeName":"body","attributes":{},"children":[{"nodeName":"section","attributes":{},"children":[{"nodeName":"p","attributes":{},"children":[{"nodeName":"text","content":"You must assign a light bulb to at least one lighting group to operate that light bulb."}]}]}]}]}'),
+        parent = JSON.parse('{"nodeName":"doc","children":[{"nodeName":"topic","attributes":{"id":"program"},"children":[{"nodeName":"title","attributes":{},"children":[{"nodeName":"text","content":"Programming Light Bulbs to a Lighting Group"}]},{"nodeName":"body","attributes":{},"children":[{"nodeName":"section","attributes":{},"children":[{"nodeName":"p","attributes":{},"children":[{"nodeName":"text","content":"You must assign a light bulb to at least one lighting group to operate that light bulb."}]}]}]}]}]}'),
+        expected = travel(node, parent),
+        result = JSON.parse('{"type":"topic","attrs":{"id":"program","parent":"doc"},"content":[{"type":"title","attrs":{"parent":"topic"},"content":[{"type":"text","text":"Programming Light Bulbs to a Lighting Group","attrs":{"parent":"title"}}]},{"type":"body","attrs":{"parent":"topic"},"content":[{"type":"section","attrs":{"parent":"body"},"content":[{"type":"p","attrs":{"parent":"section"},"content":[{"type":"text","text":"You must assign a light bulb to at least one lighting group to operate that light bulb.","attrs":{"parent":"p"}}]}]}]}]}');
+      assert.deepEqual(result, expected);
+    });
+  });
+});
+
 // Pass a JDita object
 // and test against expected JDita transformation output
 describe('document()', () => {
