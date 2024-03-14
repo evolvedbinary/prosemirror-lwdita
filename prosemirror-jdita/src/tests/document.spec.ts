@@ -3,7 +3,7 @@ import { use } from 'chai';
 import { expect, assert } from 'chai';
 import { xditaToJson } from 'jdita';
 import { document } from '../document';
-import { XML, PMJSON, JDITA_OBJECT, TRANSFORMED_JDITA_OBJECT } from './xml';
+import { XML, PMJSON, JDITA_OBJECT, TRANSFORMED_JDITA_OBJECT } from './test-utils';
 
 use(ChaiPromised);
 

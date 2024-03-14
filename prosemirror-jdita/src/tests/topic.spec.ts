@@ -3,10 +3,10 @@ import { use } from 'chai';
 import { expect, assert } from 'chai';
 import { xditaToJson } from 'jdita';
 import { document } from '../document';
+import { topic } from './test-utils';
 
 use(ChaiPromised);
 
-import { topic } from './xml';
 
 const attrs = {
   id: 'topic-id',
