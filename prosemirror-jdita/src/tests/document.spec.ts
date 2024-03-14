@@ -2,7 +2,7 @@ import ChaiPromised from 'chai-as-promised';
 import { use } from 'chai';
 import { expect, assert } from 'chai';
 import { xditaToJson } from 'jdita';
-import { document } from '../document';
+import { document, deleteUndefined } from '../document';
 import { XML, PMJSON, JDITA_OBJECT, TRANSFORMED_JDITA_OBJECT } from './test-utils';
 
 use(ChaiPromised);
@@ -22,11 +22,29 @@ describe('Prosemirror objects', () => {
   });
 });
 
-/*
-// Pass an object with "undefined" attributes
+// Pass an object with undefined attributes
 // and test against expected object
-deleteUndefined()
+describe('deleteUndefined()', () => {
+  it.only('removes undefined attributes from a passed object', () => {
+    const attrs = {
+      'dir': undefined,
+      'xml:lang': undefined,
+      'translate': undefined,
+      'name': undefined,
+      'value': 'movie.ogg',
+      'parent': 'video'
+    };
 
+    const result = deleteUndefined(attrs);
+    const expected = {
+      value: 'movie.ogg',
+      parent: 'video'
+    };
+    assert.deepEqual(result, expected);
+  });
+});
+
+/*
 // Pass a JDita document node
 // and test against expected Prosemirror document output
 defaultTravel()
