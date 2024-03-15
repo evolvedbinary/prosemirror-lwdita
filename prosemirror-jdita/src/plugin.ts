@@ -2,8 +2,8 @@ import { keymap } from "prosemirror-keymap";
 import { MarkType, NodeType, Schema } from "prosemirror-model";
 import { menuBar, MenuElement, MenuItem, MenuItemSpec } from "prosemirror-menu";
 import { toggleMark, newLine, hasMark, insertNode, insertImage, InputContainer } from "./commands";
-import { Command } from "prosemirror-commands";
 import { redo, undo } from "prosemirror-history";
+import { Command } from "prosemirror-state";
 
 /**
  * This is the entire DOM node of the Prosemirror editor that will be observed for DOM mutations
@@ -172,9 +172,9 @@ function simpleCommand(callbacks: SimpleItemCallbacks | (() => void), props: Par
 function separator(): MenuElement {
   return new MenuItem({
     run: () => {},
-    icon: {},
     enable: () => false,
     class: 'separator',
+    icon: {text: ""}
   });
 }
 
@@ -257,18 +257,18 @@ export function menu(schema: Schema, { start, before, after, end}: Additions = {
     }, { label: 'Show debug info', class: 'ic-bug', css: 'color: #c81200' }),
   ];
   const toolbar:MenuElement[][] = [[
-    commandItem(undo, { icon: {}, title: 'Undo', class: 'ic-undo' }),
-    commandItem(redo, { icon: {}, title: 'Redo', class: 'ic-redo' }),
+    commandItem(undo, { icon: {text: ""}, title: 'Undo', class: 'ic-undo' }),
+    commandItem(redo, { icon: {text: ""}, title: 'Redo', class: 'ic-redo' }),
   ], [
-    markItem(schema.marks.b, { icon: {}, title: 'Bold', class: 'ic-bold' }),
-    markItem(schema.marks.u, { icon: {}, title: 'Underlined', class: 'ic-underline' }),
-    markItem(schema.marks.i, { icon: {}, title: 'Italic', class: 'ic-italic' }),
-    markItem(schema.marks.sub, { icon: {}, title: 'Subscript', class: 'ic-subscript' }),
-    markItem(schema.marks.sup, { icon: {}, title: 'Superscript', class: 'ic-superscript' }),
+    markItem(schema.marks.b, { icon: {text: ""}, title: 'Bold', class: 'ic-bold' }),
+    markItem(schema.marks.u, { icon: {text: ""}, title: 'Underlined', class: 'ic-underline' }),
+    markItem(schema.marks.i, { icon: {text: ""}, title: 'Italic', class: 'ic-italic' }),
+    markItem(schema.marks.sub, { icon: {text: ""}, title: 'Subscript', class: 'ic-subscript' }),
+    markItem(schema.marks.sup, { icon: {text: ""}, title: 'Superscript', class: 'ic-superscript' }),
   ], [
-    insertItem(schema.nodes.ol, { icon: {}, title: 'Ordered list', class: 'ic-olist' }),
-    insertItem(schema.nodes.ul, { icon: {}, title: 'Unordered list', class: 'ic-ulist' }),
-    insertImageItem(schema.nodes.image, { icon: {}, title: 'Insert image', class: 'ic-image' }),
+    insertItem(schema.nodes.ol, { icon: {text: ""}, title: 'Ordered list', class: 'ic-olist' }),
+    insertItem(schema.nodes.ul, { icon: {text: ""}, title: 'Unordered list', class: 'ic-ulist' }),
+    insertImageItem(schema.nodes.image, { title: 'Insert image', class: 'ic-image' }),
   ]];
   if (!start) {
     start = [];
