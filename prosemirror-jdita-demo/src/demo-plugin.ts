@@ -2,6 +2,11 @@ import { Command } from "prosemirror-commands";
 import { MenuElement, MenuItem, MenuItemSpec } from "prosemirror-menu";
 import { InputContainer } from "prosemirror-jdita";
 
+/**
+ * Open file selection dialog and select and file to insert into the local storage.
+ * @param input - The input element
+ * @returns - Command
+ */
 function openFile(input: InputContainer): Command {
   return (state, dispatch) => {
   function fileSelected(this: HTMLInputElement, event: Event) {
@@ -45,6 +50,10 @@ function openFile(input: InputContainer): Command {
 }
 }
 
+/**
+ * Create a menu item to open a file selection dialog to upload a file into the local storage.
+ * @returns A MenuElement
+ */
 export function openFileMenuItem(): MenuElement {
   const input = new InputContainer();
   return new MenuItem({
@@ -67,6 +76,11 @@ export function openFileMenuItem(): MenuElement {
   });
 }
 
+/**
+ * Create a menu item to redirect to the github page of the project.
+ * @param props - Menu item properties
+ * @returns - MenuItem
+ */
 export function githubMenuItem(props: Partial<MenuItemSpec & { url: string }> = {}): MenuElement {
   return new MenuItem({
     enable: () => true,

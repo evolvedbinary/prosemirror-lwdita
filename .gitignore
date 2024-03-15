@@ -109,3 +109,6 @@ dist
 .vscode/
 .cache/
 yarn-error.log
+
+# generated documentation
+generated-docs/

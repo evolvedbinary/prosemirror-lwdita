@@ -9,16 +9,26 @@ import { history } from "prosemirror-history";
 
 const schemaObject = schema();
 
+/**
+ * Load the json document and create a new EditorView.
+ * The json document is transformed from JDita to ProseMirror Schema
+ */
 jsonDocLoader.then(jsonDoc => {
-  console.log(jsonDoc);
+  // get the editor element from the DOM
   const domEl = document.querySelector("#editor") as HTMLElement;
+  // clear the element innerHTML
   domEl.innerHTML = '';
+  // if the element exists, create a new EditorView
   if (domEl) {
+    // take in the schema and the json document
     const doc = Node.fromJSON(schemaObject, jsonDoc);
+    // create a new EditorState with the doc and the plugins
     const state = EditorState.create({
       doc,
       plugins: [
+        // history plugin comes from prosemirror-history
         history(),
+        // these were custom plugins check the prosemirror-jdita/src/plugin.ts file
         shortcuts(schemaObject),
         menu(schemaObject, {
           end: [[
@@ -29,6 +39,7 @@ jsonDocLoader.then(jsonDoc => {
         }),
       ]
     })
+    // create a new EditorView with the dom element and the state
     new EditorView(domEl, {
       state,
     });

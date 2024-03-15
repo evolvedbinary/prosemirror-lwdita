@@ -1,3 +1,6 @@
+/**
+ * DOM nodes mapping from JDITA to HTML
+ */
 export const DOM_NODES: Record<string, string | ((parent?: string) => string)> = {
   audio: 'audio',
   body: 'div',
@@ -37,6 +40,14 @@ export const DOM_NODES: Record<string, string | ((parent?: string) => string)> =
   video: 'video',
   xref: 'a',
 }
+
+/**
+ * Get the HTML node name for a JDITA node
+ *
+ * @param node - JDITA node name
+ * @param parent - JDITA parent node name
+ * @returns HTML node name
+ */
 export function getDomNode(node: string, parent?: string): string {
   const domName = DOM_NODES[node];
   return domName
