@@ -1,10 +1,10 @@
 import { assert, expect } from 'chai';
-import { defaultNodeAttrs, defaultNodeName, defaultToDom, getChildren, getDomAttr, schema, travel1 } from '../schema';
+import { defaultNodeAttrs, defaultNodeName, defaultToDom, getChildren, getDomAttr, schema, travel } from '../schema';
 import { TextNode, BaseNode, TopicNode, DdNode, nodeGroups } from 'jdita';
 import { Schema } from 'prosemirror-model';
 
 /**
- * Unit test for `travel1()`
+ * Unit test for `travel()`
  * on `TextNode`
  *
  * @privateRemarks
@@ -12,7 +12,7 @@ import { Schema } from 'prosemirror-model';
  */
 describe('Schema', () => {
   it('Text node', () => {
-    assert.deepEqual(travel1(TextNode as unknown as typeof BaseNode, console.log), { attrs: { parent: { default: '' } }} as any);
+    assert.deepEqual(travel(TextNode as unknown as typeof BaseNode, console.log), { attrs: { parent: { default: '' } }} as any);
   });
 });
 
