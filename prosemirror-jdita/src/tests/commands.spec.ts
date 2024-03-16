@@ -2,6 +2,10 @@
  * Unit tests for command.ts
  */
 
+import { expect } from "chai";
+import { schema } from "../schema";
+import {createNode} from '../commands'
+const schemaObject = schema();
 /*
 // Pass all 12 NodeTypes from the schema
 // and test against their expected returned nodes
@@ -84,3 +88,14 @@ enterPressed()
 // and test against expected Boolean
 hasMark()
 */
+
+describe('createNode', () => {
+  it('creates a node', () => {
+    const type = schemaObject.nodes.title;
+    const node = createNode(type);
+    console.log(node);
+    
+    expect(node.type.name).to.equal('title');
+  });
+
+});
