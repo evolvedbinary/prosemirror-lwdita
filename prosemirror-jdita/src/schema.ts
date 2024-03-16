@@ -146,7 +146,6 @@ export function getChildren(type: ChildTypes): string[] {
 }
 
 
-// TODO if we have abundant time we can write unit tests for this function
 /**
  * Travel the node and generate the node spec
  * 
@@ -219,13 +218,6 @@ export function defaultNodeAttrs(attrs: string[]): any {
   }, {} as Record<string, { default: string }>);
 }
 
-// TODO: Unit Test
-// estimation 1h
-// we can test this by generating node spec for some nodes and make sure we get the correct output
-// we can do enough with 3 tests
-// text, topic and body
-// we need to test inner functions as well like `toDOM`
-
 /**
  * Travel the node and generate the node spec
  *
@@ -293,12 +285,6 @@ export function defaultNodeName(nodeName: string): string {
   return NODE_NAMES[nodeName] || nodeName.replace(/-/g, '_');
 }
 
-// TODO: Unit Test
-// estimation 1h
-// we can test this using document node and check if the schema is created
-// steps: 
-// get the generated schema object
-// write unit test that make sure that schema is created each time.
 /**
  * Creates a schema for the prosemirror editor
  * based on the jdita nodes
