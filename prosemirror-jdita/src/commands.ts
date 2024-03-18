@@ -34,7 +34,6 @@ export function createNode(type: NodeType, args: Record<string, any> = {}): Node
   throw new Error('unkown node type: ' + type.name);
 }
 
-// TODO: Unit Test
 /**
  * Creates a node tree from the given NodeType array.
  *
