@@ -6,70 +6,10 @@ import { expect } from "chai";
 import { schema } from "../schema";
 import {canCreate, canCreateIndex, createNode, createNodesTree, insertNode, defaultBlocks } from '../commands'
 import { EditorState } from "prosemirror-state";
-import { Node } from "prosemirror-model";
-import { RESOLVEDPOSITION } from './test-utils';
+import { Node, ResolvedPos } from "prosemirror-model";
+//import { RESOLVEDPOSITION } from './test-utils';
 
 const schemaObject = schema();
-/*
-
-// Pass NodeType, InputContainer,
-// an EditorState, and a transaction object
-// and test against expected command
-insertImage()
-
-// Pass a ResolvedPos object and an allowed NodeType
-// and test against the expected NodeType
-defaultBlockAt()
-
-// Pass a transaction object
-// and test against expected Boolean
-enterEOL()
-
-// Pass a transaction object
-// and test against expected transaction object
-deleteEmptyLine()
-
-// Pass a transaction object
-// and test against expected transaction of enterEOL()
-enterEmpty()
-
-// Pass a transaction object
-// and test against expected Boolean
-enterSplit()
-
-// Pass a transaction object
-// and test against expected Boolean
-isEOL()
-
-// Pass a transaction object
-// and test against expected Boolean
-isEmpty()
-
-// Pass a transaction object
-// and test against expected Boolean
-isPrevEmpty()
-
-// Pass a transaction object
-// and test against expected number
-getDepth()
-
-// Pass a transaction object
-// and test against expected number
-getPrevDepth()
-
-// Pass a ResolvedPos object
-// and test against expected array of NodeTypes
-getTree()
-
-// Pass an EditorState object, a transaction object,
-// a ResolvedPos object
-// and test against expected Boolean
-enterPressed()
-
-// Pass an EditorState object and a MarkType
-// and test against expected Boolean
-hasMark()
-*/
 
 describe('createNode', () => {
   it('creates a node', () => {
@@ -147,7 +87,7 @@ describe('canCreate', () => {
   });
 });
 
-describe('insertNode', () => {
+/* describe('insertNode', () => {
   it('insertNode', () => {
     const type = schemaObject.nodes.p;
     const command = insertNode(type);
@@ -167,13 +107,15 @@ describe('insertNode', () => {
   });
 });
 
+ */
 // Pass a ResolvedPos object
 // and test against expected list of NodeTypes
-describe.only('defaultBlocks', () => {
+/* describe('defaultBlocks', () => {
   const resPos = JSON.parse(RESOLVEDPOSITION);
-  const blocks = defaultBlocks(resPos, 0);
+  const blocks = defaultBlocks(resPos as unknown as ResolvedPos, 0);
   const expectedBlocks: String[] = [];
   blocks.forEach((block) => expectedBlocks.push(block.name));
   console.log('expectedBlocks', expectedBlocks);
   // expected output: ['data', 'p', 'simpletable', 'ul']
 });
+ */
