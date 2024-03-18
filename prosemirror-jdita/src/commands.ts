@@ -214,7 +214,6 @@ export function insertImage(type: NodeType, input: InputContainer): Command {
   }
 }
 
-// TODO: Unit Test
 /**
  * Check the node in allowed nodes list and return the index of the node.
  * This function also ensures that the order of the nodes is correct.
@@ -222,19 +221,18 @@ export function insertImage(type: NodeType, input: InputContainer): Command {
  * @param type - NodeType or nodeName
  * @returns node index from the list of nodes
  */
-function canCreateIndex(type: NodeType) {
+export function canCreateIndex(type: NodeType) {
   return ['data', 'ul', 'li', 'p', 'section', 'stentry', 'strow', 'simpletable'].indexOf(type.name);
 }
 
 
-// TODO: Unit Test
 /**
  * Check if the node can be created or not.
  *
  * @param type - NodeType object, contains the node name
  * @returns Boolean of whether the node can be created or not
  */
-function canCreate(type: NodeType) {
+export function canCreate(type: NodeType) {
   return canCreateIndex(type) > -1;
 }
 

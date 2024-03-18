@@ -4,7 +4,7 @@
 
 import { expect } from "chai";
 import { schema } from "../schema";
-import {createNode, createNodesTree} from '../commands'
+import {canCreate, canCreateIndex, createNode, createNodesTree} from '../commands'
 const schemaObject = schema();
 /*
 // Pass all 12 NodeTypes from the schema
@@ -127,5 +127,36 @@ describe('createNodesTree', () => {
     expect(li?.type.name).to.equal('li');
     expect(p?.type.name).to.equal('p');
 
+  });
+});
+
+
+describe('canCreateIndex', () => {
+  it('correct index for allowed node types', () => {
+    const knownTypes = [schemaObject.nodes.data, schemaObject.nodes.ul, schemaObject.nodes.li, schemaObject.nodes.p, schemaObject.nodes.section, schemaObject.nodes.stentry, schemaObject.nodes.strow, schemaObject.nodes.simpletable]
+    knownTypes.forEach((type) => {
+      const index = canCreateIndex(type);
+      expect(index).to.equal(knownTypes.indexOf(type));
+    });
+  });
+
+  it('-1 for denied node types', () => {    
+    const index = canCreateIndex(schemaObject.nodes.xref);
+    expect(index).to.equal(-1);
+  });
+});
+
+describe('canCreate', () => {
+  it('true for allowed types', () => {
+    const knownTypes = [schemaObject.nodes.data, schemaObject.nodes.ul, schemaObject.nodes.li, schemaObject.nodes.p, schemaObject.nodes.section, schemaObject.nodes.stentry, schemaObject.nodes.strow, schemaObject.nodes.simpletable]
+    knownTypes.forEach((type) => {
+      const result = canCreate(type);
+      expect(result).to.be.true;
+    });
+  });
+
+  it('false for denied node types', () => {
+    const result = canCreate(schemaObject.nodes.xref);
+    expect(result).to.be.false;
   });
 });
