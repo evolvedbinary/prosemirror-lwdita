@@ -4,7 +4,7 @@
 
 import { expect } from "chai";
 import { schema } from "../schema";
-import {createNode} from '../commands'
+import {createNode, createNodesTree} from '../commands'
 const schemaObject = schema();
 /*
 // Pass all 12 NodeTypes from the schema
@@ -112,4 +112,20 @@ describe('createNode', () => {
     expect(() => createNode(type)).to.throw();
   });
 
+})
+
+describe('createNodesTree', () => {
+  it('creates a node tree', () => {
+    const nodeTypes = [schemaObject.nodes.p, schemaObject.nodes.li, schemaObject.nodes.ul];
+    
+    const node = createNodesTree(nodeTypes);
+
+    
+    let li = node.content.firstChild;
+    let p = li?.content.firstChild;
+    
+    expect(li?.type.name).to.equal('li');
+    expect(p?.type.name).to.equal('p');
+
+  });
 });
