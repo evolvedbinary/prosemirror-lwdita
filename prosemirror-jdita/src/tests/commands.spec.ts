@@ -4,10 +4,7 @@
 
 import { expect } from "chai";
 import { schema } from "../schema";
-import {canCreate, canCreateIndex, createNode, createNodesTree, insertNode, defaultBlocks } from '../commands'
-import { EditorState } from "prosemirror-state";
-import { Node, ResolvedPos } from "prosemirror-model";
-//import { RESOLVEDPOSITION } from './test-utils';
+import { canCreate, canCreateIndex, createNode, createNodesTree } from '../commands';
 
 const schemaObject = schema();
 
