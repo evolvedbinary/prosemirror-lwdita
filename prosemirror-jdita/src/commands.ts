@@ -5,7 +5,6 @@ import { Fragment, MarkType, Node, NodeType, ResolvedPos, Schema } from 'prosemi
 import { TextSelection, EditorState, Transaction, Command } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 
-// TODO: Unit Test
 /**
  * Create a new Node and fill it with the args as attributes.
  * Fill the node with child nodes if they're required.
