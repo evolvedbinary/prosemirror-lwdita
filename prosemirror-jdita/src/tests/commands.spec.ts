@@ -91,11 +91,14 @@ hasMark()
 
 describe('createNode', () => {
   it('creates a node', () => {
-    const type = schemaObject.nodes.title;
-    const node = createNode(type);
-    console.log(node);
+    const type = schemaObject.nodes.p;
     
-    expect(node.type.name).to.equal('title');
+    const node = createNode(type);    
+    expect(node.type.name).to.equal('p');
+  });
+  it('throws on unknown node type', () => {
+    const type = schemaObject.nodes.unknown;
+    expect(() => createNode(type)).to.throw();
   });
 
 });
