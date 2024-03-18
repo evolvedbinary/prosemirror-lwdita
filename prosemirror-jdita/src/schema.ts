@@ -148,10 +148,10 @@ export function getChildren(type: ChildTypes): string[] {
 
 /**
  * Travel the node and generate the node spec
- * 
+ *
  * @privateRemarks
  * This function is not being used anywhere in the code.
- * 
+ *
  * @param node - JDita node
  * @param next - Next travel function
  * @returns SchemaNode
@@ -160,11 +160,6 @@ export function schemaTravel(node: typeof BaseNode, next: (nodeName: string) => 
   return (SCHEMAS[node.nodeName] || defaultTravel)(node, next);
 }
 
-// TODO: Unit Test
-// estimation 50 min
-// this returns a function and that function needs to be tested
-// we should test the output of the function and the inner function as well
-// we can do enough with 3 tests
 /**
  * Returns a function that generates the dom spec for a node
  *
@@ -175,7 +170,7 @@ export function schemaTravel(node: typeof BaseNode, next: (nodeName: string) => 
  * @returns A function that generates the DOM spec
  */
 export function defaultToDom(node: typeof BaseNode, attrs: any): (node: Node) => DOMOutputSpec {
-  return function(pmNode: Node) {     
+  return function(pmNode: Node) {
     return [getDomNode(node.nodeName, pmNode.attrs?.parent), attrs
       ? Object.keys(attrs).reduce((newAttrs, attr) => {
         if (pmNode.attrs[attr]) {
