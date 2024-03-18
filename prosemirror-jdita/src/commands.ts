@@ -56,7 +56,6 @@ export function createNodesTree(tree: NodeType[]): Node {
   return result as Node;
 }
 
-// TODO: Unit Test
 /**
  * Creates a command to insert a new node at the current cursor position.
  *
@@ -162,7 +161,6 @@ export class InputContainer {
   }
 }
 
-// TODO: Unit Test
 /**
  * Creates a command to insert a new Image node at the current cursor position.
  *
@@ -269,7 +267,6 @@ export function defaultBlocks(pos: ResolvedPos, depth = 0) {
 }
 
 
-// TODO: Unit Test
 /**
  * Get the Node that can be created at the current cursor position.
  *
@@ -299,7 +296,6 @@ function defaultBlockAt(pos: ResolvedPos, depth = 0, preferred?: NodeType) {
   return type;
 }
 
-// TODO: Unit Test
 /**
  * Handle the enter key event when the cursor is at the end of the line.
  *
@@ -334,7 +330,6 @@ export function enterEOL(tr: Transaction, dispatch = false, depth = 0): Transact
   return false;
 }
 
-// TODO: Unit Test
 /**
  * Deletes the empty line in the current cursor position
  *
@@ -348,7 +343,6 @@ export function deleteEmptyLine(tr: Transaction, depth = 0, shift = 0): Transact
   return tr.setSelection(TextSelection.create(tr.doc, tr.selection.anchor - depth * 2 + shift, tr.selection.anchor + shift)).deleteSelection();
 }
 
-// TODO: Unit Test
 /**
  * Handle the enter key event when the cursor is at empty line.
  *
@@ -366,7 +360,6 @@ export function enterEmpty(tr: Transaction, dispatch = false, depth = 0): Transa
   return enterEOL(tr, dispatch, depth);
 }
 
-// TODO: Unit Test
 /**
  * Handle the enter key event when the cursor is in the middle of a node.
  *
@@ -440,7 +433,6 @@ export function enterSplit(tr: Transaction, dispatch = false, depth = 0): Transa
   return false;
 }
 
-// TODO: Unit Test
 /**
  * Check if the cursor is at the end of the line.
  *
@@ -464,7 +456,6 @@ export function isEOL(tr: Transaction, depth = 0) {
   return true;
 }
 
-// TODO: Unit Test
 /**
  * Checks whether the cursor is at an empty line or not.
  *
@@ -488,7 +479,6 @@ export function isEmpty(tr: Transaction, depth = 0) {
   return true;
 }
 
-// TODO: Unit Test
 /**
  * Checks if the previous node is empty or not when the cursor is at the beginning of the line.
  *
@@ -512,7 +502,6 @@ export function isPrevEmpty(tr: Transaction, depth = 0) {
   return true;
 }
 
-// TODO: Unit Test
 /**
  * Get the distance from the current cursor position to the closest parent Node with children.
  * 
@@ -530,7 +519,6 @@ export function getDepth(tr: Transaction, empty = false) {
   return depth;
 }
 
-// TODO: Unit Test
 /**
  * Get the previous node distance from the first parent with children.
  *
@@ -547,7 +535,6 @@ export function getPrevDepth(tr: Transaction) {
   return depth;
 }
 
-// TODO: Unit Test
 /**
  * Get the tree of nodes starting from the current cursor position, and going up to first parent node with children.
  *
@@ -563,7 +550,6 @@ export function getTree(pos: ResolvedPos, depth = 0) {
   return result;
 }
 
-// TODO: Unit Test
 /**
  * Handle pressing the `enter` key in the editor.
  * This contains an editor state, an optional `dispatch`
@@ -615,7 +601,6 @@ export function enterPressed(state: EditorState, dispatch?: (tr: Transaction) =>
  */
 export const newLine = chainCommands(enterPressed);
 
-// TODO: Unit Test
 /**
  * Checks the state of any mark against the
  * list of all marks in the editor menu
