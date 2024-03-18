@@ -4,7 +4,10 @@
 
 import { expect } from "chai";
 import { schema } from "../schema";
-import {canCreate, canCreateIndex, createNode, createNodesTree} from '../commands'
+import {canCreate, canCreateIndex, createNode, createNodesTree, insertNode} from '../commands'
+import { EditorState } from "prosemirror-state";
+import { Node } from "prosemirror-model";
+
 const schemaObject = schema();
 /*
 // Pass all 12 NodeTypes from the schema
@@ -158,5 +161,25 @@ describe('canCreate', () => {
   it('false for denied node types', () => {
     const result = canCreate(schemaObject.nodes.xref);
     expect(result).to.be.false;
+  });
+});
+
+describe('insertNode', () => {
+  it.only('insertNode', () => {
+    const type = schemaObject.nodes.p;
+    const command = insertNode(type);
+
+    const jsonDoc = `{ "type": "doc", "attrs": {}, "content": [ { "type": "topic", "attrs": { "parent": "doc" }, "content": [ { "type": "title", "attrs": { "parent": "topic" }, "content": [ { "type": "text", "text": "title", "attrs": { "parent": "title" } } ] }, { "type": "body", "attrs": { "parent": "topic" }, "content": [ { "type": "section", "attrs": { "parent": "body" }, "content": [ { "type": "p", "attrs": { "parent": "section" }, "content": [ { "type": "text", "text": "text content", "attrs": { "parent": "p" } } ] } ] } ] } ] } ] }`;
+
+    const doc = Node.fromJSON(schemaObject, JSON.parse(jsonDoc));
+
+    const state = EditorState.create({
+      doc
+    })
+    const dispatch = () => {};
+
+    const result = command(state as unknown as EditorState, dispatch);
+    console.log(result);
+    
   });
 });
