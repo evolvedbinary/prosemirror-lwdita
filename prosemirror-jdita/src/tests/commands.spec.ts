@@ -165,7 +165,7 @@ describe('canCreate', () => {
 });
 
 describe('insertNode', () => {
-  it.only('insertNode', () => {
+  it('insertNode', () => {
     const type = schemaObject.nodes.p;
     const command = insertNode(type);
 
