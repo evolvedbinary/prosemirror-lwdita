@@ -1,7 +1,7 @@
 import { assert, expect } from 'chai';
 import { defaultNodeAttrs, defaultNodeName, defaultToDom, getChildren, getDomAttr, schema, schemaTravel } from '../schema';
 import { TextNode, BaseNode, TopicNode, DdNode, nodeGroups } from 'jdita';
-import { Schema } from 'prosemirror-model';
+import { DOMOutputSpec, Schema } from 'prosemirror-model';
 
 /**
  * Unit test for `schemaTravel()`
@@ -57,8 +57,10 @@ describe('defaultToDom', () => {
       },
       0,
     ];
+    console.log(result);
+    console.log(expected);
     // TODO correct this assertion
-    // assert.deepEqual(result, expected as DOMOutputSpec);
+    // assert.equal(result, expected as unknown as DOMOutputSpec);
   });
 });
 
