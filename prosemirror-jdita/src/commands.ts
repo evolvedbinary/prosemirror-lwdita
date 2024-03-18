@@ -236,8 +236,6 @@ export function canCreate(type: NodeType) {
   return canCreateIndex(type) > -1;
 }
 
-
-// TODO: Unit Test
 /**
  * Create an array of NodeTypes that are "allowed" nodes to be
  * added at the current curser position.
@@ -251,7 +249,7 @@ export function canCreate(type: NodeType) {
  * @param depth - distance from the current cursor position to the closest parent Node with children
  * @returns List of NodeTypes that can be created
  */
-function defaultBlocks(pos: ResolvedPos, depth = 0) {
+export function defaultBlocks(pos: ResolvedPos, depth = 0) {
   // Get the content match at the current cursor position
   const match = pos.node(-depth - 1).contentMatchAt(pos.indexAfter(-depth - 1));
   let index = -1;

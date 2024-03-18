@@ -4,9 +4,10 @@
 
 import { expect } from "chai";
 import { schema } from "../schema";
-import {canCreate, canCreateIndex, createNode, createNodesTree, insertNode} from '../commands'
+import {canCreate, canCreateIndex, createNode, createNodesTree, insertNode, defaultBlocks } from '../commands'
 import { EditorState } from "prosemirror-state";
 import { Node } from "prosemirror-model";
+import { RESOLVEDPOSITION } from './test-utils';
 
 const schemaObject = schema();
 /*
@@ -164,4 +165,15 @@ describe('insertNode', () => {
     console.log(result);
 
   });
+});
+
+// Pass a ResolvedPos object
+// and test against expected list of NodeTypes
+describe.only('defaultBlocks', () => {
+  const resPos = JSON.parse(RESOLVEDPOSITION);
+  const blocks = defaultBlocks(resPos, 0);
+  const expectedBlocks: String[] = [];
+  blocks.forEach((block) => expectedBlocks.push(block.name));
+  console.log('expectedBlocks', expectedBlocks);
+  // expected output: ['data', 'p', 'simpletable', 'ul']
 });
