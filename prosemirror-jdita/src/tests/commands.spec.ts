@@ -83,36 +83,3 @@ describe('canCreate', () => {
     expect(result).to.be.false;
   });
 });
-
-/* describe('insertNode', () => {
-  it('insertNode', () => {
-    const type = schemaObject.nodes.p;
-    const command = insertNode(type);
-
-    const jsonDoc = `{ "type": "doc", "attrs": {}, "content": [ { "type": "topic", "attrs": { "parent": "doc" }, "content": [ { "type": "title", "attrs": { "parent": "topic" }, "content": [ { "type": "text", "text": "title", "attrs": { "parent": "title" } } ] }, { "type": "body", "attrs": { "parent": "topic" }, "content": [ { "type": "section", "attrs": { "parent": "body" }, "content": [ { "type": "p", "attrs": { "parent": "section" }, "content": [ { "type": "text", "text": "text content", "attrs": { "parent": "p" } } ] } ] } ] } ] } ] }`;
-
-    const doc = Node.fromJSON(schemaObject, JSON.parse(jsonDoc));
-
-    const state = EditorState.create({
-      doc
-    })
-    const dispatch = () => {};
-
-    const result = command(state as unknown as EditorState, dispatch);
-    console.log(result);
-
-  });
-});
-
- */
-// Pass a ResolvedPos object
-// and test against expected list of NodeTypes
-/* describe('defaultBlocks', () => {
-  const resPos = JSON.parse(RESOLVEDPOSITION);
-  const blocks = defaultBlocks(resPos as unknown as ResolvedPos, 0);
-  const expectedBlocks: String[] = [];
-  blocks.forEach((block) => expectedBlocks.push(block.name));
-  console.log('expectedBlocks', expectedBlocks);
-  // expected output: ['data', 'p', 'simpletable', 'ul']
-});
- */
