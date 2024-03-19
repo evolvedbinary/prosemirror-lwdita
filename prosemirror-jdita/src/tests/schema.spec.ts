@@ -1,6 +1,6 @@
 import { assert, expect } from 'chai';
 import { defaultNodeAttrs, defaultNodeName, defaultToDom, getChildren, getDomAttr, schema, schemaTravel } from '../schema';
-import { TextNode, BaseNode, TopicNode, DdNode, nodeGroups } from 'jdita';
+import { TextNode, BaseNode, TopicNode, DdNode } from 'jdita';
 import { DOMOutputSpec, Schema } from 'prosemirror-model';
 import { createNode } from '../commands';
 
@@ -11,20 +11,20 @@ import { createNode } from '../commands';
  * @privateRemarks
  * Do we need tests for other NodeTypes?
  */
-describe('Schema', () => {
-  it('Text node', () => {
+describe('schemaTravel', () => {
+  it('returns correct attributes for a TextNode', () => {
     assert.deepEqual(schemaTravel(TextNode as unknown as typeof BaseNode, console.log), { attrs: { parent: { default: '' } }} as any);
   });
 });
 
 describe('getChildren', () => {
-  it('regular node children', () => {
+  it('makes sure that the node type gets the correct children according to the schema', () => {
     const type = TopicNode.childTypes;
     const children = getChildren(type);
     assert.deepEqual(children, ["title","shortdesc","prolog","body"]);
   });
 
-  it('group node children', () => {
+  it('makes sure that the node type gets the correct group node children according to the schema', () => {
     // DD node children are %list-blocks
     const type = DdNode.childTypes;
     const children = getChildren(type);
@@ -34,7 +34,7 @@ describe('getChildren', () => {
 });
 
 describe('defaultToDom', () => {
-  it('should get dom node', () => {
+  it('returns a function that generates the dom spec for a node', () => {
     const attrs = {};
     const toDom = defaultToDom(BaseNode, attrs);
 
@@ -48,13 +48,12 @@ describe('defaultToDom', () => {
       },
       0,
     ];
-
     assert.deepEqual(result, expected as unknown as DOMOutputSpec);
   });
 });
 
 describe('getDomAttr', () => {
-  it('topic Id dom attribute', () => {
+  it('returns the dom attribute "Id" for nodeName "topic"', () => {
     const nodeName = 'topic';
     const attrs = "id";
     const domAttrs = getDomAttr(nodeName, attrs);
@@ -63,7 +62,7 @@ describe('getDomAttr', () => {
 });
 
 describe('defaultNodeAttrs', () => {
-  it('adds default node attributes', () => {
+  it('creates default node attributes', () => {
     const attrs = ['attr1', 'attr2', 'attr3'];
     const result = defaultNodeAttrs(attrs);
     const expected = {
@@ -76,14 +75,14 @@ describe('defaultNodeAttrs', () => {
 });
 
 describe('defaultNodeName', () => {
-  it('regular name', () => {
+  it('preserves the nodeName "topic" as it is', () => {
     const nodeName = 'topic';
     const result = defaultNodeName(nodeName);
     const expected = 'topic';
     assert.equal(result, expected);
   });
 
-  it('name with hyphen', () => {
+  it('replaces hyphens in a nodeName into an underscore', () => {
     const nodeName = 'media-autoplay';
     const result = defaultNodeName(nodeName);
     const expected = 'media_autoplay';
@@ -97,21 +96,20 @@ describe('schema', () => {
     result = schema();
   });
 
-  it('typeof Schema', () => {
+  it('is the correct instance class "Schema"', () => {
     assert.instanceOf(result, Schema);
   });
-  
-  it('contains marks property', () => {
+
+  it('contains the "marks" property', () => {
     expect(result).to.have.property('marks');
   });
 
 
-  it('contains nodes property', () => {
-
+  it('contains "nodes" property', () => {
     expect(result).to.have.property('nodes');
   });
 
-  it('all jdita nodes', () => {
+  it('contains all JDita nodes', () => {
     const nodes = result.spec.nodes as any; //orderedMap does not have content property so we had to cast it to any
     // nodeNames are strings in the content array
     const nodeNames = nodes.content.filter((node: any) => typeof node === 'string')
@@ -129,10 +127,9 @@ describe('schema', () => {
       'body',         'topic',       'doc'
     ];
     expect(nodeNames).to.have.members(expectedNodes);
-
   });
 
-  it('nodes content', () => {
+  it('returns node specs with schema-compliant children', () => {
     const nodes = result.spec.nodes as any;
     const nodesObject = {} as any;
     for(let i=0; i<nodes.content.length; i+=2) {
@@ -149,7 +146,7 @@ describe('schema', () => {
     expect(nodesObject['title'].content).to.equal('common_inline*');
   });
 
-  it('inline nodes', () => {
+  it('returns a node spec with a schema-compliant inline property', () => {
     const nodes = result.spec.nodes as any;
     const nodesObject = {} as any;
     for(let i=0; i<nodes.content.length; i+=2) {
@@ -169,7 +166,7 @@ describe('schema', () => {
     expect(nodesObject['text'].inline).to.equal(true);
   });
 
-  it('nodes attributes', () => {
+  it('returns a node spec with a schema-compliant node attribute', () => {
     const nodes = result.spec.nodes as any;
     const nodesObject = {} as any;
     for(let i=0; i<nodes.content.length; i+=2) {
@@ -211,13 +208,11 @@ describe('schema', () => {
     );
   });
 
-
-  it('all marks', () => {
+  it('contains all expected marks', () => {
     const marks = result.spec.marks as any;
     const specMarks = marks.content.filter((node: any) => typeof node === 'string')
     const expectedMarks = [ 'sup', 'sub', 'u', 'i', 'b' ];
     expect(specMarks).to.have.members(expectedMarks);
-
   });
 
 });

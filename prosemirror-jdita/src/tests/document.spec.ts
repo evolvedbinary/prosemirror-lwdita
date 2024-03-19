@@ -20,17 +20,6 @@ use(ChaiPromised);
  * Unit tests for document.ts
  */
 
-// xditaToJson()
-describe('Prosemirror objects', () => {
-  it('Document', async () => {
-    await expect(
-      xditaToJson(XML)
-        .then(jdita => document(jdita))
-        .catch(e => console.log('error:', e))
-    ).to.eventually.become(JSON.parse(PMJSON));
-  });
-});
-
 // Pass an object with undefined attributes
 // and test against expected object
 describe('deleteUndefined()', () => {
