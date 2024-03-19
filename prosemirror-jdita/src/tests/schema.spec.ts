@@ -2,6 +2,7 @@ import { assert, expect } from 'chai';
 import { defaultNodeAttrs, defaultNodeName, defaultToDom, getChildren, getDomAttr, schema, schemaTravel } from '../schema';
 import { TextNode, BaseNode, TopicNode, DdNode, nodeGroups } from 'jdita';
 import { DOMOutputSpec, Schema } from 'prosemirror-model';
+import { createNode } from '../commands';
 
 /**
  * Unit test for `schemaTravel()`
@@ -34,33 +35,21 @@ describe('getChildren', () => {
 
 describe('defaultToDom', () => {
   it('should get dom node', () => {
-    const node = {
-      nodeName: 'topic',
-      attrs: {
-        parent: 'parentValue',
-        attr1: 'attr1Value',
-        attr2: 'attr2Value',
-      },
-    };
-    const attrs = {
-      attr1: 'data-attr1',
-      attr2: 'data-attr2',
-    };
+    const attrs = {};
     const toDom = defaultToDom(BaseNode, attrs);
+
+    const type = schema().nodes.li;
+    const node = createNode(type, {});
     const result = toDom(node as any);
     const expected = [
       'jdita-node-node',
       {
         'data-j-type': 'node',
-        'data-attr1': 'attr1Value',
-        'data-attr2': 'attr2Value',
       },
       0,
     ];
-    console.log(result);
-    console.log(expected);
-    // TODO correct this assertion
-    // assert.equal(result, expected as unknown as DOMOutputSpec);
+
+    assert.deepEqual(result, expected as unknown as DOMOutputSpec);
   });
 });
 
