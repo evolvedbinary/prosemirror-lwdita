@@ -149,9 +149,6 @@ export function getChildren(type: ChildTypes): string[] {
 /**
  * Travel the node and generate the node spec
  *
- * @privateRemarks
- * This function is not being used anywhere in the code.
- *
  * @param node - JDita node
  * @param next - Next travel function
  * @returns SchemaNode
