@@ -5,19 +5,16 @@ import { DOMOutputSpec, Schema } from 'prosemirror-model';
 import { createNode } from '../commands';
 
 /**
- * Unit test for `schemaTravel()`
- * on `TextNode`
- *
- * @privateRemarks
- * Do we need tests for other NodeTypes?
+ * Unit tests for `schema.ts`
  */
-describe('schemaTravel', () => {
+
+describe('Function schemaTravel()', () => {
   it('returns correct attributes for a TextNode', () => {
     assert.deepEqual(schemaTravel(TextNode as unknown as typeof BaseNode, console.log), { attrs: { parent: { default: '' } }} as any);
   });
 });
 
-describe('getChildren', () => {
+describe('Function getChildren()', () => {
   it('makes sure that the node type gets the correct children according to the schema', () => {
     const type = TopicNode.childTypes;
     const children = getChildren(type);
@@ -33,7 +30,7 @@ describe('getChildren', () => {
   });
 });
 
-describe('defaultToDom', () => {
+describe('Function defaultToDom()', () => {
   it('returns a function that generates the dom spec for a node', () => {
     const attrs = {};
     const toDom = defaultToDom(BaseNode, attrs);
@@ -52,7 +49,7 @@ describe('defaultToDom', () => {
   });
 });
 
-describe('getDomAttr', () => {
+describe('Function getDomAttr()', () => {
   it('returns the dom attribute "Id" for nodeName "topic"', () => {
     const nodeName = 'topic';
     const attrs = "id";
@@ -61,7 +58,7 @@ describe('getDomAttr', () => {
   });
 });
 
-describe('defaultNodeAttrs', () => {
+describe('Function defaultNodeAttrs()', () => {
   it('creates default node attributes', () => {
     const attrs = ['attr1', 'attr2', 'attr3'];
     const result = defaultNodeAttrs(attrs);
@@ -74,15 +71,15 @@ describe('defaultNodeAttrs', () => {
   });
 });
 
-describe('defaultNodeName', () => {
-  it('preserves the nodeName "topic" as it is', () => {
+describe('Function defaultNodeName()', () => {
+  it('preserves the nodeName "topic" without any tranformation as it is', () => {
     const nodeName = 'topic';
     const result = defaultNodeName(nodeName);
     const expected = 'topic';
     assert.equal(result, expected);
   });
 
-  it('replaces hyphens in a nodeName into an underscore', () => {
+  it('replaces hyphens occurring in a nodeName into an underscore', () => {
     const nodeName = 'media-autoplay';
     const result = defaultNodeName(nodeName);
     const expected = 'media_autoplay';
@@ -90,13 +87,13 @@ describe('defaultNodeName', () => {
   });
 });
 
-describe('schema', () => {
+describe('Function schema()', () => {
   let result: Schema;
   before(() => {
     result = schema();
   });
 
-  it('is the correct instance class "Schema"', () => {
+  it('is the correct instance of class "Schema"', () => {
     assert.instanceOf(result, Schema);
   });
 

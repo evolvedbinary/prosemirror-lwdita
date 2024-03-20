@@ -503,7 +503,7 @@ export function isPrevEmpty(tr: Transaction, depth = 0) {
 
 /**
  * Get the distance from the current cursor position to the closest parent Node with children.
- * 
+ *
  * @param tr - The Transaction object
  * @param empty - A Boolean, set to `false`
  * @returns A number containing the depth of the tested
