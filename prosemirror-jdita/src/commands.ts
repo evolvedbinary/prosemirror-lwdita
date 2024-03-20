@@ -252,7 +252,6 @@ export function defaultBlocks(pos: ResolvedPos, depth = 0) {
   const match = pos.node(-depth - 1).contentMatchAt(pos.indexAfter(-depth - 1));
   let index = -1;
 
-  // Create an empty array of NodeTypes.
   const result: NodeType[] = [];
   // loop through the possible content matches
   for (let i = 0; i < match.edgeCount; i++) {
