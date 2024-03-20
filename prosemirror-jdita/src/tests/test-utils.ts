@@ -1,5 +1,11 @@
 import { JDita } from "jdita";
 
+/**
+ * test-utils.ts
+ *
+ * Provides objects and strings to mock test data
+ */
+
 export function node(name: string, attrs: Record<string, string> = {}, content: string = ''): string {
   return `<${name} ${Object.keys(attrs).map(attr => attr + '="' + attrs[attr] + '"').join(' ')}>${content}</${name}>`;
 }

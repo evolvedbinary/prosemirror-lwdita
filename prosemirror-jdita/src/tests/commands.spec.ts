@@ -8,7 +8,7 @@ import { canCreate, canCreateIndex, createNode, createNodesTree } from '../comma
 
 const schemaObject = schema();
 
-describe('createNode', () => {
+describe('Function createNode()', () => {
   it('creates a node', () => {
     const type = schemaObject.nodes.p;
 
@@ -26,7 +26,7 @@ describe('createNode', () => {
     expect(p?.type.name).to.equal('p');
   });
 
-  it('throws on unknown node type', () => {
+  it('throws an error on an unknown node type', () => {
     const type = schemaObject.nodes.unknown;
     expect(() => createNode(type)).to.throw();
   });
@@ -35,7 +35,7 @@ describe('createNode', () => {
 
 // Pass a NodeType tree
 // and test against expected node name
-describe('createNodesTree', () => {
+describe('Function createNodesTree()', () => {
   it('creates a node tree', () => {
     const nodeTypes = [schemaObject.nodes.p, schemaObject.nodes.li, schemaObject.nodes.ul];
 
@@ -53,8 +53,8 @@ describe('createNodesTree', () => {
 
 // Pass a NodeType
 // and test against expected node index number
-describe('canCreateIndex', () => {
-  it('correct index for allowed node types', () => {
+describe('Function canCreateIndex()', () => {
+  it('returns the correct index for allowed node types', () => {
     const knownTypes = [schemaObject.nodes.data, schemaObject.nodes.ul, schemaObject.nodes.li, schemaObject.nodes.p, schemaObject.nodes.section, schemaObject.nodes.stentry, schemaObject.nodes.strow, schemaObject.nodes.simpletable]
     knownTypes.forEach((type) => {
       const index = canCreateIndex(type);
@@ -62,15 +62,15 @@ describe('canCreateIndex', () => {
     });
   });
 
-  it('-1 for denied node types', () => {
+  it('returns index "-1" for denied node types', () => {
     const index = canCreateIndex(schemaObject.nodes.xref);
     expect(index).to.equal(-1);
   });
 });
 
 // Pass a NodeType and test against expected Boolean
-describe('canCreate', () => {
-  it('true for allowed types', () => {
+describe('Function canCreate()', () => {
+  it('returns "true" for allowed types', () => {
     const knownTypes = [schemaObject.nodes.data, schemaObject.nodes.ul, schemaObject.nodes.li, schemaObject.nodes.p, schemaObject.nodes.section, schemaObject.nodes.stentry, schemaObject.nodes.strow, schemaObject.nodes.simpletable]
     knownTypes.forEach((type) => {
       const result = canCreate(type);
@@ -78,7 +78,7 @@ describe('canCreate', () => {
     });
   });
 
-  it('false for denied node types', () => {
+  it('returns "false" for denied node types', () => {
     const result = canCreate(schemaObject.nodes.xref);
     expect(result).to.be.false;
   });
