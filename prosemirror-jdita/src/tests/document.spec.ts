@@ -1,6 +1,6 @@
 import ChaiPromised from 'chai-as-promised';
 import { use, expect, assert } from 'chai';
-import { document, deleteUndefined, defaultTravel, travel } from '../document';
+import { document, deleteUndefined, defaultTravel, travel, NODES } from '../document';
 import {
   JDITA_OBJECT,
   TRANSFORMED_JDITA_OBJECT,
@@ -88,3 +88,48 @@ describe('Function document()', () => {
   });
 });
 
+describe('Const NODES handles', () => {
+  let parent, value, result, expected;
+
+  describe('function video()', () => {
+    it('returns a video node', () => {
+      value = JSON.parse('{"nodeName":"video","attributes":{"width":"640","height":"360"},"children":[{"nodeName":"desc","attributes":{},"children":[{"nodeName":"text","content":"Your browser does not support the video tag."}]}]}');
+      parent = JSON.parse('{"nodeName":"body","attributes":{},"children":[{"nodeName":"p","attributes":{"parent":"body"},"children":[{"nodeName":"text","content":"Paragraph"}]},{"nodeName":"audio","attributes":{}},{"nodeName":"video","attributes":{"width":"640","height":"360"},"children":[{"nodeName":"desc","attributes":{},"children":[{"nodeName":"text","content":"Your browser does not support the video tag."}]}]},{"nodeName":"p","attributes":{},"children":[{"nodeName":"image","attributes":{}}]}]}');
+      expected = JSON.parse('{"type":"video","attrs":{"width":"640","height":"360"},"content":[{"type":"desc","attrs":{"parent":"video"},"content":[{"type":"text","text":"Your browser does not support the video tag.","attrs":{"parent":"desc"}}]}]}');
+      result = NODES.video(value, parent);
+      assert.deepEqual(result, expected);
+    });
+  });
+
+  describe('function audio()', () => {
+    it('returns an audio node', () => {
+      value = JSON.parse('{"nodeName":"audio","attributes":{}}');
+      parent = JSON.parse('{"nodeName":"body","attributes":{},"children":[{"nodeName":"p","attributes":{"parent":"body"},"children":[{"nodeName":"text","content":"Paragraph"}]},{"nodeName":"audio","attributes":{}},{"nodeName":"video","attributes":{"width":"640","height":"360"},"children":[{"nodeName":"desc","attributes":{},"children":[{"nodeName":"text","content":"Your browser does not support the video tag."}]}]},{"nodeName":"p","attributes":{},"children":[{"nodeName":"image","attributes":{}}]}]}');
+      expected = JSON.parse('{"type":"audio","attrs":{},"content":[]}');
+      result = NODES.audio(value, parent);
+      assert.deepEqual(result, expected);
+    });
+  });
+
+  describe('function image()', () => {
+    describe('for image nodes without an alt node', () => {
+      it('returns a transformed image node', () => {
+        value = JSON.parse('{"nodeName":"image","attributes":{}}');
+        parent = JSON.parse('{"nodeName":"p","attributes":{},"children":[{"nodeName":"image","attributes":{}}]}');
+        expected = JSON.parse('{"type":"image","attrs":{}}');
+        result = NODES.image(value, parent);
+        assert.deepEqual(result, expected);
+      });
+    });
+
+    describe('for image nodes with an alt node and attributes', () => {
+      it('returns a transformed image node', () => {
+        value = JSON.parse('{"nodeName":"image","attributes":{"width":"640","height":"360"},"children":[{"nodeName":"alt","attributes":{},"children":[{"nodeName":"text","content":"Alt text"}]}]}');
+        parent = JSON.parse('{"nodeName":"p","attributes":{},"children":[{"nodeName":"image","attributes":{"width":"640","height":"360"},"children":[{"nodeName":"alt","attributes":{},"children":[{"nodeName":"text","content":"Alt text"}]}]}]}');
+        expected = JSON.parse('{"type":"image","attrs":{"width":"640","height":"360","alt":"Alt text"}}');
+        result = NODES.image(value, parent);
+        assert.deepEqual(result, expected);
+      });
+    });
+  });
+});
