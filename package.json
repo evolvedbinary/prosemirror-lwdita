@@ -30,7 +30,8 @@
     "test": "yarn workspace prosemirror-jdita test",
     "coverage": "yarn workspace prosemirror-jdita coverage",
     "coveralls": "yarn workspace prosemirror-jdita coveralls",
-    "generate-docs": "yarn workspace prosemirror-jdita generate-docs"
+    "generate-docs": "yarn workspace prosemirror-jdita generate-docs",
+    "lint": "yarn workspace prosemirror-jdita lint"
   },
   "engines": {
     "node": ">=20.10.0 <21",
