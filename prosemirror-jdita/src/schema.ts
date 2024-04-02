@@ -52,7 +52,7 @@ export const NODE_ATTR_NAMES: Record<string, Record<string, string>> = {
  * Provide a map of special nodes to their corresponding Schema
  */
 export const SCHEMAS: Record<string, (node: typeof BaseNode, next: (nodeName: string) => void) => SchemaNode> = {
-  'text': (node: typeof BaseNode, next: (nodeName: string) => void): SchemaNode => {
+  'text': (): SchemaNode => {
     const result: SchemaNode = {
       attrs: {
         parent: { default: '' }
@@ -301,7 +301,7 @@ export function schema(): Schema {
   }
 
   // populate the schema spec using the jdita nodes
-  function browse(node: string | typeof BaseNode, parent: typeof BaseNode): void {
+  function browse(node: string | typeof BaseNode): void {
     // get the node name
     const nodeName = typeof node === 'string' ? node : node.nodeName;
 

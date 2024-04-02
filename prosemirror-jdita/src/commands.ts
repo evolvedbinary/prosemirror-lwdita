@@ -96,6 +96,7 @@ export function insertNode(type: NodeType): Command {
       }
       return true;
     } catch (e) {
+      console.error(e);
       return false;
     }
   }
@@ -203,6 +204,7 @@ export function insertImage(type: NodeType, input: InputContainer): Command {
       }
       return true;
     } catch (e) {
+      console.error(e);
       return false;
     }
   }
@@ -558,12 +560,12 @@ export function getTree(pos: ResolvedPos, depth = 0) {
  * @returns Boolean
  */
 export function enterPressed(state: EditorState, dispatch?: (tr: Transaction) => void) {
-  let { $from, empty } = state.selection;
+  let { $from } = state.selection;
+  const { empty } = state.selection;
   // check if the node is empty.
   // if the node is empty, then the depth is 1
   const depth = getDepth(state.tr, true);
-  // prepare the transaction
-  let resultTr: false | Transaction;
+
   // get the current transaction
   let tr = state.tr;
   // if the cursor selection is not empty, delete the selection
@@ -572,11 +574,12 @@ export function enterPressed(state: EditorState, dispatch?: (tr: Transaction) =>
     $from = tr.selection.$from;
   }
 
-  resultTr = isEOL(state.tr, depth)       // when the cursor is at the end of the line
-    ? $from.parentOffset === 0            // when the cursor is at the beginning of parent node
-      ? enterEmpty(tr, !!dispatch, depth) // then enterEmpty is triggered
-      : enterEOL(tr, !!dispatch, depth)   // when the cursor is not at the beginning of parent node, the cursor can be at the end text node, then enterEOL is triggered
-    : enterSplit(tr, !!dispatch, depth);  // when the cursor is not at the end of the line, then enterSplit is triggered
+    // prepare the transaction
+    const resultTr: false | Transaction = isEOL(state.tr, depth)       // when the cursor is at the end of the line
+                                          ? $from.parentOffset === 0            // when the cursor is at the beginning of parent node
+                                            ? enterEmpty(tr, !!dispatch, depth) // then enterEmpty is triggered
+                                            : enterEOL(tr, !!dispatch, depth)   // when the cursor is not at the beginning of parent node, the cursor can be at the end text node, then enterEOL is triggered
+                                          : enterSplit(tr, !!dispatch, depth);  // when the cursor is not at the end of the line, then enterSplit is triggered
 
   // if the transaction is triggered, then dispatch the transaction
   if (dispatch && resultTr !== false) {
