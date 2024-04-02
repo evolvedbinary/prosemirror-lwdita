@@ -93,7 +93,7 @@ export const NODES: Record<string, (value: JDita, parent: JDita) => any> = {
     const result = { type: value.nodeName, attrs, content: content.map(child => travel(child, value)) };
     return result;
   },
-  image: (value, parent) => {
+  image: (value) => {
     if (value.children
       && value.children[0].nodeName === 'alt'
       && value.children[0]?.children
