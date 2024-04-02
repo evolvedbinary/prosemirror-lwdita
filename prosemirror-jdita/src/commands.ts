@@ -1,7 +1,6 @@
 export { toggleMark } from 'prosemirror-commands';
 import { canSplit } from 'prosemirror-transform';
 import { chainCommands } from 'prosemirror-commands';
-// eslint-disable-next-line no-unused-vars
 import { Fragment, MarkType, Node, NodeType, ResolvedPos } from 'prosemirror-model';
 import { Command, EditorState, TextSelection, Transaction } from 'prosemirror-state';
 
