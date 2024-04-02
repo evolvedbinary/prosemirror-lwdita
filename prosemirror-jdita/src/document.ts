@@ -1,3 +1,4 @@
+import { JDita } from "jdita";
 import { IS_MARK, defaultNodeName } from "./schema";
 
 /**
@@ -102,7 +103,7 @@ export const NODES: Record<string, (value: JDita, parent: JDita) => any> = {
       const result = { type: 'image', attrs };
       return result;
     }
-    return defaultTravel(value, parent);
+    return defaultTravel(value);
   },
   text: (value: JDita) => ({ type: 'text', text: value.content, attrs: {} }),
 };
