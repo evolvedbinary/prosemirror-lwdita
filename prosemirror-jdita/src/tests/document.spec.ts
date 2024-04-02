@@ -44,7 +44,6 @@ describe('Function defaultTravel()', () => {
   describe('when passed a JDITA node "title" and its parent node "topic"', () => {
     it('returns the transformed ProseMirror objects', () => {
       const node = JSON.parse(JDITA_NODE),
-            parent = JSON.parse(JDITA_PARENT_NODE),
             expected = defaultTravel(node),
             result = (
               JSON.parse(JDITA_TRANFORMED_RESULT1),
