@@ -1,7 +1,7 @@
 import { assert, expect } from 'chai';
 import { defaultNodeAttrs, defaultNodeName, defaultToDom, getChildren, getDomAttr, schema, schemaTravel } from '../schema';
 import { TextNode, BaseNode, TopicNode, DdNode } from 'jdita';
-import { Schema } from 'prosemirror-model';
+import { DOMOutputSpec, Schema } from 'prosemirror-model';
 import { createNode } from '../commands';
 
 /**
