@@ -27,7 +27,7 @@ if (targetNode) {
       if (mutation.type === 'childList') {
         // if the mutation happened on the menubar
         if((mutation.target as HTMLElement).classList.contains('ProseMirror-menubar')){
-          let separators: HTMLElement[] = [];
+          const separators: HTMLElement[] = [];
           mutation.addedNodes.forEach(node => {
             // if the node is a separator, add it to the separators array
             if (node.childNodes[0] && (node.childNodes[0] as HTMLElement).classList.contains('separator')) {
