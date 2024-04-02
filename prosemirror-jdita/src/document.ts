@@ -112,7 +112,6 @@ export const NODES: Record<string, (value: JDita, parent: JDita) => any> = {
  * Transforms the JDita document into a proper ProseMirror document
  *
  * @param value - The JDita node
- * @param parent - The parent JDita node
  * @returns The transformed JDita node
  */
 export function defaultTravel(value: JDita): any {

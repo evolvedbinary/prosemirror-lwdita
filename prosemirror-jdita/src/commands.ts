@@ -555,7 +555,6 @@ export function getTree(pos: ResolvedPos, depth = 0) {
  *
  * @param state - The EditorState object
  * @param dispatch - A function to be used to dispatch a transaction
- * @param view - The EditorView object
  * @returns Boolean
  */
 export function enterPressed(state: EditorState, dispatch?: (tr: Transaction) => void) {
