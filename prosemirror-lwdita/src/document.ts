@@ -9,7 +9,7 @@ import { IS_MARK, defaultNodeName } from "./schema";
  */
 function deleteUndefined(object?: any) {
   if (object) {
-    for (let key in object) {
+    for (const key in object) {
       if (typeof object[key] === 'undefined') {
         delete(object[key]);
       }
@@ -25,7 +25,7 @@ function deleteUndefined(object?: any) {
  * treated in a customized way instead of applying the defaultTravel() function:
  */
 export const NODES: Record<string, (value: JDita, parent: JDita) => any> = {
-  audio: (value, parent) => {
+  audio: (value) => {
     const attrs: any = deleteUndefined({ ...value.attributes });
     const content: JDita[] = [];
     if (value.children) {
@@ -59,7 +59,7 @@ export const NODES: Record<string, (value: JDita, parent: JDita) => any> = {
     }
     return result;
   },
-  video: (value, parent) => {
+  video: (value) => {
     const attrs: any = deleteUndefined({ ...value.attributes });
     const content: JDita[] = [];
     if (value.children) {
@@ -93,7 +93,7 @@ export const NODES: Record<string, (value: JDita, parent: JDita) => any> = {
     const result = { type: value.nodeName, attrs, content: content.map(child => travel(child, value)) };
     return result;
   },
-  image: (value, parent) => {
+  image: (value) => {
     if (value.children
       && value.children[0].nodeName === 'alt'
       && value.children[0]?.children
@@ -103,7 +103,7 @@ export const NODES: Record<string, (value: JDita, parent: JDita) => any> = {
       const result = { type: 'image', attrs };
       return result;
     }
-    return defaultTravel(value, parent);
+    return defaultTravel(value);
   },
   text: (value: JDita) => ({ type: 'text', text: value.content, attrs: {} }),
 };
@@ -112,10 +112,9 @@ export const NODES: Record<string, (value: JDita, parent: JDita) => any> = {
  * Transforms the JDita document into a proper ProseMirror document
  *
  * @param value - The JDita node
- * @param parent - The parent JDita node
  * @returns The transformed JDita node
  */
-function defaultTravel(value: JDita, parent: JDita): any {
+export function defaultTravel(value: JDita): any {
   // children will become content
   const content = value.children?.map(child => travel(child, value));
   // attributes will become attrs

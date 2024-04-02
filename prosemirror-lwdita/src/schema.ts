@@ -51,7 +51,7 @@ export const NODE_ATTR_NAMES: Record<string, Record<string, string>> = {
  * Provide a map of special nodes to their corresponding Schema
  */
 export const SCHEMAS: Record<string, (node: typeof AbstractBaseNode, next: (nodeName: string) => void) => SchemaNode> = {
-  'text': (node: typeof AbstractBaseNode, next: (nodeName: string) => void): SchemaNode => {
+  'text': (): SchemaNode => {
     const result: SchemaNode = {
       attrs: {
         parent: { default: '' }
@@ -103,8 +103,8 @@ export const SCHEMA_CONTENT: Record<string, [content: string, groups: string]> =
  * A map of special children for certain media nodes
  */
 export const SCHEMA_CHILDREN: Record<string, (type: ChildTypes) => string[]> = {
-  video: type => ['media-source', 'media-track', 'desc'],
-  audio: type => ['media-source', 'media-track', 'desc'],
+  video: () => ['media-source', 'media-track', 'desc'],
+  audio: () => ['media-source', 'media-track', 'desc'],
 }
 
 /**
@@ -223,7 +223,6 @@ export function defaultNodeAttrs(attrs: string[]): any {
  */
 function defaultTravel(
   node: typeof AbstractBaseNode,
-  parent: typeof AbstractBaseNode,
   next: (nodeName: string, parent: typeof AbstractBaseNode) => void): NodeSpec {
   const children = (SCHEMA_CHILDREN[node.nodeName] || getChildren)(node.childTypes);
   const isNode = IS_MARK.indexOf(node.nodeName) < 0;
@@ -301,7 +300,7 @@ export function schema(): Schema {
   }
 
   // populate the schema spec using the jdita nodes
-  function browse(node: string | typeof AbstractBaseNode, parent: typeof AbstractBaseNode): void {
+  function browse(node: string | typeof AbstractBaseNode): void {
     // get the node name
     const nodeName = typeof node === 'string' ? node : node.nodeName;
 
@@ -320,7 +319,7 @@ export function schema(): Schema {
     try {
       const nodeClass = typeof node === 'string' ? getNodeClassType(node) : node;
       // travel the node class and generate the node spec
-      const result = defaultTravel(nodeClass, parent, browse);
+      const result = defaultTravel(nodeClass, browse);
       if (result) {
         // set the node spec based on the node type
         if (IS_MARK.indexOf(nodeName) > -1) {
@@ -331,6 +330,7 @@ export function schema(): Schema {
       }
     } catch (e) {
       if (e instanceof UnknownNodeError) {
+        console.error(e);
       } else {
         console.error(node);
         console.error(e);
@@ -339,7 +339,7 @@ export function schema(): Schema {
   }
 
   // start the process of populating the schema spec using the jdita nodes from the document node
-  browse(DocumentNode, DocumentNode);
+  browse(DocumentNode);
 
   (spec.nodes as any).topic.content = 'title shortdesc? prolog? body?';
   (spec.nodes as any).doc.content = 'topic+';

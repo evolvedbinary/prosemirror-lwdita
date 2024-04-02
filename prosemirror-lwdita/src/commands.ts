@@ -1,9 +1,8 @@
 export { toggleMark } from 'prosemirror-commands';
 import { canSplit } from 'prosemirror-transform';
 import { chainCommands } from 'prosemirror-commands';
-import { Fragment, MarkType, Node, NodeType, ResolvedPos, Schema } from 'prosemirror-model';
-import { TextSelection, EditorState, Transaction, Command } from 'prosemirror-state';
-import { EditorView } from 'prosemirror-view';
+import { Fragment, MarkType, Node, NodeType, ResolvedPos } from 'prosemirror-model';
+import { Command, EditorState, TextSelection, Transaction } from 'prosemirror-state';
 
 /**
  * Create a new Node and fill it with the args as attributes.
@@ -20,8 +19,6 @@ export function createNode(type: NodeType, args: Record<string, any> = {}): Node
   switch (type.name) {
     case 'p': return type.createAndFill() as Node;
     case 'data': return type.createAndFill({}, type.schema.text('text')) as Node;
-    case 'stentry': return type.createAndFill({}, createNode(type.schema.nodes['p'])) as Node;
-    case 'strow': return type.createAndFill({}, createNode(type.schema.nodes['stentry'])) as Node;
     case 'simpletable': return type.createAndFill({}, createNode(type.schema.nodes['strow'])) as Node;
     case 'li': return type.createAndFill({}, createNode(type.schema.nodes['p'])) as Node;
     case 'stentry': return type.createAndFill({}, createNode(type.schema.nodes['p'])) as Node;
@@ -99,6 +96,7 @@ export function insertNode(type: NodeType): Command {
       }
       return true;
     } catch (e) {
+      console.error(e);
       return false;
     }
   }
@@ -176,7 +174,7 @@ export class InputContainer {
  */
 export function insertImage(type: NodeType, input: InputContainer): Command {
   return function (state, dispatch) {
-    function fileSelected(this: HTMLInputElement, event: Event) {
+    function fileSelected(this: HTMLInputElement) {
       if (input.el?.files?.length === 1) {
         const file = input.el.files[0];
         const reader = new FileReader();
@@ -190,7 +188,6 @@ export function insertImage(type: NodeType, input: InputContainer): Command {
             dispatch(tr.scrollIntoView());
           }
         };
-      } else {
       }
     }
     try {
@@ -207,6 +204,7 @@ export function insertImage(type: NodeType, input: InputContainer): Command {
       }
       return true;
     } catch (e) {
+      console.error(e);
       return false;
     }
   }
@@ -250,12 +248,11 @@ function canCreate(type: NodeType) {
 function defaultBlocks(pos: ResolvedPos, depth = 0) {
   // Get the content match at the current cursor position
   const match = pos.node(-depth - 1).contentMatchAt(pos.indexAfter(-depth - 1));
-  let index = -1;
 
   const result: NodeType[] = [];
   // loop through the possible content matches
   for (let i = 0; i < match.edgeCount; i++) {
-    let edge = match.edge(i)
+    const edge = match.edge(i)
     // check if the node can be created
     if (canCreate(edge.type)) {
       // if success, then add new NodeType object to the array
@@ -305,9 +302,8 @@ function defaultBlockAt(pos: ResolvedPos, depth = 0, preferred?: NodeType) {
  * @returns Boolean - true if the transaction is triggered
  */
 export function enterEOL(tr: Transaction, dispatch = false, depth = 0): Transaction | false {
-  let { $from, $to, empty } = tr.selection
+  const { $from, $to } = tr.selection
   const parent = $to.node(-depth || undefined);
-  const grandParent = $to.node(-depth - 1);
   // get the allowed node types that can be created at the current cursor position
   const type = defaultBlockAt($to, depth, parent.type);
 
@@ -316,7 +312,7 @@ export function enterEOL(tr: Transaction, dispatch = false, depth = 0): Transact
     //if we have a possible node type to create
     if (type) {
       // get the new cursor position
-      let side = (!$from.parentOffset && $to.index() < parent.childCount ? $from : $to).pos + depth + 1;
+      const side = (!$from.parentOffset && $to.index() < parent.childCount ? $from : $to).pos + depth + 1;
       // create and insert the new node
       tr = tr.insert(side, createNodesTree(getTree($from, depth)));
       // select the new node
@@ -373,7 +369,7 @@ export function enterSplit(tr: Transaction, dispatch = false, depth = 0): Transa
   // if the transaction is triggered from the last function call
   if (dispatch) {
     // check if the cursor is at the end of the line
-    let atEnd = $to.parentOffset == $to.parent.content.size;
+    const atEnd = $to.parentOffset == $to.parent.content.size;
     // check if the previous node is empty
     const prevDepth = getPrevDepth(tr);
     if (prevDepth > 0) {
@@ -406,7 +402,7 @@ export function enterSplit(tr: Transaction, dispatch = false, depth = 0): Transa
     // "$from": https://prosemirror.net/docs/ref/#state.Selection.$from
     // `parent.type`: It's giving us the current NodeType, where the cursor has been set to split the lines
     // @see {@link https://prosemirror.net/docs/ref/#model.NodeType}
-    let defaultType = $from.depth == 0 ? null : defaultBlockAt($from, depth, parent.type);
+    const defaultType = $from.depth == 0 ? null : defaultBlockAt($from, depth, parent.type);
     if (defaultType) {
       let types = atEnd ? [{ type: defaultType }] : null;
       // "can": Check whether splitting at the given position is allowed
@@ -561,16 +557,15 @@ export function getTree(pos: ResolvedPos, depth = 0) {
  *
  * @param state - The EditorState object
  * @param dispatch - A function to be used to dispatch a transaction
- * @param view - The EditorView object
  * @returns Boolean
  */
-export function enterPressed(state: EditorState, dispatch?: (tr: Transaction) => void, view?: EditorView) {
-  let { $from, empty } = state.selection;
+export function enterPressed(state: EditorState, dispatch?: (tr: Transaction) => void) {
+  let { $from } = state.selection;
+  const { empty } = state.selection;
   // check if the node is empty.
   // if the node is empty, then the depth is 1
   const depth = getDepth(state.tr, true);
-  // prepare the transaction
-  let resultTr: false | Transaction;
+
   // get the current transaction
   let tr = state.tr;
   // if the cursor selection is not empty, delete the selection
@@ -579,11 +574,12 @@ export function enterPressed(state: EditorState, dispatch?: (tr: Transaction) =>
     $from = tr.selection.$from;
   }
 
-  resultTr = isEOL(state.tr, depth)       // when the cursor is at the end of the line
-    ? $from.parentOffset === 0            // when the cursor is at the beginning of parent node
-      ? enterEmpty(tr, !!dispatch, depth) // then enterEmpty is triggered
-      : enterEOL(tr, !!dispatch, depth)   // when the cursor is not at the beginning of parent node, the cursor can be at the end text node, then enterEOL is triggered
-    : enterSplit(tr, !!dispatch, depth);  // when the cursor is not at the end of the line, then enterSplit is triggered
+    // prepare the transaction
+    const resultTr: false | Transaction = isEOL(state.tr, depth)       // when the cursor is at the end of the line
+                                          ? $from.parentOffset === 0            // when the cursor is at the beginning of parent node
+                                            ? enterEmpty(tr, !!dispatch, depth) // then enterEmpty is triggered
+                                            : enterEOL(tr, !!dispatch, depth)   // when the cursor is not at the beginning of parent node, the cursor can be at the end text node, then enterEOL is triggered
+                                          : enterSplit(tr, !!dispatch, depth);  // when the cursor is not at the end of the line, then enterSplit is triggered
 
   // if the transaction is triggered, then dispatch the transaction
   if (dispatch && resultTr !== false) {

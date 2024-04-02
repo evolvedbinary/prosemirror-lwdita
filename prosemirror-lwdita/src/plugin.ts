@@ -1,8 +1,8 @@
 import { keymap } from "prosemirror-keymap";
-import { MarkType, NodeType, Schema } from "prosemirror-model";
 import { menuBar, MenuElement, MenuItem, MenuItemSpec } from "prosemirror-menu";
 import { toggleMark, newLine, hasMark, insertNode, insertImage, InputContainer } from "./commands";
 import { redo, undo } from "prosemirror-history";
+import { MarkType, NodeType, Schema } from "prosemirror-model";
 import { Command } from "prosemirror-state";
 
 /**
@@ -27,7 +27,7 @@ if (targetNode) {
       if (mutation.type === 'childList') {
         // if the mutation happened on the menubar
         if((mutation.target as HTMLElement).classList.contains('ProseMirror-menubar')){
-          let separators: HTMLElement[] = [];
+          const separators: HTMLElement[] = [];
           mutation.addedNodes.forEach(node => {
             // if the node is a separator, add it to the separators array
             if (node.childNodes[0] && (node.childNodes[0] as HTMLElement).classList.contains('separator')) {
