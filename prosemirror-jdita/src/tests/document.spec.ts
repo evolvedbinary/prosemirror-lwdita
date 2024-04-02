@@ -83,7 +83,7 @@ describe('Function travel()', () => {
 // and test against expected JDita transformation output
 describe('Function document()', () => {
   it('returns a transformed Prosemirror object', () => {
-    let transformedJdita = document(JSON.parse(JDITA_OBJECT));
+    const transformedJdita = document(JSON.parse(JDITA_OBJECT));
     expect(transformedJdita).to.deep.equal(JSON.parse(TRANSFORMED_JDITA_OBJECT));
   });
 });

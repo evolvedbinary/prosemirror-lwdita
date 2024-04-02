@@ -19,8 +19,8 @@ describe('Function createNode()', () => {
   it('creates a node and fills it with content', () => {
     const type = schemaObject.nodes.ul;
     const node = createNode(type, {});
-    let li = node.content.firstChild;
-    let p = li?.content.firstChild;
+    const li = node.content.firstChild;
+    const p = li?.content.firstChild;
 
     expect(li?.type.name).to.equal('li');
     expect(p?.type.name).to.equal('p');
@@ -42,8 +42,8 @@ describe('Function createNodesTree()', () => {
     const node = createNodesTree(nodeTypes);
 
 
-    let li = node.content.firstChild;
-    let p = li?.content.firstChild;
+    const li = node.content.firstChild;
+    const p = li?.content.firstChild;
 
     expect(li?.type.name).to.equal('li');
     expect(p?.type.name).to.equal('p');
