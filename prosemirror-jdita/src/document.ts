@@ -9,7 +9,7 @@ import { IS_MARK, defaultNodeName } from "./schema";
  */
 function deleteUndefined(object?: any) {
   if (object) {
-    for (let key in object) {
+    for (const key in object) {
       if (typeof object[key] === 'undefined') {
         delete(object[key]);
       }
