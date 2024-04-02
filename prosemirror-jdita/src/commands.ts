@@ -1,9 +1,8 @@
 export { toggleMark } from 'prosemirror-commands';
 import { canSplit } from 'prosemirror-transform';
 import { chainCommands } from 'prosemirror-commands';
-import { Fragment, MarkType, Node, NodeType, ResolvedPos, Schema } from 'prosemirror-model';
-import { TextSelection, EditorState, Transaction, Command } from 'prosemirror-state';
-import { EditorView } from 'prosemirror-view';
+import { Fragment } from 'prosemirror-model';
+import { TextSelection } from 'prosemirror-state';
 
 /**
  * Create a new Node and fill it with the args as attributes.
@@ -20,8 +19,6 @@ export function createNode(type: NodeType, args: Record<string, any> = {}): Node
   switch (type.name) {
     case 'p': return type.createAndFill() as Node;
     case 'data': return type.createAndFill({}, type.schema.text('text')) as Node;
-    case 'stentry': return type.createAndFill({}, createNode(type.schema.nodes['p'])) as Node;
-    case 'strow': return type.createAndFill({}, createNode(type.schema.nodes['stentry'])) as Node;
     case 'simpletable': return type.createAndFill({}, createNode(type.schema.nodes['strow'])) as Node;
     case 'li': return type.createAndFill({}, createNode(type.schema.nodes['p'])) as Node;
     case 'stentry': return type.createAndFill({}, createNode(type.schema.nodes['p'])) as Node;
@@ -176,7 +173,7 @@ export class InputContainer {
  */
 export function insertImage(type: NodeType, input: InputContainer): Command {
   return function (state, dispatch) {
-    function fileSelected(this: HTMLInputElement, event: Event) {
+    function fileSelected(this: HTMLInputElement) {
       if (input.el?.files?.length === 1) {
         const file = input.el.files[0];
         const reader = new FileReader();
@@ -190,7 +187,6 @@ export function insertImage(type: NodeType, input: InputContainer): Command {
             dispatch(tr.scrollIntoView());
           }
         };
-      } else {
       }
     }
     try {
@@ -250,7 +246,6 @@ function canCreate(type: NodeType) {
 function defaultBlocks(pos: ResolvedPos, depth = 0) {
   // Get the content match at the current cursor position
   const match = pos.node(-depth - 1).contentMatchAt(pos.indexAfter(-depth - 1));
-  let index = -1;
 
   const result: NodeType[] = [];
   // loop through the possible content matches
@@ -305,9 +300,8 @@ function defaultBlockAt(pos: ResolvedPos, depth = 0, preferred?: NodeType) {
  * @returns Boolean - true if the transaction is triggered
  */
 export function enterEOL(tr: Transaction, dispatch = false, depth = 0): Transaction | false {
-  let { $from, $to, empty } = tr.selection
+  let { $from, $to } = tr.selection
   const parent = $to.node(-depth || undefined);
-  const grandParent = $to.node(-depth - 1);
   // get the allowed node types that can be created at the current cursor position
   const type = defaultBlockAt($to, depth, parent.type);
 
@@ -564,7 +558,7 @@ export function getTree(pos: ResolvedPos, depth = 0) {
  * @param view - The EditorView object
  * @returns Boolean
  */
-export function enterPressed(state: EditorState, dispatch?: (tr: Transaction) => void, view?: EditorView) {
+export function enterPressed(state: EditorState, dispatch?: (tr: Transaction) => void) {
   let { $from, empty } = state.selection;
   // check if the node is empty.
   // if the node is empty, then the depth is 1
