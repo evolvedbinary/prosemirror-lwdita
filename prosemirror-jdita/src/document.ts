@@ -1,4 +1,3 @@
-import { JDita } from "jdita";
 import { IS_MARK, defaultNodeName } from "./schema";
 
 /**
@@ -25,7 +24,7 @@ export function deleteUndefined(object?: any) {
  * treated in a customized way instead of applying the defaultTravel() function:
  */
 export const NODES: Record<string, (value: JDita, parent: JDita) => any> = {
-  audio: (value, parent) => {
+  audio: (value) => {
     const attrs: any = deleteUndefined({ ...value.attributes });
     const content: JDita[] = [];
     if (value.children) {
@@ -59,7 +58,7 @@ export const NODES: Record<string, (value: JDita, parent: JDita) => any> = {
     }
     return result;
   },
-  video: (value, parent) => {
+  video: (value) => {
     const attrs: any = deleteUndefined({ ...value.attributes });
     const content: JDita[] = [];
     if (value.children) {
@@ -115,7 +114,7 @@ export const NODES: Record<string, (value: JDita, parent: JDita) => any> = {
  * @param parent - The parent JDita node
  * @returns The transformed JDita node
  */
-export function defaultTravel(value: JDita, parent: JDita): any {
+export function defaultTravel(value: JDita): any {
   // children will become content
   const content = value.children?.map(child => travel(child, value));
   // attributes will become attrs
