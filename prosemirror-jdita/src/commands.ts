@@ -1,8 +1,9 @@
 export { toggleMark } from 'prosemirror-commands';
 import { canSplit } from 'prosemirror-transform';
 import { chainCommands } from 'prosemirror-commands';
-import { Fragment } from 'prosemirror-model';
-import { TextSelection } from 'prosemirror-state';
+// eslint-disable-next-line no-unused-vars
+import { Fragment, MarkType, NodeType, ResolvedPos } from 'prosemirror-model';
+import { Command, EditorState, TextSelection, Transaction } from 'prosemirror-state';
 
 /**
  * Create a new Node and fill it with the args as attributes.
