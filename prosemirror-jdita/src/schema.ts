@@ -1,4 +1,4 @@
-import { BaseNode, getNodeClassType, UnknownNodeError, DocumentNode, nodeGroups, customChildTypesToString } from 'jdita';
+import { BaseNode, getNodeClassType, UnknownNodeError, DocumentNode, nodeGroups } from 'jdita';
 import { getDomNode } from './dom';
 import { ChildTypes } from 'jdita';
 import { NodeSpec, Schema, SchemaSpec, Node, MarkSpec, DOMOutputSpec } from 'prosemirror-model';
@@ -104,8 +104,8 @@ export const SCHEMA_CONTENT: Record<string, [content: string, groups: string]> =
  * A map of special children for certain media nodes
  */
 export const SCHEMA_CHILDREN: Record<string, (type: ChildTypes) => string[]> = {
-  video: type => ['media-source', 'media-track', 'desc'],
-  audio: type => ['media-source', 'media-track', 'desc'],
+  video: () => ['media-source', 'media-track', 'desc'],
+  audio: () => ['media-source', 'media-track', 'desc'],
 }
 
 /**
@@ -224,7 +224,6 @@ export function defaultNodeAttrs(attrs: string[]): any {
  */
 function defaultTravel(
   node: typeof BaseNode,
-  parent: typeof BaseNode,
   next: (nodeName: string, parent: typeof BaseNode) => void): NodeSpec {
   const children = (SCHEMA_CHILDREN[node.nodeName] || getChildren)(node.childTypes);
   const isNode = IS_MARK.indexOf(node.nodeName) < 0;
@@ -332,6 +331,7 @@ export function schema(): Schema {
       }
     } catch (e) {
       if (e instanceof UnknownNodeError) {
+        console.error(e);
       } else {
         console.error(node);
         console.error(e);
