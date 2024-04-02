@@ -320,7 +320,7 @@ export function schema(): Schema {
     try {
       const nodeClass = typeof node === 'string' ? getNodeClassType(node) : node;
       // travel the node class and generate the node spec
-      const result = defaultTravel(nodeClass, parent, browse);
+      const result = defaultTravel(nodeClass, browse);
       if (result) {
         // set the node spec based on the node type
         if (IS_MARK.indexOf(nodeName) > -1) {
