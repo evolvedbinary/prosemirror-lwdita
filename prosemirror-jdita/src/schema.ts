@@ -340,7 +340,7 @@ export function schema(): Schema {
   }
 
   // start the process of populating the schema spec using the jdita nodes from the document node
-  browse(DocumentNode, DocumentNode);
+  browse(DocumentNode);
 
   (spec.nodes as any).topic.content = 'title shortdesc? prolog? body?';
   (spec.nodes as any).doc.content = 'topic+';
