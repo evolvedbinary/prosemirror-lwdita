@@ -66,11 +66,11 @@
     "@tsconfig/recommended": "^1.0.6",
     "@types/chai": "^4.3.11",
     "@types/mocha": "^10.0.6",
-    "eslint": "^6.8.0",
-    "@typescript-eslint/eslint-plugin": "^5.56.0",
-    "@typescript-eslint/parser": "^5.56.0",
+    "@typescript-eslint/eslint-plugin": "^7.4.0",
+    "@typescript-eslint/parser": "^7.4.0",
     "chai": "^4.3.10",
     "coveralls": "^3.1.1",
+    "eslint": "^8.57.0",
     "mocha": "^10.2.0",
     "nodemon": "^3.0.2",
     "nyc": "^15.1.0",
@@ -78,6 +78,6 @@
     "ts-node": "^9.1.1",
     "typedoc": "^0.25.7",
     "typedoc-plugin-missing-exports": "^2.2.0",
-    "typescript": "5.2.2"
+    "typescript": "5.3.3"
   }
 }
