@@ -64,9 +64,12 @@ export function openFileMenuItem(): MenuElement {
       el.classList.add('label');
       input.el = document.createElement('input');
       input.el.type = 'file';
+      input.el.id = 'fileUpload';
+      input.el.accept = 'application/xml,.xml';
       input.el.title = 'Open XDITA file';
-      const label = document.createElement('span');
-      label.innerHTML = 'Open XDITA file';
+      const label = document.createElement('label');
+      label.setAttribute('for', 'fileUpload');
+      label.innerText = 'Open XDITA file';
       el.appendChild(input.el);
       el.appendChild(label);
       return el;
