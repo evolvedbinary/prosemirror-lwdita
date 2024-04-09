@@ -8,12 +8,12 @@ import { InputContainer } from "@evolvedbinary/prosemirror-lwdita";
  * @returns - Command
  */
 function openFile(input: InputContainer): Command {
-  return (state, dispatch) => {
+  return (state: { tr: any; selection: { empty: any; }; }, dispatch: (arg0: any) => void) => {
     function fileSelected(this: HTMLInputElement, event: Event) {
       if (input.el?.files?.length === 1) {
         const file = input.el.files[0];
         const reader = new FileReader();
-        reader.readAsBinaryString(file);
+        reader.readAsText(file, 'UTF-8');
         reader.onerror = () => {
           console.log('an error reading while reading the image');
         };
