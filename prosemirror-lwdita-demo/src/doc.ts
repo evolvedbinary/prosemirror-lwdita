@@ -1,7 +1,20 @@
 import { document } from "@evolvedbinary/prosemirror-lwdita";
 import { xditaToJdita } from "@evolvedbinary/lwdita-xdita";
 
+
+const storedFile = localStorage.getItem('file');
 let xml: string;
+
+// Read XML from the localStorage
+// It should be stored there after uploading it via the editor UI,
+// handled by demo-plugin.ts
+if (storedFile) {
+  xml = storedFile;
+  //localStorage.removeItem('file');
+}
+
+// Otherwise take this XML example as a start for the demo editor
+if (!storedFile) {
 xml = `<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE topic PUBLIC "-//OASIS//DTD LIGHTWEIGHT DITA Topic//EN" "lw-topic.dtd">
 <topic id="program-bulbs-to-groups">
@@ -66,11 +79,6 @@ xml = `<?xml version="1.0" encoding="UTF-8"?>
   </body>
 </topic>
 `;
-
-const file = localStorage.getItem('file');
-if (file) {
-  xml = file;
-  localStorage.setItem('file', '');
 }
 
 // transform the xml to Jdita object
