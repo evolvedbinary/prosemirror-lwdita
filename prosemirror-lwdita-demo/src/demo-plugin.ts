@@ -9,45 +9,45 @@ import { InputContainer } from "@evolvedbinary/prosemirror-lwdita";
  */
 function openFile(input: InputContainer): Command {
   return (state, dispatch) => {
-  function fileSelected(this: HTMLInputElement, event: Event) {
-    if (input.el?.files?.length === 1) {
-      const file = input.el.files[0];
-      const reader = new FileReader();
-      reader.readAsBinaryString(file);
-      reader.onerror = () => {
-        console.log('an error reading while reading the image');
-      };
-      reader.onload = () => {
-        if (dispatch && typeof reader.result === 'string') {
-          localStorage.setItem('file', reader.result);
-          dispatch(state.tr);
-          location.reload();
-        }
-      };
-    } else {
-      console.log('can not add image:', input.el?.files?.length);
+    function fileSelected(this: HTMLInputElement, event: Event) {
+      if (input.el?.files?.length === 1) {
+        const file = input.el.files[0];
+        const reader = new FileReader();
+        reader.readAsBinaryString(file);
+        reader.onerror = () => {
+          console.log('an error reading while reading the image');
+        };
+        reader.onload = () => {
+          if (dispatch && typeof reader.result === 'string') {
+            localStorage.setItem('file', reader.result);
+            dispatch(state.tr);
+            location.reload();
+          }
+        };
+      } else {
+        console.log('can not add image:', input.el?.files?.length);
+      }
     }
-  }
-  try {
-    if (!state.selection.empty) {
-      return false;
-    }
-    if (dispatch) {
-      if (!input.el) {
-        console.log('no input found');
+    try {
+      if (!state.selection.empty) {
         return false;
       }
-      input.el.value = '';
-      input.on('command', fileSelected);
+      if (dispatch) {
+        if (!input.el) {
+          console.log('no input found');
+          return false;
+        }
+        input.el.value = '';
+        input.on('command', fileSelected);
+        return true;
+      }
       return true;
+    } catch(e) {
+      console.info('Error opening file:');
+      console.error(e);
+      return false;
     }
-    return true;
-  } catch(e) {
-    console.info('Error opening file:');
-    console.error(e);
-    return false;
   }
-}
 }
 
 /**
