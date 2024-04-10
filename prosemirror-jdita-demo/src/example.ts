@@ -62,7 +62,7 @@ jsonDocLoader.then(jsonDoc => {
   // });
   const a = document.createElement('a');
   a.innerText = 'Click here to reload the sample document';
-  a.href = '#';
+  a.href = '/';
   a.addEventListener('click', () => location.reload());
   const el: HTMLDivElement | null = document.querySelector("#editor");
   if (el) {
