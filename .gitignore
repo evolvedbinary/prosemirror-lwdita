@@ -106,9 +106,12 @@ dist
 
 # TernJS port file
 .tern-port
-.vscode/
 .cache/
 yarn-error.log
+
+# Editor files
+.vscode/
+.idea/
 
 # generated documentation
 generated-docs/
