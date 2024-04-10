@@ -13,7 +13,7 @@ function openFile(input: InputContainer): Command {
       if (input.el?.files?.length === 1) {
         const file = input.el.files[0];
         const reader = new FileReader();
-        reader.readAsText(file, 'UTF-8');
+        reader.readAsBinaryString(file);
         reader.onerror = () => {
           console.log('an error reading while reading the file');
         };
