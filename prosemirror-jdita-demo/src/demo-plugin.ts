@@ -15,7 +15,7 @@ function openFile(input: InputContainer): Command {
         const reader = new FileReader();
         reader.readAsText(file, 'UTF-8');
         reader.onerror = () => {
-          console.log('an error reading while reading the image');
+          console.log('an error reading while reading the file');
         };
         reader.onload = () => {
           if (dispatch && typeof reader.result === 'string') {
