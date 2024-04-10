@@ -9,8 +9,7 @@ export function node(name: string, attrs: Record<string, string> = {}, content: 
 }
 
 export function topic(attrs: Record<string, string> = {}, content: string = ''): string {
-  return `<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE topic PUBLIC "-//OASIS//DTD LIGHTWEIGHT DITA Topic//EN" "lw-topic.dtd">` + node('topic', attrs, content);
+  return `<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE topic PUBLIC "-//OASIS//DTD LIGHTWEIGHT DITA Topic//EN" "lw-topic.dtd">` + node('topic', attrs, content);
 }
 
 export function title(attrs: Record<string, string> = {}, content: string = ''): string {
