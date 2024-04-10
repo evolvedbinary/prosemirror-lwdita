@@ -1,4 +1,4 @@
-import { xditaToJson } from "jdita";
+import { xditaToJson, xditaToJdita, serializeToXML } from "@evolvedbinary/lwdita-xdita";
 import { document } from "prosemirror-jdita";
 
 const storedFile = localStorage.getItem('file');
