@@ -47,6 +47,8 @@
     "@types/chai-as-promised": "^7.1.3",
     "chai-as-promised": "^7.1.1",
     "jdita": "^0.2.4",
+    "@evolvedbinary/lwdita-xdita": "git+https://github.com/evolvedbinary/jdita.git#feature/serialize-ast-xml",
+    "@evolvedbinary/lwdita-ast": "git+https://github.com/evolvedbinary/jdita.git#feature/serialize-ast-xml",
     "prosemirror-commands": "^1.5.2",
     "prosemirror-history": "^1.3.2",
     "prosemirror-keymap": "^1.2.2",
