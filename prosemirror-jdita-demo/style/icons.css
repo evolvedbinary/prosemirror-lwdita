@@ -26,7 +26,7 @@
 }
 
 .ic-bug:before {
-  content: "\e900";
+  content: "\e999";
 }
 .ic-image:before {
   content: "\e90d";
@@ -63,4 +63,7 @@
 }
 .ic-github:before {
   content: "\eab0";
+}
+.ic-download:before {
+  content: "\ea36";
 }
