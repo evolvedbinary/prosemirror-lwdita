@@ -4,7 +4,7 @@ import { Node } from "prosemirror-model";
 import { schema } from "prosemirror-jdita";
 import jsonDocLoader from "./doc";
 import { menu, shortcuts } from "prosemirror-jdita";
-import { githubMenuItem, openFileMenuItem } from "./demo-plugin";
+import { githubMenuItem, openFileMenuItem, saveFileMenuItem} from "./demo-plugin";
 import { history } from "prosemirror-history";
 
 const schemaObject = schema();
@@ -35,7 +35,10 @@ jsonDocLoader.then(jsonDoc => {
             githubMenuItem({ label: 'jdita', url: 'https://github.com/evolvedbinary/jdita' }),
             githubMenuItem({ label: 'prosemirror-jdita', url: 'https://github.com/evolvedbinary/prosemirror-jdita' }),
           ]],
-          start: [[ openFileMenuItem() ]],
+          start: [[
+            openFileMenuItem(),
+            saveFileMenuItem()
+          ]],
         }),
       ]
     })
