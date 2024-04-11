@@ -80,6 +80,35 @@ export function openFileMenuItem(): MenuElement {
 }
 
 /**
+ * Create a menu item to open a file selection dialog to upload a file into the local storage.
+ * @returns A MenuElement
+ */
+export function saveFileMenuItem(): MenuElement {
+  const input = new InputContainer();
+  return new MenuItem({
+    enable: () => true,
+    render(editorView) {
+      const el = document.createElement('div');
+      el.classList.add('ProseMirror-menuitem-file');
+      el.classList.add('label');
+      input.el = document.createElement('input');
+      input.el.type = 'button';
+      input.el.id = 'saveFile';
+      input.el.value = 'Download File';
+      input.el.title = 'Save and download the edited XDITA file';
+      const label = document.createElement('label');
+      label.setAttribute('for', 'saveFile');
+      label.innerText = 'Download File';
+      el.appendChild(input.el);
+      el.appendChild(label);
+      return el;
+    },
+    class: 'ic-download',
+    run: openFile(input),
+  });
+}
+
+/**
  * Create a menu item to redirect to the github page of the project.
  * @param props - Menu item properties
  * @returns - MenuItem
