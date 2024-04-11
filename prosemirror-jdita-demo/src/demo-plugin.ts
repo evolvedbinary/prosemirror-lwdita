@@ -1,6 +1,8 @@
 import { Command } from "prosemirror-commands";
 import { MenuElement, MenuItem, MenuItemSpec } from "prosemirror-menu";
 import { InputContainer } from "prosemirror-jdita";
+import { schema } from "prosemirror-jdita";
+import { DOMSerializer, Fragment } from "prosemirror-model";
 
 /**
  * Open file selection dialog and select and file to insert into the local storage.
@@ -12,6 +14,8 @@ function openFile(input: InputContainer): Command {
     function fileSelected(this: HTMLInputElement, event: Event) {
       if (input.el?.files?.length === 1) {
         const file = input.el.files[0];
+        const fileName = file.name.split('.xml');
+        console.log(fileName[0]);
         const reader = new FileReader();
         reader.readAsBinaryString(file);
         reader.onerror = () => {
@@ -20,6 +24,7 @@ function openFile(input: InputContainer): Command {
         reader.onload = () => {
           if (dispatch && typeof reader.result === 'string') {
             localStorage.setItem('file', reader.result);
+            localStorage.setItem('fileName', fileName[0]);
             dispatch(state.tr);
             location.reload();
           }
@@ -66,7 +71,7 @@ export function openFileMenuItem(): MenuElement {
       input.el.type = 'file';
       input.el.id = 'fileUpload';
       input.el.accept = 'application/xml,.xml';
-      input.el.title = 'Open XDITA file';
+      input.el.title = 'Upload an XDITA file';
       const label = document.createElement('label');
       label.setAttribute('for', 'fileUpload');
       label.innerText = 'Open XDITA file';
@@ -80,7 +85,39 @@ export function openFileMenuItem(): MenuElement {
 }
 
 /**
- * Create a menu item to open a file selection dialog to upload a file into the local storage.
+ * TODO
+ *
+ * @param input - TODO
+ * @returns TODO
+ */
+function saveFile(input: InputContainer): Command {
+  return (state: {[x: string]: any; tr: any; selection: { empty: any; };}, dispatch: (arg0: any) => void) => {
+    if (dispatch) {
+      dispatch(state.tr);
+      console.log('DL Button has been clicked', state.tr);
+      const updatedDoc = state.doc;
+      console.log('updatedDoc=', updatedDoc);
+      console.log(state.doc.toString());
+      getCurrentProsemirrorDom(updatedDoc);
+    }
+  }
+}
+
+/**
+ * TODO
+ *
+ * @param doc - TODO
+ * @returns TODO
+ */
+function getCurrentProsemirrorDom(doc: { content: Fragment; }) {
+  const schemaObject = schema();
+  const test = document.createElement("div")
+  test.appendChild(DOMSerializer.fromSchema(schemaObject).serializeFragment(doc.content))
+  return console.log(test.innerHTML);
+}
+
+/**
+ * Create a menu item to save a file to the filesystem
  * @returns A MenuElement
  */
 export function saveFileMenuItem(): MenuElement {
@@ -94,17 +131,17 @@ export function saveFileMenuItem(): MenuElement {
       input.el = document.createElement('input');
       input.el.type = 'button';
       input.el.id = 'saveFile';
-      input.el.value = 'Download File';
+      input.el.value = 'Save & Download File';
       input.el.title = 'Save and download the edited XDITA file';
       const label = document.createElement('label');
       label.setAttribute('for', 'saveFile');
-      label.innerText = 'Download File';
+      label.innerText = 'Save & Download File';
       el.appendChild(input.el);
       el.appendChild(label);
       return el;
     },
     class: 'ic-download',
-    run: openFile(input),
+    run: saveFile(input)
   });
 }
 
