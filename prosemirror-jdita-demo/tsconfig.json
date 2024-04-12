@@ -9,6 +9,6 @@
     "declaration": true,                      /* Generates corresponding '.d.ts' file. */
     "sourceMap": true,                        /* Generates corresponding '.map' file. */
     "rootDir": "src",                         /* Set the root directory of input files to `src/`. */
-    "outDir": "lib",                          /* Redirect output structure to the `lib/` directory. */
+    "outDir": "dist",                         /* Redirect output structure to the `dist/` directory. */
   }
 }
