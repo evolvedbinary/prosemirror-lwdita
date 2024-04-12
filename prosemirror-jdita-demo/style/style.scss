@@ -119,7 +119,7 @@ body {
                 bottom: 0;
               }
             }
-            &::has(.separator) {
+            &:has(.separator) {
               flex: 1;
             }
           }
