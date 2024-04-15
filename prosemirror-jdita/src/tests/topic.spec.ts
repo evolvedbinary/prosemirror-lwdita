@@ -1,7 +1,7 @@
 import ChaiPromised from 'chai-as-promised';
 import { use } from 'chai';
 import { expect } from 'chai';
-import { xditaToJson } from "@evolvedbinary/lwdita-xdita";
+import { xditaToJson } from 'jdita';
 import { document } from '../document';
 import { topic } from './test-utils';
 

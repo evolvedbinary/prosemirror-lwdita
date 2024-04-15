@@ -1,4 +1,4 @@
-import { JDita } from "@evolvedbinary/lwdita-xdita";
+import { JDita } from "jdita";
 import { IS_MARK, defaultNodeName } from "./schema";
 
 /**

@@ -1,7 +1,7 @@
 import { BaseNode, getNodeClassType, UnknownNodeError, DocumentNode, nodeGroups } from 'jdita';
 //import { BaseNode, getNodeClassType, UnknownNodeError, DocumentNode, nodeGroups } from '@evolvedbinary/lwdita-ast';
 import { getDomNode } from './dom';
-import { ChildTypes } from "@evolvedbinary/lwdita-xdita";
+import { ChildTypes } from 'jdita';
 import { NodeSpec, Schema, SchemaSpec, Node, MarkSpec, DOMOutputSpec } from 'prosemirror-model';
 
 /**
