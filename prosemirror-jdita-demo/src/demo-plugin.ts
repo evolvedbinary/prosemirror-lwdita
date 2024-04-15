@@ -94,11 +94,15 @@ function saveFile(input: InputContainer): Command {
   return (state: {[x: string]: any; tr: any; selection: { empty: any; };}, dispatch: (arg0: any) => void) => {
     if (dispatch) {
       dispatch(state.tr);
-      console.log('DL Button has been clicked', state.tr);
+      //console.log('Transaction Object=', state.tr);
       const updatedDoc = state.doc;
-      console.log('updatedDoc=', updatedDoc);
-      console.log(state.doc.toString());
-      getCurrentProsemirrorDom(updatedDoc);
+      //console.log('PM Node object=', updatedDoc);
+      //console.log('Prosemirror Deserialized DOM = ', state.doc.toString());
+      const file = getCurrentProsemirrorDom(updatedDoc);
+      console.log('file content=',file);
+      const data = new Blob([file], {type: 'text/plain'});
+      const url = window.URL.createObjectURL(data);
+      //const dl_link = document.getElementById('saveFile').href = url;
     }
   }
 }
@@ -111,39 +115,40 @@ function saveFile(input: InputContainer): Command {
  */
 function getCurrentProsemirrorDom(doc: { content: Fragment; }) {
   const schemaObject = schema();
-  const test = document.createElement("div")
-  test.appendChild(DOMSerializer.fromSchema(schemaObject).serializeFragment(doc.content))
-  return console.log(test.innerHTML);
+  const pmDOM = document.createElement("div")
+  pmDOM.appendChild(DOMSerializer.fromSchema(schemaObject).serializeFragment(doc.content));
+  //console.log('PM DOM =', test.innerHTML);
+  return pmDOM.innerHTML;
 }
 
 /**
  * Create a menu item to save a file to the filesystem
  * @returns A MenuElement
  */
-export function saveFileMenuItem(): MenuElement {
-  const input = new InputContainer();
+export function saveFileMenuItem(props: Partial<MenuItemSpec & { url: string }> = {}): MenuElement {
+  const link = new InputContainer();
+  //const storedFile = localStorage.getItem('file') ? localStorage.getItem('file') : console.log('No file in the localStorage to save.');
+  const storedFileName = localStorage.getItem('fileName') ? localStorage.getItem('fileName') : 'Test_File';
+
   return new MenuItem({
     enable: () => true,
     render(editorView) {
       const el = document.createElement('div');
       el.classList.add('ProseMirror-menuitem-file');
-      el.classList.add('label');
-      input.el = document.createElement('input');
-      input.el.type = 'button';
-      input.el.id = 'saveFile';
-      input.el.value = 'Save & Download File';
-      input.el.title = 'Save and download the edited XDITA file';
-      const label = document.createElement('label');
-      label.setAttribute('for', 'saveFile');
-      label.innerText = 'Save & Download File';
-      el.appendChild(input.el);
-      el.appendChild(label);
+      const link = document.createElement('a');
+      link.href = props.url || '#';
+      link.download = storedFileName + '.txt';
+      link.id = 'saveFile';
+      link.textContent = 'Download "' + storedFileName + '.txt"';
+      el.appendChild(link);
       return el;
     },
     class: 'ic-download',
-    run: saveFile(input)
+    run: saveFile(link)
   });
 }
+
+
 
 /**
  * Create a menu item to redirect to the github page of the project.
