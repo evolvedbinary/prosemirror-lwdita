@@ -128,7 +128,11 @@ function saveFile(input: InputContainer): Command {
       const data = new Blob([file], { type: 'application/json' });
       const url = window.URL.createObjectURL(data);
       const link = document.getElementById('saveFile');
-      link.setAttribute('href', url);
+      if (link) {
+        link.setAttribute('href', url);
+      } else {
+        console.log('The URL could not be assigned to the element, the link is not available.')
+      }
       // TODO: Implement a callback function to check if the download has been completed
       // After the load has completed revoke the data URL with `URL.revokeObjectURL(url);`
       // See https://w3c.github.io/FileAPI/#examplesOfCreationRevocation
