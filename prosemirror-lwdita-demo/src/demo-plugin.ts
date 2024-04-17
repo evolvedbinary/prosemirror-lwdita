@@ -3,6 +3,7 @@ import { MenuElement, MenuItem, MenuItemSpec } from "prosemirror-menu";
 import { InputContainer } from "@evolvedbinary/prosemirror-lwdita";
 import { schema } from "prosemirror-jdita";
 import { DOMSerializer, Fragment } from "prosemirror-model";
+import { unTravel } from "prosemirror-jdita";
 
 /**
  * Open file selection dialog and select and file to insert into the local storage.
@@ -85,43 +86,6 @@ export function openFileMenuItem(): MenuElement {
 }
 
 /**
- * TODO
- *
- * @param input - TODO
- * @returns TODO
- */
-function saveFile(input: InputContainer): Command {
-  return (state: {[x: string]: any; tr: any; selection: { empty: any; };}, dispatch: (arg0: any) => void) => {
-    if (dispatch) {
-      dispatch(state.tr);
-      //console.log('Transaction Object=', state.tr);
-      const updatedDoc = state.doc;
-      //console.log('PM Node object=', updatedDoc);
-      //console.log('Prosemirror Deserialized DOM = ', state.doc.toString());
-      const file = getCurrentProsemirrorDom(updatedDoc);
-      console.log('file content=',file);
-      const data = new Blob([file], {type: 'text/plain'});
-      const url = window.URL.createObjectURL(data);
-      //const dl_link = document.getElementById('saveFile').href = url;
-    }
-  }
-}
-
-/**
- * TODO
- *
- * @param doc - TODO
- * @returns TODO
- */
-function getCurrentProsemirrorDom(doc: { content: Fragment; }) {
-  const schemaObject = schema();
-  const pmDOM = document.createElement("div")
-  pmDOM.appendChild(DOMSerializer.fromSchema(schemaObject).serializeFragment(doc.content));
-  //console.log('PM DOM =', test.innerHTML);
-  return pmDOM.innerHTML;
-}
-
-/**
  * Create a menu item to save a file to the filesystem
  * @returns A MenuElement
  */
@@ -136,10 +100,9 @@ export function saveFileMenuItem(props: Partial<MenuItemSpec & { url: string }> 
       const el = document.createElement('div');
       el.classList.add('ProseMirror-menuitem-file');
       const link = document.createElement('a');
-      link.href = props.url || '#';
-      link.download = storedFileName + '.txt';
+      link.download = storedFileName + '.json';
+      link.textContent = 'Download "' + storedFileName + '.json"';
       link.id = 'saveFile';
-      link.textContent = 'Download "' + storedFileName + '.txt"';
       el.appendChild(link);
       return el;
     },
@@ -148,7 +111,50 @@ export function saveFileMenuItem(props: Partial<MenuItemSpec & { url: string }> 
   });
 }
 
+/**
+ * Provide a download facility for the current file in the Prosemirror editor
+ * Create a data url for the JDITA object and
+ * offer a JSON file download when the element is clicked
+ *
+ * @param input - The menu item containing the download link
+ * @returns The HTML data url
+ */
+function saveFile(input: InputContainer): Command {
+  return (state: {[x: string]: any; tr: any; selection: { empty: any; };}, dispatch: (arg0: any) => void) => {
+    if (dispatch) {
+      dispatch(state.tr);
+      const documentNode = transformToJditaDocumentNode(state);
+      const file = JSON.stringify(documentNode);
+      const data = new Blob([file], { type: 'application/json' });
+      const url = window.URL.createObjectURL(data);
+      const link = document.getElementById('saveFile');
+      link.setAttribute('href', url);
+      // TODO: Implement a callback function to check if the download has been completed
+      // After the load has completed revoke the data URL with `URL.revokeObjectURL(url);`
+      // See https://w3c.github.io/FileAPI/#examplesOfCreationRevocation
+    } else {
+      console.log('Nothing to download, no EditorState has been dispatched.');
+    }
+  }
+}
 
+/**
+ * Parse the current Prosemirror Editor state to a JSON object and
+ * transform it to a JDITA object
+ *
+ * @param state - The current editor state
+ * @returns The JDITA document node object
+ */
+function transformToJditaDocumentNode(state: { [x: string]: any; tr?: any; selection?: { empty: any; }; toJSON?: any; }) {
+  const prosemirrorJson = state.toJSON();
+  prosemirrorJson.doc.type = 'document';
+  const documentNode = unTravel(prosemirrorJson.doc);
+  return documentNode;
+};
+
+// TODO: Create a new function to transform the JDITA object
+// back to XDITA as soon as the JDITA version is updated!
+// Call serializeToXML() and pass the documentNode rendered by `transformToJditaDocumentNode()`.
 
 /**
  * Create a menu item to redirect to the github page of the project.
