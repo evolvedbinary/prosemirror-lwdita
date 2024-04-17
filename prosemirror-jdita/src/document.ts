@@ -242,3 +242,51 @@ export function document(jdita: JDita): Record<string, any> {
   }
   throw new Error('jdita must be a document');
 }
+
+/**
+ * Replace underscores with hyphens in node names
+ *
+ * @param type
+ * @returns The sanitized node name with hyphens
+ */
+function getJditaNodeName(type: string): string {
+  return type.replace(/_/g, '-');
+}
+
+/**
+ * Recursivley traverse through all items in the Prosemirror DOM
+ * and create a JDITA object
+ *
+ * @param prosemirrorDocument - The Prosemirror DOM object
+ * @returns The JDITA object
+ */
+export function unTravel(prosemirrorDocument: Record<string, any>): JDita{
+  // Prosemirror content will become JDITA children
+  const children = prosemirrorDocument.content?.map(unTravel);
+  // attrs will become attributes
+  const attributes = prosemirrorDocument.attrs || {};
+
+  // handle the attributes
+  for (const key in attributes) {
+    if (!attributes[key]) {
+      delete (attributes[key]);
+    }
+  }
+
+  // get the node name
+  const nodeName = getJditaNodeName(prosemirrorDocument.type);
+
+  if(nodeName === 'text') {
+    return {
+      nodeName,
+      'content': prosemirrorDocument.text
+    }
+  }
+
+  const nodeObject: JDita = {
+    nodeName,
+    attributes,
+    children
+  }
+  return nodeObject;
+}
