@@ -145,6 +145,7 @@ function getChildren(type: ChildTypes): string[] {
   return (type.isGroup ? nodeGroups[type.name] : [ type.name ]);
 }
 
+
 /**
  * Travel the node and generate the node spec
  *
@@ -152,7 +153,7 @@ function getChildren(type: ChildTypes): string[] {
  * @param next - Next travel function
  * @returns SchemaNode
  */
-export function travel(node: typeof BaseNode, next: (nodeName: string) => void): SchemaNode {
+function schemaTravel(node: typeof BaseNode, next: (nodeName: string) => void): SchemaNode {
   return (SCHEMAS[node.nodeName] || defaultTravel)(node, next);
 }
 
@@ -345,4 +346,10 @@ export function schema(): Schema {
   (spec.nodes as any).doc.content = 'topic+';
 
   return new Schema(spec);
+}
+
+//Escape hatch for Unit Testing due to a lack of “package-private” accessibility scope in TypeScript
+export const _test_private_schema = {
+  getChildren,
+  schemaTravel,
 }

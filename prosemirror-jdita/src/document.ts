@@ -53,7 +53,7 @@ export const NODES: Record<string, (value: JDita, parent: JDita) => any> = {
       });
     }
     const result = { type: value.nodeName, attrs, content: content.map(child => travel(child, value)) };
-    
+
     if (attrs && Object.keys(attrs).length) {
       result.attrs = attrs;
     }
@@ -242,4 +242,11 @@ export function document(jdita: JDita): Record<string, any> {
     return travel(jdita, jdita);
   }
   throw new Error('jdita must be a document');
+}
+
+//Escape hatch for Unit Testing due to a lack of “package-private” accessibility scope in TypeScript
+export const _test_private_document = {
+  deleteUndefined,
+  defaultTravel,
+  travel,
 }

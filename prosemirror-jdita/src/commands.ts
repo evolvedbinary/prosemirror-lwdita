@@ -127,7 +127,6 @@ export class InputContainer {
   get el(): HTMLInputElement | undefined {
     return this._el;
   }
-
   // setter function with arguments of type HTMLInputElement or undefined
   set el(value: HTMLInputElement | undefined) {
     // will not do anything, if the the current HTML input element equals the to-be-set element
@@ -224,6 +223,7 @@ function canCreateIndex(type: NodeType) {
   return ['data', 'ul', 'li', 'p', 'section', 'stentry', 'strow', 'simpletable'].indexOf(type.name);
 }
 
+
 /**
  * Check if the node can be created or not.
  *
@@ -265,6 +265,7 @@ function defaultBlocks(pos: ResolvedPos, depth = 0) {
   return result;
 }
 
+
 /**
  * Get the Node that can be created at the current cursor position.
  *
@@ -296,6 +297,7 @@ function defaultBlockAt(pos: ResolvedPos, depth = 0, preferred?: NodeType) {
 
 /**
  * Handle the enter key event when the cursor is at the end of the line.
+ *
  *
  * @param tr - The transaction object
  * @param dispatch - dispatch function
@@ -501,7 +503,7 @@ export function isPrevEmpty(tr: Transaction, depth = 0) {
 
 /**
  * Get the distance from the current cursor position to the closest parent Node with children.
- * 
+ *
  * @param tr - The Transaction object
  * @param empty - A Boolean, set to `false`
  * @returns A number containing the depth of the tested
@@ -528,6 +530,7 @@ export function getPrevDepth(tr: Transaction) {
     depth++;
 
   }
+
   return depth;
 }
 
@@ -612,4 +615,11 @@ export function hasMark(state: EditorState, mark: MarkType): boolean {
   return state.selection.empty
     ? !!mark.isInSet(state.storedMarks || state.selection.$from.marks())
     : state.doc.rangeHasMark(state.selection.from, state.selection.to, mark);
+}
+
+//Escape hatch for Unit Testing due to a lack of “package-private” accessibility scope in TypeScript
+export const _test_private_commands = {
+  canCreateIndex,
+  canCreate,
+  defaultBlocks,
 }
