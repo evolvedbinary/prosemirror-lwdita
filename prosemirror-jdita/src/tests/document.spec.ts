@@ -1,6 +1,6 @@
 import ChaiPromised from 'chai-as-promised';
 import { use, expect, assert } from 'chai';
-import { document, deleteUndefined, defaultTravel, travel, NODES } from '../document';
+import { document, NODES, _test_private_document } from '../document';
 import {
   JDITA_OBJECT,
   TRANSFORMED_JDITA_OBJECT,
@@ -29,7 +29,7 @@ describe('Function deleteUndefined()', () => {
       'parent': 'video'
     };
 
-    const result = deleteUndefined(attrs);
+    const result = _test_private_document.deleteUndefined(attrs);
     const expected = {
       value: 'movie.ogg',
       parent: 'video'
@@ -45,7 +45,7 @@ describe('Function defaultTravel()', () => {
     it('returns the transformed ProseMirror objects', () => {
       const node = JSON.parse(JDITA_NODE),
             parent = JSON.parse(JDITA_PARENT_NODE),
-            expected = defaultTravel(node, parent),
+            expected = _test_private_document.defaultTravel(node, parent),
             result = (
               JSON.parse(JDITA_TRANFORMED_RESULT1),
               JSON.parse(JDITA_TRANFORMED_RESULT2)
@@ -62,7 +62,7 @@ describe('Function travel()', () => {
     it('returns a transformed ProseMirror object', () => {
       const node = JSON.parse('{"nodeName":"text","content":"Programming Light Bulbs to a Lighting Group"}'),
             parent = JSON.parse('{"nodeName":"title","attributes":{},"children":[{"nodeName":"text","content":"Programming Light Bulbs to a Lighting Group"}]}'),
-            expected = travel(node, parent),
+            expected = _test_private_document.travel(node, parent),
             result = JSON.parse('{"type":"text","text":"Programming Light Bulbs to a Lighting Group","attrs":{"parent":"title"}}');
       assert.deepEqual(result, expected);
     });
@@ -72,7 +72,7 @@ describe('Function travel()', () => {
     it('returns a transformed ProseMirror object', () => {
       const node = JSON.parse('{"nodeName":"topic","attributes":{"id":"program"},"children":[{"nodeName":"title","attributes":{},"children":[{"nodeName":"text","content":"Programming Light Bulbs to a Lighting Group"}]},{"nodeName":"body","attributes":{},"children":[{"nodeName":"section","attributes":{},"children":[{"nodeName":"p","attributes":{},"children":[{"nodeName":"text","content":"You must assign a light bulb to at least one lighting group to operate that light bulb."}]}]}]}]}'),
             parent = JSON.parse('{"nodeName":"doc","children":[{"nodeName":"topic","attributes":{"id":"program"},"children":[{"nodeName":"title","attributes":{},"children":[{"nodeName":"text","content":"Programming Light Bulbs to a Lighting Group"}]},{"nodeName":"body","attributes":{},"children":[{"nodeName":"section","attributes":{},"children":[{"nodeName":"p","attributes":{},"children":[{"nodeName":"text","content":"You must assign a light bulb to at least one lighting group to operate that light bulb."}]}]}]}]}]}'),
-            expected = travel(node, parent),
+            expected = _test_private_document.travel(node, parent),
             result = JSON.parse('{"type":"topic","attrs":{"id":"program","parent":"doc"},"content":[{"type":"title","attrs":{"parent":"topic"},"content":[{"type":"text","text":"Programming Light Bulbs to a Lighting Group","attrs":{"parent":"title"}}]},{"type":"body","attrs":{"parent":"topic"},"content":[{"type":"section","attrs":{"parent":"body"},"content":[{"type":"p","attrs":{"parent":"section"},"content":[{"type":"text","text":"You must assign a light bulb to at least one lighting group to operate that light bulb.","attrs":{"parent":"p"}}]}]}]}]}');
       assert.deepEqual(result, expected);
     });

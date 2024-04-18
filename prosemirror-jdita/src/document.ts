@@ -7,7 +7,7 @@ import { IS_MARK, defaultNodeName } from "./schema";
  * @param object  - Generic object
  * @returns object - The object with undefined attributes removed
  */
-export function deleteUndefined(object?: any) {
+function deleteUndefined(object?: any) {
   if (object) {
     for (let key in object) {
       if (typeof object[key] === 'undefined') {
@@ -115,7 +115,7 @@ export const NODES: Record<string, (value: JDita, parent: JDita) => any> = {
  * @param parent - The parent JDita node
  * @returns The transformed JDita node
  */
-export function defaultTravel(value: JDita, parent: JDita): any {
+function defaultTravel(value: JDita, parent: JDita): any {
   // children will become content
   const content = value.children?.map(child => travel(child, value));
   // attributes will become attrs
@@ -151,7 +151,7 @@ export function defaultTravel(value: JDita, parent: JDita): any {
  * @param parent - The parent JDita node
  * @returns The transformed JDita node
  */
-export function travel(value: JDita, parent: JDita): any {
+function travel(value: JDita, parent: JDita): any {
   // if it's a special node, use the special node function,
   // otherwise use the default travel function
   const result = (NODES[value.nodeName] || defaultTravel)(value, parent);
@@ -242,4 +242,11 @@ export function document(jdita: JDita): Record<string, any> {
     return travel(jdita, jdita);
   }
   throw new Error('jdita must be a document');
+}
+
+//Escape hatch for Unit Testing due to a lack of “package-private” accessibility scope in TypeScript
+export const _test_private_document = {
+  deleteUndefined,
+  defaultTravel,
+  travel,
 }

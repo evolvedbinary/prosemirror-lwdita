@@ -137,7 +137,7 @@ export interface SchemaNodes {
  * @param type - Type of the Child nodes
  * @returns - The children of the node
  */
-export function getChildren(type: ChildTypes): string[] {
+function getChildren(type: ChildTypes): string[] {
   if (Array.isArray(type)) {
     return type.map(subType => getChildren(subType)).reduce((result, children) =>
     result.concat(children.filter(child => result.indexOf(child) < 0)), [] as string[]);
@@ -153,7 +153,7 @@ export function getChildren(type: ChildTypes): string[] {
  * @param next - Next travel function
  * @returns SchemaNode
  */
-export function schemaTravel(node: typeof BaseNode, next: (nodeName: string) => void): SchemaNode {
+function schemaTravel(node: typeof BaseNode, next: (nodeName: string) => void): SchemaNode {
   return (SCHEMAS[node.nodeName] || defaultTravel)(node, next);
 }
 
@@ -346,4 +346,10 @@ export function schema(): Schema {
   (spec.nodes as any).doc.content = 'topic+';
 
   return new Schema(spec);
+}
+
+//Escape hatch for Unit Testing due to a lack of “package-private” accessibility scope in TypeScript
+export const _test_private_schema = {
+  getChildren,
+  schemaTravel,
 }

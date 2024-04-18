@@ -219,7 +219,7 @@ export function insertImage(type: NodeType, input: InputContainer): Command {
  * @param type - NodeType or nodeName
  * @returns node index from the list of nodes
  */
-export function canCreateIndex(type: NodeType) {
+function canCreateIndex(type: NodeType) {
   return ['data', 'ul', 'li', 'p', 'section', 'stentry', 'strow', 'simpletable'].indexOf(type.name);
 }
 
@@ -230,7 +230,7 @@ export function canCreateIndex(type: NodeType) {
  * @param type - NodeType object, contains the node name
  * @returns Boolean of whether the node can be created or not
  */
-export function canCreate(type: NodeType) {
+function canCreate(type: NodeType) {
   return canCreateIndex(type) > -1;
 }
 
@@ -247,7 +247,7 @@ export function canCreate(type: NodeType) {
  * @param depth - distance from the current cursor position to the closest parent Node with children
  * @returns List of NodeTypes that can be created
  */
-export function defaultBlocks(pos: ResolvedPos, depth = 0) {
+function defaultBlocks(pos: ResolvedPos, depth = 0) {
   // Get the content match at the current cursor position
   const match = pos.node(-depth - 1).contentMatchAt(pos.indexAfter(-depth - 1));
   let index = -1;
@@ -615,4 +615,11 @@ export function hasMark(state: EditorState, mark: MarkType): boolean {
   return state.selection.empty
     ? !!mark.isInSet(state.storedMarks || state.selection.$from.marks())
     : state.doc.rangeHasMark(state.selection.from, state.selection.to, mark);
+}
+
+//Escape hatch for Unit Testing due to a lack of “package-private” accessibility scope in TypeScript
+export const _test_private_commands = {
+  canCreateIndex,
+  canCreate,
+  defaultBlocks,
 }

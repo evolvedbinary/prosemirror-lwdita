@@ -1,5 +1,5 @@
 import { assert, expect } from 'chai';
-import { defaultNodeAttrs, defaultNodeName, defaultToDom, getChildren, getDomAttr, schema, schemaTravel } from '../schema';
+import { defaultNodeAttrs, defaultNodeName, defaultToDom, getDomAttr, schema, _test_private_schema } from '../schema';
 import { TextNode, BaseNode, TopicNode, DdNode } from 'jdita';
 import { DOMOutputSpec, Schema } from 'prosemirror-model';
 import { createNode } from '../commands';
@@ -10,21 +10,21 @@ import { createNode } from '../commands';
 
 describe('Function schemaTravel()', () => {
   it('returns correct attributes for a TextNode', () => {
-    assert.deepEqual(schemaTravel(TextNode as unknown as typeof BaseNode, console.log), { attrs: { parent: { default: '' } }} as any);
+    assert.deepEqual(_test_private_schema.schemaTravel(TextNode as unknown as typeof BaseNode, console.log), { attrs: { parent: { default: '' } }} as any);
   });
 });
 
 describe('Function getChildren()', () => {
   it('makes sure that the node type gets the correct children according to the schema', () => {
     const type = TopicNode.childTypes;
-    const children = getChildren(type);
+    const children = _test_private_schema.getChildren(type);
     assert.deepEqual(children, ["title","shortdesc","prolog","body"]);
   });
 
   it('makes sure that the node type gets the correct group node children according to the schema', () => {
     // DD node children are %list-blocks
     const type = DdNode.childTypes;
-    const children = getChildren(type);
+    const children = _test_private_schema.getChildren(type);
     // %list-blocks are p  ul  ol  dl  pre  audio  video  simpletable  fig  note  data
     assert.deepEqual(children, ['p', 'ul', 'ol', 'dl', 'pre', 'audio', 'video', 'simpletable', 'fig', 'note', 'data']);
   });
