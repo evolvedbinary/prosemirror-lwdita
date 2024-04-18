@@ -3,7 +3,7 @@ import { EditorView } from "prosemirror-view";
 import { Node } from "prosemirror-model";
 import { schema } from "prosemirror-jdita";
 import jsonDocLoader from "./doc";
-import { menu, shortcuts, testWithoutExport } from "prosemirror-jdita";
+import { menu, shortcuts } from "prosemirror-jdita";
 import { githubMenuItem, openFileMenuItem } from "./demo-plugin";
 import { history } from "prosemirror-history";
 
@@ -43,8 +43,6 @@ jsonDocLoader.then(jsonDoc => {
     new EditorView(domEl, {
       state,
     });
-
-    testWithoutExport();
   }
 }).catch(e => {
   console.error(e);
