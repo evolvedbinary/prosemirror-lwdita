@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE topic PUBLIC "-//OASIS//DTD LIGHTWEIGHT DITA Topic//EN" "lw-topic.dtd">
+<topic id="program-bulbs-to-groups">
+  <title>Test File: Media Elements in XDita</title>
+  <body>
+
+    <section id="demo">
+      <title>
+        Video Element
+      </title>
+      <fig>
+        <video outputclass="videoElement" width="640" height="360">
+          <desc>Xiaomi Yeelight YLDP06YL Smart Light Bulb White</desc>
+          <video-poster value="https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/1954_Kool-Aid_Commercial._Debut_of_Pitcher_Man.webm/120px--1954_Kool-Aid_Commercial._Debut_of_Pitcher_Man.webm.jpg" />
+          <media-controls name="controls" value="true"/>
+          <media-source value="https://commons.wikimedia.org/wiki/File:1954_Kool-Aid_Commercial._Debut_of_Pitcher_Man.webm" />
+        </video>
+        </fig>
+    </section>
+
+    <section>
+      <title>Audio Element</title>
+      <fig>
+        <audio outputclass="audioElement">
+          <desc>An Audio Track</desc>
+          <media-controls name="controls" value="true"/>
+          <media-source value="https://commons.wikimedia.org/wiki/File:1943_Nov_14_NYPhil_Bernstein.ogg" />
+        </audio>
+      </fig>
+    </section>
+
+    <section>
+      <title>An Image</title>
+      <fig>
+        <image outputclass="imageElement" height="300px" width="300px" href="https://placekitten.com/300/300">
+          <alt>A kitten</alt>
+        </image>
+      </fig>
+    </section>
+  </body>
+</topic>
