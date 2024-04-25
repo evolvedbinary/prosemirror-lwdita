@@ -151,6 +151,7 @@ function saveFile(input: InputContainer): Command {
  */
 function transformToJditaDocumentNode(state: { [x: string]: any; tr?: any; selection?: { empty: any; }; toJSON?: any; }) {
   const prosemirrorJson = state.toJSON();
+  // Change the type value from 'type: doc' to expected 'type: document' for JDITA processing
   prosemirrorJson.doc.type = 'document';
   const documentNode = unTravel(prosemirrorJson.doc);
   return documentNode;
