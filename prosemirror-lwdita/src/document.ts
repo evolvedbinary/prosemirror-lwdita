@@ -287,14 +287,19 @@ function getJditaNodeName(type: string): string {
 export function unTravel(prosemirrorDocument: Record<string, any>): JDita{
   // Prosemirror content will become JDITA children
   const children = prosemirrorDocument.content?.map(unTravel);
+
   // attrs will become attributes
   const attributes = prosemirrorDocument.attrs || {};
 
+  // TODO: Remove empty objects ("attributes":{})
   // handle the attributes
   for (const key in attributes) {
-    if (!attributes[key]) {
-      delete (attributes[key]);
+    if (!attributes[key] || attributes[key] === undefined || attributes[key] === '') {
+      delete attributes[key];
     }
+
+    // Remove parent keys in attributes ("attributes":{"parent":"topic"})
+    delete attributes['parent']
   }
 
   // get the node name
