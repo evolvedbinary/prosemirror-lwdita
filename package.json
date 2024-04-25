@@ -7,18 +7,18 @@
     "type": "git",
     "url": "git+https://github.com/evolvedbinary/prosemirror-jdita.git"
   },
-  "keywords": [	
+  "keywords": [
     "ProseMirror",
     "Docker",
-    "LwDITA",	
-    "DITA",	
-    "XML",	
-    "JSON"	
-  ],	
-  "author": "Evolved Binary",	
-  "license": "AGPL-3.0",	
-  "bugs": {	
-    "url": "https://github.com/evolvedbinary/prosemirror-jdita/issues"	
+    "LwDITA",
+    "DITA",
+    "XML",
+    "JSON"
+  ],
+  "author": "Evolved Binary",
+  "license": "AGPL-3.0",
+  "bugs": {
+    "url": "https://github.com/evolvedbinary/prosemirror-jdita/issues"
   },
   "homepage": "https://github.com/evolvedbinary/prosemirror-jdita#readme",
   "private": true,
@@ -28,6 +28,7 @@
     "build:demo": "yarn workspace prosemirror-jdita-demo build",
     "build": "yarn workspace prosemirror-jdita build",
     "test": "yarn workspace prosemirror-jdita test",
+    "cy:open": "cypress open",
     "coverage": "yarn workspace prosemirror-jdita coverage",
     "coveralls": "yarn workspace prosemirror-jdita coveralls",
     "generate-docs": "yarn workspace prosemirror-jdita generate-docs",
@@ -40,5 +41,8 @@
   "workspaces": [
     "prosemirror-jdita",
     "prosemirror-jdita-demo"
-  ]
+  ],
+  "devDependencies": {
+    "cypress": "^13.8.1"
+  }
 }
