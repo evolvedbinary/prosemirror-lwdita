@@ -270,7 +270,7 @@ export function document(jdita: JDita): Record<string, any> {
 /**
  * Replace underscores with hyphens in node names
  *
- * @param type
+ * @param type - The string to be modified
  * @returns The sanitized node name with hyphens
  */
 function getJditaNodeName(type: string): string {
