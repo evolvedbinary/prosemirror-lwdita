@@ -278,26 +278,55 @@ function getJditaNodeName(type: string): string {
 }
 
 /**
- * Recursivley traverse through all items in the Prosemirror DOM
+ * Remove empty objects from a JSON tree
+ * Loop recursively through an object and return only those items which contain values
+ * @param obj - The object containing the JSON tree
+ * @returns The new object without empty objects
+ */
+function removeEmptyAttributes(obj: any): any {
+  // If the object is an Array, loop through each element and call `removeEmptyAttributes` recursively
+  if (Array.isArray(obj)) {
+    return obj.map(item => removeEmptyAttributes(item));
+  }
+
+  // If the object is an object, loop through each key-value pair
+  // and call `removeEmptyAttributes` recursively
+  if (typeof obj === 'object' && obj !== null) {
+    const newObj: { [key: string]: any } = {};
+    for (const key in obj) {
+      if (Object.prototype.hasOwnProperty.call(obj, key)) {
+        if (key !== 'attributes' || Object.keys(obj[key]).length !== 0) {
+          newObj[key] = removeEmptyAttributes(obj[key]);
+        }
+      }
+    }
+    return newObj;
+  }
+
+  // If neither array nor object, simply return the value
+  return obj;
+}
+
+ /**
+ * Recursively traverse through all items in the Prosemirror DOM
  * and create a JDITA object
  *
  * @param prosemirrorDocument - The Prosemirror DOM object
  * @returns The JDITA object
  */
 export function unTravel(prosemirrorDocument: Record<string, any>): JDita{
+
   // Prosemirror content will become JDITA children
   const children = prosemirrorDocument.content?.map(unTravel);
 
   // attrs will become attributes
   const attributes = prosemirrorDocument.attrs || {};
 
-  // TODO: Remove empty objects ("attributes":{})
   // handle the attributes
   for (const key in attributes) {
     if (!attributes[key] || attributes[key] === undefined || attributes[key] === '') {
       delete attributes[key];
     }
-
     // Remove parent keys in attributes ("attributes":{"parent":"topic"})
     delete attributes['parent']
   }
@@ -319,7 +348,6 @@ export function unTravel(prosemirrorDocument: Record<string, any>): JDita{
   }
   return nodeObject;
 }
-
 
 //Escape hatch for Unit Testing due to a lack of “package-private” accessibility scope in TypeScript
 export const _test_private_document = {
