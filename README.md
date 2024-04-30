@@ -146,6 +146,8 @@ To execute the test suite and view the code coverage, run:
 yarn test # run unit tests
 
 yarn coverage # get coverage
+
+yarn cy:open # launch the Cypress app for E2E tests
 ```
 
 ## Flow Diagram of Prosemirror-JDita
