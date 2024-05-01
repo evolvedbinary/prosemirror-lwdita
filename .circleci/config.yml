@@ -13,7 +13,7 @@ parameters:
 
 orbs:
   coveralls: coveralls/coveralls@2.2.1
-
+  cypress: cypress-io/cypress@3
 commands:
   install-yarn:
     description: "Install Yarn"
@@ -24,6 +24,7 @@ commands:
     description: "Install Dependencies"
     steps:
       - run: yarn install
+
 
 jobs:
   coverage:
@@ -75,6 +76,16 @@ jobs:
       - run:
           name: build-demo
           command: yarn build:demo
+  run-cypress-in-specified-node-version:
+    executor:
+      name: cypress/default
+      node-version: "20.10.0"
+    steps:
+      - cypress/install:
+          package-manager: "yarn"
+      - cypress/run-tests:
+          start-command: yarn run start:demo
+          cypress-command: yarn run test:demo
 workflows:
   build-and-test:
     jobs:
@@ -82,3 +93,4 @@ workflows:
       - generate-docs
       - build
       - build-demo
+      - run-cypress-in-specified-node-version
