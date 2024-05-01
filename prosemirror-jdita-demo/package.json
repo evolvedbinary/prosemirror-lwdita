@@ -26,8 +26,10 @@
   "homepage": "https://github.com/evolvedbinary/prosemirror-jdita#readme",
   "scripts": {
     "build": "parcel build ./index.html",
-    "start": "parcel ./index.html",
-    "docker": "yarn build && node docker"
+    "start": "parcel ./index.html -p 9000",
+    "docker": "yarn build && node docker",
+    "cypress": "cypress open",
+    "test": "cypress run" 
   },
   "dependencies": {
     "jdita": "^0.2.4",
