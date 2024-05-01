@@ -25,6 +25,8 @@
   "scripts": {
     "docker": "yarn workspace prosemirror-jdita-demo docker",
     "start:demo": "yarn workspace prosemirror-jdita-demo start",
+    "test:demo": "yarn workspace prosemirror-jdita-demo test",
+    "cypress": "yarn workspace prosemirror-jdita-demo cypress",
     "build:demo": "yarn workspace prosemirror-jdita-demo build",
     "build": "yarn workspace prosemirror-jdita build",
     "test": "yarn workspace prosemirror-jdita test",
