@@ -13,7 +13,7 @@ parameters:
 
 orbs:
   node: circleci/node@5.1.1
-
+  cypress: cypress-io/cypress@3
 jobs:
   clone-and-install:
     docker:
@@ -25,6 +25,16 @@ jobs:
           version: << pipeline.parameters.yarn-version >>
       - node/install-packages:
           pkg-manager: yarn 
+  run-cypress-in-specified-node-version:
+    executor:
+      name: cypress/default
+      node-version: "20.10.0"
+    steps:
+      - cypress/install:
+          package-manager: "yarn"
+      - cypress/run-tests:
+          start-command: yarn run start:demo
+          cypress-command: yarn run test:demo
 workflows:
   build-and-test:
     jobs:
@@ -84,3 +94,5 @@ workflows:
             - node/install-yarn:
                 version: << pipeline.parameters.yarn-version >>
           yarn-run: lint
+      - run-cypress-in-specified-node-version:
+          name: Run Cypress test

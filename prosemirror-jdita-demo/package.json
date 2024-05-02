@@ -7,30 +7,35 @@
     "type": "git",
     "url": "git+https://github.com/evolvedbinary/prosemirror-jdita.git"
   },
-  "keywords": [	
+  "keywords": [
     "ProseMirror",
     "Docker",
-    "LwDITA",	
-    "DITA",	
-    "XML",	
-    "JSON"	
-  ],	
-  "author": "Evolved Binary",	
-  "license": "AGPL-3.0",	
-  "bugs": {	
-    "url": "https://github.com/evolvedbinary/prosemirror-jdita/issues"	
+    "LwDITA",
+    "DITA",
+    "XML",
+    "JSON"
+  ],
+  "author": "Evolved Binary",
+  "license": "AGPL-3.0",
+  "bugs": {
+    "url": "https://github.com/evolvedbinary/prosemirror-jdita/issues"
   },
   "homepage": "https://github.com/evolvedbinary/prosemirror-jdita#readme",
   "scripts": {
     "build": "parcel build ./index.html",
-    "start": "parcel ./index.html",
-    "docker": "yarn build && node docker"
+    "start": "parcel ./index.html -p 9000",
+    "docker": "yarn build && node docker",
+    "cypress": "cypress open",
+    "test": "start-server-and-test start http://localhost:9000 cy:run",
+    "cy:run": "cypress run"
   },
   "dependencies": {
     "prosemirror-jdita": "^0.1.1"
   },
   "devDependencies": {
+    "cypress": "^13.8.1",
     "parcel": "^1.12.4",
-    "sass": "^1.26.10"
+    "sass": "^1.26.10",
+    "start-server-and-test": "^2.0.3"
   }
 }
