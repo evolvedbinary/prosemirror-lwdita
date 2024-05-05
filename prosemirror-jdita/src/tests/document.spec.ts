@@ -102,13 +102,14 @@ describe('Function unTravel()', () => {
 
   describe('when passed a Prosemirror document', () => {
 
-    it('returns a transformed JDITA object', () => {
+    // this one has been replaced
+    it.skip('returns a transformed JDITA object', () => {
       expected = JSON.parse(JDITA_DOC);
       result = unTravel(doc);
       assert.deepEqual(result, expected);
     });
 
-    it.skip('handles simple jdita document', async () => {
+    it('handles simple jdita document', async () => {
 
       // original jdita to compare against
       const originalJdita = await xditaToJson(shortXdita);
@@ -125,7 +126,7 @@ describe('Function unTravel()', () => {
       expect(result).to.deep.equal(originalJdita);
     });
 
-    it.skip('handles complex jdita document', async () => {
+    it('handles complex jdita document', async () => {
 
       // original jdita to compare against
       const originalJdita = await xditaToJson(complexXdita);
