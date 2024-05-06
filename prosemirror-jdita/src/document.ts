@@ -268,6 +268,65 @@ export function unTravel(prosemirrorDocument: Record<string, any>): JDita{
   // attrs will become attributes
   const attributes = prosemirrorDocument.attrs || {};
 
+    // get the node name
+    const nodeName = getJditaNodeName(prosemirrorDocument.type);
+    // TODO move special nodes to a separate function
+    if(nodeName === 'video') {
+      // we must populate the video node with the necessary attributes and children
+      const allAttributes = { props: undefined, dir: undefined, "xml:lang": undefined, translate: undefined, id: undefined, conref: undefined, outputclass: attributes.outputclass,  class: undefined, width: attributes.width, height: attributes.height }
+      
+      const allChildren: JDita[] = [];
+      //children[0] resembles the video desc this value does not change
+      allChildren.push(children[0]) // video desc node
+      
+      if(attributes.poster) {
+        const poster: JDita = {
+          nodeName: 'video-poster',
+          attributes: {
+            dir: undefined,
+            "xml:lang": undefined,
+            translate: undefined,
+            name: undefined,
+            value: attributes.poster,
+            outputclass: undefined,
+            class: undefined,
+          },
+          children: undefined
+        };
+        allChildren.push(poster);
+      }
+      //TODO
+      //'media-autoplay'
+      if(attributes.controls) {
+        const controls: JDita = {
+          nodeName: 'media-controls',
+          attributes: {
+            dir: undefined,
+            "xml:lang": undefined,
+            translate: undefined,
+            name: "controls",
+            value: "true",
+            outputclass: undefined,
+            class: undefined,
+          },
+          children: undefined
+        };
+        allChildren.push(controls);
+      }
+      //TODO
+      // 'media-loop'
+      // 'media-muted'
+
+      allChildren.push(children[1]) // media-source node
+
+      // return the created video node
+      return {
+        nodeName,
+        'attributes': allAttributes,
+        'children': allChildren
+      }
+    }
+
   // handle the attributes
   for (const key in attributes) {
     if (!attributes[key]) {
@@ -321,8 +380,6 @@ export function unTravel(prosemirrorDocument: Record<string, any>): JDita{
         "value": "true"
     }
  */
-  // get the node name
-  const nodeName = getJditaNodeName(prosemirrorDocument.type);
 
   if(nodeName === 'text') {
     return {
