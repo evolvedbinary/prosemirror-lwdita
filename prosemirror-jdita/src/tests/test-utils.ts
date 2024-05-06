@@ -164,7 +164,6 @@ export const videoXdita = `<?xml version="1.0" encoding="UTF-8"?>
 <topic id="program-bulbs-to-groups">
   <title>Test File: Media Elements in XDita</title>
   <body>
-
     <section id="demo">
       <title>
         Video Element
@@ -186,17 +185,16 @@ export const audioXdita = `<?xml version="1.0" encoding="UTF-8"?>
 <topic id="program-bulbs-to-groups">
   <title>Test File: Media Elements in XDita</title>
   <body>
-
-  <section>
-  <title>Audio Element</title>
-  <fig>
-    <audio outputclass="audioElement">
-      <desc>An Audio Track</desc>
-      <media-controls name="controls" value="true"/>
-      <media-source value="https://commons.wikimedia.org/wiki/File:1943_Nov_14_NYPhil_Bernstein.ogg" />
-    </audio>
-  </fig>
-</section>
+    <section>
+      <title>Audio Element</title>
+      <fig>
+        <audio outputclass="audioElement">
+          <desc>An Audio Track</desc>
+          <media-controls name="controls" value="true"/>
+          <media-source value="https://commons.wikimedia.org/wiki/File:1943_Nov_14_NYPhil_Bernstein.ogg" />
+        </audio>
+      </fig>
+    </section>
   </body>
 </topic>`;
 
@@ -205,14 +203,13 @@ export const imageXdita = `<?xml version="1.0" encoding="UTF-8"?>
 <topic id="program-bulbs-to-groups">
   <title>Test File: Media Elements in XDita</title>
   <body>
-
-  <section>
-  <title>An Image</title>
-  <fig>
-    <image outputclass="imageElement" height="300px" width="300px" href="https://placekitten.com/300/300">
-      <alt>A kitten</alt>
-    </image>
-  </fig>
-</section>
-</body>
+    <section>
+      <title>An Image</title>
+      <fig>
+        <image outputclass="imageElement" height="300px" width="300px" href="https://placekitten.com/300/300">
+          <alt>A kitten</alt>
+        </image>
+      </fig>
+    </section>
+  </body>
 </topic>`;
