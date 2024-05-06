@@ -323,7 +323,57 @@ export function unTravel(prosemirrorDocument: Record<string, any>): JDita{
  */
   // get the node name
   const nodeName = getJditaNodeName(prosemirrorDocument.type);
+  if(nodeName === 'text') {
+    return {
+      nodeName,
+      'content': prosemirrorDocument.text
+    }
+  }
 
+  const nodeObject: JDita = {
+    nodeName,
+    attributes,
+    children
+  }
+
+  return nodeObject;
+}
+
+export function reverseTravel(prosemirrorDocument: Record<string, any>): JDita{
+  const result = (MEDIA_NODES[prosemirrorDocument.nodeName] || revertToJdita)(prosemirrorDocument.nodeName);
+  return result;
+}
+
+export const MEDIA_NODES: Record<string, (value: JDita) => any> = {
+  video: (value) => {
+    console.log('MEDIA_NODES video', value);
+    return revertToJdita(value);
+  },
+  audio: (value) => {
+    console.log('MEDIA_NODES audio', value);
+    return revertToJdita(value);
+  },
+  image: (value) => {
+    console.log('MEDIA_NODES image', value);
+    return revertToJdita(value);
+  },
+}
+
+export function revertToJdita(prosemirrorDocument: Record<string, any>): JDita {
+  // Prosemirror content will become JDITA children
+  const children = prosemirrorDocument.content?.map(reverseTravel);
+
+  // attrs will become attributes
+  const attributes = prosemirrorDocument.attrs || {};
+  // handle the attributes
+  for (const key in attributes) {
+    if (!attributes[key]) {
+      delete attributes[key];
+    }
+  }
+
+  // get the node name
+  const nodeName = getJditaNodeName(prosemirrorDocument.type);
   if(nodeName === 'text') {
     return {
       nodeName,
