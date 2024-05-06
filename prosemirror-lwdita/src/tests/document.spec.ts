@@ -41,7 +41,7 @@ use(ChaiPromised);
  */
 
 // Pass an object with undefined attributes
-// and test against expected object
+// and test against the expected object
 describe('Function deleteUndefined()', () => {
   it('removes undefined attributes from a passed object', () => {
     const attrs = {
@@ -63,7 +63,7 @@ describe('Function deleteUndefined()', () => {
 });
 
 // Pass a JDita document node
-// and test against expected Prosemirror document output
+// and test against the expected Prosemirror document output
 describe('Function defaultTravel()', () => {
   describe('when passed a JDITA node "title" and its parent node "topic"', () => {
     it('returns the transformed ProseMirror objects', () => {
@@ -79,7 +79,7 @@ describe('Function defaultTravel()', () => {
 });
 
 // Pass a JDita node
-// and test against expected Prosemirror output
+// and test against the expected Prosemirror output
 describe('Function travel()', () => {
   describe('when passed a JDITA "text" node and its parent node "title"', () => {
     it('returns a transformed ProseMirror object', () => {
@@ -103,7 +103,7 @@ describe('Function travel()', () => {
 });
 
 // Pass a JDita object
-// and test against expected JDita transformation output
+// and test against the expected JDita transformation output
 describe('Function document()', () => {
   it('returns a transformed Prosemirror object', () => {
     const transformedJdita = document(JSON.parse(JDITA_OBJECT));
@@ -112,7 +112,7 @@ describe('Function document()', () => {
 });
 
 // Pass a Prosemirror document
-// and test against expected JDITA object
+// and test against the expected JDita object
 describe('Function unTravel()', () => {
   let expected: any, result: any;
   const doc = JSON.parse(PROSEMIRROR_DOC);
@@ -120,98 +120,95 @@ describe('Function unTravel()', () => {
   describe('when passed a Prosemirror document', () => {
 
     // this one has been replaced
-    it.skip('returns a transformed JDITA object', () => {
+    it.skip('returns a transformed JDita object', () => {
       expected = JSON.parse(JDITA_DOC);
       result = unTravel(doc);
       assert.deepEqual(result, expected);
     });
 
-    it('handles simple jdita document', async () => {
+    it('handles a simple JDita document', async () => {
 
-      // original jdita to compare against
+      // original JDita to compare against
       const originalJdita = await xditaToJson(shortXdita);
 
-      // process the jdita document and do the round trip
+      // process the JDita document and do the round trip
       //clean the attributes from the top node to compare
       originalJdita.attributes = {};
-      // transform the jdita document
+      // transform the JDita document
       const transformedJdita = document(originalJdita);
-      // untransform the transformed jdita document
+      // untransform the transformed JDita document
       const result = unTravel(transformedJdita);
 
-      //compare the original jdita with the result
+      //compare the original JDita with the result
       expect(result).to.deep.equal(originalJdita);
     });
 
-    it('handles complex jdita document', async () => {
+    it('handles a complex JDita document', async () => {
 
-      // original jdita to compare against
+      // original JDita to compare against
       const originalJdita = await xditaToJson(complexXdita);
 
-      // process the jdita document and do the round trip
+      // process the JDita document and do the round trip
       //clean the attributes from the top node to compare
       originalJdita.attributes = {};
-      // transform the jdita document
+      // transform the JDita document
       const transformedJdita = document(originalJdita);
-      // untransform the transformed jdita document
+      // untransform the transformed JDita document
       const result = unTravel(transformedJdita);
 
-      //compare the original jdita with the result
+      //compare the original JDita with the result
       expect(result).to.deep.equal(originalJdita);
 
     });
 
-    // this test shows the missing elements
-    it.skip('handles jdita document with video', async () => {
+    it.skip('handles a JDita document containing a video element', async () => {
 
-      // original jdita to compare against
+      // original JDita to compare against
       const originalJdita = await xditaToJson(videoXdita);
 
-      // process the jdita document and do the round trip
-      //clean the attributes from the top node to compare
+      // process the JDita document and do the round trip
+      // clean the attributes from the top node to compare
       originalJdita.attributes = {};
-      // transform the jdita document
+      // transform the JDita document
       const transformedJdita = document(originalJdita);
-      // untransform the transformed jdita document
+      // untransform the transformed JDita document
       const result = unTravel(transformedJdita);
 
-      //compare the original jdita with the result
+      //compare the original JDita with the result
       expect(result).to.deep.equal(originalJdita);
     });
 
-    // this test shows the missing elements
-    it.skip('handles jdita document with audio', async () => {
+    it.skip('handles a JDita document containing an audio element', async () => {
 
-      // original jdita to compare against
+      // original JDita to compare against
       const originalJdita = await xditaToJson(audioXdita);
 
-      // process the jdita document and do the round trip
+      // process the JDita document and do the round trip
       //clean the attributes from the top node to compare
       originalJdita.attributes = {};
-      // transform the jdita document
+      // transform the JDita document
       const transformedJdita = document(originalJdita);
-      // untransform the transformed jdita document
+      // untransform the transformed JDita document
       const result = unTravel(transformedJdita);
 
-      //compare the original jdita with the result
+      //compare the original JDita with the result
       expect(result).to.deep.equal(originalJdita);
     });
 
-    // this test shows the missing elements
-    it.skip('handles jdita document with image', async () => {
+    it.skip('handles a JDita document containing an image', async () => {
 
-      // original jdita to compare against
+      // original JDita to compare against
       const originalJdita = await xditaToJson(imageXdita);
 
-      // process the jdita document and do the round trip
+      // process the JDita document and do the round trip
       //clean the attributes from the top node to compare
       originalJdita.attributes = {};
-      // transform the jdita document
+      // transform the JDita document
       const transformedJdita = document(originalJdita);
-      // untransform the transformed jdita document
+      // untransform the transformed JDita document
       const result = unTravel(transformedJdita);
 
-      //compare the original jdita with the result
+      //compare the original JDita with the result
       expect(result).to.deep.equal(originalJdita);
     });
 
