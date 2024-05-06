@@ -144,7 +144,7 @@ describe('Function unTravel()', () => {
 
     });
 
-    it.skip('handles a JDita document containing a video element', async () => {
+    it('handles a JDita document containing a video element', async () => {
 
       // original JDita to compare against
       const originalJdita = await xditaToJson(videoXdita);
