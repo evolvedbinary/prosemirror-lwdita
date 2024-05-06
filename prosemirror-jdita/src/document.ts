@@ -274,7 +274,53 @@ export function unTravel(prosemirrorDocument: Record<string, any>): JDita{
       delete attributes[key];
     }
   }
+/**
+ * TODO: If attribute === 'alt' in image node, then create the alt attribute as a new child node to the attribute node
+ * EG like so:
+ * "children": [
+    {
+      "nodeName": "alt",
+      "attributes": {},
+      "children": [
+        {
+          "nodeName": "text",
+          "content": "The Alt Text"
+        }
+      ]
+    }
+  ]
+ */
 
+/**
+ * TODO: If attribute === 'controls' in audio node, then do not pass it through as an attribute of node 'audio'
+ * and create a new node 'media-controls' instead
+ *
+ * EG:
+ * {
+      "nodeName": "media-controls",
+      "attributes": {
+        "name": "controls",
+        "value": "true"
+      }
+    }
+ */
+
+/**
+ * TODO: If attributes 'controls' and 'source' in 'video' node, then do not pass them as attributes of node 'video'
+ * and create child nodes 'media-controls' and 'video-poster' instead
+ * EG:
+ * {
+      "nodeName": "video-poster",
+      "attributes": {
+        "value": "source.jpg"
+    }
+    },
+      "nodeName": "media-controls",
+      "attributes": {
+        "name": "controls",
+        "value": "true"
+    }
+ */
   // get the node name
   const nodeName = getJditaNodeName(prosemirrorDocument.type);
 
