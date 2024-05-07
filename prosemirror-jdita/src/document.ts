@@ -31,19 +31,19 @@ export const NODES: Record<string, (value: JDita, parent: JDita) => any> = {
     if (value.children) {
       value.children.forEach(child => {
         if (child.nodeName === 'media-autoplay') {
-          attrs.autoplay = 'autoplay';
+          attrs.autoplay = child.attributes?.value;
           return;
         }
         if (child.nodeName === 'media-controls') {
-          attrs.controls = 'controls';
+          attrs.controls = child.attributes?.value;
           return;
         }
         if (child.nodeName === 'media-loop') {
-          attrs.loop = 'loop';
+          attrs.loop = child.attributes?.value;
           return;
         }
         if (child.nodeName === 'media-muted') {
-          attrs.muted = 'muted';
+          attrs.muted = child.attributes?.value;
           return;
         }
         if (['desc', 'media-track', 'media-source'].indexOf(child.nodeName) > -1) {
@@ -65,19 +65,19 @@ export const NODES: Record<string, (value: JDita, parent: JDita) => any> = {
     if (value.children) {
       value.children.forEach(child => {
         if (child.nodeName === 'media-autoplay') {
-          attrs.autoplay = 'autoplay';
+          attrs.autoplay = child.attributes?.value;
           return;
         }
         if (child.nodeName === 'media-controls') {
-          attrs.controls = 'controls';
+          attrs.controls = child.attributes?.value;
           return;
         }
         if (child.nodeName === 'media-loop') {
-          attrs.loop = 'loop';
+          attrs.loop = child.attributes?.value;
           return;
         }
         if (child.nodeName === 'media-muted') {
-          attrs.muted = 'muted';
+          attrs.muted = child.attributes?.value;
           return;
         }
         if (child.nodeName === 'video-poster') {
