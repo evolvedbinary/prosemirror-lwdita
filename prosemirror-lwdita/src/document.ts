@@ -371,7 +371,7 @@ export function unTravel(prosemirrorDocument: Record<string, any>): JDita{
         allChildren.push(muted);
       }
 
-      allChildren.push(children[1]) // media-source node
+      allChildren.push(children[1])
 
       // return the created video node
       return {
