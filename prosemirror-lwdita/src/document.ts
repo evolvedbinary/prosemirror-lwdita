@@ -328,7 +328,7 @@ export function unTravel(prosemirrorDocument: Record<string, any>): JDita{
             "xml:lang": undefined,
             translate: undefined,
             name: "controls",
-            value: "true",
+            value: attributes.controls,
             outputclass: undefined,
             class: undefined,
           },
@@ -337,17 +337,34 @@ export function unTravel(prosemirrorDocument: Record<string, any>): JDita{
         allChildren.push(controls);
       }
 
+      if(attributes.autoplay) {
+        const autoplay: JDita = {
+          nodeName: 'media-autoplay',
+          attributes: {
+            dir: undefined,
+            "xml:lang": undefined,
+            translate: undefined,
+            name: "autoplay",
+            value: attributes.autoplay,
+            outputclass: undefined,
+            class: undefined,
+          },
+          children: undefined
+        };
+        allChildren.push(autoplay);
+      }
+
       if(attributes.loop) {
         const loop: JDita = {
           nodeName: 'media-loop',
           attributes: {
-            class: undefined,
             dir: undefined,
-            name: undefined,
-            outputclass: undefined,
+            "xml:lang": undefined,
             translate: undefined,
+            name: "loop",
             value: attributes.loop,
-            'xml:lang': undefined,
+            outputclass: undefined,
+            class: undefined,
           },
           children: undefined
         };
@@ -358,13 +375,13 @@ export function unTravel(prosemirrorDocument: Record<string, any>): JDita{
         const muted: JDita = {
           nodeName: 'media-muted',
           attributes: {
-            class: undefined,
             dir: undefined,
-            name: undefined,
-            outputclass: undefined,
+            "xml:lang": undefined,
             translate: undefined,
+            name: "muted",
             value: attributes.muted,
-            'xml:lang': undefined,
+            outputclass: undefined,
+            class: undefined,
           },
           children: undefined
         };
