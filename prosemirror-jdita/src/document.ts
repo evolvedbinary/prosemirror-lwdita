@@ -268,215 +268,209 @@ export function unTravel(prosemirrorDocument: Record<string, any>): JDita{
   // attrs will become attributes
   const attributes = prosemirrorDocument.attrs || {};
 
-    // get the node name
-    const nodeName = getJditaNodeName(prosemirrorDocument.type);
-    // TODO move special nodes to a separate function
-    if(nodeName === 'video') {
-      // we must populate the video node with the necessary attributes and children
-      const allAttributes = { props: undefined, dir: undefined, "xml:lang": undefined, translate: undefined, id: undefined, conref: undefined, outputclass: attributes.outputclass,  class: undefined, width: attributes.width, height: attributes.height }
+  // get the node name
+  const nodeName = getJditaNodeName(prosemirrorDocument.type);
+  // TODO move special nodes to a separate function
+  if(nodeName === 'video') {
+    // we must populate the video node with the necessary attributes and children
+    const allAttributes = { props: undefined, dir: undefined, "xml:lang": undefined, translate: undefined, id: undefined, conref: undefined, outputclass: attributes.outputclass,  class: undefined, width: attributes.width, height: attributes.height }
 
-      const allChildren: JDita[] = [];
-      //children[0] resembles the video desc this value does not change
-      allChildren.push(children[0]) // video desc node
+    const allChildren: JDita[] = [];
+    //children[0] resembles the video desc this value does not change
+    allChildren.push(children[0]) // video desc node
 
-      if(attributes.poster) {
-        const poster: JDita = {
-          nodeName: 'video-poster',
-          attributes: {
-            dir: undefined,
-            "xml:lang": undefined,
-            translate: undefined,
-            name: undefined,
-            value: attributes.poster,
-            outputclass: undefined,
-            class: undefined,
-          },
-          children: undefined
-        };
-        allChildren.push(poster);
-      }
-
-      if(attributes.controls) {
-        const controls: JDita = {
-          nodeName: 'media-controls',
-          attributes: {
-            dir: undefined,
-            "xml:lang": undefined,
-            translate: undefined,
-            name: "controls",
-            value: attributes.controls,
-            outputclass: undefined,
-            class: undefined,
-          },
-          children: undefined
-        };
-        allChildren.push(controls);
-      }
-
-      if(attributes.autoplay) {
-        const autoplay: JDita = {
-          nodeName: 'media-autoplay',
-          attributes: {
-            dir: undefined,
-            "xml:lang": undefined,
-            translate: undefined,
-            name: "autoplay",
-            value: attributes.autoplay,
-            outputclass: undefined,
-            class: undefined,
-          },
-          children: undefined
-        };
-        allChildren.push(autoplay);
-      }
-
-      if(attributes.loop) {
-        const loop: JDita = {
-          nodeName: 'media-loop',
-          attributes: {
-            dir: undefined,
-            "xml:lang": undefined,
-            translate: undefined,
-            name: "loop",
-            value: attributes.loop,
-            outputclass: undefined,
-            class: undefined,
-          },
-          children: undefined
-        };
-        allChildren.push(loop);
-      }
-
-      if(attributes.muted) {
-        const muted: JDita = {
-          nodeName: 'media-muted',
-          attributes: {
-            dir: undefined,
-            "xml:lang": undefined,
-            translate: undefined,
-            name: "muted",
-            value: attributes.muted,
-            outputclass: undefined,
-            class: undefined,
-          },
-          children: undefined
-        };
-        allChildren.push(muted);
-      }
-
-      allChildren.push(children[1])
-
-      // return the created video node
-      return {
-        nodeName,
-        'attributes': allAttributes,
-        'children': allChildren
-      }
-    }
-    if(nodeName === 'audio') {
-      const allAudioAttributes = { class: undefined, conref: undefined, "xml:lang": undefined, dir: undefined, id: undefined, outputclass: attributes.outputclass,  props: undefined, translate: undefined }
-
-      const allAudioChildren: JDita[] = [];
-      allAudioChildren.push(children[0])
-
-      if(attributes.controls) {
-        const controls: JDita = {
-          nodeName: 'media-controls',
-          attributes: {
-            class: undefined,
-            dir: undefined,
-            name: undefined,
-            translate: undefined,
-            outputclass: undefined,
-            value: attributes.controls,
-            "xml:lang": undefined,
-          },
-          children: undefined
-        };
-        allAudioChildren.push(controls);
-      }
-
-      if(attributes.autoplay) {
-        const autoplay: JDita = {
-          nodeName: 'media-autoplay',
-          attributes: {
-            class: undefined,
-            dir: undefined,
-            name: undefined,
-            outputclass: undefined,
-            translate: undefined,
-            value: attributes.autoplay,
-            'xml:lang': undefined,
-          },
-          children: undefined
-        };
-        allAudioChildren.push(autoplay);
-      }
-
-      if(attributes.loop) {
-        const loop: JDita = {
-          nodeName: 'media-loop',
-          attributes: {
-            class: undefined,
-            dir: undefined,
-            name: undefined,
-            outputclass: undefined,
-            translate: undefined,
-            value: attributes.loop,
-            'xml:lang': undefined,
-          },
-          children: undefined
-        };
-        allAudioChildren.push(loop);
-      }
-
-      if(attributes.muted) {
-        const muted: JDita = {
-          nodeName: 'media-muted',
-          attributes: {
-            class: undefined,
-            dir: undefined,
-            name: undefined,
-            outputclass: undefined,
-            translate: undefined,
-            value: attributes.muted,
-            'xml:lang': undefined,
-          },
-          children: undefined
-        };
-        allAudioChildren.push(muted);
-      }
-
-      if(attributes.source) {
-        const source: JDita = {
-          nodeName: 'media-source',
-          attributes: {
-            class: undefined,
-            dir: undefined,
-            name: undefined,
-            outputclass: undefined,
-            translate: undefined,
-            value: attributes.source,
-            'xml:lang': undefined,
-          },
-          children: undefined
-        };
-        allAudioChildren.push(source);
-      }
-
-      allAudioChildren.push(children[1])
-
-      return {
-        nodeName,
-        'attributes': allAudioAttributes,
-        'children': allAudioChildren
-      }
+    if(attributes.poster) {
+      const poster: JDita = {
+        nodeName: 'video-poster',
+        attributes: {
+          dir: undefined,
+          "xml:lang": undefined,
+          translate: undefined,
+          name: undefined,
+          value: attributes.poster,
+          outputclass: undefined,
+          class: undefined,
+        },
+        children: undefined
+      };
+      allChildren.push(poster);
     }
 
-  // handle the attributes
-  for (const key in attributes) {
-    if (!attributes[key]) {
-      delete attributes[key];
+    if(attributes.controls) {
+      const controls: JDita = {
+        nodeName: 'media-controls',
+        attributes: {
+          dir: undefined,
+          "xml:lang": undefined,
+          translate: undefined,
+          name: "controls",
+          value: attributes.controls,
+          outputclass: undefined,
+          class: undefined,
+        },
+        children: undefined
+      };
+      allChildren.push(controls);
+    }
+
+    if(attributes.autoplay) {
+      const autoplay: JDita = {
+        nodeName: 'media-autoplay',
+        attributes: {
+          dir: undefined,
+          "xml:lang": undefined,
+          translate: undefined,
+          name: "autoplay",
+          value: attributes.autoplay,
+          outputclass: undefined,
+          class: undefined,
+        },
+        children: undefined
+      };
+      allChildren.push(autoplay);
+    }
+
+    if(attributes.loop) {
+      const loop: JDita = {
+        nodeName: 'media-loop',
+        attributes: {
+          dir: undefined,
+          "xml:lang": undefined,
+          translate: undefined,
+          name: "loop",
+          value: attributes.loop,
+          outputclass: undefined,
+          class: undefined,
+        },
+        children: undefined
+      };
+      allChildren.push(loop);
+    }
+
+    if(attributes.muted) {
+      const muted: JDita = {
+        nodeName: 'media-muted',
+        attributes: {
+          dir: undefined,
+          "xml:lang": undefined,
+          translate: undefined,
+          name: "muted",
+          value: attributes.muted,
+          outputclass: undefined,
+          class: undefined,
+        },
+        children: undefined
+      };
+      allChildren.push(muted);
+    }
+
+    allChildren.push(children[1])
+
+    // return the created video node
+    return {
+      nodeName,
+      'attributes': allAttributes,
+      'children': allChildren
+    }
+  }
+
+  if(nodeName === 'audio') {
+    const allAudioAttributes = { class: undefined, conref: undefined, "xml:lang": undefined, dir: undefined, id: undefined, outputclass: attributes.outputclass,  props: undefined, translate: undefined }
+
+    const allAudioChildren: JDita[] = [];
+    allAudioChildren.push(children[0])
+
+    if(attributes.controls) {
+      const controls: JDita = {
+        nodeName: 'media-controls',
+        attributes: {
+          class: undefined,
+          dir: undefined,
+          name: undefined,
+          translate: undefined,
+          outputclass: undefined,
+          value: attributes.controls,
+          "xml:lang": undefined,
+        },
+        children: undefined
+      };
+      allAudioChildren.push(controls);
+    }
+
+    if(attributes.autoplay) {
+      const autoplay: JDita = {
+        nodeName: 'media-autoplay',
+        attributes: {
+          class: undefined,
+          dir: undefined,
+          name: undefined,
+          outputclass: undefined,
+          translate: undefined,
+          value: attributes.autoplay,
+          'xml:lang': undefined,
+        },
+        children: undefined
+      };
+      allAudioChildren.push(autoplay);
+    }
+
+    if(attributes.loop) {
+      const loop: JDita = {
+        nodeName: 'media-loop',
+        attributes: {
+          class: undefined,
+          dir: undefined,
+          name: undefined,
+          outputclass: undefined,
+          translate: undefined,
+          value: attributes.loop,
+          'xml:lang': undefined,
+        },
+        children: undefined
+      };
+      allAudioChildren.push(loop);
+    }
+
+    if(attributes.muted) {
+      const muted: JDita = {
+        nodeName: 'media-muted',
+        attributes: {
+          class: undefined,
+          dir: undefined,
+          name: undefined,
+          outputclass: undefined,
+          translate: undefined,
+          value: attributes.muted,
+          'xml:lang': undefined,
+        },
+        children: undefined
+      };
+      allAudioChildren.push(muted);
+    }
+
+    if(attributes.source) {
+      const source: JDita = {
+        nodeName: 'media-source',
+        attributes: {
+          class: undefined,
+          dir: undefined,
+          name: undefined,
+          outputclass: undefined,
+          translate: undefined,
+          value: attributes.source,
+          'xml:lang': undefined,
+        },
+        children: undefined
+      };
+      allAudioChildren.push(source);
+    }
+
+    allAudioChildren.push(children[1])
+
+    return {
+      nodeName,
+      'attributes': allAudioAttributes,
+      'children': allAudioChildren
     }
   }
 
@@ -484,6 +478,13 @@ export function unTravel(prosemirrorDocument: Record<string, any>): JDita{
     return {
       nodeName,
       'content': prosemirrorDocument.text
+    }
+  }
+
+  // handle the attributes
+  for (const key in attributes) {
+    if (!attributes[key]) {
+      delete attributes[key];
     }
   }
 
