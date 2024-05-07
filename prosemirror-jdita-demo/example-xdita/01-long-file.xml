@@ -17,9 +17,9 @@
       <video width="640" height="360">
         <desc>Your browser does not support the video tag.</desc>
         <video-poster value="https://img.gkbcdn.com/p/2018-11-14/xiaomi-yeelight-yldp06yl-smart-light-bulb-white-1574132915782._w500_.jpg" />
-        <media-controls />
-        <media-autoplay />
-        <media-muted />
+        <media-controls value="true"/>
+        <media-autoplay value="false"/>
+        <media-muted value="false"/>
         <media-source value="movie.mp4" />
         <media-source value="movie.ogg" />
       </video>
