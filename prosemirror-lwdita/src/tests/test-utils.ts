@@ -189,7 +189,7 @@ export const videoXdita = `<?xml version="1.0" encoding="UTF-8"?>
         <video outputclass="videoElement" width="640" height="360">
           <desc outputclass="videoElementDescriptor">Xiaomi Yeelight YLDP06YL Smart Light Bulb White</desc>
           <video-poster value="https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/1954_Kool-Aid_Commercial._Debut_of_Pitcher_Man.webm/120px--1954_Kool-Aid_Commercial._Debut_of_Pitcher_Man.webm.jpg" />
-          <media-controlss name="controls" value="true"/>
+          <media-controls name="controls" value="true"/>
           <media-autoplay name="autoplay" value="false"/>
           <media-loop name="loop" value="false"/>
           <media-muted name="muted" value="false"/>
