@@ -350,6 +350,76 @@ export function unTravel(prosemirrorDocument: Record<string, any>): JDita{
         'children': allChildren
       }
     }
+    if(nodeName === 'audio') {
+      const allAudioAttributes = { class: undefined, conref: undefined, "xml:lang": undefined, dir: undefined, id: undefined, outputclass: attributes.outputclass,  props: undefined, translate: undefined }
+
+      const allAudioChildren: JDita[] = [];
+      allAudioChildren.push(children[0])
+
+      if(attributes.controls) {
+        const controls: JDita = {
+          nodeName: 'media-controls',
+          attributes: {
+            class: undefined,
+            dir: undefined,
+            name: attributes.controls,
+            translate: undefined,
+            outputclass: undefined,
+            value: 'true',
+            "xml:lang": undefined,
+          },
+          children: undefined
+        };
+        allAudioChildren.push(controls);
+      }
+
+      if(attributes.autoplay) {
+        const autoplay: JDita = {
+          nodeName: 'media-autoplay',
+          attributes: {
+            class: undefined,
+            dir: undefined,
+            name: attributes.autoplay,
+            outputclass: undefined,
+            translate: undefined,
+            value: 'false',
+            'xml:lang': undefined,
+          },
+          children: undefined
+        };
+        allAudioChildren.push(autoplay);
+      }
+
+      if(attributes.controls) {
+        const controls: JDita = {
+          nodeName: 'media-controls',
+          attributes: {
+            class: undefined,
+            dir: undefined,
+            name: attributes.controls,
+            translate: undefined,
+            outputclass: undefined,
+            value: 'true',
+            "xml:lang": undefined,
+          },
+          children: undefined
+        };
+        allAudioChildren.push(controls);
+      }
+
+      // TODO: Implement
+      // 'media-loop'
+      // 'media-muted'
+      // 'media-source'
+
+      allAudioChildren.push(children[1])
+
+      return {
+        nodeName,
+        'attributes': allAudioAttributes,
+        'children': allAudioChildren
+      }
+    }
 
   // handle the attributes
   for (const key in attributes) {
@@ -378,4 +448,4 @@ export const _test_private_document = {
   deleteUndefined,
   defaultTravel,
   travel,
-}
+};
