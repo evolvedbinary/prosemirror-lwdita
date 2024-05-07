@@ -274,11 +274,11 @@ export function unTravel(prosemirrorDocument: Record<string, any>): JDita{
     if(nodeName === 'video') {
       // we must populate the video node with the necessary attributes and children
       const allAttributes = { props: undefined, dir: undefined, "xml:lang": undefined, translate: undefined, id: undefined, conref: undefined, outputclass: attributes.outputclass,  class: undefined, width: attributes.width, height: attributes.height }
-      
+
       const allChildren: JDita[] = [];
       //children[0] resembles the video desc this value does not change
       allChildren.push(children[0]) // video desc node
-      
+
       if(attributes.poster) {
         const poster: JDita = {
           nodeName: 'video-poster',
@@ -295,8 +295,7 @@ export function unTravel(prosemirrorDocument: Record<string, any>): JDita{
         };
         allChildren.push(poster);
       }
-      //TODO
-      //'media-autoplay'
+
       if(attributes.controls) {
         const controls: JDita = {
           nodeName: 'media-controls',
@@ -313,9 +312,40 @@ export function unTravel(prosemirrorDocument: Record<string, any>): JDita{
         };
         allChildren.push(controls);
       }
-      //TODO
-      // 'media-loop'
-      // 'media-muted'
+
+      if(attributes.loop) {
+        const loop: JDita = {
+          nodeName: 'media-loop',
+          attributes: {
+            class: undefined,
+            dir: undefined,
+            name: undefined,
+            outputclass: undefined,
+            translate: undefined,
+            value: attributes.loop,
+            'xml:lang': undefined,
+          },
+          children: undefined
+        };
+        allChildren.push(loop);
+      }
+
+      if(attributes.muted) {
+        const muted: JDita = {
+          nodeName: 'media-muted',
+          attributes: {
+            class: undefined,
+            dir: undefined,
+            name: undefined,
+            outputclass: undefined,
+            translate: undefined,
+            value: attributes.muted,
+            'xml:lang': undefined,
+          },
+          children: undefined
+        };
+        allChildren.push(muted);
+      }
 
       allChildren.push(children[1]) // media-source node
 
