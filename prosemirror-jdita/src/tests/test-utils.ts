@@ -172,7 +172,7 @@ export const videoXdita = `<?xml version="1.0" encoding="UTF-8"?>
         <video outputclass="videoElement" width="640" height="360">
           <desc outputclass="videoElementDescriptor">Xiaomi Yeelight YLDP06YL Smart Light Bulb White</desc>
           <video-poster value="https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/1954_Kool-Aid_Commercial._Debut_of_Pitcher_Man.webm/120px--1954_Kool-Aid_Commercial._Debut_of_Pitcher_Man.webm.jpg" />
-          <media-controls translate="yes" name="controls" value="true"/>
+          <media-controls outputclass="videoElementControls" name="controls" value="true"/>
           <media-autoplay name="autoplay" value="false"/>
           <media-loop name="loop" value="false"/>
           <media-muted name="muted" value="false"/>
@@ -193,7 +193,7 @@ export const audioXdita = `<?xml version="1.0" encoding="UTF-8"?>
       <fig>
         <audio outputclass="audioElement">
           <desc outputclass="audioElementDescriptor">An Audio Track</desc>
-          <media-controls translate="yes" name="controls" value="true"/>
+          <media-controls outputclass="audioElementControls" name="controls" value="true"/>
           <media-autoplay name="autoplay" value="false"/>
           <media-loop name="loop" value="false"/>
           <media-muted name="muted" value="false"/>
@@ -213,7 +213,7 @@ export const imageXdita = `<?xml version="1.0" encoding="UTF-8"?>
       <title>An Image</title>
       <fig>
         <image outputclass="imageElement" height="300px" width="300px" href="https://placekitten.com/300/300">
-          <alt outputclass="imageElementAltText">A kitten</alt>
+          <alt translate="yes" outputclass="imageElementAltText">A kitten</alt>
         </image>
       </fig>
     </section>
