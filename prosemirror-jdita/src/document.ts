@@ -279,7 +279,7 @@ export function unTravel(prosemirrorDocument: Record<string, any>): JDita{
     //children[0] resembles the video desc this value does not change
     allChildren.push(children[0]) // video desc node
 
-    if(attributes.poster) {
+    if(attributes.poster !== undefined) {
       const poster: JDita = {
         nodeName: 'video-poster',
         attributes: {
@@ -296,7 +296,7 @@ export function unTravel(prosemirrorDocument: Record<string, any>): JDita{
       allChildren.push(poster);
     }
 
-    if(attributes.controls) {
+    if(attributes.controls !== undefined) {
       const controls: JDita = {
         nodeName: 'media-controls',
         attributes: {
@@ -313,7 +313,7 @@ export function unTravel(prosemirrorDocument: Record<string, any>): JDita{
       allChildren.push(controls);
     }
 
-    if(attributes.autoplay) {
+    if(attributes.autoplay !== undefined) {
       const autoplay: JDita = {
         nodeName: 'media-autoplay',
         attributes: {
@@ -330,7 +330,7 @@ export function unTravel(prosemirrorDocument: Record<string, any>): JDita{
       allChildren.push(autoplay);
     }
 
-    if(attributes.loop) {
+    if(attributes.loop !== undefined) {
       const loop: JDita = {
         nodeName: 'media-loop',
         attributes: {
@@ -347,7 +347,7 @@ export function unTravel(prosemirrorDocument: Record<string, any>): JDita{
       allChildren.push(loop);
     }
 
-    if(attributes.muted) {
+    if(attributes.muted !== undefined) {
       const muted: JDita = {
         nodeName: 'media-muted',
         attributes: {
@@ -380,7 +380,7 @@ export function unTravel(prosemirrorDocument: Record<string, any>): JDita{
     const allAudioChildren: JDita[] = [];
     allAudioChildren.push(children[0])
 
-    if(attributes.controls) {
+    if(attributes.controls !== undefined) {
       const controls: JDita = {
         nodeName: 'media-controls',
         attributes: {
@@ -397,7 +397,7 @@ export function unTravel(prosemirrorDocument: Record<string, any>): JDita{
       allAudioChildren.push(controls);
     }
 
-    if(attributes.autoplay) {
+    if(attributes.autoplay !== undefined) {
       const autoplay: JDita = {
         nodeName: 'media-autoplay',
         attributes: {
@@ -414,7 +414,7 @@ export function unTravel(prosemirrorDocument: Record<string, any>): JDita{
       allAudioChildren.push(autoplay);
     }
 
-    if(attributes.loop) {
+    if(attributes.loop !== undefined) {
       const loop: JDita = {
         nodeName: 'media-loop',
         attributes: {
@@ -431,7 +431,7 @@ export function unTravel(prosemirrorDocument: Record<string, any>): JDita{
       allAudioChildren.push(loop);
     }
 
-    if(attributes.muted) {
+    if(attributes.muted !== undefined) {
       const muted: JDita = {
         nodeName: 'media-muted',
         attributes: {
@@ -448,7 +448,7 @@ export function unTravel(prosemirrorDocument: Record<string, any>): JDita{
       allAudioChildren.push(muted);
     }
 
-    if(attributes.source) {
+    if(attributes.source !== undefined) {
       const source: JDita = {
         nodeName: 'media-source',
         attributes: {
