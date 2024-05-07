@@ -178,7 +178,7 @@ describe('Function unTravel()', () => {
       expect(result).to.deep.equal(originalJdita);
     });
 
-    it.skip('handles a JDita document containing an audio element', async () => {
+    it('handles a JDita document containing an audio element', async () => {
 
       // original JDita to compare against
       const originalJdita = await xditaToJson(audioXdita);
