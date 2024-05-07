@@ -50,7 +50,7 @@ export const XML = `<?xml version="1.0" encoding="UTF-8"?>
   <body>
     <video width="320" height="240">
       <video-poster value="bulb.jpg" />
-      <media-controls />
+      <media-controls value="true"/>
       <media-source value="movie.mp4" />
       <media-source value="movie.ogg" />
       <desc>Your browser does not support the video tag.</desc>
@@ -189,10 +189,10 @@ export const videoXdita = `<?xml version="1.0" encoding="UTF-8"?>
         <video outputclass="videoElement" width="640" height="360">
           <desc outputclass="videoElementDescriptor">Xiaomi Yeelight YLDP06YL Smart Light Bulb White</desc>
           <video-poster value="https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/1954_Kool-Aid_Commercial._Debut_of_Pitcher_Man.webm/120px--1954_Kool-Aid_Commercial._Debut_of_Pitcher_Man.webm.jpg" />
-          <media-controls name="controls" value="true"/>
-          <media-autoplay name="autoplay" value="false"/>
-          <media-loop name="loop" value="false"/>
-          <media-muted name="muted" value="false"/>
+          <media-controls value="true"/>
+          <media-autoplay value="false"/>
+          <media-loop value="false"/>
+          <media-muted value="false"/>
           <media-source value="https://commons.wikimedia.org/wiki/File:1954_Kool-Aid_Commercial._Debut_of_Pitcher_Man.webm" />
         </video>
         </fig>
@@ -210,11 +210,11 @@ export const audioXdita = `<?xml version="1.0" encoding="UTF-8"?>
       <fig>
         <audio outputclass="audioElement">
           <desc outputclass="audioElementDescriptor">An Audio Track</desc>
-          <media-controls outputclass="audioElementControls" name="controls" value="true"/>
-          <media-autoplay name="autoplay" value="false"/>
-          <media-loop name="loop" value="false"/>
-          <media-muted name="muted" value="false"/>
-          <media-source name="source" value="https://commons.wikimedia.org/wiki/File:1943_Nov_14_NYPhil_Bernstein.ogg" />
+          <media-controls value="true"/>
+          <media-autoplay value="false"/>
+          <media-loop value="false"/>
+          <media-muted value="false"/>
+          <media-source value="https://commons.wikimedia.org/wiki/File:1943_Nov_14_NYPhil_Bernstein.ogg" />
         </audio>
       </fig>
     </section>
@@ -230,7 +230,7 @@ export const imageXdita = `<?xml version="1.0" encoding="UTF-8"?>
       <title>An Image</title>
       <fig>
         <image outputclass="imageElement" height="300px" width="300px" href="https://placekitten.com/300/300">
-          <alt translate="yes" outputclass="imageElementAltText">A kitten</alt>
+          <alt>A kitten</alt>
         </image>
       </fig>
     </section>
