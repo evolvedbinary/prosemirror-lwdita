@@ -338,10 +338,10 @@ export function unTravel(prosemirrorDocument: Record<string, any>): JDita{
           attributes: {
             class: undefined,
             dir: undefined,
-            name: attributes.controls,
+            name: undefined,
             translate: undefined,
             outputclass: undefined,
-            value: 'true',
+            value: attributes.controls,
             "xml:lang": undefined,
           },
           children: undefined
@@ -355,10 +355,10 @@ export function unTravel(prosemirrorDocument: Record<string, any>): JDita{
           attributes: {
             class: undefined,
             dir: undefined,
-            name: attributes.autoplay,
+            name: undefined,
             outputclass: undefined,
             translate: undefined,
-            value: 'false',
+            value: attributes.autoplay,
             'xml:lang': undefined,
           },
           children: undefined
@@ -366,27 +366,56 @@ export function unTravel(prosemirrorDocument: Record<string, any>): JDita{
         allAudioChildren.push(autoplay);
       }
 
-      if(attributes.controls) {
-        const controls: JDita = {
-          nodeName: 'media-controls',
+      if(attributes.loop) {
+        const loop: JDita = {
+          nodeName: 'media-loop',
           attributes: {
             class: undefined,
             dir: undefined,
-            name: attributes.controls,
-            translate: undefined,
+            name: undefined,
             outputclass: undefined,
-            value: 'true',
-            "xml:lang": undefined,
+            translate: undefined,
+            value: attributes.loop,
+            'xml:lang': undefined,
           },
           children: undefined
         };
-        allAudioChildren.push(controls);
+        allAudioChildren.push(loop);
       }
 
-      // TODO: Implement
-      // 'media-loop'
-      // 'media-muted'
-      // 'media-source'
+      if(attributes.muted) {
+        const muted: JDita = {
+          nodeName: 'media-muted',
+          attributes: {
+            class: undefined,
+            dir: undefined,
+            name: undefined,
+            outputclass: undefined,
+            translate: undefined,
+            value: attributes.muted,
+            'xml:lang': undefined,
+          },
+          children: undefined
+        };
+        allAudioChildren.push(muted);
+      }
+
+      if(attributes.source) {
+        const source: JDita = {
+          nodeName: 'media-source',
+          attributes: {
+            class: undefined,
+            dir: undefined,
+            name: undefined,
+            outputclass: undefined,
+            translate: undefined,
+            value: attributes.source,
+            'xml:lang': undefined,
+          },
+          children: undefined
+        };
+        allAudioChildren.push(source);
+      }
 
       allAudioChildren.push(children[1])
 
