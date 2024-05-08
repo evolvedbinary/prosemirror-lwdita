@@ -115,3 +115,6 @@ yarn-error.log
 
 # generated documentation
 generated-docs/
+
+# Cypress test artifacts
+prosemirror-jdita-demo/cypress/downloads/*
