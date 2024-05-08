@@ -474,6 +474,36 @@ export function unTravel(prosemirrorDocument: Record<string, any>): JDita{
     }
   }
 
+  if(nodeName === 'image') {
+    const allImageAttributes = { props: undefined, dir: undefined, "xml:lang": undefined, translate: undefined, keyref: undefined, href: attributes.href, format: undefined, scope: undefined, outputclass: attributes.outputclass, class: undefined, width: attributes.width, height: attributes.height}
+
+    const allImageChildren: JDita[] = [];
+    allImageChildren.push({
+      nodeName: 'alt',
+      attributes: {
+        dir: undefined,
+        "xml:lang": undefined,
+        translate: undefined,
+        props: undefined,
+        keyref: undefined,
+        outputclass: undefined,
+        class: undefined,
+      },
+      children: [
+        {
+          nodeName: 'text',
+          content: attributes.alt
+        }
+      ]
+    })
+
+    return {
+      nodeName,
+      'attributes': allImageAttributes,
+      'children': allImageChildren
+    }
+  }
+
   if(nodeName === 'text') {
     return {
       nodeName,
