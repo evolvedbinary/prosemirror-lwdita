@@ -154,6 +154,7 @@ function transformToJditaDocumentNode(state: { [x: string]: any; tr?: any; selec
   // Change the type value from 'type: doc' to expected 'type: document' for JDITA processing
   prosemirrorJson.doc.type = 'document';
   const documentNode = unTravel(prosemirrorJson.doc);
+  // FIXME - missing feature: Implement processing from JDITA to XDita here.
   return documentNode;
 };
 
