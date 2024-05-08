@@ -35,6 +35,10 @@
     "generate-docs": "yarn workspace prosemirror-jdita generate-docs",
     "lint": "yarn workspace prosemirror-jdita lint"
   },
+  "engines": {
+    "node": ">=20.10.0 <21",
+    "yarn": ">=1.22.19 <2"
+  },
   "workspaces": [
     "prosemirror-jdita",
     "prosemirror-jdita-demo"
