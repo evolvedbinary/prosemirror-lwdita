@@ -475,11 +475,12 @@ export function unTravel(prosemirrorDocument: Record<string, any>): JDita{
   }
 
   if(nodeName === 'image') {
-    const allImageAttributes = { props: undefined, dir: undefined, "xml:lang": undefined, translate: undefined, keyref: undefined, href: attributes.href, format: undefined, scope: undefined, outputclass: attributes.outputclass, class: undefined, width: attributes.width, height: attributes.height}
+    const allImageAttributes = { props: attributes.props, dir: attributes.dir, "xml:lang": attributes['xml:lang'], translate: attributes.translate, keyref: attributes.keyref, href: attributes.href, format: attributes.format, scope: attributes.scope, outputclass: attributes.outputclass, class: attributes.class, width: attributes.width, height: attributes.height}
 
     const allImageChildren: JDita[] = [];
     allImageChildren.push({
       nodeName: 'alt',
+      // all of the attributes will be undefined as the alt node only contains text
       attributes: {
         dir: undefined,
         "xml:lang": undefined,
