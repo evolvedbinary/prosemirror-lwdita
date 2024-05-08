@@ -20,10 +20,6 @@ export const JDITA_NODE               = '{"nodeName":"title","attributes":{},"ch
 export const JDITA_PARENT_NODE        = '{"nodeName":"topic","attributes":{"id":"program"},"children":[{"nodeName":"title","attributes":{},"children":[{"nodeName":"text","content":"Programming Light Bulbs to a Lighting Group"}]},{"nodeName":"body","attributes":{},"children":[{"nodeName":"section","attributes":{},"children":[{"nodeName":"p","attributes":{},"children":[{"nodeName":"text","content":"You must assign a light bulb to at least one lighting group to operate that light bulb."}]}]}]}]}';
 export const JDITA_TRANFORMED_RESULT1 = '{"type":"title","attrs":{}}';
 export const JDITA_TRANFORMED_RESULT2 = '{"type":"title","attrs":{},"content":[{"type":"text","text":"Programming Light Bulbs to a Lighting Group","attrs":{"parent":"title"}}]}';
-export const JDITA_DOC                = '{"nodeName":"document","children":[{"nodeName":"topic","attributes":{"id":"program"},"children":[{"nodeName":"title","children":[{"nodeName":"text","content":"Test File 2"}]},{"nodeName":"body","children":[{"nodeName":"section","children":[{"nodeName":"p","children":[{"nodeName":"text","content":"A test paragraph."}]}]}]}]}]}';
-// The type value of PROSEMIRROR_DOC is already modified from '"type":"doc' to '"type":"document'!
-export const PROSEMIRROR_DOC = '{"type":"document","attrs":{"parent":""},"content":[{"type":"topic","attrs":{"parent":"doc","dir":"","xml:lang":"","translate":"","outputclass":"","class":"","id":"program","xmlns:ditaarch":"","ditaarch:DITAArchVersion":"","domains":""},"content":[{"type":"title","attrs":{"parent":"topic","dir":"","xml:lang":"","translate":"","outputclass":"","class":""},"content":[{"type":"text","text":"Test File 2"}]},{"type":"body","attrs":{"parent":"topic","dir":"","xml:lang":"","translate":"","outputclass":"","class":""},"content":[{"type":"section","attrs":{"parent":"body","props":"","dir":"","xml:lang":"","translate":"","id":"","conref":"","outputclass":"","class":""},"content":[{"type":"p","attrs":{"parent":"section","props":"","dir":"","xml:lang":"","translate":"","id":"","conref":"","outputclass":"","class":""},"content":[{"type":"text","text":"A test paragraph."}]}]}]}]}]}';
-
 export const XML = `<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE topic PUBLIC "-//OASIS//DTD LIGHTWEIGHT DITA Topic//EN" "lw-topic.dtd">
 <topic id="program-bulbs-to-groups">
@@ -169,7 +165,7 @@ export const videoXdita = `<?xml version="1.0" encoding="UTF-8"?>
         Video Element
       </title>
       <fig>
-        <video outputclass="videoElement" width="640" height="360">
+        <video xml:lang="en" outputclass="videoElement" width="640" height="360">
           <desc outputclass="videoElementDescriptor">Xiaomi Yeelight YLDP06YL Smart Light Bulb White</desc>
           <video-poster value="https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/1954_Kool-Aid_Commercial._Debut_of_Pitcher_Man.webm/120px--1954_Kool-Aid_Commercial._Debut_of_Pitcher_Man.webm.jpg" />
           <media-controls value="true"/>
@@ -191,7 +187,7 @@ export const audioXdita = `<?xml version="1.0" encoding="UTF-8"?>
     <section>
       <title>Audio Element</title>
       <fig>
-        <audio outputclass="audioElement">
+        <audio xml:lang="en" outputclass="audioElement">
           <desc outputclass="audioElementDescriptor">An Audio Track</desc>
           <media-controls value="true"/>
           <media-autoplay value="false"/>
@@ -212,7 +208,7 @@ export const imageXdita = `<?xml version="1.0" encoding="UTF-8"?>
     <section>
       <title>An Image</title>
       <fig>
-        <image outputclass="imageElement" height="300px" width="300px" href="https://placekitten.com/300/300">
+        <image xml:lang="en" format="test" dir="ltr" outputclass="imageElement" height="300px" width="300px" href="https://placekitten.com/300/300">
           <alt>A kitten</alt>
         </image>
       </fig>

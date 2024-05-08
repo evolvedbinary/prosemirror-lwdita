@@ -7,8 +7,6 @@ import {
   JDITA_NODE,
   JDITA_TRANFORMED_RESULT1,
   JDITA_TRANFORMED_RESULT2,
-  PROSEMIRROR_DOC,
-  JDITA_DOC,
   imageXdita,
   audioXdita,
   videoXdita,
@@ -94,108 +92,34 @@ describe('Function document()', () => {
   });
 });
 
-// Pass a Prosemirror document
-// and test against the expected JDita object
-describe('Function unTravel()', () => {
-  let expected: any, result: any;
-  const doc = JSON.parse(PROSEMIRROR_DOC);
+describe('Component unTravel(), document(), xditaToJson(): A round trip of transforming Xdita to Prosemirror and back to JDITA', () => {
+const XDitaMediaFiles = [{ file: imageXdita, type: 'image' }, { file: audioXdita, type: 'audio' }, { file: videoXdita, type: 'video' }];
 
-  describe('when passed a Prosemirror document', () => {
-
-    // this one has been replaced
-    it.skip('returns a transformed JDita object', () => {
-      expected = JSON.parse(JDITA_DOC);
-      result = unTravel(doc);
-      assert.deepEqual(result, expected);
-    });
-
-    it('handles a simple JDita document', async () => {
-
-      // original JDita to compare against
-      const originalJdita = await xditaToJson(shortXdita);
-
-      // process the JDita document and do the round trip
-      //clean the attributes from the top node to compare
+XDitaMediaFiles.forEach((XDitaMediaFile) => {
+  describe('when passed an XDita document containing "' + XDitaMediaFile.type + '" elements', () => {
+    it('returns a transformed JDita containing all "' + XDitaMediaFile.type + '" elements and their attributes', async () => {
+      const originalJdita = await xditaToJson(XDitaMediaFile.file);
       originalJdita.attributes = {};
-      // transform the JDita document
       const transformedJdita = document(originalJdita);
-      // untransform the transformed JDita document
       const result = unTravel(transformedJdita);
-
-      //compare the original JDita with the result
       expect(result).to.deep.equal(originalJdita);
     });
-
-    it('handles a complex JDita document', async () => {
-
-      // original JDita to compare against
-      const originalJdita = await xditaToJson(complexXdita);
-
-      // process the JDita document and do the round trip
-      //clean the attributes from the top node to compare
-      originalJdita.attributes = {};
-      // transform the JDita document
-      const transformedJdita = document(originalJdita);
-      // untransform the transformed JDita document
-      const result = unTravel(transformedJdita);
-
-      //compare the original JDita with the result
-      expect(result).to.deep.equal(originalJdita);
-
-    });
-
-    it('handles a JDita document containing a video element', async () => {
-
-      // original JDita to compare against
-      const originalJdita = await xditaToJson(videoXdita);
-
-      // process the JDita document and do the round trip
-      // clean the attributes from the top node to compare
-      originalJdita.attributes = {};
-      // transform the JDita document
-      const transformedJdita = document(originalJdita);
-      // untransform the transformed JDita document
-      const result = unTravel(transformedJdita);
-
-      //compare the original JDita with the result
-      expect(result).to.deep.equal(originalJdita);
-    });
-
-    it('handles a JDita document containing an audio element', async () => {
-
-      // original JDita to compare against
-      const originalJdita = await xditaToJson(audioXdita);
-
-      // process the JDita document and do the round trip
-      //clean the attributes from the top node to compare
-      originalJdita.attributes = {};
-      // transform the JDita document
-      const transformedJdita = document(originalJdita);
-      // untransform the transformed JDita document
-      const result = unTravel(transformedJdita);
-
-      //compare the original JDita with the result
-      expect(result).to.deep.equal(originalJdita);
-    });
-
-    it.skip('handles a JDita document containing an image', async () => {
-
-      // original JDita to compare against
-      const originalJdita = await xditaToJson(imageXdita);
-
-      // process the JDita document and do the round trip
-      //clean the attributes from the top node to compare
-      originalJdita.attributes = {};
-      // transform the JDita document
-      const transformedJdita = document(originalJdita);
-      // untransform the transformed JDita document
-      const result = unTravel(transformedJdita);
-
-      //compare the original JDita with the result
-      expect(result).to.deep.equal(originalJdita);
-    });
-
   });
+});
+
+const XDitaFiles = [{ file: complexXdita, type: 'complex XDita' }, { file: shortXdita, type: 'short XDita' }];
+
+XDitaFiles.forEach((XDitaFile) => {
+  describe('when passed a  "' + XDitaFile.type + '" file', () => {
+    it('returns a JDita document object containing all elements and their attributes', async () => {
+      const originalJdita = await xditaToJson(XDitaFile.file);
+      originalJdita.attributes = {};
+      const transformedJdita = document(originalJdita);
+      const result = unTravel(transformedJdita);
+      expect(result).to.deep.equal(originalJdita);
+    });
+  });
+});
 
 });
 
