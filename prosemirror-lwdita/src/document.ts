@@ -297,7 +297,7 @@ export function unTravel(prosemirrorDocument: Record<string, any>): JDita{
   // TODO move special nodes to a separate function
   if(nodeName === 'video') {
     // we must populate the video node with the necessary attributes and children
-    const allAttributes = { props: undefined, dir: undefined, "xml:lang": undefined, translate: undefined, id: undefined, conref: undefined, outputclass: attributes.outputclass,  class: undefined, width: attributes.width, height: attributes.height }
+    const allAttributes = { props: attributes.props, dir: attributes.dir, "xml:lang": attributes['xml:lang'], translate: attributes.translate, id: attributes.id, conref: attributes.conref, outputclass: attributes.outputclass,  class: attributes.class, width: attributes.width, height: attributes.height }
 
     const allChildren: JDita[] = [];
     //children[0] resembles the video desc this value does not change
@@ -399,7 +399,7 @@ export function unTravel(prosemirrorDocument: Record<string, any>): JDita{
   }
 
   if(nodeName === 'audio') {
-    const allAudioAttributes = { class: undefined, conref: undefined, "xml:lang": undefined, dir: undefined, id: undefined, outputclass: attributes.outputclass,  props: undefined, translate: undefined }
+    const allAudioAttributes = { class: attributes.class, conref: attributes.conref, "xml:lang": attributes['xml:lang'], dir: attributes.dir, id: attributes.id, outputclass: attributes.outputclass,  props: attributes.props, translate: attributes.translate }
 
     const allAudioChildren: JDita[] = [];
     allAudioChildren.push(children[0])
