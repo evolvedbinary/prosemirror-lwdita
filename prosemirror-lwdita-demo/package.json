@@ -28,10 +28,10 @@
   "scripts": {
     "clean": "rimraf dist",
     "build": "parcel build ./index.html",
-    "start": "parcel ./index.html -p 9000",
+    "start": "parcel ./index.html",
     "docker": "yarn build && node docker",
     "cypress": "cypress open",
-    "test": "start-server-and-test start http://localhost:9000 cy:run",
+    "test": "start-server-and-test start http://localhost:1234 cy:run",
     "cy:run": "cypress run"
   },
   "dependencies": {
