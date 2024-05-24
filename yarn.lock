@@ -365,6 +365,7 @@ __metadata:
     chai-as-promised: "npm:^7.1.2"
     coveralls: "npm:^3.1.1"
     eslint: "npm:^8.57.0"
+    eslint-plugin-notice: "npm:^0.9.10"
     eslint-plugin-tsdoc: "npm:^0.3.0"
     mocha: "npm:^10.2.0"
     nodemon: "npm:^3.1.3"
@@ -2850,6 +2851,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"eslint-plugin-notice@npm:^0.9.10":
+  version: 0.9.10
+  resolution: "eslint-plugin-notice@npm:0.9.10"
+  dependencies:
+    find-root: "npm:^1.1.0"
+    lodash: "npm:^4.17.15"
+    metric-lcs: "npm:^0.1.2"
+  peerDependencies:
+    eslint: ">=3.0.0"
+  checksum: 10c0/05b45467299d050242045e75073429c6ab6e4826bc53aba9aa15f5736782d102a6ac15aa4f36c9f564d10c04dd3f7cf4e46cff4f2a555f1b4cb828f3d533852a
+  languageName: node
+  linkType: hard
+
 "eslint-plugin-tsdoc@npm:^0.3.0":
   version: 0.3.0
   resolution: "eslint-plugin-tsdoc@npm:0.3.0"
@@ -3084,6 +3098,13 @@ __metadata:
     make-dir: "npm:^3.0.2"
     pkg-dir: "npm:^4.1.0"
   checksum: 10c0/92747cda42bff47a0266b06014610981cfbb71f55d60f2c8216bc3108c83d9745507fb0b14ecf6ab71112bed29cd6fb1a137ee7436179ea36e11287e3159e587
+  languageName: node
+  linkType: hard
+
+"find-root@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "find-root@npm:1.1.0"
+  checksum: 10c0/1abc7f3bf2f8d78ff26d9e00ce9d0f7b32e5ff6d1da2857bcdf4746134c422282b091c672cde0572cac3840713487e0a7a636af9aa1b74cb11894b447a521efa
   languageName: node
   linkType: hard
 
@@ -4198,6 +4219,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"lodash@npm:^4.17.15":
+  version: 4.17.21
+  resolution: "lodash@npm:4.17.21"
+  checksum: 10c0/d8cbea072bb08655bb4c989da418994b073a608dffa608b09ac04b43a791b12aeae7cd7ad919aa4c925f33b48490b5cfe6c1f71d827956071dae2e7bb3a6b74c
+  languageName: node
+  linkType: hard
+
 "log-driver@npm:^1.2.7":
   version: 1.2.7
   resolution: "log-driver@npm:1.2.7"
@@ -4328,6 +4356,13 @@ __metadata:
   version: 1.4.1
   resolution: "merge2@npm:1.4.1"
   checksum: 10c0/254a8a4605b58f450308fc474c82ac9a094848081bf4c06778200207820e5193726dc563a0d2c16468810516a5c97d9d3ea0ca6585d23c58ccfff2403e8dbbeb
+  languageName: node
+  linkType: hard
+
+"metric-lcs@npm:^0.1.2":
+  version: 0.1.2
+  resolution: "metric-lcs@npm:0.1.2"
+  checksum: 10c0/cf5e8987cb92b3f70ca9f277268f5b525ae02195906de3b5c612d6c58341b8686241dce07cde7867d1442481f3b06f150d1d2c9f5f2a5a8c91c021ae94675edb
   languageName: node
   linkType: hard
 
