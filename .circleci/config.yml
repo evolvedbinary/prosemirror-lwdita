@@ -11,6 +11,9 @@ parameters:
     type: string
     default: "4.2.2"
 
+orbs:
+  coveralls: coveralls/coveralls@2.2.1
+
 commands:
   install-yarn:
     description: "Install Yarn"
@@ -23,17 +26,6 @@ commands:
       - run: yarn install
 
 jobs:
-  generate-docs:
-    docker:
-      - image: cimg/node:<< pipeline.parameters.node-image-tag >>
-    resource_class: << pipeline.parameters.resource-class >>
-    steps:
-      - checkout
-      - install-yarn
-      - install-dependencies
-      - run:
-          name: Generate Docs
-          command: yarn generate-docs
   coverage:
     docker:
       - image: cimg/node:<< pipeline.parameters.node-image-tag >>
@@ -45,6 +37,22 @@ jobs:
       - run:
           name: Run Code Coverage
           command: yarn coverage
+      - run:
+          name: Generate Code Coverage lcov File
+          command: yarn workspace prosemirror-jdita run nyc --reporter=text-lcov report > prosemirror-jdita/coverage.lcov
+      - coveralls/upload:
+          coverage_file: prosemirror-jdita/coverage.lcov
+  generate-docs:
+    docker:
+      - image: cimg/node:<< pipeline.parameters.node-image-tag >>
+    resource_class: << pipeline.parameters.resource-class >>
+    steps:
+      - checkout
+      - install-yarn
+      - install-dependencies
+      - run:
+          name: Generate Docs
+          command: yarn generate-docs
   build:
     docker:
       - image: cimg/node:<< pipeline.parameters.node-image-tag >>
