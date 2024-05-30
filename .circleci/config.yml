@@ -11,6 +11,9 @@ parameters:
     type: string
     default: "4.2.2"
 
+orbs:
+  coveralls: coveralls/coveralls@2.2.1
+
 commands:
   install-yarn:
     description: "Install Yarn"
@@ -34,6 +37,11 @@ jobs:
       - run:
           name: Run Code Coverage
           command: yarn coverage
+      - run:
+          name: Generate Code Coverage lcov File
+          command: yarn workspace prosemirror-jdita run nyc --reporter=text-lcov report > coverage.lcov
+      - coveralls/upload:
+          coverage_file: coverage.lcov
   generate-docs:
     docker:
       - image: cimg/node:<< pipeline.parameters.node-image-tag >>
