@@ -4512,9 +4512,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nodemon@npm:^3.0.2":
-  version: 3.1.0
-  resolution: "nodemon@npm:3.1.0"
+"nodemon@npm:^3.1.2":
+  version: 3.1.2
+  resolution: "nodemon@npm:3.1.2"
   dependencies:
     chokidar: "npm:^3.5.2"
     debug: "npm:^4"
@@ -4528,7 +4528,7 @@ __metadata:
     undefsafe: "npm:^2.0.5"
   bin:
     nodemon: bin/nodemon.js
-  checksum: 10c0/3aeb50105ecae31ce4d0a5cd464011d4aa0dc15419e39ac0fd203d784e38940e1436f4ed96adbaa0f9614ee0644f91e3cf38f2afae8d3918ae7afc51c7e2116b
+  checksum: 10c0/7a091067d766768fb6660b796194b01748bba5dc3f1e3ed3dd5f804bfa305e207d24635755078ee5e7cc53848cea35204901e0a6e51ac64483bb8e9ecb237c95
   languageName: node
   linkType: hard
 
@@ -5045,7 +5045,7 @@ __metadata:
     eslint-plugin-tsdoc: "npm:^0.2.17"
     jdita: "npm:^0.2.4"
     mocha: "npm:^10.2.0"
-    nodemon: "npm:^3.0.2"
+    nodemon: "npm:^3.1.2"
     nyc: "npm:^15.1.0"
     prosemirror-commands: "npm:^1.5.2"
     prosemirror-history: "npm:^1.3.2"
