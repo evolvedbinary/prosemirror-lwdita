@@ -7,85 +7,70 @@ parameters:
   resource-class:
     type: string
     default: "small"
-  pkg-manager:
+  yarn-version:
     type: string
-    default: "yarn-berry"
-  pkg-cache-version:
-    type: string
-    default: "v4"
+    default: "4.2.2"
 
-orbs:
-  node: circleci/node@5.2.0
+commands:
+  install-yarn:
+    description: "Install Yarn"
+    steps:
+      - run: corepack enable
+      - run: yarn set version << pipeline.parameters.yarn-version >>
+  install-dependencies:
+    description: "Install Dependencies"
+    steps:
+      - run: yarn install
 
 jobs:
-  clone-and-install:
+  generate-docs:
     docker:
       - image: cimg/node:<< pipeline.parameters.node-image-tag >>
     resource_class: << pipeline.parameters.resource-class >>
     steps:
       - checkout
-      - node/install-packages:
-          check-cache: always
-          cache-version: << pipeline.parameters.pkg-cache-version >>
-          pkg-manager: << pipeline.parameters.pkg-manager >>
-          with-cache: false
+      - install-yarn
+      - install-dependencies
+      - run:
+          name: Generate Docs
+          command: yarn generate-docs
+  coverage:
+    docker:
+      - image: cimg/node:<< pipeline.parameters.node-image-tag >>
+    resource_class: << pipeline.parameters.resource-class >>
+    steps:
+      - checkout
+      - install-yarn
+      - install-dependencies
+      - run:
+          name: Run Code Coverage
+          command: yarn coverage
+  build:
+    docker:
+      - image: cimg/node:<< pipeline.parameters.node-image-tag >>
+    resource_class: << pipeline.parameters.resource-class >>
+    steps:
+      - checkout
+      - install-yarn
+      - install-dependencies
+      - run:
+          name: build
+          command: yarn build
+  build-demo:
+    docker:
+      - image: cimg/node:<< pipeline.parameters.node-image-tag >>
+    resource_class: << pipeline.parameters.resource-class >>
+    steps:
+      - checkout
+      - install-yarn
+      - install-dependencies
+      - run:
+          name: build-demo
+          command: yarn build:demo
 workflows:
   build-and-test:
     jobs:
-      - clone-and-install
-      - node/run:
-          name: build
-          requires:
-            - clone-and-install
-          version: << pipeline.parameters.node-image-tag >>
-          resource_class: << pipeline.parameters.resource-class >>
-          pkg-manager: << pipeline.parameters.pkg-manager >>
-          setup:
-            - node/install-packages:
-                check-cache: always
-                cache-version: << pipeline.parameters.pkg-cache-version >>
-                pkg-manager: << pipeline.parameters.pkg-manager >>
-                with-cache: false
-          yarn-run: build
-      - node/run:
-          name: build:demo
-          requires:
-            - clone-and-install
-          version: << pipeline.parameters.node-image-tag >>
-          resource_class: << pipeline.parameters.resource-class >>
-          pkg-manager: << pipeline.parameters.pkg-manager >>
-          setup:
-            - node/install-packages:
-                check-cache: always
-                cache-version: << pipeline.parameters.pkg-cache-version >>
-                pkg-manager: << pipeline.parameters.pkg-manager >>
-                with-cache: false
-          yarn-run: build:demo
-      - node/run:
-          name: coverage
-          requires:
-            - clone-and-install
-          version: << pipeline.parameters.node-image-tag >>
-          resource_class: << pipeline.parameters.resource-class >>
-          pkg-manager: << pipeline.parameters.pkg-manager >>
-          setup:
-            - node/install-packages:
-                check-cache: always
-                cache-version: << pipeline.parameters.pkg-cache-version >>
-                pkg-manager: << pipeline.parameters.pkg-manager >>
-                with-cache: false
-          yarn-run: coverage
-      - node/run:
-          name: generate docs
-          requires:
-            - clone-and-install
-          version: << pipeline.parameters.node-image-tag >>
-          resource_class: << pipeline.parameters.resource-class >>
-          pkg-manager: << pipeline.parameters.pkg-manager >>
-          setup:
-            - node/install-packages:
-                check-cache: always
-                cache-version: << pipeline.parameters.pkg-cache-version >>
-                pkg-manager: << pipeline.parameters.pkg-manager >>
-                with-cache: false
-          yarn-run: generate-docs
+      - coverage
+      - generate-docs
+      - build
+      - build-demo
