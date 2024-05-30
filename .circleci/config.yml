@@ -4,27 +4,31 @@ parameters:
   node-image-tag:
     type: string
     default: "20.10.0"
-  yarn-version:
-    type: string
-    default: "1.22.21"
   resource-class:
     type: string
     default: "small"
+  pkg-manager:
+    type: string
+    default: "yarn-berry"
+  pkg-cache-version:
+    type: string
+    default: "v4"
 
 orbs:
-  node: circleci/node@5.1.1
+  node: circleci/node@5.2.0
 
 jobs:
   clone-and-install:
     docker:
-     - image: cimg/node:<< pipeline.parameters.node-image-tag >>
+      - image: cimg/node:<< pipeline.parameters.node-image-tag >>
     resource_class: << pipeline.parameters.resource-class >>
     steps:
       - checkout
-      - node/install-yarn:
-          version: << pipeline.parameters.yarn-version >>
       - node/install-packages:
-          pkg-manager: yarn 
+          check-cache: always
+          cache-version: << pipeline.parameters.pkg-cache-version >>
+          pkg-manager: << pipeline.parameters.pkg-manager >>
+          with-cache: false
 workflows:
   build-and-test:
     jobs:
@@ -35,10 +39,13 @@ workflows:
             - clone-and-install
           version: << pipeline.parameters.node-image-tag >>
           resource_class: << pipeline.parameters.resource-class >>
-          pkg-manager: yarn
+          pkg-manager: << pipeline.parameters.pkg-manager >>
           setup:
-            - node/install-yarn:
-                version: << pipeline.parameters.yarn-version >>
+            - node/install-packages:
+                check-cache: always
+                cache-version: << pipeline.parameters.pkg-cache-version >>
+                pkg-manager: << pipeline.parameters.pkg-manager >>
+                with-cache: false
           yarn-run: build
       - node/run:
           name: build:demo
@@ -46,10 +53,13 @@ workflows:
             - clone-and-install
           version: << pipeline.parameters.node-image-tag >>
           resource_class: << pipeline.parameters.resource-class >>
-          pkg-manager: yarn
+          pkg-manager: << pipeline.parameters.pkg-manager >>
           setup:
-            - node/install-yarn:
-                version: << pipeline.parameters.yarn-version >>
+            - node/install-packages:
+                check-cache: always
+                cache-version: << pipeline.parameters.pkg-cache-version >>
+                pkg-manager: << pipeline.parameters.pkg-manager >>
+                with-cache: false
           yarn-run: build:demo
       - node/run:
           name: coverage
@@ -57,10 +67,13 @@ workflows:
             - clone-and-install
           version: << pipeline.parameters.node-image-tag >>
           resource_class: << pipeline.parameters.resource-class >>
-          pkg-manager: yarn
+          pkg-manager: << pipeline.parameters.pkg-manager >>
           setup:
-            - node/install-yarn:
-                version: << pipeline.parameters.yarn-version >>
+            - node/install-packages:
+                check-cache: always
+                cache-version: << pipeline.parameters.pkg-cache-version >>
+                pkg-manager: << pipeline.parameters.pkg-manager >>
+                with-cache: false
           yarn-run: coverage
       - node/run:
           name: generate docs
@@ -68,8 +81,11 @@ workflows:
             - clone-and-install
           version: << pipeline.parameters.node-image-tag >>
           resource_class: << pipeline.parameters.resource-class >>
-          pkg-manager: yarn
+          pkg-manager: << pipeline.parameters.pkg-manager >>
           setup:
-            - node/install-yarn:
-                version: << pipeline.parameters.yarn-version >>
+            - node/install-packages:
+                check-cache: always
+                cache-version: << pipeline.parameters.pkg-cache-version >>
+                pkg-manager: << pipeline.parameters.pkg-manager >>
+                with-cache: false
           yarn-run: generate-docs
