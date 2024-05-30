@@ -4,72 +4,73 @@ parameters:
   node-image-tag:
     type: string
     default: "20.10.0"
-  yarn-version:
-    type: string
-    default: "1.22.21"
   resource-class:
     type: string
-    default: "small"
+    default: "medium"
+  yarn-version:
+    type: string
+    default: "4.2.2"
 
-orbs:
-  node: circleci/node@5.1.1
+commands:
+  install-yarn:
+    description: "Install Yarn"
+    steps:
+      - run: corepack enable
+      - run: yarn set version << pipeline.parameters.yarn-version >>
+  install-dependencies:
+    description: "Install Dependencies"
+    steps:
+      - run: yarn install
 
 jobs:
-  clone-and-install:
+  generate-docs:
     docker:
-     - image: cimg/node:<< pipeline.parameters.node-image-tag >>
+      - image: cimg/node:<< pipeline.parameters.node-image-tag >>
     resource_class: << pipeline.parameters.resource-class >>
     steps:
       - checkout
-      - node/install-yarn:
-          version: << pipeline.parameters.yarn-version >>
-      - node/install-packages:
-          pkg-manager: yarn 
+      - install-yarn
+      - install-dependencies
+      - run:
+          name: Generate Docs
+          command: yarn generate-docs
+  coverage:
+    docker:
+      - image: cimg/node:<< pipeline.parameters.node-image-tag >>
+    resource_class: << pipeline.parameters.resource-class >>
+    steps:
+      - checkout
+      - install-yarn
+      - install-dependencies
+      - run:
+          name: Run Code Coverage
+          command: yarn coverage
+  build:
+    docker:
+      - image: cimg/node:<< pipeline.parameters.node-image-tag >>
+    resource_class: << pipeline.parameters.resource-class >>
+    steps:
+      - checkout
+      - install-yarn
+      - install-dependencies
+      - run:
+          name: build
+          command: yarn build
+  build-demo:
+    docker:
+      - image: cimg/node:<< pipeline.parameters.node-image-tag >>
+    resource_class: << pipeline.parameters.resource-class >>
+    steps:
+      - checkout
+      - install-yarn
+      - install-dependencies
+      - run:
+          name: build-demo
+          command: yarn build:demo
 workflows:
   build-and-test:
     jobs:
-      - clone-and-install
-      - node/run:
-          name: build
-          requires:
-            - clone-and-install
-          version: << pipeline.parameters.node-image-tag >>
-          resource_class: << pipeline.parameters.resource-class >>
-          pkg-manager: yarn
-          setup:
-            - node/install-yarn:
-                version: << pipeline.parameters.yarn-version >>
-          yarn-run: build
-      - node/run:
-          name: build:demo
-          requires:
-            - clone-and-install
-          version: << pipeline.parameters.node-image-tag >>
-          resource_class: << pipeline.parameters.resource-class >>
-          pkg-manager: yarn
-          setup:
-            - node/install-yarn:
-                version: << pipeline.parameters.yarn-version >>
-          yarn-run: build:demo
-      - node/run:
-          name: coverage
-          requires:
-            - clone-and-install
-          version: << pipeline.parameters.node-image-tag >>
-          resource_class: << pipeline.parameters.resource-class >>
-          pkg-manager: yarn
-          setup:
-            - node/install-yarn:
-                version: << pipeline.parameters.yarn-version >>
-          yarn-run: coverage
-      - node/run:
-          name: generate docs
-          requires:
-            - clone-and-install
-          version: << pipeline.parameters.node-image-tag >>
-          resource_class: << pipeline.parameters.resource-class >>
-          pkg-manager: yarn
-          setup:
-            - node/install-yarn:
-                version: << pipeline.parameters.yarn-version >>
-          yarn-run: generate-docs
+      - coverage
+      - generate-docs
+      - build
+      - build-demo

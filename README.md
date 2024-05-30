@@ -92,7 +92,7 @@ If this port is already in use, `parcel` will assign a random port that you can 
 For development, you will need Node.js and a node package manager, like Yarn, to be installed in your environment.
 
 * Minimal Node version: v20.10.0
-* Optional: This project uses Yarn as its build system. Although we don't support it, if you prefer, it should also be possible to use npm instead of Yarn. The version of Yarn that we have used is v1.22.21.
+* Optional: This project uses Yarn as its build system. Although we don't support it, if you prefer, it should also be possible to use npm instead of Yarn. The version of Yarn that we have used is v4.2.2.
 
 ### Installation
 
