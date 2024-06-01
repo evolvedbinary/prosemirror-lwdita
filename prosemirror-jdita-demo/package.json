@@ -33,6 +33,7 @@
     "cy:run": "cypress run"
   },
   "dependencies": {
+    "@evolvedbinary/lwdita-xdita": "^1.1.0",
     "prosemirror-history": "^1.3.2",
     "prosemirror-jdita": "workspace:^",
     "prosemirror-menu": "^1.2.4",

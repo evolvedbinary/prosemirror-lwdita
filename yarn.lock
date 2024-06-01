@@ -358,6 +358,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@evolvedbinary/lwdita-xdita@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "@evolvedbinary/lwdita-xdita@npm:1.1.0"
+  dependencies:
+    "@evolvedbinary/lwdita-ast": "npm:^1.0.1"
+    "@rubensworks/saxes": "npm:6.0.1"
+  checksum: 10c0/cf02ccff86914427d059c8ef097f2fceabcdcfb36a0fa6083bb7ca8b2b5cb6f80af24f9ba0e6267374989be0924f78df6a6ed8705130fc1801b96c41725868c2
+  languageName: node
+  linkType: hard
+
 "@humanwhocodes/config-array@npm:^0.11.14":
   version: 0.11.14
   resolution: "@humanwhocodes/config-array@npm:0.11.14"
@@ -1490,26 +1500,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sideway/address@npm:^4.1.5":
-  version: 4.1.5
-  resolution: "@sideway/address@npm:4.1.5"
+"@rubensworks/saxes@npm:6.0.1":
+  version: 6.0.1
+  resolution: "@rubensworks/saxes@npm:6.0.1"
   dependencies:
-    "@hapi/hoek": "npm:^9.0.0"
-  checksum: 10c0/638eb6f7e7dba209053dd6c8da74d7cc995e2b791b97644d0303a7dd3119263bcb7225a4f6804d4db2bc4f96e5a9d262975a014f58eae4d1753c27cbc96ef959
-  languageName: node
-  linkType: hard
-
-"@sideway/formula@npm:^3.0.1":
-  version: 3.0.1
-  resolution: "@sideway/formula@npm:3.0.1"
-  checksum: 10c0/3fe81fa9662efc076bf41612b060eb9b02e846ea4bea5bd114f1662b7f1541e9dedcf98aff0d24400bcb92f113964a50e0290b86e284edbdf6346fa9b7e2bf2c
-  languageName: node
-  linkType: hard
-
-"@sideway/pinpoint@npm:^2.0.0":
-  version: 2.0.0
-  resolution: "@sideway/pinpoint@npm:2.0.0"
-  checksum: 10c0/d2ca75dacaf69b8fc0bb8916a204e01def3105ee44d8be16c355e5f58189eb94039e15ce831f3d544f229889ccfa35562a0ce2516179f3a7ee1bbe0b71e55b36
+    xmlchars: "npm:^2.2.0"
+  checksum: 10c0/f14716c3b7e00fe13173c6d131ab4df43444d68d00506e61e2af37cf87a9a823e2ffdcbb45304c77c5cb214069b105cabc0617d36d74bf08bdf4c067dd52336e
   languageName: node
   linkType: hard
 
@@ -5905,6 +5901,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "prosemirror-jdita-demo@workspace:prosemirror-jdita-demo"
   dependencies:
+    "@evolvedbinary/lwdita-xdita": "npm:^1.1.0"
     "@parcel/transformer-sass": "npm:^2.12.0"
     parcel: "npm:^2.12.0"
     prosemirror-history: "npm:^1.3.2"
@@ -7298,6 +7295,13 @@ __metadata:
     signal-exit: "npm:^3.0.2"
     typedarray-to-buffer: "npm:^3.1.5"
   checksum: 10c0/7fb67affd811c7a1221bed0c905c26e28f0041e138fb19ccf02db57a0ef93ea69220959af3906b920f9b0411d1914474cdd90b93a96e5cd9e8368d9777caac0e
+  languageName: node
+  linkType: hard
+
+"xmlchars@npm:^2.2.0":
+  version: 2.2.0
+  resolution: "xmlchars@npm:2.2.0"
+  checksum: 10c0/b64b535861a6f310c5d9bfa10834cf49127c71922c297da9d4d1b45eeaae40bf9b4363275876088fbe2667e5db028d2cd4f8ee72eed9bede840a67d57dab7593
   languageName: node
   linkType: hard
 

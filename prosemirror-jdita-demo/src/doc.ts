@@ -1,3 +1,5 @@
+
+import { xditaToJdita } from "@evolvedbinary/lwdita-xdita";
 import { document } from "prosemirror-jdita";
 
 const storedFile = localStorage.getItem('file');
@@ -27,4 +29,4 @@ if (!storedFile) {
 
 // transform the xml to Jdita object
 // then transform the Jdita object to Prosemirror schema
-export default xditaToJson(xml, true).then(json => document(json)) as Promise<Record<string, any>>;
+export default xditaToJdita(xml, true).then(json => document(json)) as Promise<Record<string, any>>;
