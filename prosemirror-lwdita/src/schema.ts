@@ -1,6 +1,5 @@
-import { BaseNode, getNodeClassType, UnknownNodeError, DocumentNode, nodeGroups, customChildTypesToString } from 'jdita';
+import { AbstractBaseNode, ChildTypes, DocumentNode, UnknownNodeError, getNodeClassType, nodeGroups } from '@evolvedbinary/lwdita-ast';
 import { getDomNode } from './dom';
-import { ChildTypes } from 'jdita';
 import { NodeSpec, Schema, SchemaSpec, Node, MarkSpec, DOMOutputSpec } from 'prosemirror-model';
 
 /**
@@ -16,7 +15,7 @@ export const NODE_NAMES: Record<string, string> = {
 /**
  * Provide a map of special nodes to their corresponding DOM node
  */
-export const TO_DOM: Record<string, (node: typeof BaseNode, attrs: any)
+export const TO_DOM: Record<string, (node: typeof AbstractBaseNode, attrs: any)
   => (node: Node) => DOMOutputSpec> = {}
 
 /**
@@ -51,8 +50,8 @@ export const NODE_ATTR_NAMES: Record<string, Record<string, string>> = {
 /**
  * Provide a map of special nodes to their corresponding Schema
  */
-export const SCHEMAS: Record<string, (node: typeof BaseNode, next: (nodeName: string) => void) => SchemaNode> = {
-  'text': (node: typeof BaseNode, next: (nodeName: string) => void): SchemaNode => {
+export const SCHEMAS: Record<string, (node: typeof AbstractBaseNode, next: (nodeName: string) => void) => SchemaNode> = {
+  'text': (node: typeof AbstractBaseNode, next: (nodeName: string) => void): SchemaNode => {
     const result: SchemaNode = {
       attrs: {
         parent: { default: '' }
@@ -153,7 +152,7 @@ function getChildren(type: ChildTypes): string[] {
  * @param next - Next travel function
  * @returns SchemaNode
  */
-function schemaTravel(node: typeof BaseNode, next: (nodeName: string) => void): SchemaNode {
+function schemaTravel(node: typeof AbstractBaseNode, next: (nodeName: string) => void): SchemaNode {
   return (SCHEMAS[node.nodeName] || defaultTravel)(node, next);
 }
 
@@ -166,7 +165,7 @@ function schemaTravel(node: typeof BaseNode, next: (nodeName: string) => void): 
  * @param attrs - The attributes of the node
  * @returns A function that generates the DOM spec
  */
-export function defaultToDom(node: typeof BaseNode, attrs: any): (node: Node) => DOMOutputSpec {
+export function defaultToDom(node: typeof AbstractBaseNode, attrs: any): (node: Node) => DOMOutputSpec {
   return function(pmNode: Node) {
     return [getDomNode(node.nodeName, pmNode.attrs?.parent), attrs
       ? Object.keys(attrs).reduce((newAttrs, attr) => {
@@ -223,9 +222,9 @@ export function defaultNodeAttrs(attrs: string[]): any {
  * @returns NodeSpec
  */
 function defaultTravel(
-  node: typeof BaseNode,
-  parent: typeof BaseNode,
-  next: (nodeName: string, parent: typeof BaseNode) => void): NodeSpec {
+  node: typeof AbstractBaseNode,
+  parent: typeof AbstractBaseNode,
+  next: (nodeName: string, parent: typeof AbstractBaseNode) => void): NodeSpec {
   const children = (SCHEMA_CHILDREN[node.nodeName] || getChildren)(node.childTypes);
   const isNode = IS_MARK.indexOf(node.nodeName) < 0;
   const [content, group] = isNode ? SCHEMA_CONTENT[node.nodeName] : [undefined, undefined];
@@ -302,7 +301,7 @@ export function schema(): Schema {
   }
 
   // populate the schema spec using the jdita nodes
-  function browse(node: string | typeof BaseNode, parent: typeof BaseNode): void {
+  function browse(node: string | typeof AbstractBaseNode, parent: typeof AbstractBaseNode): void {
     // get the node name
     const nodeName = typeof node === 'string' ? node : node.nodeName;
 

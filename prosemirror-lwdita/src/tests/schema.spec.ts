@@ -1,8 +1,8 @@
 import { assert, expect } from 'chai';
 import { defaultNodeAttrs, defaultNodeName, defaultToDom, getDomAttr, schema, _test_private_schema } from '../schema';
-import { TextNode, BaseNode, TopicNode, DdNode } from 'jdita';
 import { DOMOutputSpec, Schema } from 'prosemirror-model';
 import { createNode } from '../commands';
+import { AbstractBaseNode, DdNode, TextNode, TopicNode } from '@evolvedbinary/lwdita-ast';
 
 /**
  * Unit tests for `schema.ts`
@@ -10,7 +10,7 @@ import { createNode } from '../commands';
 
 describe('Function schemaTravel()', () => {
   it('returns correct attributes for a TextNode', () => {
-    assert.deepEqual(_test_private_schema.schemaTravel(TextNode as unknown as typeof BaseNode, console.log), { attrs: { parent: { default: '' } }} as any);
+    assert.deepEqual(_test_private_schema.schemaTravel(TextNode as unknown as typeof AbstractBaseNode, console.log), { attrs: { parent: { default: '' } }} as any);
   });
 });
 
@@ -33,7 +33,7 @@ describe('Function getChildren()', () => {
 describe('Function defaultToDom()', () => {
   it('returns a function that generates the dom spec for a node', () => {
     const attrs = {};
-    const toDom = defaultToDom(BaseNode, attrs);
+    const toDom = defaultToDom(AbstractBaseNode, attrs);
 
     const type = schema().nodes.li;
     const node = createNode(type, {});
