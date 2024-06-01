@@ -5978,8 +5978,6 @@ __metadata:
     chai-as-promised: "npm:^7.1.1"
     coveralls: "npm:^3.1.1"
     eslint: "npm:^8.57.0"
-    eslint-plugin-tsdoc: "npm:^0.2.17"
-    jdita: "npm:^0.2.4"
     mocha: "npm:^10.2.0"
     nodemon: "npm:^3.0.2"
     nyc: "npm:^15.1.0"

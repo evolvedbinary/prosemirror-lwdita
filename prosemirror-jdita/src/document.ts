@@ -1,4 +1,3 @@
-import { JDita } from "jdita";
 import { IS_MARK, defaultNodeName } from "./schema";
 
 /**
