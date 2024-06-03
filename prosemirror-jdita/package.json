@@ -44,8 +44,8 @@
     "index.js"
   ],
   "dependencies": {
-    "@evolvedbinary/lwdita-ast": "^1.0.1",
-    "@evolvedbinary/lwdita-xdita": "^1.1.0",
+    "@evolvedbinary/lwdita-ast": "^1.1.0",
+    "@evolvedbinary/lwdita-xdita": "^1.2.0",
     "@types/chai-as-promised": "^7.1.3",
     "chai-as-promised": "^7.1.1",
     "prosemirror-commands": "^1.5.2",

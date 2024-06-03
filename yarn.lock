@@ -358,6 +358,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@evolvedbinary/lwdita-ast@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "@evolvedbinary/lwdita-ast@npm:1.1.0"
+  checksum: 10c0/4f1883b291346c47fae02077d52037cdafea621c134d237c1946c51ef80ef4006fcac7593e81c4f967eb651ab773e06092318b33915d885aba43f2d19544ef62
+  languageName: node
+  linkType: hard
+
 "@evolvedbinary/lwdita-xdita@npm:^1.1.0":
   version: 1.1.0
   resolution: "@evolvedbinary/lwdita-xdita@npm:1.1.0"
@@ -365,6 +372,16 @@ __metadata:
     "@evolvedbinary/lwdita-ast": "npm:^1.0.1"
     "@rubensworks/saxes": "npm:6.0.1"
   checksum: 10c0/cf02ccff86914427d059c8ef097f2fceabcdcfb36a0fa6083bb7ca8b2b5cb6f80af24f9ba0e6267374989be0924f78df6a6ed8705130fc1801b96c41725868c2
+  languageName: node
+  linkType: hard
+
+"@evolvedbinary/lwdita-xdita@npm:^1.2.0":
+  version: 1.2.0
+  resolution: "@evolvedbinary/lwdita-xdita@npm:1.2.0"
+  dependencies:
+    "@evolvedbinary/lwdita-ast": "npm:^1.1.0"
+    "@rubensworks/saxes": "npm:6.0.1"
+  checksum: 10c0/b4974e3c1edf6c964c8506126eeef64076b1585480452d40107fad55b50e05557981cb9bb8b03d25b725829f888bc7bdd6da9ab54334666af8131bc5d8efc04a
   languageName: node
   linkType: hard
 
@@ -5925,8 +5942,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "prosemirror-jdita@workspace:prosemirror-jdita"
   dependencies:
-    "@evolvedbinary/lwdita-ast": "npm:^1.0.1"
-    "@evolvedbinary/lwdita-xdita": "npm:^1.1.0"
+    "@evolvedbinary/lwdita-ast": "npm:^1.1.0"
+    "@evolvedbinary/lwdita-xdita": "npm:^1.2.0"
     "@tsconfig/recommended": "npm:^1.0.6"
     "@types/chai": "npm:^4.3.11"
     "@types/chai-as-promised": "npm:^7.1.3"
