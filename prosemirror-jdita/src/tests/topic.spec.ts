@@ -1,7 +1,7 @@
 import ChaiPromised from 'chai-as-promised';
 import { use } from 'chai';
 import { expect } from 'chai';
-import { xditaToJson } from 'jdita';
+import { xditaToJdita } from "@evolvedbinary/lwdita-xdita";
 import { document } from '../document';
 import { topic } from './test-utils';
 
@@ -31,7 +31,7 @@ const pmjson = {
 describe('document()', () => {
   it('transforms the JDita "topic" node into a Prosemirror node', async () => {
     await expect(
-      xditaToJson(topic(attrs))
+      xditaToJdita(topic(attrs))
         .then(jdita => document(jdita))
         .catch(e => console.log('error:', e))
     ).to.eventually.become(pmjson);

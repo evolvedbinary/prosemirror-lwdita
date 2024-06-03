@@ -5926,6 +5926,7 @@ __metadata:
   resolution: "prosemirror-jdita@workspace:prosemirror-jdita"
   dependencies:
     "@evolvedbinary/lwdita-ast": "npm:^1.0.1"
+    "@evolvedbinary/lwdita-xdita": "npm:^1.1.0"
     "@tsconfig/recommended": "npm:^1.0.6"
     "@types/chai": "npm:^4.3.11"
     "@types/chai-as-promised": "npm:^7.1.3"
