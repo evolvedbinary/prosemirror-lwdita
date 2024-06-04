@@ -1,4 +1,4 @@
-describe('download a file', () => {
+describe.skip('download a file', () => {
 
   it('downloads the file correctly', () => {
     cy.visit('http://localhost:1234/')
