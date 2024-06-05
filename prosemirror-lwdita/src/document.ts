@@ -114,7 +114,7 @@ export const NODES: Record<string, (value: JDita, parent: JDita) => any> = {
  * @param value - The JDita node
  * @returns The transformed JDita node
  */
-export function defaultTravel(value: JDita): any {
+function defaultTravel(value: JDita): any {
   // children will become content
   const content = value.children?.map(child => travel(child, value));
   // attributes will become attrs
