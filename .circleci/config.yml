@@ -42,6 +42,17 @@ jobs:
           command: yarn workspace @evolvedbinary/prosemirror-lwdita run nyc --reporter=text-lcov report > prosemirror-lwdita/coverage.lcov
       - coveralls/upload:
           coverage_file: prosemirror-lwdita/coverage.lcov
+  lint:
+    docker:
+      - image: cimg/node:<< pipeline.parameters.node-image-tag >>
+    resource_class: << pipeline.parameters.resource-class >>
+    steps:
+      - checkout
+      - install-yarn
+      - install-dependencies
+      - run:
+          name: Lint
+          command: yarn lint
   generate-docs:
     docker:
       - image: cimg/node:<< pipeline.parameters.node-image-tag >>
@@ -78,7 +89,8 @@ jobs:
 workflows:
   build-and-test:
     jobs:
+      - lint
+      - build
       - coverage
       - generate-docs
-      - build
       - build-demo
