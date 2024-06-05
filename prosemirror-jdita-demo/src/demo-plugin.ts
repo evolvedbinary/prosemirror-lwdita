@@ -125,7 +125,7 @@ function saveFile(input: InputContainer): Command {
   return (state: {[x: string]: any; tr: any; selection: { empty: any; };}, dispatch: (arg0: any) => void) => {
     if (dispatch) {
       dispatch(state.tr);
-      const xditaPrefix = `<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE topic PUBLIC "-//OASIS//DTD LIGHTWEIGHT DITA Topic//EN" "lw-topic.dtd">`;
+      const xditaPrefix = `<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE topic PUBLIC "-//OASIS//DTD LIGHTWEIGHT DITA Topic//EN" "lw-topic.dtd">\n`;
       const documentNode = transformToJditaDocumentNode(state);
       console.log('Document Node:', documentNode);
       const file = xditaPrefix + documentNode;
