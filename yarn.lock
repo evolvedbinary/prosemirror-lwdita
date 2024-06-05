@@ -375,7 +375,7 @@ __metadata:
     prosemirror-model: "npm:^1.19.4"
     prosemirror-schema-list: "npm:^1.3.0"
     prosemirror-state: "npm:^1.4.3"
-    prosemirror-transform: "npm:^1.8.0"
+    prosemirror-transform: "npm:^1.9.0"
     prosemirror-view: "npm:^1.32.7"
     rimraf: "npm:^5.0.7"
     ts-node: "npm:^9.1.1"
@@ -5096,6 +5096,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"prosemirror-model@npm:^1.21.0":
+  version: 1.21.1
+  resolution: "prosemirror-model@npm:1.21.1"
+  dependencies:
+    orderedmap: "npm:^2.0.0"
+  checksum: 10c0/fdf7cbd6cd9e1fd8826671257ea06fb2171afdca315ce0df36b7e15f72404818bcf2c6a4c5e2d2035e1cfaf96ea30fdde78f13eee473ca7a13eda3c12a20da15
+  languageName: node
+  linkType: hard
+
 "prosemirror-schema-list@npm:^1.3.0":
   version: 1.3.0
   resolution: "prosemirror-schema-list@npm:1.3.0"
@@ -5118,12 +5127,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prosemirror-transform@npm:^1.0.0, prosemirror-transform@npm:^1.1.0, prosemirror-transform@npm:^1.7.3, prosemirror-transform@npm:^1.8.0":
+"prosemirror-transform@npm:^1.0.0, prosemirror-transform@npm:^1.1.0, prosemirror-transform@npm:^1.7.3":
   version: 1.8.0
   resolution: "prosemirror-transform@npm:1.8.0"
   dependencies:
     prosemirror-model: "npm:^1.0.0"
   checksum: 10c0/20861fcb304cc68718e49be6c41f22505689e969507f1e9754bbdfedf98fc4059254a79e1659b930c13ca52c547d3449f1814263a7601aeea1c1c4dfedc80ac1
+  languageName: node
+  linkType: hard
+
+"prosemirror-transform@npm:^1.9.0":
+  version: 1.9.0
+  resolution: "prosemirror-transform@npm:1.9.0"
+  dependencies:
+    prosemirror-model: "npm:^1.21.0"
+  checksum: 10c0/8832d825a9d38fd116f5c3fbc9708f3aa627f88980efbc1923524da7673f5bd9d7ed0032762f5be223d990176a759b2ae0a5f3ba67bffd596c028ddbc0d53b93
   languageName: node
   linkType: hard
 
