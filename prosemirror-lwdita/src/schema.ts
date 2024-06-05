@@ -1,6 +1,6 @@
 import { AbstractBaseNode, ChildTypes, DocumentNode, UnknownNodeError, getNodeClassType, nodeGroups } from '@evolvedbinary/lwdita-ast';
 import { getDomNode } from './dom';
-import { NodeSpec, Schema, SchemaSpec, Node, MarkSpec, DOMOutputSpec } from 'prosemirror-model';
+import { NodeSpec, Schema, SchemaSpec, Node, MarkSpec, DOMOutputSpec, Attrs } from 'prosemirror-model';
 
 /**
  * Set the root node `document` to string "doc"
@@ -15,14 +15,14 @@ export const NODE_NAMES: Record<string, string> = {
 /**
  * Provide a map of special nodes to their corresponding DOM node
  */
-export const TO_DOM: Record<string, (node: typeof AbstractBaseNode, attrs: any)
+export const TO_DOM: Record<string, (node: typeof AbstractBaseNode, attrs: Attrs)
   => (node: Node) => DOMOutputSpec> = {}
 
 /**
  * Some nodes have special attributes.
  * This is a list of those nodes and their special attributes
  */
-export const NODE_ATTRS: Record<string, (attrs: string[]) => any> = {
+export const NODE_ATTRS: Record<string, (attrs: string[]) => Attrs> = {
   video: node => defaultNodeAttrs([...node, 'controls', 'autoplay', 'loop', 'muted', 'poster']),
   audio: node => defaultNodeAttrs([...node, 'controls', 'autoplay', 'loop', 'muted']),
 }
@@ -165,7 +165,7 @@ function schemaTravel(node: typeof AbstractBaseNode, next: (nodeName: string) =>
  * @param attrs - The attributes of the node
  * @returns A function that generates the DOM spec
  */
-export function defaultToDom(node: typeof AbstractBaseNode, attrs: any): (node: Node) => DOMOutputSpec {
+export function defaultToDom(node: typeof AbstractBaseNode, attrs: Attrs): (node: Node) => DOMOutputSpec {
   return function(pmNode: Node) {
     return [getDomNode(node.nodeName, pmNode.attrs?.parent), attrs
       ? Object.keys(attrs).reduce((newAttrs, attr) => {
@@ -174,7 +174,7 @@ export function defaultToDom(node: typeof AbstractBaseNode, attrs: any): (node: 
           newAttrs[domAttr] = pmNode.attrs[attr];
         }
         return newAttrs;
-      }, { 'data-j-type': node.nodeName } as any)
+      }, { 'data-j-type': node.nodeName } as Record<string, string>)
     : {}, 0];
   }
 }
@@ -202,7 +202,7 @@ export function getDomAttr(nodeName: string, attr: string): string {
  * @param attrs - The attributes of the node
  * @returns A map of the attributes with default values
  */
-export function defaultNodeAttrs(attrs: string[]): any {
+export function defaultNodeAttrs(attrs: string[]): Attrs {
   return attrs.reduce((result, field) => {
     result[field] = { default: '' };
     return result;
@@ -243,6 +243,7 @@ function defaultTravel(
               newAttrs[attr] = dom.getAttribute(domAttr);
             }
             return newAttrs;
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           }, {} as any)
           : {}
       },
@@ -341,8 +342,8 @@ export function schema(): Schema {
   // start the process of populating the schema spec using the jdita nodes from the document node
   browse(DocumentNode);
 
-  (spec.nodes as any).topic.content = 'title shortdesc? prolog? body?';
-  (spec.nodes as any).doc.content = 'topic+';
+  (spec.nodes as NodeSpec).topic.content = 'title shortdesc? prolog? body?';
+  (spec.nodes as NodeSpec).doc.content = 'topic+';
 
   return new Schema(spec);
 }

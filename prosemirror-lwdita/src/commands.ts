@@ -15,6 +15,7 @@ import { Command, EditorState, TextSelection, Transaction } from 'prosemirror-st
  * @param args - Node attributes
  * @returns a new Node
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function createNode(type: NodeType, args: Record<string, any> = {}): Node {
   switch (type.name) {
     case 'p': return type.createAndFill() as Node;
@@ -273,6 +274,7 @@ function defaultBlocks(pos: ResolvedPos, depth = 0) {
  */
 function defaultBlockAt(pos: ResolvedPos, depth = 0, preferred?: NodeType) {
   let index = -1;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let type: NodeType = null as any;
   // assign all allowed NodeType objects to variable `blocks`
   const blocks = defaultBlocks(pos, depth || undefined);
@@ -393,6 +395,7 @@ export function enterSplit(tr: Transaction, dispatch = false, depth = 0): Transa
     if (atEnd && depth > 1 && $from.depth - depth > 2) {
       const defaultType = $from.node(-depth + 1).type;
       return deleteEmptyLine(tr, depth - 1)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
         .split(tr.mapping.map($from.pos), depth, [{ type: defaultType }] as any);
     }
     if (tr.selection instanceof TextSelection) tr.deleteSelection();
@@ -406,6 +409,7 @@ export function enterSplit(tr: Transaction, dispatch = false, depth = 0): Transa
     if (defaultType) {
       let types = atEnd ? [{ type: defaultType }] : null;
       // "can": Check whether splitting at the given position is allowed
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let can = canSplit(tr.doc, tr.mapping.map($from.pos), depth, types as any);
 
       if (!types && !can && canSplit(tr.doc, tr.mapping.map($from.pos), depth, [{ type: defaultType }])) {
@@ -414,6 +418,7 @@ export function enterSplit(tr: Transaction, dispatch = false, depth = 0): Transa
       }
       // if we can split, then split the node
       if (can) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         tr.split(tr.mapping.map($from.pos), depth, types as any);
         if (!atEnd && !$from.parentOffset && $from.parent.type != defaultType && $from.node(-depth).canReplace($from.index(-depth), $from.indexAfter(-depth), Fragment.from([(defaultType as NodeType).create(), $from.parent]))) {
           // update the previous node markups
