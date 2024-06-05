@@ -266,13 +266,30 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@evolvedbinary/lwdita-ast@npm:^2.1.1":
+  version: 2.1.1
+  resolution: "@evolvedbinary/lwdita-ast@npm:2.1.1"
+  checksum: 10c0/261d5d22873e1aef56a00a322e51bcfdadf2c64bda2d1f98225cb5fae63a4e4ec7d7720be2d709ff6c4c66301c062608fe015c15475f82c5e7765e6529bc9bcc
+  languageName: node
+  linkType: hard
+
+"@evolvedbinary/lwdita-xdita@npm:^2.1.1":
+  version: 2.1.1
+  resolution: "@evolvedbinary/lwdita-xdita@npm:2.1.1"
+  dependencies:
+    "@evolvedbinary/lwdita-ast": "npm:^2.1.1"
+    "@rubensworks/saxes": "npm:6.0.1"
+  checksum: 10c0/7ba9230bf7b8c9c3ed294c44ae51b13611eafb6e56df7d71c3f16aeceb5f54fd30da526aba6f54e3cd61e79404f68c565a232fbc1bb51d87e506b89b71a07d14
+  languageName: node
+  linkType: hard
+
 "@evolvedbinary/prosemirror-lwdita-demo@workspace:prosemirror-lwdita-demo":
   version: 0.0.0-use.local
   resolution: "@evolvedbinary/prosemirror-lwdita-demo@workspace:prosemirror-lwdita-demo"
   dependencies:
+    "@evolvedbinary/lwdita-xdita": "npm:^2.1.1"
     "@evolvedbinary/prosemirror-lwdita": "workspace:^"
     "@parcel/transformer-sass": "npm:^2.12.0"
-    jdita: "npm:^0.2.4"
     parcel: "npm:^2.12.0"
     prosemirror-history: "npm:^1.3.2"
     prosemirror-menu: "npm:^1.2.4"
@@ -294,6 +311,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@evolvedbinary/prosemirror-lwdita@workspace:prosemirror-lwdita"
   dependencies:
+    "@evolvedbinary/lwdita-ast": "npm:^2.1.1"
+    "@evolvedbinary/lwdita-xdita": "npm:^2.1.1"
     "@tsconfig/recommended": "npm:^1.0.6"
     "@types/chai": "npm:^4.3.11"
     "@types/chai-as-promised": "npm:^7.1.3"
@@ -305,7 +324,6 @@ __metadata:
     coveralls: "npm:^3.1.1"
     eslint: "npm:^6.8.0"
     eslint-plugin-tsdoc: "npm:^0.2.17"
-    jdita: "npm:^0.2.4"
     mocha: "npm:^10.2.0"
     nodemon: "npm:^3.0.2"
     nyc: "npm:^15.1.0"
@@ -3749,6 +3767,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"jju@npm:~1.4.0":
+  version: 1.4.0
+  resolution: "jju@npm:1.4.0"
+  checksum: 10c0/f3f444557e4364cfc06b1abf8331bf3778b26c0c8552ca54429bc0092652172fdea26cbffe33e1017b303d5aa506f7ede8571857400efe459cb7439180e2acad
+  languageName: node
+  linkType: hard
+
 "js-tokens@npm:^4.0.0":
   version: 4.0.0
   resolution: "js-tokens@npm:4.0.0"
@@ -5068,65 +5093,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prosemirror-lwdita-demo@workspace:prosemirror-lwdita-demo":
-  version: 0.0.0-use.local
-  resolution: "prosemirror-lwdita-demo@workspace:prosemirror-lwdita-demo"
-  dependencies:
-    "@evolvedbinary/lwdita-xdita": "npm:^1.1.0"
-    "@parcel/transformer-sass": "npm:^2.12.0"
-    parcel: "npm:^2.12.0"
-    prosemirror-history: "npm:^1.3.2"
-    prosemirror-lwdita: "workspace:^"
-    prosemirror-menu: "npm:^1.2.4"
-    prosemirror-model: "npm:^1.19.4"
-    prosemirror-state: "npm:^1.4.3"
-    prosemirror-view: "npm:^1.32.7"
-    sass: "npm:^1.26.10"
-  languageName: unknown
-  linkType: soft
-
-"prosemirror-lwdita-package@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "prosemirror-lwdita-package@workspace:."
-  languageName: unknown
-  linkType: soft
-
-"prosemirror-lwdita@workspace:^, prosemirror-lwdita@workspace:prosemirror-lwdita":
-  version: 0.0.0-use.local
-  resolution: "prosemirror-lwdita@workspace:prosemirror-lwdita"
-  dependencies:
-    "@evolvedbinary/lwdita-ast": "npm:^1.0.1"
-    "@evolvedbinary/lwdita-xdita": "npm:^1.1.0"
-    "@tsconfig/recommended": "npm:^1.0.6"
-    "@types/chai": "npm:^4.3.11"
-    "@types/chai-as-promised": "npm:^7.1.3"
-    "@types/mocha": "npm:^10.0.6"
-    "@typescript-eslint/eslint-plugin": "npm:^2.30.0"
-    "@typescript-eslint/parser": "npm:^2.30.0"
-    chai: "npm:^4.3.10"
-    chai-as-promised: "npm:^7.1.1"
-    coveralls: "npm:^3.1.1"
-    eslint: "npm:^8.57.0"
-    mocha: "npm:^10.2.0"
-    nodemon: "npm:^3.0.2"
-    nyc: "npm:^15.1.0"
-    prosemirror-commands: "npm:^1.5.2"
-    prosemirror-history: "npm:^1.3.2"
-    prosemirror-keymap: "npm:^1.2.2"
-    prosemirror-menu: "npm:^1.2.4"
-    prosemirror-model: "npm:^1.19.4"
-    prosemirror-schema-list: "npm:^1.3.0"
-    prosemirror-state: "npm:^1.4.3"
-    prosemirror-transform: "npm:^1.8.0"
-    prosemirror-view: "npm:^1.32.7"
-    rimraf: "npm:^5.0.5"
-    ts-node: "npm:^9.1.1"
-    typedoc: "npm:^0.25.7"
-    typedoc-plugin-missing-exports: "npm:^2.2.0"
-    typescript: "npm:4.6.3"
-  languageName: unknown
-  linkType: soft
-
 "prosemirror-menu@npm:^1.2.4":
   version: 1.2.4
   resolution: "prosemirror-menu@npm:1.2.4"
@@ -5456,9 +5422,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"semver@npm:^6.0.0, semver@npm:^6.3.0, semver@npm:^6.3.1":
-  version: 6.3.1
-  resolution: "semver@npm:6.3.1"
+"semver@npm:^5.5.0":
+  version: 5.7.2
+  resolution: "semver@npm:5.7.2"
   bin:
     semver: bin/semver
   checksum: 10c0/e4cf10f86f168db772ae95d86ba65b3fd6c5967c94d97c708ccb463b778c2ee53b914cd7167620950fc07faf5a564e6efe903836639e512a1aa15fbc9667fa25
@@ -6316,6 +6282,15 @@ __metadata:
     signal-exit: "npm:^3.0.2"
     typedarray-to-buffer: "npm:^3.1.5"
   checksum: 10c0/7fb67affd811c7a1221bed0c905c26e28f0041e138fb19ccf02db57a0ef93ea69220959af3906b920f9b0411d1914474cdd90b93a96e5cd9e8368d9777caac0e
+  languageName: node
+  linkType: hard
+
+"write@npm:1.0.3":
+  version: 1.0.3
+  resolution: "write@npm:1.0.3"
+  dependencies:
+    mkdirp: "npm:^0.5.1"
+  checksum: 10c0/2ab5472e32ce2d25279a9d22365c5dd5b95fe40497ca43fa329aa61687fca56e36837615a1b6adfc4ca540389383185680a23497d75a1698b1dcbb52741d29a4
   languageName: node
   linkType: hard
 
