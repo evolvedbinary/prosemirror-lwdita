@@ -338,7 +338,7 @@ __metadata:
     prosemirror-model: "npm:^1.19.4"
     prosemirror-state: "npm:^1.4.3"
     prosemirror-view: "npm:^1.32.7"
-    rimraf: "npm:^5.0.5"
+    rimraf: "npm:^5.0.7"
     sass: "npm:^1.26.10"
   languageName: unknown
   linkType: soft
@@ -377,7 +377,7 @@ __metadata:
     prosemirror-state: "npm:^1.4.3"
     prosemirror-transform: "npm:^1.8.0"
     prosemirror-view: "npm:^1.32.7"
-    rimraf: "npm:^5.0.5"
+    rimraf: "npm:^5.0.7"
     ts-node: "npm:^9.1.1"
     typedoc: "npm:^0.25.7"
     typedoc-plugin-missing-exports: "npm:^2.2.0"
@@ -5302,14 +5302,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rimraf@npm:^5.0.5":
-  version: 5.0.5
-  resolution: "rimraf@npm:5.0.5"
+"rimraf@npm:^5.0.7":
+  version: 5.0.7
+  resolution: "rimraf@npm:5.0.7"
   dependencies:
     glob: "npm:^10.3.7"
   bin:
     rimraf: dist/esm/bin.mjs
-  checksum: 10c0/d50dbe724f33835decd88395b25ed35995077c60a50ae78ded06e0185418914e555817aad1b4243edbff2254548c2f6ad6f70cc850040bebb4da9e8cc016f586
+  checksum: 10c0/bd6dbfaa98ae34ce1e54d1e06045d2d63e8859d9a1979bb4a4628b652b459a2d17b17dc20ee072b034bd2d09bd691e801d24c4d9cfe94e16fdbcc8470a1d4807
   languageName: node
   linkType: hard
 
