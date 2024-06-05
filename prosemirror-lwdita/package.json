@@ -1,7 +1,7 @@
 {
-  "name": "prosemirror-jdita",
+  "name": "prosemirror-lwdita",
   "version": "0.1.1",
-  "description": "Use JDita in prosemirror",
+  "description": "Use LwDITA in ProseMirror",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
@@ -19,20 +19,23 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/evolvedbinary/prosemirror-jdita.git"
+    "url": "git+https://github.com/evolvedbinary/prosemirror-lwdita.git"
   },
   "keywords": [
+    "ProseMirror",
     "LwDITA",
     "DITA",
+    "XDITA",
     "XML",
+    "JDITA",
     "JSON"
   ],
   "author": "Evolved Binary",
   "license": "AGPL-3.0",
   "bugs": {
-    "url": "https://github.com/evolvedbinary/prosemirror-jdita/issues"
+    "url": "https://github.com/evolvedbinary/prosemirror-lwdita/issues"
   },
-  "homepage": "https://github.com/evolvedbinary/prosemirror-jdita#readme",
+  "homepage": "https://github.com/evolvedbinary/prosemirror-lwdita#readme",
   "directories": {
     "src": "./src",
     "test": "./test",

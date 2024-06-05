@@ -1,29 +1,30 @@
 {
-  "name": "prosemirror-jdita-demo",
+  "name": "prosemirror-lwdita-demo",
   "version": "0.1.1",
-  "description": "Demo for Prosemirror JDita plugin",
+  "description": "Demo for ProseMirror LwDITA Integration",
   "main": "index.html",
   "targets": {
     "main": false
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/evolvedbinary/prosemirror-jdita.git"
+    "url": "git+https://github.com/evolvedbinary/prosemirror-lwdita.git"
   },
   "keywords": [
     "ProseMirror",
-    "Docker",
     "LwDITA",
     "DITA",
+    "XDITA",
     "XML",
-    "JSON"
+    "JSON",
+    "JDITA"
   ],
   "author": "Evolved Binary",
   "license": "AGPL-3.0",
   "bugs": {
-    "url": "https://github.com/evolvedbinary/prosemirror-jdita/issues"
+    "url": "https://github.com/evolvedbinary/prosemirror-lwdita/issues"
   },
-  "homepage": "https://github.com/evolvedbinary/prosemirror-jdita#readme",
+  "homepage": "https://github.com/evolvedbinary/prosemirror-lwdita#readme",
   "scripts": {
     "build": "parcel build ./index.html",
     "start": "parcel ./index.html",
@@ -32,7 +33,7 @@
   "dependencies": {
     "jdita": "^0.2.4",
     "prosemirror-history": "^1.3.2",
-    "prosemirror-jdita": "workspace:^",
+    "prosemirror-lwdita": "workspace:^",
     "prosemirror-menu": "^1.2.4",
     "prosemirror-model": "^1.19.4",
     "prosemirror-state": "^1.4.3",

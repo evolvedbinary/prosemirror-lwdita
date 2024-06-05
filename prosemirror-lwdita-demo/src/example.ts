@@ -1,9 +1,9 @@
 import { EditorState } from "prosemirror-state";
 import { EditorView } from "prosemirror-view";
 import { Node } from "prosemirror-model";
-import { schema } from "prosemirror-jdita";
+import { schema } from "prosemirror-lwdita";
 import jsonDocLoader from "./doc";
-import { menu, shortcuts } from "prosemirror-jdita";
+import { menu, shortcuts } from "prosemirror-lwdita";
 import { githubMenuItem, openFileMenuItem } from "./demo-plugin";
 import { history } from "prosemirror-history";
 
@@ -11,7 +11,7 @@ const schemaObject = schema();
 
 /**
  * Load the json document and create a new EditorView.
- * The json document is transformed from JDita to ProseMirror Schema
+ * The json document is transformed from JDITA to ProseMirror Schema
  */
 jsonDocLoader.then(jsonDoc => {
   // get the editor element from the DOM
@@ -28,12 +28,12 @@ jsonDocLoader.then(jsonDoc => {
       plugins: [
         // history plugin comes from prosemirror-history
         history(),
-        // these were custom plugins check the prosemirror-jdita/src/plugin.ts file
+        // these were custom plugins check the prosemirror-lwdita/src/plugin.ts file
         shortcuts(schemaObject),
         menu(schemaObject, {
           end: [[
-            githubMenuItem({ label: 'jdita', url: 'https://github.com/evolvedbinary/jdita' }),
-            githubMenuItem({ label: 'prosemirror-jdita', url: 'https://github.com/evolvedbinary/prosemirror-jdita' }),
+            githubMenuItem({ label: 'lwdita', url: 'https://github.com/evolvedbinary/lwdita' }),
+            githubMenuItem({ label: 'prosemirror-lwdita', url: 'https://github.com/evolvedbinary/prosemirror-lwdita' }),
           ]],
           start: [[ openFileMenuItem() ]],
         }),

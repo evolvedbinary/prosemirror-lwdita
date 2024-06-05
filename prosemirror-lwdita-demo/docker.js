@@ -7,13 +7,13 @@ const content = `FROM nginx:alpine
 COPY dist /usr/share/nginx/html
 
 LABEL org.label-schema.build-date="${buildTimeStamp}" \\
-      org.label-schema.description="ProseMirror JDita Example" \\
-      org.label-schema.name="prosemirror-jdita-example" \\
+      org.label-schema.description="ProseMirror LwDITA Example" \\
+      org.label-schema.name="prosemirror-lwdita-example" \\
       org.label-schema.version="${buildVersion}" \\
       org.label-schema.schema-version="1.0" \\
-      org.label-schema.url="https://github.com/evolvedbinary/prosemirror-jdita" \\
+      org.label-schema.url="https://github.com/evolvedbinary/prosemirror-lwdita" \\
       org.label-schema.vcs-ref="${buildCommitAbbrev}" \\
-      org.label-schema.vcs-url="https://github.com/evolvedbinary/prosemirror-jdita" \\
+      org.label-schema.vcs-url="https://github.com/evolvedbinary/prosemirror-lwdita" \\
       org.label-schema.vendor="Evolved Binary"
 
 COPY LICENSE /usr/share/nginx/html/LICENSE`;

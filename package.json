@@ -1,44 +1,45 @@
 {
-  "name": "prosemirror-jdita-package",
+  "name": "prosemirror-lwdita-package",
   "version": "0.1.1",
-  "description": "Prosemirror plugin to edit JDita documents",
+  "description": "ProseMirror plugin to edit LwDITA documents",
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/evolvedbinary/prosemirror-jdita.git"
+    "url": "git+https://github.com/evolvedbinary/prosemirror-lwdita.git"
   },
   "keywords": [
     "ProseMirror",
-    "Docker",
     "LwDITA",
     "DITA",
+    "XDITA",
     "XML",
+    "JDITA",
     "JSON"
   ],
   "author": "Evolved Binary",
   "license": "AGPL-3.0",
   "bugs": {
-    "url": "https://github.com/evolvedbinary/prosemirror-jdita/issues"
+    "url": "https://github.com/evolvedbinary/prosemirror-lwdita/issues"
   },
-  "homepage": "https://github.com/evolvedbinary/prosemirror-jdita#readme",
+  "homepage": "https://github.com/evolvedbinary/prosemirror-lwdita#readme",
   "private": true,
   "scripts": {
-    "docker": "yarn workspace prosemirror-jdita-demo docker",
-    "start:demo": "yarn workspace prosemirror-jdita-demo start",
-    "build:demo": "yarn workspace prosemirror-jdita-demo build",
-    "build": "yarn workspace prosemirror-jdita build",
-    "test": "yarn workspace prosemirror-jdita test",
-    "coverage": "yarn workspace prosemirror-jdita coverage",
-    "coveralls": "yarn workspace prosemirror-jdita coveralls",
-    "generate-docs": "yarn workspace prosemirror-jdita generate-docs"
+    "docker": "yarn workspace prosemirror-lwdita-demo docker",
+    "start:demo": "yarn workspace prosemirror-lwdita-demo start",
+    "build:demo": "yarn workspace prosemirror-lwdita-demo build",
+    "build": "yarn workspace prosemirror-lwdita build",
+    "test": "yarn workspace prosemirror-lwdita test",
+    "coverage": "yarn workspace prosemirror-lwdita coverage",
+    "coveralls": "yarn workspace prosemirror-lwdita coveralls",
+    "generate-docs": "yarn workspace prosemirror-lwdita generate-docs"
   },
   "engines": {
     "node": ">=20.10.0 <21",
     "yarn": ">=4.2.2"
   },
   "workspaces": [
-    "prosemirror-jdita",
-    "prosemirror-jdita-demo"
+    "prosemirror-lwdita",
+    "prosemirror-lwdita-demo"
   ],
   "packageManager": "yarn@4.2.2"
 }

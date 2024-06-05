@@ -5005,15 +5005,25 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prosemirror-jdita-demo@workspace:prosemirror-jdita-demo":
+"prosemirror-keymap@npm:^1.2.2":
+  version: 1.2.2
+  resolution: "prosemirror-keymap@npm:1.2.2"
+  dependencies:
+    prosemirror-state: "npm:^1.0.0"
+    w3c-keyname: "npm:^2.2.0"
+  checksum: 10c0/7aa28c731e00962c90c91361a3c9f7000f960870a1300f7477da8afa8fd1b9cce0b3b7ca483aaa5832fd0bf88b5ff081defc184592997b08980b9ab67eeddcb7
+  languageName: node
+  linkType: hard
+
+"prosemirror-lwdita-demo@workspace:prosemirror-lwdita-demo":
   version: 0.0.0-use.local
-  resolution: "prosemirror-jdita-demo@workspace:prosemirror-jdita-demo"
+  resolution: "prosemirror-lwdita-demo@workspace:prosemirror-lwdita-demo"
   dependencies:
     "@parcel/transformer-sass": "npm:^2.12.0"
     jdita: "npm:^0.2.4"
     parcel: "npm:^2.12.0"
     prosemirror-history: "npm:^1.3.2"
-    prosemirror-jdita: "workspace:^"
+    prosemirror-lwdita: "workspace:^"
     prosemirror-menu: "npm:^1.2.4"
     prosemirror-model: "npm:^1.19.4"
     prosemirror-state: "npm:^1.4.3"
@@ -5022,15 +5032,15 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"prosemirror-jdita-package@workspace:.":
+"prosemirror-lwdita-package@workspace:.":
   version: 0.0.0-use.local
-  resolution: "prosemirror-jdita-package@workspace:."
+  resolution: "prosemirror-lwdita-package@workspace:."
   languageName: unknown
   linkType: soft
 
-"prosemirror-jdita@workspace:^, prosemirror-jdita@workspace:prosemirror-jdita":
+"prosemirror-lwdita@workspace:^, prosemirror-lwdita@workspace:prosemirror-lwdita":
   version: 0.0.0-use.local
-  resolution: "prosemirror-jdita@workspace:prosemirror-jdita"
+  resolution: "prosemirror-lwdita@workspace:prosemirror-lwdita"
   dependencies:
     "@tsconfig/recommended": "npm:^1.0.6"
     "@types/chai": "npm:^4.3.11"
@@ -5063,16 +5073,6 @@ __metadata:
     typescript: "npm:4.6.3"
   languageName: unknown
   linkType: soft
-
-"prosemirror-keymap@npm:^1.2.2":
-  version: 1.2.2
-  resolution: "prosemirror-keymap@npm:1.2.2"
-  dependencies:
-    prosemirror-state: "npm:^1.0.0"
-    w3c-keyname: "npm:^2.2.0"
-  checksum: 10c0/7aa28c731e00962c90c91361a3c9f7000f960870a1300f7477da8afa8fd1b9cce0b3b7ca483aaa5832fd0bf88b5ff081defc184592997b08980b9ab67eeddcb7
-  languageName: node
-  linkType: hard
 
 "prosemirror-menu@npm:^1.2.4":
   version: 1.2.4

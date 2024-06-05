@@ -39,9 +39,9 @@ jobs:
           command: yarn coverage
       - run:
           name: Generate Code Coverage lcov File
-          command: yarn workspace prosemirror-jdita run nyc --reporter=text-lcov report > prosemirror-jdita/coverage.lcov
+          command: yarn workspace prosemirror-lwdita run nyc --reporter=text-lcov report > prosemirror-lwdita/coverage.lcov
       - coveralls/upload:
-          coverage_file: prosemirror-jdita/coverage.lcov
+          coverage_file: prosemirror-lwdita/coverage.lcov
   generate-docs:
     docker:
       - image: cimg/node:<< pipeline.parameters.node-image-tag >>

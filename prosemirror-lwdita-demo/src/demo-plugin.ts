@@ -1,6 +1,6 @@
 import { Command } from "prosemirror-commands";
 import { MenuElement, MenuItem, MenuItemSpec } from "prosemirror-menu";
-import { InputContainer } from "prosemirror-jdita";
+import { InputContainer } from "prosemirror-lwdita";
 
 /**
  * Open file selection dialog and select and file to insert into the local storage.

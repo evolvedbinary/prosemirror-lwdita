@@ -1,45 +1,45 @@
-# Prosemirror JDita
+# ProseMirror LwDITA
 
-[![Node.js Version](https://img.shields.io/node/v-lts/prosemirror-jdita)](https://nodejs.org)
-[![Npm Package Version](https://img.shields.io/npm/v/prosemirror-jdita)](https://www.npmjs.com/package/prosemirror-jdita)
-[![Build Status](https://circleci.com/gh/evolvedbinary/prosemirror-jdita.svg?style=svg)](https://circleci.com/gh/evolvedbinary/prosemirror-jdita)
-[![Coverage Status](https://coveralls.io/repos/github/evolvedbinary/prosemirror-jdita/badge.svg?branch=main)](https://coveralls.io/github/evolvedbinary/prosemirror-jdita?branch=main)
+[![Node.js Version](https://img.shields.io/node/v-lts/prosemirror-lwdita)](https://nodejs.org)
+[![Npm Package Version](https://img.shields.io/npm/v/prosemirror-lwdita)](https://www.npmjs.com/package/prosemirror-lwdita)
+[![Build Status](https://circleci.com/gh/evolvedbinary/prosemirror-lwdita.svg?style=svg)](https://circleci.com/gh/evolvedbinary/prosemirror-lwdita)
+[![Coverage Status](https://coveralls.io/repos/github/evolvedbinary/prosemirror-lwdita/badge.svg?branch=main)](https://coveralls.io/github/evolvedbinary/prosemirror-lwdita?branch=main)
 
-This tool generates Prosemirror documents from JDita objects. It also provides Schema Definition for proper display and editing of JDita data.
+This tool generates ProseMirror documents from JDITA objects. It also provides Schema Definition for proper display and editing of JDITA data.
 
 ## Usage
 
 Add the library to your project using npm or yarn
 
 ```shell
-npm install prosemirror-jdita
+npm install prosemirror-lwdita
 ```
 
 ```shell
-yarn add prosemirror-jdita
+yarn add prosemirror-lwdita
 ```
 
 Include the Library:
 
 ```javascript
 // SCHEMA builder
-import { schema } from "prosemirror-jdita";
+import { schema } from "prosemirror-lwdita";
 //PLUGINS
-import { menu, shortcuts } from "prosemirror-jdita";
+import { menu, shortcuts } from "prosemirror-lwdita";
 //Transform library
-import { xditaToJson } from "jdita";
-import { document } from "prosemirror-jdita";
+import { xditaToJson } from "lwdita";
+import { document } from "prosemirror-lwdita";
 ```
 
-This is a minimal example of how to use Prosemirror-JDita.
-You can check the [included demo](prosemirror-jdita-demo/src/) for a full example:
+This is a minimal example of how to use prosemirror-lwdita.
+You can check the [included demo](prosemirror-lwdita-demo/src/) for a full example:
 
 ```javascript
-// Please use a valid XDita sample,
+// Please use a valid XDITA sample,
 // e.g. pick one from https://github.com/oasis-tcs/dita-lwdita/tree/spec/org.oasis.xdita/samples/xdita
-let xdita = `Insert your XDita example here`
+let xdita = `Insert your XDITA example here`
 
-// Transform the XDita to jdita
+// Transform the XDITA to JDITA
 let jDita = await xditaToJson(xdita,true);
 // transform the jdita to Schema compliant Document
 let document = await document(jDita);
@@ -70,12 +70,12 @@ new EditorView(domEl, {
 
 ## Demo
 
-We provide a [small demo](prosemirror-jdita-demo/src/) to showcase features and as a playground to test all of the features.
+We provide a [small demo](prosemirror-lwdita-demo/src/) to showcase features and as a playground to test all of the features.
 
 ```shell
 # clone project and install dependencies
-git clone https://github.com/evolvedbinary/prosemirror-jdita.git
-cd prosemirror-jdita
+git clone https://github.com/evolvedbinary/prosemirror-lwdita.git
+cd prosemirror-lwdita
 yarn install
 
 # start the demo
@@ -96,16 +96,16 @@ For development, you will need Node.js and a node package manager, like Yarn, to
 
 ### Installation
 
-Clone the Prosemirror-JDita repository:
+Clone the prosemirror-lwdita repository:
 
 ```shell
-git clone https://github.com/evolvedbinary/prosemirror-jdita.git
+git clone https://github.com/evolvedbinary/prosemirror-lwdita.git
 ```
 
-Change to the Prosemirror-JDita directory:
+Change to the prosemirror-lwdita directory:
 
 ```shell
-cd prosemirror-jdita
+cd prosemirror-lwdita
 ```
 
 Install all packages:
@@ -134,7 +134,7 @@ yarn build:demo
 yarn run generate-docs
 ```
 
-This will generate a new folder `generated-docs` containing an HTML file with the entire TSDoc Prosemirror-JDita documentation.
+This will generate a new folder `generated-docs` containing an HTML file with the entire TSDoc prosemirror-lwdita documentation.
 Open this file in a browser to navigate through the documentation.
 
 ### Test
@@ -148,8 +148,9 @@ yarn test # run unit tests
 yarn coverage # get coverage
 ```
 
-## Flow Diagram of Prosemirror-JDita
+## Flow Diagram of prosemirror-lwdita
+
 
 This diagram demonstrates the library and the internal flow:
 
-![Diagram of the Prosemirror-JDita application flow](diagrams/prosemirror-jdita-app-flow.svg "Diagram of the Prosemirror-JDita application flow")
+![Diagram of the prosemirror-lwita application flow](diagrams/prosemirror-lwdita-app-flow.svg "Diagram of the prosemirror-lwdita application flow")
