@@ -5,7 +5,6 @@ import {
   JDITA_OBJECT,
   TRANSFORMED_JDITA_OBJECT,
   JDITA_NODE,
-  JDITA_PARENT_NODE,
   JDITA_TRANFORMED_RESULT1,
   JDITA_TRANFORMED_RESULT2
 } from './test-utils';
@@ -44,8 +43,7 @@ describe('Function defaultTravel()', () => {
   describe('when passed a JDITA node "title" and its parent node "topic"', () => {
     it('returns the transformed ProseMirror objects', () => {
       const node = JSON.parse(JDITA_NODE),
-            parent = JSON.parse(JDITA_PARENT_NODE),
-            expected = _test_private_document.defaultTravel(node, parent),
+            expected = _test_private_document.defaultTravel(node),
             result = (
               JSON.parse(JDITA_TRANFORMED_RESULT1),
               JSON.parse(JDITA_TRANFORMED_RESULT2)
@@ -83,7 +81,7 @@ describe('Function travel()', () => {
 // and test against expected JDita transformation output
 describe('Function document()', () => {
   it('returns a transformed Prosemirror object', () => {
-    let transformedJdita = document(JSON.parse(JDITA_OBJECT));
+    const transformedJdita = document(JSON.parse(JDITA_OBJECT));
     expect(transformedJdita).to.deep.equal(JSON.parse(TRANSFORMED_JDITA_OBJECT));
   });
 });

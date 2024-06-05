@@ -7,9 +7,10 @@ import { IS_MARK, defaultNodeName } from "./schema";
  * @param object  - Generic object
  * @returns object - The object with undefined attributes removed
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function deleteUndefined(object?: any) {
   if (object) {
-    for (let key in object) {
+    for (const key in object) {
       if (typeof object[key] === 'undefined') {
         delete(object[key]);
       }
@@ -24,8 +25,10 @@ function deleteUndefined(object?: any) {
  * The following 4 nodes (audio, video, image, text) are
  * treated in a customized way instead of applying the defaultTravel() function:
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const NODES: Record<string, (value: JDita, parent: JDita) => any> = {
-  audio: (value, parent) => {
+  audio: (value) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const attrs: any = deleteUndefined({ ...value.attributes });
     const content: JDita[] = [];
     if (value.children) {
@@ -59,7 +62,8 @@ export const NODES: Record<string, (value: JDita, parent: JDita) => any> = {
     }
     return result;
   },
-  video: (value, parent) => {
+  video: (value) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const attrs: any = deleteUndefined({ ...value.attributes });
     const content: JDita[] = [];
     if (value.children) {
@@ -93,7 +97,7 @@ export const NODES: Record<string, (value: JDita, parent: JDita) => any> = {
     const result = { type: value.nodeName, attrs, content: content.map(child => travel(child, value)) };
     return result;
   },
-  image: (value, parent) => {
+  image: (value) => {
     if (value.children
       && value.children[0].nodeName === 'alt'
       && value.children[0]?.children
@@ -103,7 +107,7 @@ export const NODES: Record<string, (value: JDita, parent: JDita) => any> = {
       const result = { type: 'image', attrs };
       return result;
     }
-    return defaultTravel(value, parent);
+    return defaultTravel(value);
   },
   text: (value: JDita) => ({ type: 'text', text: value.content, attrs: {} }),
 };
@@ -112,10 +116,10 @@ export const NODES: Record<string, (value: JDita, parent: JDita) => any> = {
  * Transforms the JDita document into a proper ProseMirror document
  *
  * @param value - The JDita node
- * @param parent - The parent JDita node
  * @returns The transformed JDita node
  */
-function defaultTravel(value: JDita, parent: JDita): any {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function defaultTravel(value: JDita): any {
   // children will become content
   const content = value.children?.map(child => travel(child, value));
   // attributes will become attrs
@@ -124,6 +128,7 @@ function defaultTravel(value: JDita, parent: JDita): any {
   deleteUndefined(attrs);
   // node name will become type
   const type = defaultNodeName(value.nodeName);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let result: any;
   // IS_MARK is the array  `u, s, b, sup, sub`
   if (IS_MARK.indexOf(value.nodeName) > -1) {
@@ -151,6 +156,7 @@ function defaultTravel(value: JDita, parent: JDita): any {
  * @param parent - The parent JDita node
  * @returns The transformed JDita node
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function travel(value: JDita, parent: JDita): any {
   // if it's a special node, use the special node function,
   // otherwise use the default travel function
@@ -169,6 +175,7 @@ function travel(value: JDita, parent: JDita): any {
  * @param jdita - the JDita document
  * @returns transformed JDita document
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function document(jdita: JDita): Record<string, any> {
   /**
    * Example input:

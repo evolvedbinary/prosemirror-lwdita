@@ -1,6 +1,6 @@
 import { AbstractBaseNode, ChildTypes, DocumentNode, UnknownNodeError, getNodeClassType, nodeGroups } from '@evolvedbinary/lwdita-ast';
 import { getDomNode } from './dom';
-import { NodeSpec, Schema, SchemaSpec, Node, MarkSpec, DOMOutputSpec } from 'prosemirror-model';
+import { NodeSpec, Schema, SchemaSpec, Node, MarkSpec, DOMOutputSpec, Attrs } from 'prosemirror-model';
 
 /**
  * Set the root node `document` to string "doc"
@@ -15,14 +15,14 @@ export const NODE_NAMES: Record<string, string> = {
 /**
  * Provide a map of special nodes to their corresponding DOM node
  */
-export const TO_DOM: Record<string, (node: typeof AbstractBaseNode, attrs: any)
+export const TO_DOM: Record<string, (node: typeof AbstractBaseNode, attrs: Attrs)
   => (node: Node) => DOMOutputSpec> = {}
 
 /**
  * Some nodes have special attributes.
  * This is a list of those nodes and their special attributes
  */
-export const NODE_ATTRS: Record<string, (attrs: string[]) => any> = {
+export const NODE_ATTRS: Record<string, (attrs: string[]) => Attrs> = {
   video: node => defaultNodeAttrs([...node, 'controls', 'autoplay', 'loop', 'muted', 'poster']),
   audio: node => defaultNodeAttrs([...node, 'controls', 'autoplay', 'loop', 'muted']),
 }
@@ -51,7 +51,7 @@ export const NODE_ATTR_NAMES: Record<string, Record<string, string>> = {
  * Provide a map of special nodes to their corresponding Schema
  */
 export const SCHEMAS: Record<string, (node: typeof AbstractBaseNode, next: (nodeName: string) => void) => SchemaNode> = {
-  'text': (node: typeof AbstractBaseNode, next: (nodeName: string) => void): SchemaNode => {
+  'text': (): SchemaNode => {
     const result: SchemaNode = {
       attrs: {
         parent: { default: '' }
@@ -103,8 +103,8 @@ export const SCHEMA_CONTENT: Record<string, [content: string, groups: string]> =
  * A map of special children for certain media nodes
  */
 export const SCHEMA_CHILDREN: Record<string, (type: ChildTypes) => string[]> = {
-  video: type => ['media-source', 'media-track', 'desc'],
-  audio: type => ['media-source', 'media-track', 'desc'],
+  video: () => ['media-source', 'media-track', 'desc'],
+  audio: () => ['media-source', 'media-track', 'desc'],
 }
 
 /**
@@ -165,7 +165,7 @@ function schemaTravel(node: typeof AbstractBaseNode, next: (nodeName: string) =>
  * @param attrs - The attributes of the node
  * @returns A function that generates the DOM spec
  */
-export function defaultToDom(node: typeof AbstractBaseNode, attrs: any): (node: Node) => DOMOutputSpec {
+export function defaultToDom(node: typeof AbstractBaseNode, attrs: Attrs): (node: Node) => DOMOutputSpec {
   return function(pmNode: Node) {
     return [getDomNode(node.nodeName, pmNode.attrs?.parent), attrs
       ? Object.keys(attrs).reduce((newAttrs, attr) => {
@@ -174,7 +174,7 @@ export function defaultToDom(node: typeof AbstractBaseNode, attrs: any): (node: 
           newAttrs[domAttr] = pmNode.attrs[attr];
         }
         return newAttrs;
-      }, { 'data-j-type': node.nodeName } as any)
+      }, { 'data-j-type': node.nodeName } as Record<string, string>)
     : {}, 0];
   }
 }
@@ -202,7 +202,7 @@ export function getDomAttr(nodeName: string, attr: string): string {
  * @param attrs - The attributes of the node
  * @returns A map of the attributes with default values
  */
-export function defaultNodeAttrs(attrs: string[]): any {
+export function defaultNodeAttrs(attrs: string[]): Attrs {
   return attrs.reduce((result, field) => {
     result[field] = { default: '' };
     return result;
@@ -223,7 +223,6 @@ export function defaultNodeAttrs(attrs: string[]): any {
  */
 function defaultTravel(
   node: typeof AbstractBaseNode,
-  parent: typeof AbstractBaseNode,
   next: (nodeName: string, parent: typeof AbstractBaseNode) => void): NodeSpec {
   const children = (SCHEMA_CHILDREN[node.nodeName] || getChildren)(node.childTypes);
   const isNode = IS_MARK.indexOf(node.nodeName) < 0;
@@ -244,6 +243,7 @@ function defaultTravel(
               newAttrs[attr] = dom.getAttribute(domAttr);
             }
             return newAttrs;
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           }, {} as any)
           : {}
       },
@@ -301,7 +301,7 @@ export function schema(): Schema {
   }
 
   // populate the schema spec using the jdita nodes
-  function browse(node: string | typeof AbstractBaseNode, parent: typeof AbstractBaseNode): void {
+  function browse(node: string | typeof AbstractBaseNode): void {
     // get the node name
     const nodeName = typeof node === 'string' ? node : node.nodeName;
 
@@ -320,7 +320,7 @@ export function schema(): Schema {
     try {
       const nodeClass = typeof node === 'string' ? getNodeClassType(node) : node;
       // travel the node class and generate the node spec
-      const result = defaultTravel(nodeClass, parent, browse);
+      const result = defaultTravel(nodeClass, browse);
       if (result) {
         // set the node spec based on the node type
         if (IS_MARK.indexOf(nodeName) > -1) {
@@ -331,6 +331,7 @@ export function schema(): Schema {
       }
     } catch (e) {
       if (e instanceof UnknownNodeError) {
+        console.error(e);
       } else {
         console.error(node);
         console.error(e);
@@ -339,10 +340,10 @@ export function schema(): Schema {
   }
 
   // start the process of populating the schema spec using the jdita nodes from the document node
-  browse(DocumentNode, DocumentNode);
+  browse(DocumentNode);
 
-  (spec.nodes as any).topic.content = 'title shortdesc? prolog? body?';
-  (spec.nodes as any).doc.content = 'topic+';
+  (spec.nodes as NodeSpec).topic.content = 'title shortdesc? prolog? body?';
+  (spec.nodes as NodeSpec).doc.content = 'topic+';
 
   return new Schema(spec);
 }

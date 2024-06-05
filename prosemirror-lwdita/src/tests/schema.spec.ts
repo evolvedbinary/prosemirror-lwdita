@@ -1,6 +1,6 @@
 import { assert, expect } from 'chai';
-import { defaultNodeAttrs, defaultNodeName, defaultToDom, getDomAttr, schema, _test_private_schema } from '../schema';
-import { DOMOutputSpec, Schema } from 'prosemirror-model';
+import { defaultNodeAttrs, defaultNodeName, defaultToDom, getDomAttr, schema, _test_private_schema, SchemaNode } from '../schema';
+import { DOMOutputSpec, MarkSpec, NodeSpec, Schema } from 'prosemirror-model';
 import { createNode } from '../commands';
 import { AbstractBaseNode, DdNode, TextNode, TopicNode } from '@evolvedbinary/lwdita-ast';
 
@@ -10,7 +10,7 @@ import { AbstractBaseNode, DdNode, TextNode, TopicNode } from '@evolvedbinary/lw
 
 describe('Function schemaTravel()', () => {
   it('returns correct attributes for a TextNode', () => {
-    assert.deepEqual(_test_private_schema.schemaTravel(TextNode as unknown as typeof AbstractBaseNode, console.log), { attrs: { parent: { default: '' } }} as any);
+    assert.deepEqual(_test_private_schema.schemaTravel(TextNode as unknown as typeof AbstractBaseNode, console.log), { attrs: { parent: { default: '' } }} as SchemaNode);
   });
 });
 
@@ -37,7 +37,7 @@ describe('Function defaultToDom()', () => {
 
     const type = schema().nodes.li;
     const node = createNode(type, {});
-    const result = toDom(node as any);
+    const result = toDom(node);
     const expected = [
       'jdita-node-node',
       {
@@ -107,9 +107,10 @@ describe('Function schema()', () => {
   });
 
   it('contains all JDita nodes', () => {
-    const nodes = result.spec.nodes as any; //orderedMap does not have content property so we had to cast it to any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const nodes = result.spec.nodes as any; 
     // nodeNames are strings in the content array
-    const nodeNames = nodes.content.filter((node: any) => typeof node === 'string')
+    const nodeNames = nodes.content.filter((node: NodeSpec) => typeof node === 'string')
     const expectedNodes = [
       'text',         'image',       'data',
       'xref',         'ph',          'title',
@@ -127,8 +128,9 @@ describe('Function schema()', () => {
   });
 
   it('returns node specs with schema-compliant children', () => {
-    const nodes = result.spec.nodes as any;
-    const nodesObject = {} as any;
+    const nodes = result.spec.nodes as NodeSpec;
+    const nodesObject = {} as NodeSpec;
+    if(!nodes.content) return;
     for(let i=0; i<nodes.content.length; i+=2) {
       nodesObject[nodes.content[i]] = nodes.content[i+1];
     }
@@ -144,9 +146,10 @@ describe('Function schema()', () => {
   });
 
   it('returns a node spec with a schema-compliant inline property', () => {
-    const nodes = result.spec.nodes as any;
-    const nodesObject = {} as any;
-    for(let i=0; i<nodes.content.length; i+=2) {
+    const nodes = result.spec.nodes as NodeSpec;
+    const nodesObject = {} as NodeSpec;
+    if(!nodes.content) return;
+    for(let i=0; i < nodes.content.length; i+=2) {
       nodesObject[nodes.content[i]] = nodes.content[i+1];
     }
 
@@ -164,9 +167,10 @@ describe('Function schema()', () => {
   });
 
   it('returns a node spec with a schema-compliant node attribute', () => {
-    const nodes = result.spec.nodes as any;
-    const nodesObject = {} as any;
-    for(let i=0; i<nodes.content.length; i+=2) {
+    const nodes = result.spec.nodes as NodeSpec;
+    const nodesObject = {} as NodeSpec;
+    if(!nodes.content) return;
+    for(let i=0; i< nodes.content.length; i+=2) {
       nodesObject[nodes.content[i]] = nodes.content[i+1];
     }
 
@@ -206,8 +210,8 @@ describe('Function schema()', () => {
   });
 
   it('contains all expected marks', () => {
-    const marks = result.spec.marks as any;
-    const specMarks = marks.content.filter((node: any) => typeof node === 'string')
+    const marks = result.spec.marks as MarkSpec;
+    const specMarks = marks.content.filter((node: MarkSpec) => typeof node === 'string')
     const expectedMarks = [ 'sup', 'sub', 'u', 'i', 'b' ];
     expect(specMarks).to.have.members(expectedMarks);
   });
