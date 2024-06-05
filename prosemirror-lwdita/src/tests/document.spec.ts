@@ -30,7 +30,8 @@ import {
   complexXdita,
   shortXdita
 } from './test-utils';
-import { JDita, xditaToJson } from 'jdita';
+import { JDita } from '@evolvedbinary/lwdita-ast';
+import { xditaToJdita } from '@evolvedbinary/lwdita-xdita';
 
 use(ChaiPromised);
 
@@ -115,7 +116,7 @@ const XDitaMediaFiles = [{ file: imageXdita, type: 'image' }, { file: audioXdita
 XDitaMediaFiles.forEach((XDitaMediaFile) => {
   describe('when passed an XDita document containing "' + XDitaMediaFile.type + '" elements', () => {
     it('returns a transformed JDita containing all "' + XDitaMediaFile.type + '" elements and their attributes', async () => {
-      const originalJdita = await xditaToJson(XDitaMediaFile.file);
+      const originalJdita = await xditaToJdita(XDitaMediaFile.file);
       originalJdita.attributes = {};
       const transformedJdita = document(originalJdita);
       const result = unTravel(transformedJdita);
@@ -129,7 +130,7 @@ const XDitaFiles = [{ file: complexXdita, type: 'complex XDita' }, { file: short
 XDitaFiles.forEach((XDitaFile) => {
   describe('when passed a  "' + XDitaFile.type + '" file', () => {
     it('returns a JDita document object containing all elements and their attributes', async () => {
-      const originalJdita = await xditaToJson(XDitaFile.file);
+      const originalJdita = await xditaToJdita(XDitaFile.file);
       originalJdita.attributes = {};
       const transformedJdita = document(originalJdita);
       const result = unTravel(transformedJdita);
@@ -141,7 +142,7 @@ XDitaFiles.forEach((XDitaFile) => {
 });
 
 describe('Const NODES handles', () => {
-  let parent: JDita, value: JDita, result: any, expected: any;
+  let parent: JDita, value: JDita, result: string, expected: string;
 
   describe('function video()', () => {
     it('returns a video node', () => {

@@ -1,9 +1,7 @@
 import { Command } from "prosemirror-commands";
 import { MenuElement, MenuItem, MenuItemSpec } from "prosemirror-menu";
 import { InputContainer } from "@evolvedbinary/prosemirror-lwdita";
-import { schema } from "prosemirror-jdita";
-import { DOMSerializer, Fragment } from "prosemirror-model";
-import { unTravel } from "prosemirror-jdita";
+import { unTravel } from "@evolvedbinary/prosemirror-lwdita";
 
 /**
  * Open file selection dialog and select and file to insert into the local storage.
