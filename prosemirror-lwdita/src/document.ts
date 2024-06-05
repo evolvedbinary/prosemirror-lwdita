@@ -189,72 +189,71 @@ function travel(value: JDita, parent: JDita): any {
  * Transforms the JDita document
  * into a Schema compliant JDita document
  *
+ * @example
+ * Here's an example input:
+ * ```
+ * {
+ *   "nodeName": "document",
+ *   "children": [
+ *     {
+ *       "nodeName": "topic",
+ *       "attributes": {
+ *       "id": "intro-product"
+ *     },
+ *     {
+ *       "nodeName": "title",
+ *       "attributes": {},
+ *       "children": [
+ *         {
+ *           "nodeName": "text",
+ *           "content": "Overview"
+ *         }
+ *       ]
+ *     }
+ *   ]
+ * }
+ * ```
+ *
+ * @example
+ * Here's an example output of the transformation `travel(jdita, jdita)`:
+ * ```
+ * {
+ *   "type": "doc",
+ *   "attrs": {},
+ *   "content": [
+ *     {
+ *       "type": "topic",
+ *       "attrs": {
+ *         "id": "intro-product",
+ *         "parent": "doc"
+ *       },
+ *       "content": [
+ *         {
+ *           "type": "title",
+ *           "attrs": {
+ *             "parent": "topic"
+ *           },
+ *           "content": [
+ *             {
+ *               "type": "text",
+ *               "text": "Overview",
+ *               "attrs": {
+ *                 "parent": "title"
+ *               }
+ *             }
+ *           ]
+ *         }
+ *       ]
+ *     }
+ *   ]
+ * }
+ * ```
+ *
  * @param jdita - the JDita document
  * @returns transformed JDita document
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function document(jdita: JDita): Record<string, any> {
-  /**
-   * Example input:
-  {
-    "nodeName": "document",
-    "children": [
-      {
-        "nodeName": "topic",
-        "attributes": {
-          "id": "intro-product"
-        },
-        "children": [
-          {
-            "nodeName": "title",
-            "attributes": {},
-            "children": [
-              {
-                "nodeName": "text",
-                "content": "Overview"
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  }
-  */
-
-  /**
-   * Example output of the transformation `travel(jdita, jdita)`:
-  {
-    "type": "doc",
-    "attrs": {},
-    "content": [
-      {
-        "type": "topic",
-        "attrs": {
-          "id": "intro-product",
-          "parent": "doc"
-        },
-        "content": [
-          {
-            "type": "title",
-            "attrs": {
-              "parent": "topic"
-            },
-            "content": [
-              {
-                "type": "text",
-                "text": "Overview",
-                "attrs": {
-                  "parent": "title"
-                }
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  }
-  */
-
   if (jdita.nodeName === 'document') {
     jdita.nodeName = 'doc';
     /*
