@@ -1,3 +1,20 @@
+/*!
+Copyright (C) 2020 Evolved Binary
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
+
 import { JDita } from "@evolvedbinary/lwdita-ast";
 import { IS_MARK, defaultNodeName } from "./schema";
 
@@ -172,72 +189,71 @@ function travel(value: JDita, parent: JDita): any {
  * Transforms the JDita document
  * into a Schema compliant JDita document
  *
+ * @example
+ * Here's an example input:
+ * ```
+ * {
+ *   "nodeName": "document",
+ *   "children": [
+ *     {
+ *       "nodeName": "topic",
+ *       "attributes": {
+ *       "id": "intro-product"
+ *     },
+ *     {
+ *       "nodeName": "title",
+ *       "attributes": {},
+ *       "children": [
+ *         {
+ *           "nodeName": "text",
+ *           "content": "Overview"
+ *         }
+ *       ]
+ *     }
+ *   ]
+ * }
+ * ```
+ *
+ * @example
+ * Here's an example output of the transformation `travel(jdita, jdita)`:
+ * ```
+ * {
+ *   "type": "doc",
+ *   "attrs": {},
+ *   "content": [
+ *     {
+ *       "type": "topic",
+ *       "attrs": {
+ *         "id": "intro-product",
+ *         "parent": "doc"
+ *       },
+ *       "content": [
+ *         {
+ *           "type": "title",
+ *           "attrs": {
+ *             "parent": "topic"
+ *           },
+ *           "content": [
+ *             {
+ *               "type": "text",
+ *               "text": "Overview",
+ *               "attrs": {
+ *                 "parent": "title"
+ *               }
+ *             }
+ *           ]
+ *         }
+ *       ]
+ *     }
+ *   ]
+ * }
+ * ```
+ *
  * @param jdita - the JDita document
  * @returns transformed JDita document
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function document(jdita: JDita): Record<string, any> {
-  /**
-   * Example input:
-  {
-    "nodeName": "document",
-    "children": [
-      {
-        "nodeName": "topic",
-        "attributes": {
-          "id": "intro-product"
-        },
-        "children": [
-          {
-            "nodeName": "title",
-            "attributes": {},
-            "children": [
-              {
-                "nodeName": "text",
-                "content": "Overview"
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  }
-  */
-
-  /**
-   * Example output of the transformation `travel(jdita, jdita)`:
-  {
-    "type": "doc",
-    "attrs": {},
-    "content": [
-      {
-        "type": "topic",
-        "attrs": {
-          "id": "intro-product",
-          "parent": "doc"
-        },
-        "content": [
-          {
-            "type": "title",
-            "attrs": {
-              "parent": "topic"
-            },
-            "content": [
-              {
-                "type": "text",
-                "text": "Overview",
-                "attrs": {
-                  "parent": "title"
-                }
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  }
-  */
-
   if (jdita.nodeName === 'document') {
     jdita.nodeName = 'doc';
     /*

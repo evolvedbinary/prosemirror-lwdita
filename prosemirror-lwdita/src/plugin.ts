@@ -1,3 +1,20 @@
+/*!
+Copyright (C) 2020 Evolved Binary
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
+
 import { keymap } from "prosemirror-keymap";
 import { menuBar, MenuElement, MenuItem, MenuItemSpec } from "prosemirror-menu";
 import { toggleMark, newLine, hasMark, insertNode, insertImage, InputContainer } from "./commands";
@@ -82,8 +99,10 @@ export function shortcuts(schema: Schema) {
 /**
  * Create a new instance of MenuItem and attach a command
  *
- * @example of the returned MenuItem
- * MenuItem {spec: {class: "ic-undo", enable: undo(state, dispatch), icon:{}, run: undo(state, dispatch), title: "Undo"}}
+ * @example of the returned MenuItem:
+ * ```
+ * {spec: {class: "ic-undo", enable: undo(state, dispatch), icon:{}, run: undo(state, dispatch), title: "Undo"}}
+ * ```
  *
  * @param command - The command associated with the menu item
  * @param props - The properties of the menu item
@@ -135,15 +154,19 @@ interface SimpleItemCallbacks {
  * @remarks
  * This instance of MenuItem is used for the "Debug Info" icon button in the menu
  *
- * @example of the MenuItem object
- * MenuItem {spec: {label: 'Show debug info', class: 'ic-bug', css: 'color: #c81200', enable: undefined, run}}
+ * @example of the MenuItem object:
+ * ```
+ * {spec: {label: 'Show debug info', class: 'ic-bug', css: 'color: #c81200', enable: undefined, run}}
+ * ```
  *
- * @example of the callback functions
+ * @example of the callback functions:
+ * ```
  * active:() => document.body.classList.contains('debug')
  * call:() => document.body.classList.toggle('debug')
+ * ```
  *
  * @param callbacks - callbacks `active`, `call`, e.g.
- * @param props - MenuItem properties, e.g. {label: 'Show debug info', class: 'ic-bug', css: 'color: #c81200'}
+ * @param props - MenuItem properties
  * @returns The MenuItem object
  */
 function simpleCommand(callbacks: SimpleItemCallbacks | (() => void), props: Partial<MenuItemSpec> = {}): MenuElement {

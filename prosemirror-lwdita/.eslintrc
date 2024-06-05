@@ -3,6 +3,7 @@
   "parser": "@typescript-eslint/parser",
   "plugins": [
     "@typescript-eslint",
+    "eslint-plugin-notice",
     "eslint-plugin-tsdoc"
   ],
   "extends": [
@@ -12,6 +13,9 @@
   ],
   "rules": {
     "@typescript-eslint/no-empty-interface": 0,
-    "tsdoc/syntax": "warn"
+    "tsdoc/syntax": "warn",
+    "notice/notice":["error", {
+      "templateFile": "../config/notice.js"
+    }]
   }
 }
