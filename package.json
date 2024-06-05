@@ -29,6 +29,7 @@
     "start:demo": "yarn workspace @evolvedbinary/prosemirror-lwdita-demo start",
     "build:demo": "yarn workspace @evolvedbinary/prosemirror-lwdita-demo build",
     "build": "yarn workspace @evolvedbinary/prosemirror-lwdita build",
+    "prepack": "yarn run build",
     "test": "yarn workspace @evolvedbinary/prosemirror-lwdita test",
     "coverage": "yarn workspace @evolvedbinary/prosemirror-lwdita coverage",
     "coveralls": "yarn workspace @evolvedbinary/prosemirror-lwdita coveralls",
