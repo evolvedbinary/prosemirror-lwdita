@@ -1,5 +1,5 @@
 {
-  "name": "prosemirror-lwdita-package",
+  "name": "@evolvedbinary/prosemirror-lwdita-package",
   "version": "0.1.1",
   "description": "ProseMirror plugin to edit LwDITA documents",
   "main": "index.js",
@@ -24,14 +24,15 @@
   "homepage": "https://github.com/evolvedbinary/prosemirror-lwdita#readme",
   "private": true,
   "scripts": {
-    "docker": "yarn workspace prosemirror-lwdita-demo docker",
-    "start:demo": "yarn workspace prosemirror-lwdita-demo start",
-    "build:demo": "yarn workspace prosemirror-lwdita-demo build",
-    "build": "yarn workspace prosemirror-lwdita build",
-    "test": "yarn workspace prosemirror-lwdita test",
-    "coverage": "yarn workspace prosemirror-lwdita coverage",
-    "coveralls": "yarn workspace prosemirror-lwdita coveralls",
-    "generate-docs": "yarn workspace prosemirror-lwdita generate-docs"
+    "clean": "yarn workspace @evolvedbinary/prosemirror-lwdita run clean && yarn workspace @evolvedbinary/prosemirror-lwdita-demo run clean",
+    "docker": "yarn workspace @evolvedbinary/prosemirror-lwdita-demo docker",
+    "start:demo": "yarn workspace @evolvedbinary/prosemirror-lwdita-demo start",
+    "build:demo": "yarn workspace @evolvedbinary/prosemirror-lwdita-demo build",
+    "build": "yarn workspace @evolvedbinary/prosemirror-lwdita build",
+    "test": "yarn workspace @evolvedbinary/prosemirror-lwdita test",
+    "coverage": "yarn workspace @evolvedbinary/prosemirror-lwdita coverage",
+    "coveralls": "yarn workspace @evolvedbinary/prosemirror-lwdita coveralls",
+    "generate-docs": "yarn workspace @evolvedbinary/prosemirror-lwdita generate-docs"
   },
   "engines": {
     "node": ">=20.10.0 <21",

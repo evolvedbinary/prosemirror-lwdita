@@ -39,7 +39,7 @@ jobs:
           command: yarn coverage
       - run:
           name: Generate Code Coverage lcov File
-          command: yarn workspace prosemirror-lwdita run nyc --reporter=text-lcov report > prosemirror-lwdita/coverage.lcov
+          command: yarn workspace @evolvedbinary/prosemirror-lwdita run nyc --reporter=text-lcov report > prosemirror-lwdita/coverage.lcov
       - coveralls/upload:
           coverage_file: prosemirror-lwdita/coverage.lcov
   generate-docs:

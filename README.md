@@ -9,26 +9,26 @@ This tool generates ProseMirror documents from JDITA objects. It also provides S
 
 ## Usage
 
-Add the library to your project using npm or yarn
+Add the library to your project using npm or yarn:
 
 ```shell
-npm install prosemirror-lwdita
+npm install @evolvedbinary/prosemirror-lwdita
 ```
 
 ```shell
-yarn add prosemirror-lwdita
+yarn add @evolvedbinary/prosemirror-lwdita
 ```
 
 Include the Library:
 
 ```javascript
 // SCHEMA builder
-import { schema } from "prosemirror-lwdita";
+import { schema } from "@evolvedbinary/prosemirror-lwdita";
 //PLUGINS
-import { menu, shortcuts } from "prosemirror-lwdita";
+import { menu, shortcuts } from "@evolvedbinary/prosemirror-lwdita";
+import { document } from "@evolvedbinary/prosemirror-lwdita";
 //Transform library
 import { xditaToJson } from "lwdita";
-import { document } from "prosemirror-lwdita";
 ```
 
 This is a minimal example of how to use prosemirror-lwdita.
@@ -153,4 +153,4 @@ yarn coverage # get coverage
 
 This diagram demonstrates the library and the internal flow:
 
-![Diagram of the prosemirror-lwita application flow](diagrams/prosemirror-lwdita-app-flow.svg "Diagram of the prosemirror-lwdita application flow")
+![Diagram of the prosemirror-lwdita application flow](diagrams/prosemirror-lwdita-app-flow.svg "Diagram of the prosemirror-lwdita application flow")
