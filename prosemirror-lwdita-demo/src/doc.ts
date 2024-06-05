@@ -1,5 +1,6 @@
-import { xditaToJson } from "jdita";
 import { document } from "@evolvedbinary/prosemirror-lwdita";
+import { xditaToJdita } from "@evolvedbinary/lwdita-xdita";
+
 let xml: string;
 xml = `<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE topic PUBLIC "-//OASIS//DTD LIGHTWEIGHT DITA Topic//EN" "lw-topic.dtd">
@@ -74,4 +75,4 @@ if (file) {
 
 // transform the xml to Jdita object
 // then transform the Jdita object to Prosemirror schema
-export default xditaToJson(xml, true).then(json => document(json)) as Promise<Record<string, any>>;
+export default xditaToJdita(xml, true).then(json => document(json)) as Promise<Record<string, any>>;

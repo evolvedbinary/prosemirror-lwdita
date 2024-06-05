@@ -1,5 +1,3 @@
-import { JDita } from "jdita";
-
 /**
  * test-utils.ts
  *
