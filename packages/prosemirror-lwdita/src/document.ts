@@ -301,6 +301,7 @@ export function unTravel(prosemirrorDocument: Record<string, any>): JDita {
   }
 
   // handle the attributes
+  delete attributes['parent'];
   for (const key in attributes) {
     if (!attributes[key]) {
       delete attributes[key];
