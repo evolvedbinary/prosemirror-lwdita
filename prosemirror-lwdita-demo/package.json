@@ -1,5 +1,5 @@
 {
-  "name": "prosemirror-lwdita-demo",
+  "name": "@evolvedbinary/prosemirror-lwdita-demo",
   "version": "0.1.1",
   "description": "Demo for ProseMirror LwDITA Integration",
   "main": "index.html",
@@ -26,14 +26,15 @@
   },
   "homepage": "https://github.com/evolvedbinary/prosemirror-lwdita#readme",
   "scripts": {
+    "clean": "rimraf dist",
     "build": "parcel build ./index.html",
     "start": "parcel ./index.html",
     "docker": "yarn build && node docker"
   },
   "dependencies": {
+    "@evolvedbinary/prosemirror-lwdita": "workspace:^",
     "jdita": "^0.2.4",
     "prosemirror-history": "^1.3.2",
-    "prosemirror-lwdita": "workspace:^",
     "prosemirror-menu": "^1.2.4",
     "prosemirror-model": "^1.19.4",
     "prosemirror-state": "^1.4.3",
@@ -42,6 +43,7 @@
   "devDependencies": {
     "@parcel/transformer-sass": "^2.12.0",
     "parcel": "^2.12.0",
+    "rimraf": "^5.0.5",
     "sass": "^1.26.10"
   }
 }

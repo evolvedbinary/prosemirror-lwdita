@@ -1,15 +1,16 @@
 {
-  "name": "prosemirror-lwdita",
+  "name": "@evolvedbinary/prosemirror-lwdita",
   "version": "0.1.1",
   "description": "Use LwDITA in ProseMirror",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
+    "clean": "rimraf dist",
     "fix": "node scripts/fix",
     "postinstall": "yarn fix",
     "lint": "eslint src --ext .ts",
     "lint:fix": "eslint src --ext .ts --fix",
-    "build": "rimraf ./lib && tsc",
+    "build": "tsc",
     "prepublishOnly": "yarn build",
     "test": "mocha",
     "test:watch": "mocha -w",
