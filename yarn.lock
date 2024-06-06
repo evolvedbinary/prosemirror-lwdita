@@ -346,9 +346,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@evolvedbinary/prosemirror-lwdita-demo@workspace:prosemirror-lwdita-demo":
+"@evolvedbinary/prosemirror-lwdita-demo@workspace:packages/prosemirror-lwdita-demo":
   version: 0.0.0-use.local
-  resolution: "@evolvedbinary/prosemirror-lwdita-demo@workspace:prosemirror-lwdita-demo"
+  resolution: "@evolvedbinary/prosemirror-lwdita-demo@workspace:packages/prosemirror-lwdita-demo"
   dependencies:
     "@evolvedbinary/lwdita-xdita": "npm:^2.1.1"
     "@evolvedbinary/prosemirror-lwdita": "workspace:^"
@@ -369,16 +369,17 @@ __metadata:
 "@evolvedbinary/prosemirror-lwdita-package@workspace:.":
   version: 0.0.0-use.local
   resolution: "@evolvedbinary/prosemirror-lwdita-package@workspace:."
+  dependencies:
+    "@tsconfig/recommended": "npm:^1.0.6"
   languageName: unknown
   linkType: soft
 
-"@evolvedbinary/prosemirror-lwdita@workspace:^, @evolvedbinary/prosemirror-lwdita@workspace:prosemirror-lwdita":
+"@evolvedbinary/prosemirror-lwdita@workspace:^, @evolvedbinary/prosemirror-lwdita@workspace:packages/prosemirror-lwdita":
   version: 0.0.0-use.local
-  resolution: "@evolvedbinary/prosemirror-lwdita@workspace:prosemirror-lwdita"
+  resolution: "@evolvedbinary/prosemirror-lwdita@workspace:packages/prosemirror-lwdita"
   dependencies:
     "@evolvedbinary/lwdita-ast": "npm:^2.1.1"
     "@evolvedbinary/lwdita-xdita": "npm:^2.1.1"
-    "@tsconfig/recommended": "npm:^1.0.6"
     "@types/chai": "npm:^4.3.11"
     "@types/chai-as-promised": "npm:^7.1.3"
     "@types/mocha": "npm:^10.0.6"
