@@ -2,10 +2,10 @@ describe('download a file', () => {
 
   it('downloads the file correctly', () => {
     cy.visit('http://localhost:1234/')
-    .readFile('Test_File.xml').
+    .readFile('Petal.xml').
     should('not.exist')
     .get('#saveFile').click()
-    .readFile('cypress/downloads/Test_File.xml');
+    .readFile('cypress/downloads/Petal.xml');
   })
 
 
@@ -26,7 +26,7 @@ describe('download a file', () => {
     cy.visit('http://localhost:1234/')
     .get('#saveFile')
     .click()
-    .readFile('cypress/downloads/Test_File.xml')
+    .readFile('cypress/downloads/Petal.xml')
     .debug()
     .should('equal', mockXML);
   })
