@@ -29,7 +29,7 @@ function deleteUndefined(object?: any) {
   if (object) {
     for (const key in object) {
       if (typeof object[key] === 'undefined') {
-        delete(object[key]);
+        delete (object[key]);
       }
     }
   }
@@ -51,19 +51,19 @@ export const NODES: Record<string, (value: JDita, parent: JDita) => any> = {
     if (value.children) {
       value.children.forEach(child => {
         if (child.nodeName === 'media-autoplay') {
-          attrs.autoplay = 'autoplay';
+          attrs.autoplay = child.attributes?.value;
           return;
         }
         if (child.nodeName === 'media-controls') {
-          attrs.controls = 'controls';
+          attrs.controls = child.attributes?.value;
           return;
         }
         if (child.nodeName === 'media-loop') {
-          attrs.loop = 'loop';
+          attrs.loop = child.attributes?.value;
           return;
         }
         if (child.nodeName === 'media-muted') {
-          attrs.muted = 'muted';
+          attrs.muted = child.attributes?.value;
           return;
         }
         if (['desc', 'media-track', 'media-source'].indexOf(child.nodeName) > -1) {
@@ -86,19 +86,19 @@ export const NODES: Record<string, (value: JDita, parent: JDita) => any> = {
     if (value.children) {
       value.children.forEach(child => {
         if (child.nodeName === 'media-autoplay') {
-          attrs.autoplay = 'autoplay';
+          attrs.autoplay = child.attributes?.value;
           return;
         }
         if (child.nodeName === 'media-controls') {
-          attrs.controls = 'controls';
+          attrs.controls = child.attributes?.value;
           return;
         }
         if (child.nodeName === 'media-loop') {
-          attrs.loop = 'loop';
+          attrs.loop = child.attributes?.value;
           return;
         }
         if (child.nodeName === 'media-muted') {
-          attrs.muted = 'muted';
+          attrs.muted = child.attributes?.value;
           return;
         }
         if (child.nodeName === 'video-poster') {
@@ -119,7 +119,7 @@ export const NODES: Record<string, (value: JDita, parent: JDita) => any> = {
       && value.children[0].nodeName === 'alt'
       && value.children[0]?.children
       && value.children[0].children[0].nodeName == 'text'
-      ) {
+    ) {
       const attrs = deleteUndefined({ ...value.attributes, alt: value.children[0].children[0].content });
       const result = { type: 'image', attrs };
       return result;
@@ -140,7 +140,7 @@ function defaultTravel(value: JDita): any {
   // children will become content
   const content = value.children?.map(child => travel(child, value));
   // attributes will become attrs
-  const attrs =  value.attributes || {};
+  const attrs = value.attributes || {};
   // remove undefined attributes
   deleteUndefined(attrs);
   // node name will become type
@@ -267,9 +267,219 @@ export function document(jdita: JDita): Record<string, any> {
   throw new Error('jdita must be a document');
 }
 
+/**
+ * Replace underscores with hyphens in node names
+ *
+ * @param type - The string to be modified
+ * @returns The sanitized node name with hyphens
+ */
+function getJditaNodeName(type: string): string {
+  return type.replace(/_/g, '-');
+}
+
+/**
+* Recursively traverse through all items in the Prosemirror DOM
+* and create a JDITA object
+*
+* @param prosemirrorDocument - The Prosemirror DOM object
+* @returns The JDITA object
+*/
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function unTravel(prosemirrorDocument: Record<string, any>): JDita {
+
+  // Prosemirror content will become JDITA children
+  const children = prosemirrorDocument.content?.map(unTravel);
+
+  // attrs will become attributes
+  const attributes = prosemirrorDocument.attrs || {};
+
+  // get the node name
+  const nodeName = getJditaNodeName(prosemirrorDocument.type);
+
+  if (nodeName === 'video' || nodeName === 'audio' || nodeName === 'image' || nodeName === 'text') {
+    return mediaNodeUntravel(nodeName, attributes, children, prosemirrorDocument)
+  }
+
+  // handle the attributes
+  for (const key in attributes) {
+    if (!attributes[key]) {
+      delete attributes[key];
+    }
+  }
+
+  const nodeObject: JDita = {
+    nodeName,
+    attributes,
+    children
+  }
+
+  return nodeObject;
+}
+
+/**
+ * Special untravel function for media nodes.
+ * Reverses the transformation done by the NODES[value.nodeName] in the travel function
+ * 
+ * @param nodeName - string node name
+ * @param attributes -  node attributes
+ * @param children - JDita[] node children
+ * @param prosemirrorDocument -  prosemirror document 
+ * @returns JDita node
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function mediaNodeUntravel(nodeName: string, attributes: Record<string, string>, children: JDita[], prosemirrorDocument: Record<string, any>): JDita {
+  if (nodeName === 'video') {
+    // we must populate the video node with the necessary attributes and children
+    const allAttributes = { props: attributes.props, dir: attributes.dir, "xml:lang": attributes['xml:lang'], translate: attributes.translate, id: attributes.id, conref: attributes.conref, outputclass: attributes.outputclass, class: attributes.class, width: attributes.width, height: attributes.height }
+
+    const allChildren: JDita[] = [];
+    //children[0] resembles the video desc this value does not change
+    allChildren.push(children[0]) // video desc node
+
+    if (attributes.poster !== undefined) {
+      const poster: JDita = createMediaChild('video-poster', attributes.poster);
+      allChildren.push(poster);
+    }
+
+    if (attributes.controls !== undefined) {
+      const controls: JDita = createMediaChild('media-controls', attributes.controls);
+      allChildren.push(controls);
+    }
+
+    if (attributes.autoplay !== undefined) {
+      const autoplay: JDita = createMediaChild('media-autoplay', attributes.autoplay);
+      allChildren.push(autoplay);
+    }
+
+    if (attributes.loop !== undefined) {
+      const loop: JDita = createMediaChild('media-loop', attributes.loop);
+      allChildren.push(loop);
+    }
+
+    if (attributes.muted !== undefined) {
+      const muted: JDita = createMediaChild('media-muted', attributes.muted);
+      allChildren.push(muted);
+    }
+
+    allChildren.push(children[1])
+
+    // return the created video node
+    return {
+      nodeName,
+      'attributes': allAttributes,
+      'children': allChildren
+    }
+  }
+
+  if (nodeName === 'audio') {
+    const allAudioAttributes = { class: attributes.class, conref: attributes.conref, "xml:lang": attributes['xml:lang'], dir: attributes.dir, id: attributes.id, outputclass: attributes.outputclass, props: attributes.props, translate: attributes.translate }
+
+    const allAudioChildren: JDita[] = [];
+    allAudioChildren.push(children[0])
+
+    if (attributes.controls !== undefined) {
+      const controls: JDita = createMediaChild('media-controls', attributes.controls);
+      allAudioChildren.push(controls);
+    }
+
+    if (attributes.autoplay !== undefined) {
+      const autoplay: JDita = createMediaChild('media-autoplay', attributes.autoplay);
+      allAudioChildren.push(autoplay);
+    }
+
+    if (attributes.loop !== undefined) {
+      const loop: JDita = createMediaChild('media-loop', attributes.loop);
+      allAudioChildren.push(loop);
+    }
+
+    if (attributes.muted !== undefined) {
+      const muted: JDita = createMediaChild('media-muted', attributes.muted);
+      allAudioChildren.push(muted);
+    }
+
+    if (attributes.source !== undefined) {
+      const source: JDita = createMediaChild('media-source', attributes.source);
+      allAudioChildren.push(source);
+    }
+
+    allAudioChildren.push(children[1])
+
+    return {
+      nodeName,
+      'attributes': allAudioAttributes,
+      'children': allAudioChildren
+    }
+  }
+
+  if (nodeName === 'image') {
+    const allImageAttributes = { props: attributes.props, dir: attributes.dir, "xml:lang": attributes['xml:lang'], translate: attributes.translate, keyref: attributes.keyref, href: attributes.href, format: attributes.format, scope: attributes.scope, outputclass: attributes.outputclass, class: attributes.class, width: attributes.width, height: attributes.height }
+
+    const allImageChildren: JDita[] = [];
+    allImageChildren.push({
+      nodeName: 'alt',
+      // all of the attributes will be undefined as the alt node only contains text
+      attributes: {
+        dir: undefined,
+        "xml:lang": undefined,
+        translate: undefined,
+        props: undefined,
+        keyref: undefined,
+        outputclass: undefined,
+        class: undefined,
+      },
+      children: [
+        {
+          nodeName: 'text',
+          content: attributes.alt
+        }
+      ]
+    })
+
+    return {
+      nodeName,
+      'attributes': allImageAttributes,
+      'children': allImageChildren
+    }
+  }
+
+  if (nodeName === 'text') {
+    return {
+      nodeName,
+      'content': prosemirrorDocument.text
+    }
+  }
+
+  throw new Error('Invalid node name');
+}
+
+/**
+ * Creates children for media nodes
+ * Children like media-autoplay, media-controls, media-loop, media-muted, video-poster, media-source share all the same structure
+ * This is a helper function to create these children
+ * 
+ * @param nodeName - string 
+ * @param value - string
+ * @returns media child node
+ */
+function createMediaChild(nodeName: string,value: string): JDita {
+  return {
+    nodeName: nodeName,
+    attributes: {
+      dir: undefined,
+      "xml:lang": undefined,
+      translate: undefined,
+      name: undefined,
+      value: value,
+      outputclass: undefined,
+      class: undefined,
+    },
+    children: undefined
+  };
+} 
+
 //Escape hatch for Unit Testing due to a lack of “package-private” accessibility scope in TypeScript
 export const _test_private_document = {
   deleteUndefined,
   defaultTravel,
   travel,
-}
+};

@@ -29,3 +29,6 @@ package-lock.json
 !.yarn/versions
 #!.yarn/cache
 .pnp.*
+
+# Cypress test artifacts
+prosemirror-lwdita-demo/cypress/downloads/*

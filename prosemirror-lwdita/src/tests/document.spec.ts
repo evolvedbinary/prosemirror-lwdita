@@ -17,14 +17,21 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import ChaiPromised from 'chai-as-promised';
 import { use, expect, assert } from 'chai';
-import { document, NODES, _test_private_document } from '../document';
+import { document, NODES, _test_private_document, unTravel } from '../document';
 import {
   JDITA_OBJECT,
   TRANSFORMED_JDITA_OBJECT,
   JDITA_NODE,
   JDITA_TRANFORMED_RESULT1,
-  JDITA_TRANFORMED_RESULT2
+  JDITA_TRANFORMED_RESULT2,
+  imageXdita,
+  audioXdita,
+  videoXdita,
+  complexXdita,
+  shortXdita
 } from './test-utils';
+import { xditaToJdita } from '@evolvedbinary/lwdita-xdita'
+import { JDita } from '@evolvedbinary/lwdita-ast';
 
 use(ChaiPromised);
 
@@ -33,7 +40,7 @@ use(ChaiPromised);
  */
 
 // Pass an object with undefined attributes
-// and test against expected object
+// and test against the expected object
 describe('Function deleteUndefined()', () => {
   it('removes undefined attributes from a passed object', () => {
     const attrs = {
@@ -55,7 +62,7 @@ describe('Function deleteUndefined()', () => {
 });
 
 // Pass a JDita document node
-// and test against expected Prosemirror document output
+// and test against the expected Prosemirror document output
 describe('Function defaultTravel()', () => {
   describe('when passed a JDITA node "title" and its parent node "topic"', () => {
     it('returns the transformed ProseMirror objects', () => {
@@ -71,7 +78,7 @@ describe('Function defaultTravel()', () => {
 });
 
 // Pass a JDita node
-// and test against expected Prosemirror output
+// and test against the expected Prosemirror output
 describe('Function travel()', () => {
   describe('when passed a JDITA "text" node and its parent node "title"', () => {
     it('returns a transformed ProseMirror object', () => {
@@ -95,7 +102,7 @@ describe('Function travel()', () => {
 });
 
 // Pass a JDita object
-// and test against expected JDita transformation output
+// and test against the expected JDita transformation output
 describe('Function document()', () => {
   it('returns a transformed Prosemirror object', () => {
     const transformedJdita = document(JSON.parse(JDITA_OBJECT));
@@ -103,8 +110,102 @@ describe('Function document()', () => {
   });
 });
 
+// Pass a Prosemirror document
+// and test against the expected JDita object
+describe('Function unTravel()', () => {
+  describe('when passed a Prosemirror document', () => {
+
+    it('handles a simple JDita document', async () => {
+
+      // original JDita to compare against
+      const originalJdita = await xditaToJdita(shortXdita);
+
+      // process the JDita document and do the round trip
+      //clean the attributes from the top node to compare
+      originalJdita.attributes = {};
+      // transform the JDita document
+      const transformedJdita = document(originalJdita);
+      // untransform the transformed JDita document
+      const result = unTravel(transformedJdita);
+
+      //compare the original JDita with the result
+      expect(result).to.deep.equal(originalJdita);
+    });
+
+    it('handles a complex JDita document', async () => {
+
+      // original JDita to compare against
+      const originalJdita = await xditaToJdita(complexXdita);
+
+      // process the JDita document and do the round trip
+      //clean the attributes from the top node to compare
+      originalJdita.attributes = {};
+      // transform the JDita document
+      const transformedJdita = document(originalJdita);
+      // untransform the transformed JDita document
+      const result = unTravel(transformedJdita);
+
+      //compare the original JDita with the result
+      expect(result).to.deep.equal(originalJdita);
+
+    });
+
+    it('handles a JDita document containing a video element', async () => {
+
+      // original JDita to compare against
+      const originalJdita = await xditaToJdita(videoXdita);
+
+      // process the JDita document and do the round trip
+      // clean the attributes from the top node to compare
+      originalJdita.attributes = {};
+      // transform the JDita document
+      const transformedJdita = document(originalJdita);
+      // untransform the transformed JDita document
+      const result = unTravel(transformedJdita);
+
+      //compare the original JDita with the result
+      expect(result).to.deep.equal(originalJdita);
+    });
+
+    it('handles a JDita document containing an audio element', async () => {
+
+      // original JDita to compare against
+      const originalJdita = await xditaToJdita(audioXdita);
+
+      // process the JDita document and do the round trip
+      //clean the attributes from the top node to compare
+      originalJdita.attributes = {};
+      // transform the JDita document
+      const transformedJdita = document(originalJdita);
+      // untransform the transformed JDita document
+      const result = unTravel(transformedJdita);
+
+      //compare the original JDita with the result
+      expect(result).to.deep.equal(originalJdita);
+    });
+
+    it('handles a JDita document containing an image', async () => {
+
+      // original JDita to compare against
+      const originalJdita = await xditaToJdita(imageXdita);
+
+      // process the JDita document and do the round trip
+      //clean the attributes from the top node to compare
+      originalJdita.attributes = {};
+      // transform the JDita document
+      const transformedJdita = document(originalJdita);
+      // untransform the transformed JDita document
+      const result = unTravel(transformedJdita);
+
+      //compare the original JDita with the result
+      expect(result).to.deep.equal(originalJdita);
+    });
+  });
+
+});
+
 describe('Const NODES handles', () => {
-  let parent, value, result, expected;
+  let parent: JDita, value: JDita, result: string, expected: string;
 
   describe('function video()', () => {
     it('returns a video node', () => {

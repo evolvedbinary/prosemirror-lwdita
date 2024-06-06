@@ -1,4 +1,5 @@
 $nodes: "audio", "body", "data", "dd", "desc", "dl", "dlentry", "dt", "document", "fig", "fn", "image", "media-source", "media-track", "li", "note", "ol", "p", "ph", "pre", "prolog", "section", "simpletable", "shortdesc", "stentry", "sthead", "strow", "title", "topic", "ul", "video", "xref", "b", "i", "u", "sub", "sup";
+$height: 36px;
 
 html {
   height: 100%;
@@ -48,16 +49,33 @@ body {
           box-shadow: rgba(0, 0, 0, 0.133) 0px 1.6px 3.6px 0px, rgba(0, 0, 0, 0.11) 0px 0.3px 0.9px 0px;
           .ProseMirror-menuitem {
             &:first-child > * {
-              margin-inline-start: 1em;
+              margin-inline-start: 1rem;
             }
             &:last-child > * {
-              margin-inline-end: 1em;
+              margin-inline-end: 1rem;
+            }
+            .label {
+              display: flex;
+              align-items: center;
+              gap: .4rem;
+            }
+
+            .ic-download {
+              margin-left: 1rem;
+              display:flex;
+              align-items: center;
+              gap: .4rem;
+
+              a {
+                color: inherit;
+                text-decoration: none;
+              }
             }
             & > * {
               cursor: pointer;
-              line-height: 36px;
-              height: 36px;
-              min-width: 36px;
+              line-height: $height;
+              height: $height;
+              min-width: $height;
               white-space: nowrap;
               &.separator {
                 min-width: auto;
@@ -67,14 +85,13 @@ body {
                 &:before {
                   font-family: 'petal' !important;
                 }
-                &.label:before, &.ic-bug:before {
+                &.ic-bug:before {
                   margin-inline-end: 0.5em;
                 }
               }
               background-color: transparent;
               color: #252423;
               box-sizing: border-box;
-              border: 1px solid transparent;
               text-decoration: none;
               text-align: center;
               vertical-align: top;
@@ -109,6 +126,9 @@ body {
               &.ProseMirror-menu-disabled input {
                 cursor: default;
               }
+              label {
+                cursor: pointer;
+              }
               input {
                 cursor: pointer;
                 opacity: 0;
@@ -117,8 +137,18 @@ body {
                 left: 0;
                 right: 0;
                 bottom: 0;
+                height: $height;
+
+                &[type="button"] {
+                  appearance: none;
+                  border: 0;
+                  padding: 0;
+                  padding-block: 0;
+                  padding-inline: 0;
+                }
               }
             }
+
             &:has(.separator) {
               flex: 1;
             }
@@ -126,7 +156,7 @@ body {
           .ProseMirror-menuseparator {
             background-color: #c8c8c8;
             width: 1px;
-            height: 28px;
+            height: $height - 8px;
             margin: 0 12px;
           }
         }

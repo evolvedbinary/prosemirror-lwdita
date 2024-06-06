@@ -31,10 +31,12 @@
     "build": "yarn workspace @evolvedbinary/prosemirror-lwdita build",
     "prepack": "yarn run build",
     "test": "yarn workspace @evolvedbinary/prosemirror-lwdita test",
+    "test:demo": "yarn workspace @evolvedbinary/prosemirror-lwdita-demo test",
     "coverage": "yarn workspace @evolvedbinary/prosemirror-lwdita coverage",
     "coveralls": "yarn workspace @evolvedbinary/prosemirror-lwdita coveralls",
     "generate-docs": "yarn workspace @evolvedbinary/prosemirror-lwdita generate-docs",
     "lint": "yarn workspace @evolvedbinary/prosemirror-lwdita lint"
+
   },
   "engines": {
     "node": ">=20.10.0 <21",

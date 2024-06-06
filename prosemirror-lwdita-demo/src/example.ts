@@ -4,7 +4,7 @@ import { Node } from "prosemirror-model";
 import { schema } from "@evolvedbinary/prosemirror-lwdita";
 import jsonDocLoader from "./doc";
 import { menu, shortcuts } from "@evolvedbinary/prosemirror-lwdita";
-import { githubMenuItem, openFileMenuItem } from "./demo-plugin";
+import { githubMenuItem, openFileMenuItem, saveFileMenuItem} from "./demo-plugin";
 import { history } from "prosemirror-history";
 
 const schemaObject = schema();
@@ -35,7 +35,10 @@ jsonDocLoader.then(jsonDoc => {
             githubMenuItem({ label: 'lwdita', url: 'https://github.com/evolvedbinary/lwdita' }),
             githubMenuItem({ label: 'prosemirror-lwdita', url: 'https://github.com/evolvedbinary/prosemirror-lwdita' }),
           ]],
-          start: [[ openFileMenuItem() ]],
+          start: [[
+            openFileMenuItem(),
+            saveFileMenuItem()
+          ]],
         }),
       ]
     })
@@ -62,7 +65,7 @@ jsonDocLoader.then(jsonDoc => {
   // });
   const a = document.createElement('a');
   a.innerText = 'Click here to reload the sample document';
-  a.href = '#';
+  a.href = '/';
   a.addEventListener('click', () => location.reload());
   const el: HTMLDivElement | null = document.querySelector("#editor");
   if (el) {

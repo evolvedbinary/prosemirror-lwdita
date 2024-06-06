@@ -13,7 +13,7 @@ parameters:
 
 orbs:
   coveralls: coveralls/coveralls@2.2.1
-
+  cypress: cypress-io/cypress@3
 commands:
   install-yarn:
     description: "Install Yarn"
@@ -24,6 +24,7 @@ commands:
     description: "Install Dependencies"
     steps:
       - run: yarn install
+
 
 jobs:
   coverage:
@@ -86,6 +87,16 @@ jobs:
       - run:
           name: build-demo
           command: yarn build:demo
+  run-cypress:
+    executor:
+      name: cypress/default
+      node-version: "20.10.0"
+    steps:
+      - run: "corepack enable"
+      - cypress/install:
+          package-manager: "yarn-berry"
+      - cypress/run-tests:
+          cypress-command: yarn run test:demo
 workflows:
   build-and-test:
     jobs:
@@ -94,3 +105,4 @@ workflows:
       - coverage
       - generate-docs
       - build-demo
+      - run-cypress
