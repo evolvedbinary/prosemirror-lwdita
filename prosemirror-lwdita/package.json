@@ -11,7 +11,7 @@
     "lint": "eslint src --ext .ts",
     "lint:fix": "eslint src --ext .ts --fix",
     "build": "tsc",
-    "prepublishOnly": "yarn build",
+    "prepack": "yarn run build",
     "test": "mocha",
     "test:watch": "mocha -w",
     "coverage": "rimraf coverage && nyc yarn mocha",

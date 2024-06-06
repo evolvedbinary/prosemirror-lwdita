@@ -28,6 +28,7 @@
   "scripts": {
     "clean": "rimraf dist",
     "build": "parcel build ./index.html",
+    "prepack": "yarn run build",
     "start": "parcel ./index.html",
     "docker": "yarn build && node docker"
   },
