@@ -31,4 +31,4 @@ package-lock.json
 .pnp.*
 
 # Cypress test artifacts
-prosemirror-jdita-demo/cypress/downloads/*
+prosemirror-lwdita-demo/cypress/downloads/*
