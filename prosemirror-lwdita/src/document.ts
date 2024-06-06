@@ -284,6 +284,7 @@ function getJditaNodeName(type: string): string {
 * @param prosemirrorDocument - The Prosemirror DOM object
 * @returns The JDITA object
 */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function unTravel(prosemirrorDocument: Record<string, any>): JDita {
 
   // Prosemirror content will become JDITA children
@@ -320,11 +321,12 @@ export function unTravel(prosemirrorDocument: Record<string, any>): JDita {
  * Reverses the transformation done by the NODES[value.nodeName] in the travel function
  * 
  * @param nodeName - string node name
- * @param attributes - Record<string, string> node attributes
+ * @param attributes -  node attributes
  * @param children - JDita[] node children
- * @param prosemirrorDocument - Record<string, any> prosemirror document 
+ * @param prosemirrorDocument -  prosemirror document 
  * @returns JDita node
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function mediaNodeUntravel(nodeName: string, attributes: Record<string, string>, children: JDita[], prosemirrorDocument: Record<string, any>): JDita {
   if (nodeName === 'video') {
     // we must populate the video node with the necessary attributes and children
@@ -455,8 +457,8 @@ function mediaNodeUntravel(nodeName: string, attributes: Record<string, string>,
  * Children like media-autoplay, media-controls, media-loop, media-muted, video-poster, media-source share all the same structure
  * This is a helper function to create these children
  * 
- * @param nodeName string 
- * @param value string
+ * @param nodeName - string 
+ * @param value - string
  * @returns media child node
  */
 function createMediaChild(nodeName: string,value: string): JDita {
