@@ -1,7 +1,26 @@
+/*!
+Copyright (C) 2020 Evolved Binary
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
+
 import { Command } from "prosemirror-commands";
 import { MenuElement, MenuItem, MenuItemSpec } from "prosemirror-menu";
 import { InputContainer } from "@evolvedbinary/prosemirror-lwdita";
 import { unTravel } from "@evolvedbinary/prosemirror-lwdita";
+import { JditaSerializer } from "@evolvedbinary/lwdita-xdita";
+import { InMemoryTextSimpleOutputStreamCollector } from "@evolvedbinary/lwdita-xdita/dist/stream";
 
 /**
  * Open file selection dialog and select and file to insert into the local storage.
@@ -98,8 +117,8 @@ export function saveFileMenuItem(props: Partial<MenuItemSpec & { url: string }> 
       const el = document.createElement('div');
       el.classList.add('ProseMirror-menuitem-file');
       const link = document.createElement('a');
-      link.download = storedFileName + '.json';
-      link.textContent = 'Download "' + storedFileName + '.json"';
+      link.download = storedFileName + '.xml';
+      link.textContent = 'Download "' + storedFileName + '.xml"';
       link.id = 'saveFile';
       el.appendChild(link);
       return el;
@@ -121,9 +140,11 @@ function saveFile(input: InputContainer): Command {
   return (state: {[x: string]: any; tr: any; selection: { empty: any; };}, dispatch: (arg0: any) => void) => {
     if (dispatch) {
       dispatch(state.tr);
+      const xditaPrefix = `<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE topic PUBLIC "-//OASIS//DTD LIGHTWEIGHT DITA Topic//EN" "lw-topic.dtd">`;
       const documentNode = transformToJditaDocumentNode(state);
-      const file = JSON.stringify(documentNode);
-      const data = new Blob([file], { type: 'application/json' });
+      console.log('Document Node:', documentNode);
+      const file = xditaPrefix + documentNode;
+      const data = new Blob([file], { type: 'text/plain' });
       const url = window.URL.createObjectURL(data);
       const link = document.getElementById('saveFile');
       if (link) {
@@ -152,8 +173,13 @@ function transformToJditaDocumentNode(state: { [x: string]: any; tr?: any; selec
   // Change the type value from 'type: doc' to expected 'type: document' for JDITA processing
   prosemirrorJson.doc.type = 'document';
   const documentNode = unTravel(prosemirrorJson.doc);
-  // FIXME - missing feature: Implement processing from JDITA to XDita here.
-  return documentNode;
+  const outStream = new InMemoryTextSimpleOutputStreamCollector();
+  const serializer = new JditaSerializer(outStream, true);
+
+  serializer.serializeFromJdita(documentNode);
+  
+  return outStream.getText();
+  ;
 };
 
 // TODO: Create a new function to transform the JDITA object
