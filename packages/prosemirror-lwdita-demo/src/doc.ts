@@ -23,7 +23,7 @@ if (!storedFile) {
     <body>
         <p dir="ltr">Sadly many projects lack proper documentation, but why is that?</p>
         <fig>
-            <image href="https://images.unsplash.com/photo-1519481116090-11a5d47f4c2f"></image>
+            <image href="https://static.evolvedbinary.com/petal/eb-rose-small.png"></image>
         </fig>
 
         <p dir="ltr">The effort that goes into coding great software is paramount, but often
