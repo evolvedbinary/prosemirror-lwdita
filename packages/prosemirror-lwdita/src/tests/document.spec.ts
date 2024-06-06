@@ -28,7 +28,8 @@ import {
   audioXdita,
   videoXdita,
   complexXdita,
-  shortXdita
+  shortXdita,
+  bXdita
 } from './test-utils';
 import { xditaToJdita } from '@evolvedbinary/lwdita-xdita'
 import { JDita } from '@evolvedbinary/lwdita-ast';
@@ -157,6 +158,23 @@ describe('Function unTravel()', () => {
 
       // process the JDita document and do the round trip
       // clean the attributes from the top node to compare
+      originalJdita.attributes = {};
+      // transform the JDita document
+      const transformedJdita = document(originalJdita);
+      // untransform the transformed JDita document
+      const result = unTravel(transformedJdita);
+
+      //compare the original JDita with the result
+      expect(result).to.deep.equal(originalJdita);
+    });
+
+    it('handles a JDita document containing an b mark', async () => {
+
+      // original JDita to compare against
+      const originalJdita = await xditaToJdita(bXdita);
+
+      // process the JDita document and do the round trip
+      //clean the attributes from the top node to compare
       originalJdita.attributes = {};
       // transform the JDita document
       const transformedJdita = document(originalJdita);
