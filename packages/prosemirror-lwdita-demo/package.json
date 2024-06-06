@@ -1,6 +1,6 @@
 {
   "name": "@evolvedbinary/prosemirror-lwdita-demo",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "Demo for ProseMirror LwDITA Integration",
   "main": "index.html",
   "targets": {
