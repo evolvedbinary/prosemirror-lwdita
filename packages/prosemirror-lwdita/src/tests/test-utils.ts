@@ -217,6 +217,17 @@ export const audioXdita = `<?xml version="1.0" encoding="UTF-8"?>
   </body>
 </topic>`;
 
+export const bXdita = `<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE topic PUBLIC "-//OASIS//DTD LIGHTWEIGHT DITA Topic//EN" "lw-topic.dtd">
+<topic id="program">
+  <title>Test File 2</title>
+  <body>
+    <section>
+      <p>A test <b id="one">paragraph</b>.</p>
+    </section>
+  </body>
+</topic>`;
+
 export const imageXdita = `<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE topic PUBLIC "-//OASIS//DTD LIGHTWEIGHT DITA Topic//EN" "lw-topic.dtd">
 <topic id="program-bulbs-to-groups">

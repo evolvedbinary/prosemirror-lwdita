@@ -296,8 +296,8 @@ export function unTravel(prosemirrorDocument: Record<string, any>): JDita {
   // get the node name
   const nodeName = getJditaNodeName(prosemirrorDocument.type);
 
-  if (nodeName === 'video' || nodeName === 'audio' || nodeName === 'image' || nodeName === 'text') {
-    return mediaNodeUntravel(nodeName, attributes, children, prosemirrorDocument)
+  if (nodeName === 'video' || nodeName === 'audio' || nodeName === 'image') {
+    return mediaNodeUntravel(nodeName, attributes, children)
   }
 
   // handle the attributes
@@ -305,6 +305,28 @@ export function unTravel(prosemirrorDocument: Record<string, any>): JDita {
   for (const key in attributes) {
     if (!attributes[key]) {
       delete attributes[key];
+    }
+  }
+
+  if (nodeName === 'text') {
+    // check for marks and wrap the content in the mark node
+
+    if (prosemirrorDocument.marks) {
+      const mark = prosemirrorDocument.marks[0].type;
+      return {
+        nodeName: mark,
+        attributes: attributes,
+        children: [
+          {
+            nodeName: "text",
+            content: prosemirrorDocument.text
+          }
+        ]
+      }
+    }
+    return {
+      nodeName,
+      'content': prosemirrorDocument.text
     }
   }
 
@@ -328,7 +350,7 @@ export function unTravel(prosemirrorDocument: Record<string, any>): JDita {
  * @returns JDita node
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function mediaNodeUntravel(nodeName: string, attributes: Record<string, string>, children: JDita[], prosemirrorDocument: Record<string, any>): JDita {
+function mediaNodeUntravel(nodeName: string, attributes: Record<string, string>, children: JDita[]): JDita {
   if (nodeName === 'video') {
     // we must populate the video node with the necessary attributes and children
     const allAttributes = { props: attributes.props, dir: attributes.dir, "xml:lang": attributes['xml:lang'], translate: attributes.translate, id: attributes.id, conref: attributes.conref, outputclass: attributes.outputclass, class: attributes.class, width: attributes.width, height: attributes.height }
@@ -442,14 +464,6 @@ function mediaNodeUntravel(nodeName: string, attributes: Record<string, string>,
       'children': allImageChildren
     }
   }
-
-  if (nodeName === 'text') {
-    return {
-      nodeName,
-      'content': prosemirrorDocument.text
-    }
-  }
-
   throw new Error('Invalid node name');
 }
 
