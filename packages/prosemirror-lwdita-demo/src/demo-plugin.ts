@@ -21,6 +21,7 @@ import { InputContainer } from "@evolvedbinary/prosemirror-lwdita";
 import { unTravel } from "@evolvedbinary/prosemirror-lwdita";
 import { JditaSerializer } from "@evolvedbinary/lwdita-xdita";
 import { InMemoryTextSimpleOutputStreamCollector } from "@evolvedbinary/lwdita-xdita/dist/stream";
+import xmlFormat from 'xml-formatter';
 
 /**
  * Open file selection dialog and select and file to insert into the local storage.
@@ -141,7 +142,8 @@ function saveFile(input: InputContainer): Command {
     if (dispatch) {
       dispatch(state.tr);
       const xditaPrefix = `<?xml version="1.0" encoding="UTF-8"?>\n<!DOCTYPE topic PUBLIC "-//OASIS//DTD LIGHTWEIGHT DITA Topic//EN" "lw-topic.dtd">\n`;
-      const documentNode = transformToJditaDocumentNode(state);
+      let documentNode = transformToJditaDocumentNode(state);
+      documentNode = xmlFormat(documentNode)
       console.log('Document Node:', documentNode);
       const file = xditaPrefix + documentNode;
       const data = new Blob([file], { type: 'text/plain' });
@@ -174,7 +176,7 @@ function transformToJditaDocumentNode(state: { [x: string]: any; tr?: any; selec
   prosemirrorJson.doc.type = 'document';
   const documentNode = unTravel(prosemirrorJson.doc);
   const outStream = new InMemoryTextSimpleOutputStreamCollector();
-  const serializer = new JditaSerializer(outStream, true);
+  const serializer = new JditaSerializer(outStream);
 
   serializer.serializeFromJdita(documentNode);
   
