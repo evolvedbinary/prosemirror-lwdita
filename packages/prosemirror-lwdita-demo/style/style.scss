@@ -225,7 +225,7 @@ body {
           display: block;
         }
         [data-j-type="image"] {
-          //max-width: 100%;
+          max-width: 100%;
           display: inline-block;
           &:first-child:last-child {
             margin-left: auto;
@@ -252,11 +252,4 @@ body {
 }
 [data-j-type] {
   border: 1 solid transparent;
-}
-
-[data-j-type="fig"] {
-  > [data-j-type="image"] {
-    max-width: 10rem;
-    margin: 0 auto 0 3rem;
-  }
 }
