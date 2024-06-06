@@ -1,0 +1,18 @@
+# ignore config files
+*.json
+
+#include package.json
+!package.json
+
+# ignore the .ts files
+*.ts
+
+# include the .d.ts files
+!*.d.ts
+
+# eslint
+.eslintrc
+
+# docker files
+.dockerignore
+docker.js
