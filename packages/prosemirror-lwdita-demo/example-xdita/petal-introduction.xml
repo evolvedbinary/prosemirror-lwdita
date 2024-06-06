@@ -1,22 +1,4 @@
-import { document } from "@evolvedbinary/prosemirror-lwdita";
-import { xditaToJdita } from "@evolvedbinary/lwdita-xdita";
-
-
-const storedFile = localStorage.getItem('file');
-let xml: string;
-
-// Read XML from the localStorage
-// It should be stored there after uploading it via the editor UI,
-// handled by demo-plugin.ts
-if (storedFile) {
-  xml = storedFile;
-  //localStorage.removeItem('file');
-}
-
-// Otherwise take this XML example as a start for the demo editor
-// It is the content of file petal-introduction.xml
-if (!storedFile) {
-  xml = `<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE topic PUBLIC "-//OASIS//DTD LIGHTWEIGHT DITA Topic//EN" "lw-topic.dtd">
 <topic id="petal">
     <title>What is Petal?</title>
@@ -80,9 +62,4 @@ if (!storedFile) {
         <p dir="ltr">Bad documentation keeps good projects from being GREAT.</p>
         <p dir="ltr">Petal helps anyone to contribute documentation to a project with ease. If you know how to type text on a computer, then you already know how to use Petal.</p>
     </body>
-</topic>`;
-}
-
-// transform the xml to Jdita object
-// then transform the Jdita object to Prosemirror schema
-export default xditaToJdita(xml, true).then(json => document(json)) as Promise<Record<string, any>>;
+</topic>

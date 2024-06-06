@@ -109,7 +109,7 @@ export function openFileMenuItem(): MenuElement {
 export function saveFileMenuItem(props: Partial<MenuItemSpec & { url: string }> = {}): MenuElement {
   const link = new InputContainer();
   //const storedFile = localStorage.getItem('file') ? localStorage.getItem('file') : console.log('No file in the localStorage to save.');
-  const storedFileName = localStorage.getItem('fileName') ? localStorage.getItem('fileName') : 'Test_File';
+  const storedFileName = localStorage.getItem('fileName') ? localStorage.getItem('fileName') : 'Petal';
 
   return new MenuItem({
     enable: () => true,
