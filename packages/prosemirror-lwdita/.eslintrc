@@ -15,7 +15,7 @@
     "@typescript-eslint/no-empty-interface": 0,
     "tsdoc/syntax": "warn",
     "notice/notice":["error", {
-      "templateFile": "../config/notice.js"
+      "templateFile": "../../config/notice.js"
     }]
   }
 }
