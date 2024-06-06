@@ -80,5 +80,6 @@
     "typedoc": "^0.25.7",
     "typedoc-plugin-missing-exports": "^2.2.0",
     "typescript": "5.4.5"
-  }
+  },
+  "packageManager": "yarn@4.2.2"
 }
