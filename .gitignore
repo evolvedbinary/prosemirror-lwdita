@@ -35,3 +35,7 @@ prosemirror-lwdita-demo/cypress/downloads/*
 
 #Dockerfile
 Dockerfile
+
+
+# parcel
+.parcel-cache
