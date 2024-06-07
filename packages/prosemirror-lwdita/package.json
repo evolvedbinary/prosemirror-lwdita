@@ -1,6 +1,6 @@
 {
   "name": "@evolvedbinary/prosemirror-lwdita",
-  "version": "2.0.3",
+  "version": "2.1.0",
   "description": "Use LwDITA in ProseMirror",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
