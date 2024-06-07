@@ -27,8 +27,13 @@ body {
     .header {
       color: white;
       padding: 12px 24px;
-      h2 {
+      h1 {
+        display: inline;
         margin: 0;
+      }
+      img.eb-logo {
+        float: right;
+        width: 6em;
       }
     }
     #editor {
