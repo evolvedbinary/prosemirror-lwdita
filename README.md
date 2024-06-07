@@ -1,7 +1,7 @@
 # ProseMirror LwDITA
 
-[![Node.js Version](https://img.shields.io/node/v-lts/prosemirror-lwdita)](https://nodejs.org)
-[![Npm Package Version](https://img.shields.io/npm/v/prosemirror-lwdita)](https://www.npmjs.com/package/prosemirror-lwdita)
+[![Node.js Version](https://img.shields.io/node/v-lts/@evolvedbinary/prosemirror-lwdita)](https://nodejs.org)
+[![Npm Package Version](https://img.shields.io/npm/v/@evolvedbinary/prosemirror-lwdita)](https://www.npmjs.com/package/@evolvedbinary/prosemirror-lwdita)
 [![Build Status](https://circleci.com/gh/evolvedbinary/prosemirror-lwdita.svg?style=svg)](https://circleci.com/gh/evolvedbinary/prosemirror-lwdita)
 [![Coverage Status](https://coveralls.io/repos/github/evolvedbinary/prosemirror-lwdita/badge.svg?branch=main)](https://coveralls.io/github/evolvedbinary/prosemirror-lwdita?branch=main)
 
