@@ -9,14 +9,14 @@ This tool generates ProseMirror documents from JDITA objects. It also provides S
 
 ## Usage
 
-Add the library to your project using npm or yarn:
-
-```shell
-npm install @evolvedbinary/prosemirror-lwdita
-```
+Add the library to your project using Yarn or Npm:
 
 ```shell
 yarn add @evolvedbinary/prosemirror-lwdita
+```
+
+```shell
+npm install @evolvedbinary/prosemirror-lwdita
 ```
 
 Include the Library:
