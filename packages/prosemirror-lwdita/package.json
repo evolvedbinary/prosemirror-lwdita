@@ -4,6 +4,10 @@
   "description": "Use LwDITA in ProseMirror",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "engines": {
+    "node": ">=20.1.0 <21",
+    "yarn": ">=4.2.2"
+  },
   "scripts": {
     "clean": "rimraf dist",
     "fix": "node scripts/fix",

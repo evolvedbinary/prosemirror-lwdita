@@ -3,6 +3,10 @@
   "version": "2.0.3",
   "description": "Demo for ProseMirror LwDITA integration",
   "main": "index.html",
+  "engines": {
+    "node": ">=20.1.0 <21",
+    "yarn": ">=4.2.2"
+  },
   "targets": {
     "main": false
   },
