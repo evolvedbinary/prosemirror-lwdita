@@ -345,6 +345,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@evolvedbinary/lwdita-ast@npm:^2.1.2":
+  version: 2.1.2
+  resolution: "@evolvedbinary/lwdita-ast@npm:2.1.2"
+  checksum: 10c0/5fafaf943a0b0a9d06d2986d70e47fbfaaa593ca336f418fa254d4890061212b949f9b69005b70269ecaf8b07eb7c74bb6894d709f2a2432e651cbd14f64e473
+  languageName: node
+  linkType: hard
+
 "@evolvedbinary/lwdita-xdita@npm:^2.1.1":
   version: 2.1.1
   resolution: "@evolvedbinary/lwdita-xdita@npm:2.1.1"
@@ -387,7 +394,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@evolvedbinary/prosemirror-lwdita@workspace:packages/prosemirror-lwdita"
   dependencies:
-    "@evolvedbinary/lwdita-ast": "npm:^2.1.1"
+    "@evolvedbinary/lwdita-ast": "npm:^2.1.2"
     "@evolvedbinary/lwdita-xdita": "npm:^2.1.1"
     "@types/chai": "npm:^4.3.11"
     "@types/chai-as-promised": "npm:^7.1.3"
