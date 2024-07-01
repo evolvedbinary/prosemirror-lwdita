@@ -387,6 +387,7 @@ __metadata:
   resolution: "@evolvedbinary/prosemirror-lwdita-package@workspace:."
   dependencies:
     "@tsconfig/recommended": "npm:^1.0.6"
+    rimraf: "npm:^5.0.7"
   languageName: unknown
   linkType: soft
 
