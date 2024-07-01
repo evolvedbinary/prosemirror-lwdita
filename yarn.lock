@@ -338,13 +338,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@evolvedbinary/lwdita-ast@npm:^2.1.1":
-  version: 2.1.1
-  resolution: "@evolvedbinary/lwdita-ast@npm:2.1.1"
-  checksum: 10c0/261d5d22873e1aef56a00a322e51bcfdadf2c64bda2d1f98225cb5fae63a4e4ec7d7720be2d709ff6c4c66301c062608fe015c15475f82c5e7765e6529bc9bcc
-  languageName: node
-  linkType: hard
-
 "@evolvedbinary/lwdita-ast@npm:^2.1.2":
   version: 2.1.2
   resolution: "@evolvedbinary/lwdita-ast@npm:2.1.2"
@@ -352,13 +345,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@evolvedbinary/lwdita-xdita@npm:^2.1.1":
-  version: 2.1.1
-  resolution: "@evolvedbinary/lwdita-xdita@npm:2.1.1"
+"@evolvedbinary/lwdita-xdita@npm:^2.1.2":
+  version: 2.1.2
+  resolution: "@evolvedbinary/lwdita-xdita@npm:2.1.2"
   dependencies:
-    "@evolvedbinary/lwdita-ast": "npm:^2.1.1"
+    "@evolvedbinary/lwdita-ast": "npm:^2.1.2"
     "@rubensworks/saxes": "npm:6.0.1"
-  checksum: 10c0/7ba9230bf7b8c9c3ed294c44ae51b13611eafb6e56df7d71c3f16aeceb5f54fd30da526aba6f54e3cd61e79404f68c565a232fbc1bb51d87e506b89b71a07d14
+  checksum: 10c0/6cae1932392cb22f7864e253909ca3eb6cb25883aec2aae0c804d97dcab828537dfe18ddbb17a0095e0d3feb73967c62469ba548aca0d152c3f3316c203dea16
   languageName: node
   linkType: hard
 
@@ -366,7 +359,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@evolvedbinary/prosemirror-lwdita-demo@workspace:packages/prosemirror-lwdita-demo"
   dependencies:
-    "@evolvedbinary/lwdita-xdita": "npm:^2.1.1"
+    "@evolvedbinary/lwdita-xdita": "npm:^2.1.2"
     "@evolvedbinary/prosemirror-lwdita": "workspace:^"
     "@parcel/transformer-sass": "npm:^2.12.0"
     cypress: "npm:^13.8.1"
@@ -396,7 +389,7 @@ __metadata:
   resolution: "@evolvedbinary/prosemirror-lwdita@workspace:packages/prosemirror-lwdita"
   dependencies:
     "@evolvedbinary/lwdita-ast": "npm:^2.1.2"
-    "@evolvedbinary/lwdita-xdita": "npm:^2.1.1"
+    "@evolvedbinary/lwdita-xdita": "npm:^2.1.2"
     "@types/chai": "npm:^4.3.11"
     "@types/chai-as-promised": "npm:^7.1.3"
     "@types/mocha": "npm:^10.0.6"
