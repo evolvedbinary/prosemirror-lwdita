@@ -217,7 +217,7 @@ export function imageInputOverlay(callback: (args: any) => void, node?: Node): v
   urlInput.placeholder = 'url';
 
   const embeddedLabel = document.createElement('label');
-  embeddedLabel.textContent = 'embed a copy:';
+  embeddedLabel.textContent = 'Embed a copy:';
   embeddedLabel.htmlFor = 'embeddedInput';
   const embeddedInput = document.createElement('input');
   embeddedInput.type = 'checkbox';
