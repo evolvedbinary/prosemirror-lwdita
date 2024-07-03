@@ -291,7 +291,6 @@ body {
     margin-bottom: 10px;
 
     label {
-      width: 70px;
       margin-right: 10px;
       text-align: left;
     }
@@ -302,14 +301,9 @@ body {
   }
 
   #btnConatiner {
+    margin-top: .5rem;
     padding: 0 1rem;
     display: flex;
     justify-content: space-between;
-
-    button {
-      border:none;
-      background: none;
-      cursor: pointer;
-    }
   }
 }

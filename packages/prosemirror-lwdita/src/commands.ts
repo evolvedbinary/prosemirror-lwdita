@@ -206,6 +206,7 @@ export function imageInputOverlay(callback: (args: any) => void, node?: Node): v
   const fileInput = document.createElement('input');
   fileInput.type = 'file';
   fileInput.id = 'fileInput';
+  fileInput.accept = 'image/*';
 
   const urlLabel = document.createElement('label');
   urlLabel.textContent = 'URL:';
@@ -216,11 +217,12 @@ export function imageInputOverlay(callback: (args: any) => void, node?: Node): v
   urlInput.placeholder = 'url';
 
   const embeddedLabel = document.createElement('label');
-  embeddedLabel.textContent = 'embed a copy';
+  embeddedLabel.textContent = 'embed a copy:';
   embeddedLabel.htmlFor = 'embeddedInput';
   const embeddedInput = document.createElement('input');
   embeddedInput.type = 'checkbox';
   embeddedInput.id = 'embeddedInput';
+  embeddedInput.title = "this option will embed the image from an external source and store a copy in the document as base64 string"
 
   const heightLabel = document.createElement('label');
   heightLabel.textContent = 'Height:';
@@ -251,11 +253,11 @@ export function imageInputOverlay(callback: (args: any) => void, node?: Node): v
 
   const closeButton = document.createElement('button');
   closeButton.id = 'closeButton';
-  closeButton.classList.add('ic-cross');
+  closeButton.textContent = 'Dismiss';
 
   const okButton = document.createElement('button');
   okButton.id = 'okButton';
-  okButton.classList.add('ic-checkmark');
+  okButton.textContent = 'Insert';
 
   btnConatiner.appendChild(closeButton);
   btnConatiner.appendChild(okButton);
@@ -309,6 +311,13 @@ export function imageInputOverlay(callback: (args: any) => void, node?: Node): v
 
   urlInput.addEventListener('change', () => {
 
+  });
+
+  overlay.addEventListener('click', function (e) {
+    if (e.target === overlay) {
+      document.body.removeChild(overlay);
+      return null;
+    }
   });
 
   // Add event listener to ok button
