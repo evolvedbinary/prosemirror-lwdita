@@ -82,6 +82,7 @@ export const SCHEMAS: Record<string, (node: typeof AbstractBaseNode, next: (node
  * The LwDITA Schema. Describes parent-child relationships.
  */
 export const SCHEMA_CONTENT: Record<string, [content: string, groups: string]> = {
+  alt: ['(text|ph|data)*', ''],
   audio: ['desc? media_source* media_track*', 'simple_blocks fig_blocks list_blocks all_blocks'],
   body: ['list_blocks* section* fn*', ''],
   data: ['(text|data)*', 'common_inline all_inline fn_blocks simple_blocks fig_blocks list_blocks all_blocks'],
@@ -93,7 +94,7 @@ export const SCHEMA_CONTENT: Record<string, [content: string, groups: string]> =
   document: ['topic', ''],
   fig: ['title? desc? (fig_blocks|image|xref)*', 'list_blocks all_blocks'],
   fn: ['fn_blocks*', 'simple_blocks all_blocks'],
-  image: ['', 'common_inline all_inline'],
+  image: ['alt?', 'common_inline all_inline'],
   'media-source': ['', ''],
   'media-track': ['', ''],
   li: ['list_blocks*', ''],
@@ -337,7 +338,7 @@ export function schema(): Schema {
     done.push(nodeName);
 
     // do not process the alt or text nodes
-    if (['alt', 'text'].indexOf(node as string) > -1) {
+    if (['text'].indexOf(node as string) > -1) {
       return;
     }
 
