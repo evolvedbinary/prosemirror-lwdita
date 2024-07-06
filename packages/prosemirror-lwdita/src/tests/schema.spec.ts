@@ -129,8 +129,8 @@ describe('Function schema()', () => {
     // nodeNames are strings in the content array
     const nodeNames = nodes.content.filter((node: NodeSpec) => typeof node === 'string')
     const expectedNodes = [
-      'text',         'hard_break',
-      'image',       'data',
+      'text',         'data',        'alt',
+      'image',        'hard_break',  
       'xref',         'ph',          'title',
       'shortdesc',    'prolog',      'p',
       'ol',           'dt',          'pre',
