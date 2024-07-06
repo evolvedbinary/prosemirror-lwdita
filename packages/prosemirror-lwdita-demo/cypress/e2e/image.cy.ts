@@ -24,6 +24,7 @@ describe('handling images', () => {
     .click()
     .get('figure img')
     .should('have.attr', 'src', 'https://static.evolvedbinary.com/petal/eb-rose-small.png')
+    .should('have.attr', 'scope', 'external')
   });
 
   it('embeds remote image using the toolbar button', () => {
@@ -39,6 +40,8 @@ describe('handling images', () => {
     .get('#okButton')
     .click()
     .get('figure img')
+    .should('be.visible')
+    .should('have.attr', 'scope', 'peer')
     // the test is crashing here and can not compare the base64 string to image src
   });
 
@@ -61,6 +64,7 @@ describe('handling images', () => {
     .get('#okButton')
     .click()
     .get('figure img')
+    .should('be.visible')
     // the test is crashing here and can not compare the base64 string to image src
   });
 
@@ -76,15 +80,32 @@ describe('handling images', () => {
     .click()
     .get('figure img')
     .should('have.attr', 'src', `data:image/png;base64;filename=small.png,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII=`)
+    .should('have.attr', 'scope', 'peer')
   });
 
-  it('lunch image upload dialog using the shortut', () => {
+  it('lunch image upload dialog using the shortcut', () => {
     cy.visit('http://localhost:1234/')
     .get('#editor > div > div.ProseMirror > article > div > section > p')
     .click()
     .type('{alt}n')
     .get('#dialog')
     .should('be.visible')
+  });
+
+  it('sets the alt text for an image', () => {
+    cy.visit('http://localhost:1234/')
+    .get('#editor > div > div.ProseMirror > article > div > section > p')
+    .click()
+    .get('#editor > div > div.ProseMirror-menubar > span > div.ic-image')
+    .click()
+    .get('#fileInput')
+    .selectFile('cypress/fixtures/small.png')
+    .get('#altTextInput')
+    .type('A small block')
+    .get('#okButton')
+    .click()
+    .get('figure img alt')
+    .should('have.text', 'A small block')
   });
 
 });
