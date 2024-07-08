@@ -46,7 +46,7 @@
   ],
   "devDependencies": {
     "@tsconfig/recommended": "^1.0.7",
-    "rimraf": "^5.0.7"
+    "rimraf": "^5.0.8"
   },
   "packageManager": "yarn@4.2.2"
 }
