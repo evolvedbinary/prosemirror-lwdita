@@ -31,7 +31,7 @@ package-lock.json
 .pnp.*
 
 # Cypress test artifacts
-prosemirror-lwdita-demo/cypress/downloads/*
+packages/prosemirror-lwdita-demo/cypress/downloads
 
 #Dockerfile
 Dockerfile
