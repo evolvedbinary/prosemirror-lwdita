@@ -19,6 +19,11 @@ import { AbstractBaseNode, ChildTypes, DocumentNode, UnknownNodeError, getNodeCl
 import { getDomNode } from './dom';
 import { NodeSpec, Schema, SchemaSpec, Node, MarkSpec, DOMOutputSpec, Attrs } from 'prosemirror-model';
 
+
+/**
+ * Referenced schema: https://github.com/oasis-tcs/dita-lwdita/tree/spec/org.oasis.xdita/dtd
+ */
+
 /**
  * Set the root node `document` to string "doc"
  *
@@ -80,40 +85,57 @@ export const SCHEMAS: Record<string, (node: typeof AbstractBaseNode, next: (node
 
 /**
  * The LwDITA Schema. Describes parent-child relationships.
+ * content: The allowed child elements of the element
+ * groups: The content-groups, the element is allowed to be part of
  */
 export const SCHEMA_CONTENT: Record<string, [content: string, groups: string]> = {
-  audio: ['desc? media_source* media_track*', 'simple_blocks fig_blocks list_blocks all_blocks'],
-  body: ['list_blocks* section* fn*', ''],
-  data: ['(text|data)*', 'common_inline all_inline fn_blocks simple_blocks fig_blocks list_blocks all_blocks'],
+/*
+  lwdita-ast node groups:
+  'ph': ['b', 'em', 'i', 'ph', 'strong', 'sub', 'sup', 'tt', 'u'],
+  'inline.noimage': ['text', 'b', 'em', 'i', 'ph', 'strong', 'sub', 'sup', 'tt', 'u', 'xref'],
+  'inline.noxref': ['text', 'b', 'em', 'i', 'ph', 'strong', 'sub', 'sup', 'tt', 'u', 'image'],
+  'inline': ['text', 'b', 'em', 'i', 'ph', 'strong', 'sub', 'sup', 'tt', 'u', 'image', 'xref'],
+  'simple_blocks': ['p', 'ul', 'ol', 'dl', 'pre', 'audio', 'video', 'example', 'note'],
+  'fn-blocks': ['p', 'ul', 'ol', 'dl'],
+  'all-blocks': ['p','ul','ol','dl','pre','audio','video','example','simpletable','fig','note'],
+  'list-blocks': ['p','ul', 'ol', 'dl', 'pre', 'audio', 'video', 'example', 'simpletable', 'fig', 'note'],
+  'fig-blocks': ['p', 'ul', 'ol', 'dl', 'pre', 'audio', 'video', 'example', 'simpletable'],
+  'example-blocks': ['p','ul','ol','dl','pre','audio','video','simpletable','fig','note'],
+  'fallback-blocks': ['image','alt','p','ul','ol','dl','pre','note'],
+ */
+  alt: ['(text|ph)* |', 'fallback_blocks'],
+  audio: ['desc? fallback? media_source* media_track*', 'simple_blocks all_blocks list_blocks fig_blocks example_blocks'],
+  body: ['list_blocks* section* div?', ''],
+  metadata: ['othermeta*', ''],
   dd: ['list_blocks*', ''],
-  desc: ['common_inline*', ''],
-  dl: ['dlentry+', 'fn_blocks simple_blocks fig_blocks list_blocks all_blocks'],
+  desc: ['inline.noxref*', ''],
+  dl: ['dlentry+', 'simple_blocks fn_blocks all_blocks list_blocks fig_blocks example_blocks fallback_blocks'],
   dlentry: ['dt dd', ''],
-  dt: ['all_inline*', ''],
+  dt: ['inline*', ''],
   document: ['topic', ''],
-  fig: ['title? desc? (fig_blocks|image|xref)*', 'list_blocks all_blocks'],
-  fn: ['fn_blocks*', 'simple_blocks all_blocks'],
-  image: ['', 'common_inline all_inline'],
+  fig: ['title? desc? (fig_blocks|image|xref)*', 'all_blocks list_blocks example_blocks'],
+  fn: ['fn_blocks*', ''],
+  image: ['alt?', 'inline.noimage inline.noxref inline fallback_blocks'],
   'media-source': ['', ''],
-  'media-track': ['', ''],
+  'media-track': ['text', ''],
   li: ['list_blocks*', ''],
-  note: ['simple_blocks*', 'simple_blocks list_blocks all_blocks'],
-  ol: ['li+', 'fn_blocks simple_blocks fig_blocks list_blocks all_blocks'],
-  p: ['all_inline*', 'fn_blocks simple_blocks fig_blocks list_blocks all_blocks'],
-  ph: ['all_inline*', 'common_inline all_inline'],
-  pre: ['(text|ph|xref|data)*', 'simple_blocks fig_blocks list_blocks all_blocks'],
-  prolog: ['data*', ''],
+  note: ['simple_blocks*', 'simple_blocks all_blocks list_blocks example_blocks fallback_blocks'],
+  ol: ['li+', 'simple_blocks fn_blocks all_blocks list_blocks fig_blocks example_blocks fallback_blocks'],
+  p: ['inline*', 'fn_blocks simple_blocks fig_blocks list_blocks all_blocks'],
+  ph: ['inline*', 'ph inline.noimage inline.noxref inline'],
+  pre: ['(text|ph|xref)*', 'simple_blocks all_blocks list_blocks fig_blocks example_blocks fallback_blocks'],
+  prolog: ['metadata*', ''],
   section: ['title? all_blocks*', ''],
-  simpletable: ['sthead? strow+', 'fig_blocks list_blocks all_blocks'],
-  shortdesc: ['all_inline*', ''],
+  simpletable: ['title? sthead? strow+', ' all_blocks list_blocks fig_blocks example_blocks'],
+  shortdesc: ['inline*', ''],
   stentry: ['simple_blocks*', ''],
   sthead: ['stentry+', ''],
   strow: ['(stentry*)', ''],
-  title: ['common_inline*', ''],
+  title: ['inline.noxref*', ''],
   topic: ['title shortdesc? prolog? body?', ''],
-  ul: ['li+', 'fn_blocks simple_blocks fig_blocks list_blocks all_blocks'],
-  video: ['desc? media_source* media_track*', 'simple_blocks fig_blocks list_blocks all_blocks'],
-  xref: ['common_inline*', 'all_inline'],
+  ul: ['li+', 'simple_blocks fn_blocks  all_blocks list_blocks fig_blocks example_blocks fallback_blocks'],
+  video: ['desc? fallback? video-poster? media_source* media_track*', 'simple_blocks all_blocks list_blocks fig_blocks example_blocks'],
+  xref: ['inline.noxref', 'inline.noimage inline'],
 }
 
 /**
