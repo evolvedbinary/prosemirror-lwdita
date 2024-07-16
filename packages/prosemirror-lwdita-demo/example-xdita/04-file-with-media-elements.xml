@@ -4,37 +4,36 @@
   <title>Test File: Media Elements in XDita</title>
   <body>
 
-    <section id="demo">
+    <section outputcalss="demo">
       <title>
         Video Element
       </title>
       <fig>
-        <video outputclass="videoElement" width="640" height="360" autoplay="false" muted="false">
+        <video outputclass="videoElement" width="640" height="360" autoplay="false" muted="false" controls="true">
           <desc outputclass="videoElementDescriptor">Xiaomi Yeelight YLDP06YL Smart Light Bulb White</desc>
-          <video-poster value="https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/1954_Kool-Aid_Commercial._Debut_of_Pitcher_Man.webm/120px--1954_Kool-Aid_Commercial._Debut_of_Pitcher_Man.webm.jpg" />
-          <media-source value="https://commons.wikimedia.org/wiki/File:1954_Kool-Aid_Commercial._Debut_of_Pitcher_Man.webm" />
+          <video-poster href="https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/1954_Kool-Aid_Commercial._Debut_of_Pitcher_Man.webm/120px--1954_Kool-Aid_Commercial._Debut_of_Pitcher_Man.webm.jpg" />
+          <media-source href="https://commons.wikimedia.org/wiki/File:1954_Kool-Aid_Commercial._Debut_of_Pitcher_Man.webm" />
         </video>
         </fig>
     </section>
 
     <section>
       <title>Audio Element</title>
-      <fig>
-        <audio outputclass="audioElement">
+      <note>
+        <audio outputclass="audioElement" autoplay="false" controls="true" loop="false" muted="false" tabindex="1">
           <desc outputclass="audioElementDescriptor">An Audio Track</desc>
-          <media-controls value="true"/>
-          <media-autoplay value="false"/>
-          <media-loop value="false"/>
-          <media-muted value="false"/>
-          <media-source value="https://commons.wikimedia.org/wiki/File:1943_Nov_14_NYPhil_Bernstein.ogg" />
+          <media-source href="https://commons.wikimedia.org/wiki/File:1943_Nov_14_NYPhil_Bernstein.ogg" format="ogg/vorbis"/>
+          <fallback>
+            <p>Sorry, the audio could not be played.</p>
+          </fallback>
         </audio>
-      </fig>
+      </note>
     </section>
 
     <section>
       <title>An Image</title>
       <fig>
-        <image outputclass="imageElement" height="300px" width="300px" href="https://placekitten.com/300/300">
+        <image outputclass="imageElement" height="300" width="300" href="https://placekitten.com/300/300">
           <alt>A kitten</alt>
         </image>
       </fig>
