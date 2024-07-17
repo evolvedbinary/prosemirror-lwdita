@@ -126,8 +126,8 @@ export const complexXdita = `<?xml version="1.0" encoding="UTF-8"?>
     with your remote control.</shortdesc>
   <body>
     <section id="context">
-      <p>Your <ph keyref="product-name"/> remote control can manage up to <data>250 network light bulbs on the same lighting
-      network</data>. When you add a light bulb to the network, you can program it to one or more
+      <p>Your <ph keyref="product-name"/> remote control can manage up to <pre>250 network light bulbs on the same lighting
+      network</pre>. When you add a light bulb to the network, you can program it to one or more
         lighting groups. You must assign a light bulb to at least one lighting group to
         operate that light bulb  A network light bulb that is not programmed to a
         lighting group will still operate when controlling all network light bulbs from

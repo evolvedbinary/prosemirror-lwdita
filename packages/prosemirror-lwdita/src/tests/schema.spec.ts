@@ -42,8 +42,8 @@ describe('Function getChildren()', () => {
     // DD node children are %list-blocks
     const type = DdNode.childTypes;
     const children = _test_private_schema.getChildren(type);
-    // %list-blocks are p  ul  ol  dl  pre  audio  video  simpletable  fig  note  data
-    assert.deepEqual(children, ['p', 'ul', 'ol', 'dl', 'pre', 'audio', 'video', 'simpletable', 'fig', 'note', 'data']);
+    // %list-blocks are p  ul  ol  dl  pre  audio  video  simpletable  fig  note
+    assert.deepEqual(children, ['p', 'ul', 'ol', 'dl', 'pre', 'audio', 'video', 'simpletable', 'fig', 'note']);
   });
 });
 
@@ -125,11 +125,11 @@ describe('Function schema()', () => {
 
   it('contains all JDita nodes', () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const nodes = result.spec.nodes as any; 
+    const nodes = result.spec.nodes as any;
     // nodeNames are strings in the content array
     const nodeNames = nodes.content.filter((node: NodeSpec) => typeof node === 'string')
     const expectedNodes = [
-      'text',         'image',       'data',
+      'text',         'image',       'alt',
       'xref',         'ph',          'title',
       'shortdesc',    'prolog',      'p',
       'ol',           'dt',          'pre',
@@ -139,7 +139,9 @@ describe('Function schema()', () => {
       'strow',        'simpletable', 'fig',
       'dd',           'dlentry',     'dl',
       'li',           'ul',          'section',
-      'body',         'topic',       'doc'
+      'body',         'document',    'topic',
+      'doc',          'metadata',    'fallback',
+      'doc',          'metadata',    'fallback',
     ];
     expect(nodeNames).to.have.members(expectedNodes);
   });

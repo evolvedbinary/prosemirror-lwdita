@@ -22,7 +22,7 @@ export const DOM_NODES: Record<string, string | ((parent?: string) => string)> =
   audio: 'audio',
   body: 'div',
   b: 'strong',
-  data: 'data',
+  //data: 'data',
   desc: parent => parent === 'fig' ? 'figcaption' : 'caption',
   dd: 'dd',
   dl: 'dl',
