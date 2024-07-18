@@ -103,7 +103,7 @@ export const SCHEMA_CONTENT: Record<string, [content: string, groups: string]> =
   'example-blocks': ['p','ul','ol','dl','pre','audio','video','simpletable','fig','note'],
   'fallback-blocks': ['image','alt','p','ul','ol','dl','pre','note'],
  */
-  alt: ['(text|ph)* |', 'fallback_blocks'],
+  alt: ['(text|ph)*', 'fallback_blocks'],
   audio: ['desc? fallback? media_source* media_track*', 'simple_blocks all_blocks list_blocks fig_blocks example_blocks'],
   body: ['list_blocks* section* div?', ''],
   dd: ['list_blocks*', ''],
