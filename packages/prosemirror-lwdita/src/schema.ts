@@ -124,7 +124,7 @@ export const SCHEMA_CONTENT: Record<string, [content: string, groups: string]> =
   li: ['list_blocks*', ''],
   map: ['(topicmeta? (topicref|keydef)*)', ''],
   'media-source': ['', ''],
-  'media-track': ['text', ''],
+  'media-track': ['', ''],
   metadata: ['othermeta*', ''],
   navtitle: ['(text|ph)*', ''],
   note: ['simple_blocks*', 'simple_blocks all_blocks list_blocks example_blocks fallback_blocks'],
