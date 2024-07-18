@@ -147,7 +147,8 @@ export const SCHEMA_CONTENT: Record<string, [content: string, groups: string]> =
   topicref: ['topicmeta? topicref*', ''],
   tt: ['inline_noimage*', ''],
   ul: ['li+', 'simple_blocks fn_blocks  all_blocks list_blocks fig_blocks example_blocks fallback_blocks'],
-  video: ['desc? fallback? video-poster? media_source* media_track*', 'simple_blocks all_blocks list_blocks fig_blocks example_blocks'],
+  video: ['desc? fallback? video_poster? media_source* media_track*', 'simple_blocks all_blocks list_blocks fig_blocks example_blocks'],
+  'video-poster': ['', ''],
   xref: ['inline_noxref', 'inline_noimage inline'],
 }
 
@@ -155,8 +156,8 @@ export const SCHEMA_CONTENT: Record<string, [content: string, groups: string]> =
  * A map of special children for certain media nodes
  */
 export const SCHEMA_CHILDREN: Record<string, (type: ChildTypes) => string[]> = {
-  video: () => ['media-source', 'media-track', 'desc'],
-  audio: () => ['media-source', 'media-track', 'desc'],
+  video: () => ['media-source', 'media-track', 'desc', 'video-poster', 'fallback'],
+  audio: () => ['media-source', 'media-track', 'desc', 'fallback'],
 }
 
 /**
