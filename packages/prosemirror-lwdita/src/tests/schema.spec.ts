@@ -129,19 +129,21 @@ describe('Function schema()', () => {
     // nodeNames are strings in the content array
     const nodeNames = nodes.content.filter((node: NodeSpec) => typeof node === 'string')
     const expectedNodes = [
-      'text',         'image',       'alt',
-      'xref',         'ph',          'title',
-      'shortdesc',    'prolog',      'p',
-      'ol',           'dt',          'pre',
-      'media_source', 'media_track', 'desc',
-      'audio',        'video',       'fn',
-      'note',         'stentry',     'sthead',
-      'strow',        'simpletable', 'fig',
-      'dd',           'dlentry',     'dl',
-      'li',           'ul',          'section',
-      'body',         'document',    'topic',
-      'doc',          'metadata',    'fallback',
-      'doc',          'metadata',    'fallback',
+      'alt',            'audio',        'body',
+      'dd',             'desc',         'div',
+      'dl',             'dlentry',      'dt',
+      'em',             'example',      'fig',
+      'fn',             'image',        'keydef',
+      'keytext',        'li',           'map',
+      'media-source',   'media-track',  'metadata',
+      'navtitle',       'note',         'ol',
+      'othermeta',      'p',            'ph',
+      'pre',            'prolog',       'section',
+      'simpletable',    'shortdesc',    'stentry',
+      'sthead',         'strow',        'strong',
+      'title',          'topic',        'topicmeta',
+      'topicref',       'tt',           'ul',
+      'video',          'video-poster'
     ];
     expect(nodeNames).to.have.members(expectedNodes);
   });
