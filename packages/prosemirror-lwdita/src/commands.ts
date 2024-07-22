@@ -229,7 +229,7 @@ export function imageInputOverlay(callback: (args: any) => void, node?: Node): v
   heightLabel.textContent = 'Height:';
   heightLabel.htmlFor = 'heightInput';
   const heightInput = document.createElement('input');
-  heightInput.type = 'text';
+  heightInput.type = 'number';
   heightInput.id = 'heightInput';
   heightInput.placeholder = 'Height';
 
@@ -237,7 +237,7 @@ export function imageInputOverlay(callback: (args: any) => void, node?: Node): v
   widthLabel.textContent = 'Width:';
   widthLabel.htmlFor = 'widthInput';
   const widthInput = document.createElement('input');
-  widthInput.type = 'text';
+  widthInput.type = 'number';
   widthInput.id = 'widthInput';
   widthInput.placeholder = 'Width';
 
