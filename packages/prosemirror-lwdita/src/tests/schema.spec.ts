@@ -42,8 +42,8 @@ describe('Function getChildren()', () => {
     // DD node children are %list-blocks
     const type = DdNode.childTypes;
     const children = _test_private_schema.getChildren(type);
-    // %list-blocks are p  ul  ol  dl  pre  audio  video  simpletable  fig  note
-    assert.deepEqual(children, ['p', 'ul', 'ol', 'dl', 'pre', 'audio', 'video', 'simpletable', 'fig', 'note']);
+    // %list-blocks are 'p','ul', 'ol', 'dl', 'pre', 'audio', 'video', 'example', 'simpletable', 'fig', 'note'
+    assert.deepEqual(children, ['p','ul', 'ol', 'dl', 'pre', 'audio', 'video', 'example', 'simpletable', 'fig', 'note']);
   });
 });
 
@@ -163,7 +163,7 @@ describe('Function schema()', () => {
     expect(nodesObject['dd'].content).to.equal('list_blocks*');
 
     // title node
-    expect(nodesObject['title'].content).to.equal('common_inline*');
+    expect(nodesObject['title'].content).to.equal('inline_noxref*');
   });
 
   it('returns a node spec with a schema-compliant inline property', () => {
@@ -198,15 +198,15 @@ describe('Function schema()', () => {
     // topic node
     expect(nodesObject['topic'].attrs).to.have.keys(
       'id',
-      'domains',
+      'xmlns:ditaarch',
+      'ditaarch:DITAArchVersion',
+      'specializations',
       'outputclass',
       'translate',
       'dir',
       'parent',
       'class',
-      'xml:lang',
-      'xmlns:ditaarch',
-      'ditaarch:DITAArchVersion'
+      'xml:lang'
     );
 
     // body node

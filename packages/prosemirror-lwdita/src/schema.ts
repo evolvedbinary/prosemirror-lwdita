@@ -345,7 +345,7 @@ export function schema(): Schema {
     // the node types in this schema
     nodes: {
       text: {
-        group: 'common_inline all_inline',
+        group: 'inline_noimage inline_noxref',
         inline: true,
       },
     },
