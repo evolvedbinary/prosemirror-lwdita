@@ -236,9 +236,8 @@ export function insertImage(type: NodeType, input: InputContainer): Command {
  * @returns node index from the list of nodes
  */
 function canCreateIndex(type: NodeType) {
-  return ['data', 'ul', 'li', 'p', 'section', 'stentry', 'strow', 'simpletable'].indexOf(type.name);
+  return ['ul', 'li', 'p', 'section', 'stentry', 'strow', 'simpletable'].indexOf(type.name);
 }
-
 
 /**
  * Check if the node can be created or not.
