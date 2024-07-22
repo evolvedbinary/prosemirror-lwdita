@@ -342,11 +342,11 @@ export function unTravel(prosemirrorDocument: Record<string, any>): JDita {
 /**
  * Special untravel function for media nodes.
  * Reverses the transformation done by the NODES[value.nodeName] in the travel function
- * 
+ *
  * @param nodeName - string node name
  * @param attributes -  node attributes
  * @param children - JDita[] node children
- * @param prosemirrorDocument -  prosemirror document 
+ * @param prosemirrorDocument -  prosemirror document
  * @returns JDita node
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -435,7 +435,23 @@ function mediaNodeUntravel(nodeName: string, attributes: Record<string, string>,
   }
 
   if (nodeName === 'image') {
-    const allImageAttributes = { props: attributes.props, dir: attributes.dir, "xml:lang": attributes['xml:lang'], translate: attributes.translate, keyref: attributes.keyref, href: attributes.href, format: attributes.format, scope: attributes.scope, outputclass: attributes.outputclass, class: attributes.class, width: attributes.width, height: attributes.height }
+    const allImageAttributes = {
+      // %localization
+      dir: attributes.dir,
+      "xml:lang": attributes['xml:lang'],
+      translate: attributes.translate,
+      // %reference-content
+      href: attributes.href,
+      format: attributes.format,
+      scope: attributes.scope,
+      // class attributes
+      outputclass: attributes.outputclass,
+      class: attributes.class,
+      // custom attributes
+      keyref: attributes.keyref,
+      width: attributes.width,
+      height: attributes.height
+    }
 
     const allImageChildren: JDita[] = [];
     allImageChildren.push({
@@ -445,11 +461,11 @@ function mediaNodeUntravel(nodeName: string, attributes: Record<string, string>,
         dir: undefined,
         "xml:lang": undefined,
         translate: undefined,
-        props: undefined,
         keyref: undefined,
         outputclass: undefined,
         class: undefined,
       },
+      // FIXME: allowed children of `alt` are: 'b', 'em', 'i', 'ph', 'strong', 'sub', 'sup', 'tt', 'u'
       children: [
         {
           nodeName: 'text',
@@ -471,8 +487,8 @@ function mediaNodeUntravel(nodeName: string, attributes: Record<string, string>,
  * Creates children for media nodes
  * Children like media-autoplay, media-controls, media-loop, media-muted, video-poster, media-source share all the same structure
  * This is a helper function to create these children
- * 
- * @param nodeName - string 
+ *
+ * @param nodeName - string
  * @param value - string
  * @returns media child node
  */
@@ -490,7 +506,7 @@ function createMediaChild(nodeName: string,value: string): JDita {
     },
     children: undefined
   };
-} 
+}
 
 //Escape hatch for Unit Testing due to a lack of “package-private” accessibility scope in TypeScript
 export const _test_private_document = {
