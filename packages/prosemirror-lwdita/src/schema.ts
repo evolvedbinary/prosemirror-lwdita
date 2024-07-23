@@ -312,6 +312,13 @@ export function schema(): Schema {
         group: 'common_inline all_inline',
         inline: true,
       },
+      hard_break: {
+        inline: true,
+        group: 'common_inline all_inline',
+        selectable: false,
+        parseDOM: [{tag: "br"}],
+        toDOM() { return ["br"] }
+      } as NodeSpec
     },
     // the mark types that exist in this schema
     marks: {},

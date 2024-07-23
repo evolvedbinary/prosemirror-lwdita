@@ -129,7 +129,8 @@ describe('Function schema()', () => {
     // nodeNames are strings in the content array
     const nodeNames = nodes.content.filter((node: NodeSpec) => typeof node === 'string')
     const expectedNodes = [
-      'text',         'image',       'data',
+      'text',         'hard_break',
+      'image',       'data',
       'xref',         'ph',          'title',
       'shortdesc',    'prolog',      'p',
       'ol',           'dt',          'pre',
@@ -139,7 +140,7 @@ describe('Function schema()', () => {
       'strow',        'simpletable', 'fig',
       'dd',           'dlentry',     'dl',
       'li',           'ul',          'section',
-      'body',         'topic',       'doc'
+      'body',         'topic',       'doc',
     ];
     expect(nodeNames).to.have.members(expectedNodes);
   });

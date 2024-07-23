@@ -308,6 +308,13 @@ export function unTravel(prosemirrorDocument: Record<string, any>): JDita {
     }
   }
 
+  if(nodeName === 'hard-break') {
+    return {
+      nodeName: 'text',
+      content: '\n'
+    }
+  }
+
   if (nodeName === 'text') {
     // check for marks and wrap the content in the mark node
 

@@ -596,13 +596,22 @@ export function enterPressed(state: EditorState, dispatch?: (tr: Transaction) =>
     $from = tr.selection.$from;
   }
 
-    // prepare the transaction
-    const resultTr: false | Transaction = isEOL(state.tr, depth)       // when the cursor is at the end of the line
-                                          ? $from.parentOffset === 0            // when the cursor is at the beginning of parent node
-                                            ? enterEmpty(tr, !!dispatch, depth) // then enterEmpty is triggered
-                                            : enterEOL(tr, !!dispatch, depth)   // when the cursor is not at the beginning of parent node, the cursor can be at the end text node, then enterEOL is triggered
-                                          : enterSplit(tr, !!dispatch, depth);  // when the cursor is not at the end of the line, then enterSplit is triggered
-
+  // prepare the transaction
+    let resultTr: false | Transaction
+ 
+  if(isEOL(state.tr, depth)) {
+    if($from.parentOffset === 0 ) {
+      resultTr = enterEmpty(tr, !!dispatch, depth)
+    } else {
+      resultTr = enterEOL(tr, !!dispatch, depth)
+    }
+  } else {
+    if($from.parentOffset === 0 ) {
+      resultTr = enterSplit(tr, !!dispatch, depth)
+    } else {
+      resultTr = tr.replaceSelectionWith(state.schema.nodes.hard_break.create()).scrollIntoView();
+    }
+  }
   // if the transaction is triggered, then dispatch the transaction
   if (dispatch && resultTr !== false) {
     dispatch(resultTr);
