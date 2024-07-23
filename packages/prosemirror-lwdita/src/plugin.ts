@@ -309,12 +309,15 @@ export const doubleClickImagePlugin = new Plugin({
 
         if (pos) {
           const node = doc.nodeAt(pos.pos);
+          const parent = doc.nodeAt(pos.pos - 1);
+          const nodeSize = parent?.nodeSize || 0;
           const { state, dispatch } = view;
           if (node && node.type === schema.nodes.image) {
             imageInputOverlay((imageInfo) => {
               if (!imageInfo) return false;
               const newNode = createNode(schema.nodes['fig'], { src: imageInfo.src, scope: imageInfo.scope, alt: imageInfo.alt, height: imageInfo.height, width: imageInfo.width });
-              dispatch(state.tr.replaceWith(pos.pos - 1, pos.pos + 1, newNode));
+              dispatch(state.tr.replaceWith(pos.pos - 1, pos.pos + nodeSize, newNode));
+              return true;
             }, node);
             return true;
           }

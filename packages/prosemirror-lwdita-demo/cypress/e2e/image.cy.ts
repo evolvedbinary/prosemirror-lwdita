@@ -12,7 +12,7 @@ describe('handling images', () => {
 </topic>`);
   })
 
-  it('remote image using the toolbar button', () => {
+  it('inserting remote image using the toolbar button', () => {
     cy.visit('http://localhost:1234/')
     .get('#editor > div > div.ProseMirror > article > div > section > p')
     .click()
@@ -45,7 +45,7 @@ describe('handling images', () => {
     // the test is crashing here and can not compare the base64 string to image src
   });
 
-  it('remote image using the toolbar button with properties', () => {
+  it('inserting remote image using the toolbar button with properties', () => {
     cy.visit('http://localhost:1234/')
     .get('#editor > div > div.ProseMirror > article > div > section > p')
     .click()
@@ -83,7 +83,7 @@ describe('handling images', () => {
     .should('have.attr', 'scope', 'peer')
   });
 
-  it('lunch image upload dialog using the shortcut', () => {
+  it('launch image upload dialog using the shortcut', () => {
     cy.visit('http://localhost:1234/')
     .get('#editor > div > div.ProseMirror > article > div > section > p')
     .click()
