@@ -45,8 +45,8 @@ export const TO_DOM: Record<string, (node: typeof AbstractBaseNode, attrs: Attrs
  * This is a list of those nodes and their special attributes
  */
 export const NODE_ATTRS: Record<string, (attrs: string[]) => Attrs> = {
-  video: node => defaultNodeAttrs([...node, 'controls', 'autoplay', 'loop', 'muted', 'poster']),
-  audio: node => defaultNodeAttrs([...node, 'controls', 'autoplay', 'loop', 'muted']),
+  video: node => defaultNodeAttrs([...node, 'controls', 'autoplay', 'loop', 'muted', 'poster', 'tabindex', 'height', 'width']),
+  audio: node => defaultNodeAttrs([...node, 'controls', 'autoplay', 'loop', 'muted', 'tabindex', 'keyref']),
 }
 
 /**
@@ -57,9 +57,29 @@ export const NODE_ATTR_NAMES: Record<string, Record<string, string>> = {
     _: '*',
     autoplay: '*',
     controls: '*',
+    loop: '*',
+    muted: '*',
+    tabindex: '*',
+    height: 'height',
+    width: 'width',
+    poster: 'poster',
+  },
+  audio: {
+    _: '*',
+    autoplay: '*',
+    controls: '*',
+    loop: '*',
+    muted: '*',
+    tabindex: '*',
+    keyref: 'src',
   },
   'media-source': {
-    value: 'src',
+    keyref: 'src',
+  },
+  'media-track': {
+    kind: '*',
+    keyref: 'src',
+    srclang: '*',
   },
   xref: {
     keyref: 'href',
@@ -67,6 +87,7 @@ export const NODE_ATTR_NAMES: Record<string, Record<string, string>> = {
   image: {
     _: '*',
     href: 'src',
+    alt: 'alt'
   },
 }
 /**
@@ -366,7 +387,7 @@ export function schema(): Schema {
     done.push(nodeName);
 
     // do not process the alt or text nodes
-    if (['alt', 'text'].indexOf(node as string) > -1) {
+    if (['text'].indexOf(node as string) > -1) {
       return;
     }
 
