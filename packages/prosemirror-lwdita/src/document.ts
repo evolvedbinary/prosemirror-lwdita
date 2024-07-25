@@ -328,44 +328,65 @@ export function unTravel(prosemirrorDocument: Record<string, any>): JDita {
  * Reverses the transformation done by the NODES[value.nodeName] in the travel function
  *
  * @param nodeName - string node name
- * @param attributes -  node attributes
+ * @param attributes - node attributes
  * @param children - JDita[] node children
- * @param prosemirrorDocument -  prosemirror document
+ * @param prosemirrorDocument - prosemirror document
  * @returns JDita node
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function mediaNodeUntravel(nodeName: string, attributes: Record<string, string>, children: JDita[]): JDita {
   if (nodeName === 'video') {
     // we must populate the video node with the necessary attributes and children
-    const allAttributes = { props: attributes.props, dir: attributes.dir, "xml:lang": attributes['xml:lang'], translate: attributes.translate, id: attributes.id, conref: attributes.conref, outputclass: attributes.outputclass, class: attributes.class, width: attributes.width, height: attributes.height }
+    const allAttributes = {
+      props: attributes.props,
+      dir: attributes.dir,
+      "xml:lang": attributes['xml:lang'],
+      translate: attributes.translate,
+      id: attributes.id,
+      conref: attributes.conref,
+      outputclass: attributes.outputclass,
+      class: attributes.class,
+      width: attributes.width,
+      height: attributes.height,
+      tabindex: attributes.tabindex,
+      poster: attributes.poster,
+      fallback: attributes.fallback,
+      controls: attributes.controls,
+      autoplay: attributes.autoplay,
+      loop: attributes.loop,
+      muted: attributes.muted,
+      href: attributes.href,
+      format: attributes.format,
+      scope: attributes.scope
+    }
 
     const allChildren: JDita[] = [];
     //children[0] resembles the video desc this value does not change
     allChildren.push(children[0]) // video desc node
+
+    if (attributes.desc !== undefined) {
+      const desc: JDita = createMediaChild('desc', attributes.desc);
+      allChildren.push(desc);
+    }
 
     if (attributes.poster !== undefined) {
       const poster: JDita = createMediaChild('video-poster', attributes.poster);
       allChildren.push(poster);
     }
 
-    if (attributes.controls !== undefined) {
-      const controls: JDita = createMediaChild('media-controls', attributes.controls);
-      allChildren.push(controls);
+    if (attributes.fallback !== undefined) {
+      const fallback: JDita = createMediaChild('fallback', attributes.fallback);
+      allChildren.push(fallback);
     }
 
-    if (attributes.autoplay !== undefined) {
-      const autoplay: JDita = createMediaChild('media-autoplay', attributes.autoplay);
-      allChildren.push(autoplay);
+    if (attributes.track !== undefined) {
+      const track: JDita = createMediaChild('media-track', attributes.track);
+      allChildren.push(track);
     }
 
-    if (attributes.loop !== undefined) {
-      const loop: JDita = createMediaChild('media-loop', attributes.loop);
-      allChildren.push(loop);
-    }
-
-    if (attributes.muted !== undefined) {
-      const muted: JDita = createMediaChild('media-muted', attributes.muted);
-      allChildren.push(muted);
+    if (attributes.source !== undefined) {
+      const source: JDita = createMediaChild('media-source', attributes.source);
+      allChildren.push(source);
     }
 
     allChildren.push(children[1])
@@ -379,34 +400,47 @@ function mediaNodeUntravel(nodeName: string, attributes: Record<string, string>,
   }
 
   if (nodeName === 'audio') {
-    const allAudioAttributes = { class: attributes.class, conref: attributes.conref, "xml:lang": attributes['xml:lang'], dir: attributes.dir, id: attributes.id, outputclass: attributes.outputclass, props: attributes.props, translate: attributes.translate }
+    const allAudioAttributes = {
+      class: attributes.class,
+      conref: attributes.conref,
+      "xml:lang": attributes['xml:lang'],
+      dir: attributes.dir,
+      id: attributes.id,
+      outputclass: attributes.outputclass,
+      props: attributes.props,
+      translate: attributes.translate,
+      tabindex: attributes.tabindex,
+      controls: attributes.controls,
+      autoplay: attributes.autoplay,
+      loop: attributes.loop,
+      muted: attributes.muted,
+      source: attributes.source,
+      href: attributes.href,
+      format: attributes.format,
+      scope: attributes.scope
+    }
 
     const allAudioChildren: JDita[] = [];
     allAudioChildren.push(children[0])
 
-    if (attributes.controls !== undefined) {
-      const controls: JDita = createMediaChild('media-controls', attributes.controls);
-      allAudioChildren.push(controls);
-    }
-
-    if (attributes.autoplay !== undefined) {
-      const autoplay: JDita = createMediaChild('media-autoplay', attributes.autoplay);
-      allAudioChildren.push(autoplay);
-    }
-
-    if (attributes.loop !== undefined) {
-      const loop: JDita = createMediaChild('media-loop', attributes.loop);
-      allAudioChildren.push(loop);
-    }
-
-    if (attributes.muted !== undefined) {
-      const muted: JDita = createMediaChild('media-muted', attributes.muted);
-      allAudioChildren.push(muted);
+    if (attributes.desc !== undefined) {
+      const desc: JDita = createMediaChild('desc', attributes.desc);
+      allAudioChildren.push(desc);
     }
 
     if (attributes.source !== undefined) {
       const source: JDita = createMediaChild('media-source', attributes.source);
       allAudioChildren.push(source);
+    }
+
+    if (attributes.track !== undefined) {
+      const track: JDita = createMediaChild('media-track', attributes.track);
+      allAudioChildren.push(track);
+    }
+
+    if (attributes.fallback !== undefined) {
+      const fallback: JDita = createMediaChild('fallback', attributes.fallback);
+      allAudioChildren.push(fallback);
     }
 
     allAudioChildren.push(children[1])
@@ -434,7 +468,7 @@ function mediaNodeUntravel(nodeName: string, attributes: Record<string, string>,
       // custom attributes
       keyref: attributes.keyref,
       width: attributes.width,
-      height: attributes.height
+      height: attributes.height,
     }
 
     const allImageChildren: JDita[] = [];
@@ -447,7 +481,7 @@ function mediaNodeUntravel(nodeName: string, attributes: Record<string, string>,
         translate: undefined,
         keyref: undefined,
         outputclass: undefined,
-        class: undefined,
+        class: undefined
       },
       // FIXME: allowed children of `alt` are: 'b', 'em', 'i', 'ph', 'strong', 'sub', 'sup', 'tt', 'u'
       children: [
