@@ -118,7 +118,9 @@ export const shortXdita = `<?xml version="1.0" encoding="UTF-8"?>
   </body>
 </topic>`;
 
-export const complexXdita = `<?xml version="1.0" encoding="UTF-8"?>
+export const complexXdita =  `<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE topic PUBLIC "-//OASIS//DTD LIGHTWEIGHT DITA Topic//EN" "lw-topic.dtd"><topic id="intro-product"><title><ph keyref="product-name"/>Overview</title><shortdesc>The<ph keyref="product-name"/> kit allows you to operate network-based home lighting through a remote control</shortdesc><body><p id="cdataTest"><![CDATA[ &%<tagname/><!--comment-->]]>The<ph keyref="product-name"/> kit includes a wireless smart lighting system that helps make the lighting in your home more energy efficient and easier to manage. The kit includes the following components:</p><dl><dlentry><dt>Remote Control</dt><dd><p>Allows you to power on, power off, and dim groups of lights on your network.</p></dd></dlentry><dlentry><dt>LED Light Bulbs</dt><dd><p>Energy-efficient network light bulbs you can install into standard light fixtures.</p></dd></dlentry></dl><fig><title><ph keyref="product-name"/>ready for installation</title><image href="../images/kit.png"><alt>Remote Lighting Kit</alt></image></fig><p id="warning">Electrical hazards can cause burns, shocks and electrocution (death).</p></body></topic>`
+
+/* `<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE topic PUBLIC "-//OASIS//DTD LIGHTWEIGHT DITA Topic//EN" "lw-topic.dtd">
 <topic id="program-bulbs-to-groups">
   <title>Test File: Programming Light Bulbs to a Lighting Group</title>
@@ -170,7 +172,8 @@ export const complexXdita = `<?xml version="1.0" encoding="UTF-8"?>
 
   </body>
 </topic>
-`;
+` */
+  ;
 
 export const videoXdita = `<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE topic PUBLIC "-//OASIS//DTD LIGHTWEIGHT DITA Topic//EN" "lw-topic.dtd">
@@ -182,16 +185,12 @@ export const videoXdita = `<?xml version="1.0" encoding="UTF-8"?>
         Video Element
       </title>
       <fig>
-        <video xml:lang="en" outputclass="videoElement" width="640" height="360">
+        <video xml:lang="en" outputclass="videoElement" width="640" height="360"  controls="true" autoplay="false" loop="false" muted="false">
           <desc outputclass="videoElementDescriptor">Xiaomi Yeelight YLDP06YL Smart Light Bulb White</desc>
           <video-poster value="https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/1954_Kool-Aid_Commercial._Debut_of_Pitcher_Man.webm/120px--1954_Kool-Aid_Commercial._Debut_of_Pitcher_Man.webm.jpg" />
-          <media-controls value="true"/>
-          <media-autoplay value="false"/>
-          <media-loop value="false"/>
-          <media-muted value="false"/>
           <media-source value="https://commons.wikimedia.org/wiki/File:1954_Kool-Aid_Commercial._Debut_of_Pitcher_Man.webm" />
         </video>
-        </fig>
+      </fig>
     </section>
   </body>
 </topic>`;
@@ -204,13 +203,11 @@ export const audioXdita = `<?xml version="1.0" encoding="UTF-8"?>
     <section>
       <title>Audio Element</title>
       <fig>
-        <audio xml:lang="en" outputclass="audioElement">
+        <audio xml:lang="en" outputclass="audioElement" controls="true" autoplay="false" loop="false" muted="false">
           <desc outputclass="audioElementDescriptor">An Audio Track</desc>
-          <media-controls value="true"/>
-          <media-autoplay value="false"/>
-          <media-loop value="false"/>
-          <media-muted value="false"/>
           <media-source value="https://commons.wikimedia.org/wiki/File:1943_Nov_14_NYPhil_Bernstein.ogg" />
+          <media-track kind="metadata">The media track metadata</media-track>
+          <fallback><p>The fallback content</p></fallback>
         </audio>
       </fig>
     </section>
