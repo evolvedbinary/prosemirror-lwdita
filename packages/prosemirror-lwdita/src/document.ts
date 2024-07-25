@@ -50,23 +50,15 @@ export const NODES: Record<string, (value: JDita, parent: JDita) => any> = {
     const content: JDita[] = [];
     if (value.children) {
       value.children.forEach(child => {
-        if (child.nodeName === 'media-autoplay') {
-          attrs.autoplay = child.attributes?.value;
-          return;
-        }
-        if (child.nodeName === 'media-controls') {
-          attrs.controls = child.attributes?.value;
-          return;
-        }
-        if (child.nodeName === 'media-loop') {
-          attrs.loop = child.attributes?.value;
-          return;
-        }
-        if (child.nodeName === 'media-muted') {
+        if (child.nodeName === 'fallback') {
           attrs.muted = child.attributes?.value;
           return;
         }
-        if (['desc', 'media-track', 'media-source'].indexOf(child.nodeName) > -1) {
+        if (child.nodeName === 'desc') {
+          attrs.muted = child.attributes?.value;
+          return;
+        }
+        if (['media-track', 'media-source'].indexOf(child.nodeName) > -1) {
           content.push(child);
           return;
         }
@@ -85,19 +77,7 @@ export const NODES: Record<string, (value: JDita, parent: JDita) => any> = {
     const content: JDita[] = [];
     if (value.children) {
       value.children.forEach(child => {
-        if (child.nodeName === 'media-autoplay') {
-          attrs.autoplay = child.attributes?.value;
-          return;
-        }
-        if (child.nodeName === 'media-controls') {
-          attrs.controls = child.attributes?.value;
-          return;
-        }
-        if (child.nodeName === 'media-loop') {
-          attrs.loop = child.attributes?.value;
-          return;
-        }
-        if (child.nodeName === 'media-muted') {
+        if (child.nodeName === 'fallback') {
           attrs.muted = child.attributes?.value;
           return;
         }
@@ -105,7 +85,11 @@ export const NODES: Record<string, (value: JDita, parent: JDita) => any> = {
           attrs.poster = child.attributes?.value;
           return;
         }
-        if (['desc', 'media-track', 'media-source'].indexOf(child.nodeName) > -1) {
+        if (child.nodeName === 'desc') {
+          attrs.poster = child.attributes?.value;
+          return;
+        }
+        if (['media-track', 'media-source'].indexOf(child.nodeName) > -1) {
           content.push(child);
           return;
         }
