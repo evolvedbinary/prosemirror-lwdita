@@ -207,7 +207,7 @@ export const audioXdita = `<?xml version="1.0" encoding="UTF-8"?>
           <desc outputclass="audioElementDescriptor">An Audio Track</desc>
           <media-source value="https://commons.wikimedia.org/wiki/File:1943_Nov_14_NYPhil_Bernstein.ogg" />
           <media-track kind="metadata">The media track metadata</media-track>
-          <fallback><p>The fallback content</p></fallback>
+          <fallback>The fallback content</fallback>
         </audio>
       </fig>
     </section>
