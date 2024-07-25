@@ -36,7 +36,6 @@ import { Command, EditorState, TextSelection, Transaction } from 'prosemirror-st
 export function createNode(type: NodeType, args: Record<string, any> = {}): Node {
   switch (type.name) {
     case 'p': return type.createAndFill() as Node;
-    case 'data': return type.createAndFill({}, type.schema.text('text')) as Node;
     case 'simpletable': return type.createAndFill({}, createNode(type.schema.nodes['strow'])) as Node;
     case 'li': return type.createAndFill({}, createNode(type.schema.nodes['p'])) as Node;
     case 'stentry': return type.createAndFill({}, createNode(type.schema.nodes['p'])) as Node;
