@@ -15,7 +15,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import { AbstractBaseNode, ChildTypes, DocumentNode, UnknownNodeError, getNodeClassType, nodeGroups } from '@evolvedbinary/lwdita-ast';
+import { AbstractBaseNode, ChildTypes, DocumentNode, MapNode, UnknownNodeError, getNodeClassType, nodeGroups } from '@evolvedbinary/lwdita-ast';
 import { getDomNode } from './dom';
 import { NodeSpec, Schema, SchemaSpec, Node, MarkSpec, DOMOutputSpec, Attrs } from 'prosemirror-model';
 
@@ -415,6 +415,7 @@ export function schema(): Schema {
 
   // start the process of populating the schema spec using the jdita nodes from the document node
   browse(DocumentNode);
+  browse(MapNode);
 
   (spec.nodes as NodeSpec).topic.content = 'title shortdesc? prolog? body?';
   (spec.nodes as NodeSpec).doc.content = 'topic+';
