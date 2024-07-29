@@ -50,8 +50,17 @@ export const NODES: Record<string, (value: JDita, parent: JDita) => any> = {
     const content: JDita[] = [];
     if (value.children) {
       value.children.forEach(child => {
+        if (child.nodeName === 'desc') {
+          attrs.desc = child.attributes?.value;
+          return;
+        }
 
-        if (['media-track', 'media-source', 'desc', 'fallback'].indexOf(child.nodeName) > -1) {
+        if (child.nodeName === 'fallback') {
+          attrs.fallback = child.attributes?.value;
+          return;
+        }
+
+        if (['media-track', 'media-source'].indexOf(child.nodeName) > -1) {
           content.push(child);
           return;
         }
@@ -67,15 +76,31 @@ export const NODES: Record<string, (value: JDita, parent: JDita) => any> = {
   video: (value) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const attrs: any = deleteUndefined({ ...value.attributes });
+    //console.log('value.children', value.children);
     const content: JDita[] = [];
     if (value.children) {
       value.children.forEach(child => {
-        if (child.nodeName === 'video-poster') {
-          attrs.poster = child.attributes?.value;
+        if (child.nodeName === 'desc') {
+          attrs.desc = child.attributes?.value;
+          //console.log('desc attributes === ', child.attributes?.value);
           return;
         }
-        if (['media-track', 'media-source', 'fallback', 'desc', 'video-poster'].indexOf(child.nodeName) > -1) {
+
+        if (child.nodeName === 'fallback') {
+          attrs.fallback = child.attributes?.value;
+          //console.log('fallback attributes === ', child.attributes);
+          return;
+        }
+
+        if (child.nodeName === 'video-poster') {
+          attrs.poster = child.attributes?.value;
+          //console.log('poster attributes === ', child.attributes);
+          return;
+        }
+
+        if (['media-track', 'media-source'].indexOf(child.nodeName) > -1) {
           content.push(child);
+          //console.log('content => ', child.nodeName);
           return;
         }
       });
@@ -352,14 +377,14 @@ function mediaNodeUntravel(nodeName: string, attributes: Record<string, string>,
       allChildren.push(desc);
     }
 
-    if (attributes.poster !== undefined) {
-      const poster: JDita = createMediaChild('video-poster', attributes.poster);
-      allChildren.push(poster);
-    }
-
     if (attributes.fallback !== undefined) {
       const fallback: JDita = createMediaChild('fallback', attributes.fallback);
       allChildren.push(fallback);
+    }
+
+    if (attributes.poster !== undefined) {
+      const poster: JDita = createMediaChild('video-poster', attributes.poster);
+      allChildren.push(poster);
     }
 
     if (attributes.track !== undefined) {
@@ -411,6 +436,11 @@ function mediaNodeUntravel(nodeName: string, attributes: Record<string, string>,
       allAudioChildren.push(desc);
     }
 
+    if (attributes.fallback !== undefined) {
+      const fallback: JDita = createMediaChild('fallback', attributes.fallback);
+      allAudioChildren.push(fallback);
+    }
+
     if (attributes.source !== undefined) {
       const source: JDita = createMediaChild('media-source', attributes.source);
       allAudioChildren.push(source);
@@ -419,11 +449,6 @@ function mediaNodeUntravel(nodeName: string, attributes: Record<string, string>,
     if (attributes.track !== undefined) {
       const track: JDita = createMediaChild('media-track', attributes.track);
       allAudioChildren.push(track);
-    }
-
-    if (attributes.fallback !== undefined) {
-      const fallback: JDita = createMediaChild('fallback', attributes.fallback);
-      allAudioChildren.push(fallback);
     }
 
     allAudioChildren.push(children[1])
