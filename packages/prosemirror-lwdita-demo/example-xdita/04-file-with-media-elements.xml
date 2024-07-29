@@ -22,10 +22,10 @@
       <note>
         <audio outputclass="audioElement" autoplay="false" controls="true" loop="false" muted="false" tabindex="1">
           <desc outputclass="audioElementDescriptor">An Audio Track</desc>
-          <media-source href="https://commons.wikimedia.org/wiki/File:1943_Nov_14_NYPhil_Bernstein.ogg" format="audio/ogg"/>
           <fallback>
             <p>Sorry, the audio could not be played.</p>
           </fallback>
+          <media-source href="https://commons.wikimedia.org/wiki/File:1943_Nov_14_NYPhil_Bernstein.ogg" format="audio/ogg"/>
         </audio>
       </note>
     </section>
