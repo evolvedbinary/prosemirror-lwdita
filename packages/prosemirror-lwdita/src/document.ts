@@ -50,15 +50,8 @@ export const NODES: Record<string, (value: JDita, parent: JDita) => any> = {
     const content: JDita[] = [];
     if (value.children) {
       value.children.forEach(child => {
-        if (child.nodeName === 'fallback') {
-          attrs.muted = child.attributes?.value;
-          return;
-        }
-        if (child.nodeName === 'desc') {
-          attrs.muted = child.attributes?.value;
-          return;
-        }
-        if (['media-track', 'media-source'].indexOf(child.nodeName) > -1) {
+
+        if (['media-track', 'media-source', 'desc', 'fallback'].indexOf(child.nodeName) > -1) {
           content.push(child);
           return;
         }
@@ -77,19 +70,11 @@ export const NODES: Record<string, (value: JDita, parent: JDita) => any> = {
     const content: JDita[] = [];
     if (value.children) {
       value.children.forEach(child => {
-        if (child.nodeName === 'fallback') {
-          attrs.muted = child.attributes?.value;
-          return;
-        }
         if (child.nodeName === 'video-poster') {
           attrs.poster = child.attributes?.value;
           return;
         }
-        if (child.nodeName === 'desc') {
-          attrs.poster = child.attributes?.value;
-          return;
-        }
-        if (['media-track', 'media-source'].indexOf(child.nodeName) > -1) {
+        if (['media-track', 'media-source', 'fallback', 'desc', 'video-poster'].indexOf(child.nodeName) > -1) {
           content.push(child);
           return;
         }
@@ -342,6 +327,9 @@ function mediaNodeUntravel(nodeName: string, attributes: Record<string, string>,
       dir: attributes.dir,
       "xml:lang": attributes['xml:lang'],
       translate: attributes.translate,
+      href: attributes.href,
+      format: attributes.format,
+      scope: attributes.scope,
       id: attributes.id,
       conref: attributes.conref,
       outputclass: attributes.outputclass,
@@ -349,15 +337,10 @@ function mediaNodeUntravel(nodeName: string, attributes: Record<string, string>,
       width: attributes.width,
       height: attributes.height,
       tabindex: attributes.tabindex,
-      poster: attributes.poster,
-      fallback: attributes.fallback,
       controls: attributes.controls,
       autoplay: attributes.autoplay,
       loop: attributes.loop,
       muted: attributes.muted,
-      href: attributes.href,
-      format: attributes.format,
-      scope: attributes.scope
     }
 
     const allChildren: JDita[] = [];
