@@ -45,8 +45,8 @@ export const TO_DOM: Record<string, (node: typeof AbstractBaseNode, attrs: Attrs
  * This is a list of those nodes and their special attributes
  */
 export const NODE_ATTRS: Record<string, (attrs: string[]) => Attrs> = {
-  video: node => defaultNodeAttrs([...node, 'controls', 'autoplay', 'loop', 'muted', 'poster', 'tabindex', 'height', 'width']),
-  audio: node => defaultNodeAttrs([...node, 'controls', 'autoplay', 'loop', 'muted', 'tabindex', 'keyref']),
+  video: node => defaultNodeAttrs([...node,  'autoplay', 'controls', 'loop', 'muted', 'poster', 'tabindex', 'height', 'width']),
+  audio: node => defaultNodeAttrs([...node,  'autoplay', 'controls', 'loop', 'muted', 'tabindex', 'keyref']),
 }
 
 /**
@@ -177,8 +177,8 @@ export const SCHEMA_CONTENT: Record<string, [content: string, groups: string]> =
  * A map of special children for certain media nodes
  */
 export const SCHEMA_CHILDREN: Record<string, (type: ChildTypes) => string[]> = {
-  video: () => ['media-source', 'media-track', 'desc', 'video-poster', 'fallback'],
-  audio: () => ['media-source', 'media-track', 'desc', 'fallback'],
+  video: () => ['desc', 'fallback', 'video-poster', 'media-source', 'media-track' ],
+  audio: () => ['desc', 'fallback', 'media-source', 'media-track' ],
 }
 
 /**

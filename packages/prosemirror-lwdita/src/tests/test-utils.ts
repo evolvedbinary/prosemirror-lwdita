@@ -203,12 +203,12 @@ export const audioXdita = `<?xml version="1.0" encoding="UTF-8"?>
     <section>
       <title>Audio Element</title>
       <fig>
-        <audio xml:lang="en" outputclass="audioElement" controls="true" autoplay="false" loop="false" muted="false">
+        <audio xml:lang="en" outputclass="audioElement" autoplay="false" controls="true" loop="false" muted="false">
           <desc outputclass="audioElementDescriptor">An Audio Track</desc>
           <fallback><p>Sorry, the audio could not be played.</p></fallback>
           <media-source href="https://commons.wikimedia.org/wiki/File:1943_Nov_14_NYPhil_Bernstein.ogg" />
           <media-track kind="metadata">The media track metadata</media-track>
-          </audio>
+        </audio>
       </fig>
     </section>
   </body>
