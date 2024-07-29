@@ -4,7 +4,7 @@
   <title>Test File: Media Elements in XDita</title>
   <body>
 
-    <section outputcalss="demo">
+    <section outputclass="demo">
       <title>
         Video Element
       </title>

@@ -187,8 +187,8 @@ export const videoXdita = `<?xml version="1.0" encoding="UTF-8"?>
       <fig>
         <video xml:lang="en" outputclass="videoElement" width="640" height="360"  controls="true" autoplay="false" loop="false" muted="false">
           <desc outputclass="videoElementDescriptor">Xiaomi Yeelight YLDP06YL Smart Light Bulb White</desc>
-          <video-poster value="https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/1954_Kool-Aid_Commercial._Debut_of_Pitcher_Man.webm/120px--1954_Kool-Aid_Commercial._Debut_of_Pitcher_Man.webm.jpg" />
-          <media-source value="https://commons.wikimedia.org/wiki/File:1954_Kool-Aid_Commercial._Debut_of_Pitcher_Man.webm" />
+          <video-poster href="https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/1954_Kool-Aid_Commercial._Debut_of_Pitcher_Man.webm/120px--1954_Kool-Aid_Commercial._Debut_of_Pitcher_Man.webm.jpg" />
+          <media-source href="https://commons.wikimedia.org/wiki/File:1954_Kool-Aid_Commercial._Debut_of_Pitcher_Man.webm" />
         </video>
       </fig>
     </section>
@@ -205,9 +205,9 @@ export const audioXdita = `<?xml version="1.0" encoding="UTF-8"?>
       <fig>
         <audio xml:lang="en" outputclass="audioElement" controls="true" autoplay="false" loop="false" muted="false">
           <desc outputclass="audioElementDescriptor">An Audio Track</desc>
-          <media-source value="https://commons.wikimedia.org/wiki/File:1943_Nov_14_NYPhil_Bernstein.ogg" />
+          <media-source href="https://commons.wikimedia.org/wiki/File:1943_Nov_14_NYPhil_Bernstein.ogg" />
           <media-track kind="metadata">The media track metadata</media-track>
-          <fallback>The fallback content</fallback>
+          <fallback/>
         </audio>
       </fig>
     </section>
