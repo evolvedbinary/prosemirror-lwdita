@@ -76,24 +76,25 @@ export const NODES: Record<string, (value: JDita, parent: JDita) => any> = {
   video: (value) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const attrs: any = deleteUndefined({ ...value.attributes });
-    //console.log('value.children', value.children);
+    //console.log('value.children', value.children?.map(child => child.attributes));
+    //console.log('value.children', value.children?.map(child => child.nodeName));
     const content: JDita[] = [];
     if (value.children) {
       value.children.forEach(child => {
         if (child.nodeName === 'desc') {
-          attrs.desc = child.attributes?.value;
-          //console.log('desc attributes === ', child.attributes?.value);
+          attrs.desc = child.attributes;
+          //console.log('desc attributes === ', child.attributes);
           return;
         }
 
         if (child.nodeName === 'fallback') {
-          attrs.fallback = child.attributes?.value;
+          attrs.fallback = child.attributes;
           //console.log('fallback attributes === ', child.attributes);
           return;
         }
 
         if (child.nodeName === 'video-poster') {
-          attrs.poster = child.attributes?.value;
+          attrs.poster = child.attributes;
           //console.log('poster attributes === ', child.attributes);
           return;
         }
