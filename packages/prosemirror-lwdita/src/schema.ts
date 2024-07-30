@@ -369,6 +369,13 @@ export function schema(): Schema {
         group: 'inline_noimage inline_noxref',
         inline: true,
       },
+      hard_break: {
+        inline: true,
+        group: 'common_inline all_inline',
+        selectable: false,
+        parseDOM: [{tag: "br"}],
+        toDOM() { return ["br"] }
+      } as NodeSpec
     },
     // the mark types that exist in this schema
     marks: {},
