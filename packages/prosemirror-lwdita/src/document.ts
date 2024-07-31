@@ -89,8 +89,11 @@ export const NODES: Record<string, (value: JDita, parent: JDita) => any> = {
       value.children.forEach(child => {
         if (child.nodeName === 'desc') {
           // ... assign the desc child as a new attribute to the video element
-          attrs.desc = child.attributes;
-          //console.log('desc attributes === ', child.attributes);
+
+          if (child.children) {
+            const titleText = child.children[0].content;
+            attrs.title = titleText;
+          }
           return;
         }
 
@@ -102,11 +105,11 @@ export const NODES: Record<string, (value: JDita, parent: JDita) => any> = {
         }
 
         if (child.nodeName === 'video-poster') {
-          // ... assign the video-poster child as a new attribute to the video element
-          attrs.poster = child.attributes;
-          //console.log('poster attributes === ', child.attributes);
+          // ... assign the video-poster child as a new poster attribute to the video element
+          attrs.poster = child.attributes?.href;
           return;
         }
+
         // ... keep these child elements as the content of the video element
         if (['media-track', 'media-source'].indexOf(child.nodeName) > -1) {
           content.push(child);
