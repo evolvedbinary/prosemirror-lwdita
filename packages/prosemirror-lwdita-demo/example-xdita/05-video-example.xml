@@ -3,7 +3,7 @@
 <topic id="sensei-promise">
   <title>The Sensei Sushi Promise</title>
   <body>
-    <video height="300px" controls="true" loop="false" muted="false" poster="sensei-video.jpg" width="400px">
+    <video height="300px" controls="true" loop="false" muted="false"  width="400px">
       <desc>Video about the Sensei Sushi promise.</desc>
       <video-poster href="some-poster.jpg"/>
 <!--       <fallback>
