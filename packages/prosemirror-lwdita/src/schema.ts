@@ -35,7 +35,7 @@ export const NODE_NAMES: Record<string, string> = {
 }
 
 /**
- * Provide a map of special nodes to their corresponding DOM node
+ * Provide a map of special (media) nodes to their corresponding DOM node
  */
 export const TO_DOM: Record<string, (node: typeof AbstractBaseNode, attrs: Attrs)
   => (node: Node) => DOMOutputSpec> = {}
