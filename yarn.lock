@@ -405,7 +405,7 @@ __metadata:
     mocha: "npm:^10.6.0"
     nodemon: "npm:^3.1.4"
     nyc: "npm:^17.0.0"
-    prosemirror-commands: "npm:^1.5.2"
+    prosemirror-commands: "npm:^1.6.0"
     prosemirror-history: "npm:^1.4.1"
     prosemirror-keymap: "npm:^1.2.2"
     prosemirror-menu: "npm:^1.2.4"
@@ -6021,7 +6021,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prosemirror-commands@npm:^1.0.0, prosemirror-commands@npm:^1.5.2":
+"prosemirror-commands@npm:^1.0.0":
   version: 1.5.2
   resolution: "prosemirror-commands@npm:1.5.2"
   dependencies:
@@ -6029,6 +6029,17 @@ __metadata:
     prosemirror-state: "npm:^1.0.0"
     prosemirror-transform: "npm:^1.0.0"
   checksum: 10c0/9ff0b525d4bc654ecd41a27f11d8aff52f719ea9a7da2587d9632cfc00bcac46ecc3be628623d1a768e3aa7c7ed2fe291326bb7d63b0a5c0814e53b0a6af5b35
+  languageName: node
+  linkType: hard
+
+"prosemirror-commands@npm:^1.6.0":
+  version: 1.6.0
+  resolution: "prosemirror-commands@npm:1.6.0"
+  dependencies:
+    prosemirror-model: "npm:^1.0.0"
+    prosemirror-state: "npm:^1.0.0"
+    prosemirror-transform: "npm:^1.0.0"
+  checksum: 10c0/ba7317917159645980b7cafb04d24c4b3c6cc877b30929c776f51242289930333dc2351f5b55d9a81153331cdfa5c6fe13742b7925d7ec290addadab5ff4affc
   languageName: node
   linkType: hard
 
