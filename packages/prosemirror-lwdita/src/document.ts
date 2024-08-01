@@ -37,7 +37,10 @@ function deleteUndefined(object?: any) {
 }
 
 /**
- * A map of special nodes that need to be handled differently.
+ * A map of JDita nodes that require a customized transformation into ProseMirror nodes,
+ * e.g. because their content model can't be applied directly as valid HTML:
+ * `audio`, `video`, `image`, `text`.
+ *
  * Instead of using the defaultTravel function, we use the special node function
  * The following 4 nodes (audio, video, image, text) are
  * treated in a customized way instead of applying the defaultTravel() function:
