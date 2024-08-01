@@ -32,6 +32,7 @@ export const DOM_NODES: Record<string, string | ((parent?: string) => string)> =
   dlentry: 'div',
   em: 'em',
   example: 'div', // TODO: Add class "example", <div class="example">
+  fallback: 'p',  // TODO: Add data-class "fallback", <p data-class="fallback">
   fig: 'figure',
   fn: 'span',
   i: 'em',
