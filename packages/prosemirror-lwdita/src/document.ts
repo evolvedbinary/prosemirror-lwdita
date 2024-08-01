@@ -376,11 +376,11 @@ function mediaNodeUntravel(nodeName: string, attributes: Record<string, string>,
       class: attributes.class,
       width: attributes.width,
       height: attributes.height,
-      tabindex: attributes.tabindex,
       autoplay: attributes.autoplay,
       controls: attributes.controls,
       loop: attributes.loop,
       muted: attributes.muted,
+      tabindex: attributes.tabindex,
     }
 
     const allChildren: JDita[] = [];
@@ -432,7 +432,6 @@ function mediaNodeUntravel(nodeName: string, attributes: Record<string, string>,
       outputclass: attributes.outputclass,
       props: attributes.props,
       translate: attributes.translate,
-      tabindex: attributes.tabindex,
       autoplay: attributes.autoplay,
       controls: attributes.controls,
       loop: attributes.loop,
@@ -440,7 +439,8 @@ function mediaNodeUntravel(nodeName: string, attributes: Record<string, string>,
       source: attributes.source,
       href: attributes.href,
       format: attributes.format,
-      scope: attributes.scope
+      scope: attributes.scope,
+      tabindex: attributes.tabindex,
     }
 
     const allAudioChildren: JDita[] = [];
