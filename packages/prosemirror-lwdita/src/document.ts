@@ -47,27 +47,28 @@ function deleteUndefined(object?: any) {
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const NODES: Record<string, (value: JDita, parent: JDita) => any> = {
+
   audio: (value) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const attrs: any = deleteUndefined({ ...value.attributes });
     const content: JDita[] = [];
+
     // If the audio node has child elements...
     if (value.children) {
       // ...loop through the child elements and ...
       value.children.forEach(child => {
+
         if (child.nodeName === 'desc') {
-          // ... assign the desc child as a new attribute to the audio element
-          attrs.desc = child.attributes?.value;
+          // ... assign the desc child as a new attribute to the video element
+          if (child.children) {
+            const titleText = child.children[0].content;
+            attrs.title = titleText;
+          }
           return;
         }
 
-        if (child.nodeName === 'fallback') {
-          // ... assign the fallback child as a new attribute to the audio element
-          attrs.fallback = child.attributes?.value;
-          return;
-        }
         // ... keep these child elements as the content of the audio element
-        if (['media-track', 'media-source'].indexOf(child.nodeName) > -1) {
+        if (['fallback', 'media-source', 'media-track'].indexOf(child.nodeName) > -1) {
           content.push(child);
           return;
         }
@@ -83,27 +84,19 @@ export const NODES: Record<string, (value: JDita, parent: JDita) => any> = {
   video: (value) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const attrs: any = deleteUndefined({ ...value.attributes });
-    //console.log('value.children', value.children?.map(child => child.attributes));
-    //console.log('value.children', value.children?.map(child => child.nodeName));
     const content: JDita[] = [];
+
     // If the video node has child elements...
     if (value.children) {
       // ...loop through the child elements and ...
       value.children.forEach(child => {
+
         if (child.nodeName === 'desc') {
           // ... assign the desc child as a new attribute to the video element
-
           if (child.children) {
             const titleText = child.children[0].content;
             attrs.title = titleText;
           }
-          return;
-        }
-
-        if (child.nodeName === 'fallback') {
-          // ... assign the fallback child as a new attribute to the video element
-          attrs.fallback = child.attributes;
-          //console.log('fallback attributes === ', child.attributes);
           return;
         }
 
@@ -114,9 +107,8 @@ export const NODES: Record<string, (value: JDita, parent: JDita) => any> = {
         }
 
         // ... keep these child elements as the content of the video element
-        if (['media-track', 'media-source'].indexOf(child.nodeName) > -1) {
+        if (['fallback', 'media-source', 'media-track'].indexOf(child.nodeName) > -1) {
           content.push(child);
-          //console.log('content => ', child.nodeName);
           return;
         }
       });
