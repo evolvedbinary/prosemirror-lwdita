@@ -387,8 +387,8 @@ function mediaNodeUntravel(nodeName: string, attributes: Record<string, string>,
     //children[0] resembles the video desc this value does not change
     allChildren.push(children[0]) // video desc node
 
-    if (attributes.desc !== undefined) {
-      const desc: JDita = createMediaChild('desc', attributes.desc);
+    if (attributes.title !== undefined) {
+      const desc: JDita = createMediaChild('desc', attributes.title);
       allChildren.push(desc);
     }
 
@@ -541,7 +541,7 @@ function createMediaChild(nodeName: string,value: string): JDita {
       "xml:lang": undefined,
       translate: undefined,
       name: undefined,
-      value: value,
+      href: value,
       outputclass: undefined,
       class: undefined,
     },
