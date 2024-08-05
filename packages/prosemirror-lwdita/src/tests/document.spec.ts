@@ -30,7 +30,10 @@ import {
   videoXdita,
   complexXdita,
   shortXdita,
-  bXdita
+  bXdita,
+  expectedVideoObject,
+  parentVideoObject,
+  originalVideoObject
 } from './test-utils';
 import { xditaToJdita } from '@evolvedbinary/lwdita-xdita'
 import { JDita } from '@evolvedbinary/lwdita-ast';
@@ -228,9 +231,9 @@ describe('Const NODES handles', () => {
 
   describe('function video()', () => {
     it('returns a video node', () => {
-      value = JSON.parse('{"nodeName":"video","attributes":{"width":"640","height":"360"},"children":[{"nodeName":"desc","attributes":{},"children":[{"nodeName":"text","content":"Your browser does not support the video tag."}]}]}');
-      parent = JSON.parse('{"nodeName":"body","attributes":{},"children":[{"nodeName":"p","attributes":{"parent":"body"},"children":[{"nodeName":"text","content":"Paragraph"}]},{"nodeName":"audio","attributes":{}},{"nodeName":"video","attributes":{"width":"640","height":"360"},"children":[{"nodeName":"desc","attributes":{},"children":[{"nodeName":"text","content":"Your browser does not support the video tag."}]}]},{"nodeName":"p","attributes":{},"children":[{"nodeName":"image","attributes":{}}]}]}');
-      expected = JSON.parse('{"type":"video","attrs":{"width":"640","height":"360"},"content":[{"type":"desc","attrs":{"parent":"video"},"content":[{"type":"text","text":"Your browser does not support the video tag.","attrs":{"parent":"desc"}}]}]}');
+      value = JSON.parse(originalVideoObject);
+      parent = JSON.parse(parentVideoObject);
+      expected = JSON.parse(expectedVideoObject);
       result = NODES.video(value, parent);
       assert.deepEqual(result, expected);
     });
