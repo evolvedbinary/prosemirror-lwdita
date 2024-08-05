@@ -186,7 +186,7 @@ export const videoXdita = `<?xml version="1.0" encoding="UTF-8"?>
       </title>
       <fig>
         <video xml:lang="en" outputclass="videoElement" width="640" height="360"  tabindex="1" controls="true" autoplay="false" loop="false" muted="false">
-          <desc outputclass="videoElementDescriptor">Xiaomi Yeelight YLDP06YL Smart Light Bulb White</desc>
+          <desc>Xiaomi Yeelight YLDP06YL Smart Light Bulb White</desc>
           <fallback>
             <p>Sorry, the video is not available.</p>
           </fallback>
@@ -243,3 +243,71 @@ export const imageXdita = `<?xml version="1.0" encoding="UTF-8"?>
     </section>
   </body>
 </topic>`;
+
+export const originalVideoObject = `{
+  "nodeName": "video",
+  "attributes": {
+    "width": "640",
+    "height": "360"
+  },
+  "children": [
+    {
+      "nodeName": "desc",
+      "attributes": {},
+      "children": [
+        {
+          "nodeName": "text",
+          "content": "Your browser does not support the video tag."
+        }
+      ]
+    }
+  ]
+}`
+
+export const parentVideoObject = `{
+  "nodeName": "body",
+  "attributes": {},
+  "children": [
+    {
+      "nodeName": "p",
+      "attributes": {
+        "parent": "body"
+      },
+      "children": [
+        {
+          "nodeName": "text",
+          "content": "Paragraph"
+        }
+      ]
+    },
+    {
+      "nodeName": "video",
+      "attributes": {
+        "width": "640",
+        "height": "360"
+      },
+      "children": [
+        {
+          "nodeName": "desc",
+          "attributes": {},
+          "children": [
+            {
+              "nodeName": "text",
+              "content": "Your browser does not support the video tag."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}`
+
+export const expectedVideoObject = `{
+    "type": "video",
+    "attrs": {
+        "width": "640",
+        "height": "360",
+        "title": "Your browser does not support the video tag."
+    },
+    "content": []
+}`
