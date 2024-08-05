@@ -47,7 +47,27 @@ function deleteUndefined(object?: any) {
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const NODES: Record<string, (value: JDita, parent: JDita) => any> = {
+  video: (value) => {
+    // Create a new object with title and poster attributes:
+    // the desc and the video-poster children will be assigned as new attributes to the video element
+    const attrs = deleteUndefined({
+    ...value.attributes,
+    title: value.children?.find(child => child.nodeName === 'desc')?.children?.[0]?.content,
+    poster: value.children?.find(child => child.nodeName === 'video-poster')?.attributes?.href,
+    });
 
+    // Create a new array with the fallback, media-source and media-track children
+    // that will be assigned as the content of the video element
+    const content: JDita[] = [];
+    value.children?.forEach(child => {
+      if (['fallback', 'media-source', 'media-track'].includes(child.nodeName)) {
+        content.push(child);
+      }
+    });
+
+    // Return the video element with the new attributes and content
+    return { type: value.nodeName, attrs, content: content?.map(child => travel(child, value)) };
+  },
   audio: (value) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const attrs: any = deleteUndefined({ ...value.attributes });
@@ -79,41 +99,6 @@ export const NODES: Record<string, (value: JDita, parent: JDita) => any> = {
     if (attrs && Object.keys(attrs).length) {
       result.attrs = attrs;
     }
-    return result;
-  },
-  video: (value) => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const attrs: any = deleteUndefined({ ...value.attributes });
-    const content: JDita[] = [];
-
-    // If the video node has child elements...
-    if (value.children) {
-      // ...loop through the child elements and ...
-      value.children.forEach(child => {
-
-        if (child.nodeName === 'desc') {
-          // ... assign the desc child as a new attribute to the video element
-          if (child.children) {
-            const titleText = child.children[0].content;
-            attrs.title = titleText;
-          }
-          return;
-        }
-
-        if (child.nodeName === 'video-poster') {
-          // ... assign the video-poster child as a new poster attribute to the video element
-          attrs.poster = child.attributes?.href;
-          return;
-        }
-
-        // ... keep these child elements as the content of the video element
-        if (['fallback', 'media-source', 'media-track'].indexOf(child.nodeName) > -1) {
-          content.push(child);
-          return;
-        }
-      });
-    }
-    const result = { type: value.nodeName, attrs, content: content.map(child => travel(child, value)) };
     return result;
   },
   image: (value) => {
