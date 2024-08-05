@@ -128,28 +128,26 @@ describe('Function schema()', () => {
     const nodes = result.spec.nodes as any;
     // nodeNames are strings in the content array
     const nodeNames = nodes.content.filter((node: NodeSpec) => typeof node === 'string')
-    /*
-    console.log(nodeNames.sort());
-    Missing: 'keydef', 'keytext', 'map', 'navtitle', 'topicmeta', 'topicref'
-    */
+
     const expectedNodes = [
-      'alt',            'audio',        'body',
-      'dd',             'desc',         'doc',
-      'div',            'dl',           'dlentry',
-      'dt',             'em',           'example',
-      'fallback',       'fig',          'fn',
-      'image',          'keydef',       'keytext',
-      'li',             'map',          'media_source',
-      'media_track',    'metadata',     'navtitle',
-      'note',           'ol',           'othermeta',
-      'p',              'ph',           'pre',
-      'prolog',         'section',      'simpletable',
-      'shortdesc',      'stentry',      'sthead',
-      'strow',          'strong',       'text',
-      'title',          'topic',        'topicmeta',
-      'topicref',       'tt',           'ul',
-      'video',          'video_poster', 'xref'
-     ];
+      'alt',          'audio',       'body',
+      'dd',           'desc',        'div',
+      'dl',           'dlentry',     'doc',
+      'dt',           'em',          'example',
+      'fallback',     'fig',         'fn',
+      'hard_break',   'image',       'keydef',
+      'keytext',      'li',          'map',
+      'media_source', 'media_track', 'metadata',
+      'navtitle',     'note',        'ol',
+      'othermeta',    'p',           'ph',
+      'pre',          'prolog',      'section',
+      'shortdesc',    'simpletable', 'stentry',
+      'sthead',       'strong',      'strow',
+      'text',         'title',       'topic',
+      'topicmeta',    'topicref',    'tt',
+      'ul',           'video',       'video_poster',
+      'xref'
+    ];
 
     expect(nodeNames).to.have.members(expectedNodes);
   });
