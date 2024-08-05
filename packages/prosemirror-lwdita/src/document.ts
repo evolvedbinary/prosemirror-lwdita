@@ -166,7 +166,7 @@ function travel(value: JDita, parent: JDita): any {
   // otherwise use the default travel function
   const result = (NODES[value.nodeName] || defaultTravel)(value, parent);
   // if the node is not a document and has attributes, set the parent attribute
-  if (value.nodeName !== 'doc' && result.attrs) {
+  if (value.nodeName !== 'doc' && result && result.attrs) {
     result.attrs.parent = parent.nodeName;
   }
   return result;
