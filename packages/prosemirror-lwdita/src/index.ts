@@ -19,4 +19,4 @@ export * from './schema';
 export * from './document';
 export * from './plugin';
 export * from './commands';
-export * from './untravelNodes';
+export * from './untravel-document';
