@@ -62,6 +62,7 @@ export const NODE_ATTR_NAMES: Record<string, Record<string, string>> = {
   image: {
     _: '*',
     href: 'src',
+    scope: 'data-j-scope'
   },
 }
 /**
