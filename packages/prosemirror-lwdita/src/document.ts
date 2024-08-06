@@ -52,9 +52,9 @@ export const NODES: Record<string, (value: JDita, parent: JDita) => any> = {
     // the desc and the video-poster children will be assigned as new attributes to the video element
     // undefined attributes will be removed
     const attrs = deleteUndefined({
-    ...value.attributes,
-    title: value.children?.find(child => child.nodeName === 'desc')?.children?.[0]?.content,
-    poster: value.children?.find(child => child.nodeName === 'video-poster')?.attributes?.href,
+      ...value.attributes,
+      title: value.children?.find(child => child.nodeName === 'desc')?.children?.[0]?.content,
+      poster: value.children?.find(child => child.nodeName === 'video-poster')?.attributes?.href,
     });
 
     // Create a new array with the fallback, media-source and media-track children
@@ -70,26 +70,26 @@ export const NODES: Record<string, (value: JDita, parent: JDita) => any> = {
     return { type: value.nodeName, attrs, content: content?.map(child => travel(child, value)) };
   },
   audio: (value) => {
-  // Create a new object with a title attribute, if it exists:
-  // the `desc` child will be assigned as a new attribute to the audio element,
-  // undefined attributes will be removed
-  const attrs = deleteUndefined({
-    ...value.attributes,
-    title: value.children?.find(child => child.nodeName === 'desc')?.children?.[0]?.content,
-  });
+    // Create a new object with a title attribute, if it exists:
+    // the `desc` child will be assigned as a new attribute to the audio element,
+    // undefined attributes will be removed
+    const attrs = deleteUndefined({
+      ...value.attributes,
+      title: value.children?.find(child => child.nodeName === 'desc')?.children?.[0]?.content,
+    });
 
-  // Create a new array with the fallback, media-source and media-track children
-  // that will be assigned as the content of the audio element
-  const content: JDita[] = [];
-  value.children?.forEach(child => {
-    if (['fallback', 'media-source', 'media-track'].includes(child.nodeName)) {
-      content.push(child);
-    }
-  });
+    // Create a new array with the fallback, media-source and media-track children
+    // that will be assigned as the content of the audio element
+    const content: JDita[] = [];
+    value.children?.forEach(child => {
+      if (['fallback', 'media-source', 'media-track'].includes(child.nodeName)) {
+        content.push(child);
+      }
+    });
 
-  // Return the audio object with the new attributes and content
-  return { type: value.nodeName, attrs, content: content?.map(child => travel(child, value)) };
-},
+    // Return the audio object with the new attributes and content
+    return { type: value.nodeName, attrs, content: content?.map(child => travel(child, value)) };
+  },
   image: (value) => {
     if (value.children
       && value.children[0].nodeName === 'alt'
