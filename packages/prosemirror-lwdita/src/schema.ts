@@ -371,7 +371,7 @@ export function schema(): Schema {
       },
       hard_break: {
         inline: true,
-        group: 'common_inline all_inline',
+        group: 'inline inline_noxref inline_noimage',
         selectable: false,
         parseDOM: [{tag: "br"}],
         toDOM() { return ["br"] }
