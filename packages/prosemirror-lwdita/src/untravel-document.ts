@@ -140,7 +140,7 @@ function mediaNodeUntravel(nodeName: string, attributes: Record<string, string>,
 
     if (attributes.title !== undefined) {
       const desc: JDita = createMediaChild('desc', attributes.title);
-      allChildren.push(desc);
+      allChildren.unshift(desc); // Add 'desc' at the beginning of the array to create the expected order
     }
 
     if (attributes.fallback !== undefined) {
