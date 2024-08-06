@@ -136,50 +136,36 @@ function mediaNodeUntravel(nodeName: string, attributes: Record<string, string>,
     }
 
     const allChildren: JDita[] = [];
-
-    //console.log('mediaNodeUntravel video mediaNodeUntravel children =', JSON.stringify(children, null, 4));
-    //children[0] resembles the video desc this value does not change
-    allChildren.push(children[0]) // video desc node
+    allChildren.push(children[0])
 
     if (attributes.title !== undefined) {
       const desc: JDita = createMediaChild('desc', attributes.title);
-      //console.log('attributes.title =', JSON.stringify(attributes.title, null, 4));
-      //console.log('desc =', JSON.stringify(desc, null, 4));
       allChildren.push(desc);
     }
 
     if (attributes.fallback !== undefined) {
       const fallback: JDita = createMediaChild('fallback', attributes.fallback);
-      //console.log('fallback =', JSON.stringify(fallback, null, 4));
       allChildren.push(fallback);
     }
 
     if (attributes.poster !== undefined) {
       const poster: JDita = createMediaChild('video-poster', attributes.poster);
-      console.log('poster =', JSON.stringify(poster, null, 4));
       allChildren.push(poster);
     }
 
     if (attributes.track !== undefined) {
       const track: JDita = createMediaChild('media-track', attributes.track);
-      //console.log('track =', JSON.stringify(track, null, 4));
       allChildren.push(track);
     }
 
     if (attributes.source !== undefined) {
       const source: JDita = createMediaChild('media-source', attributes.source);
-      //console.log('source =', JSON.stringify(source, null, 4));
       allChildren.push(source);
     }
 
     allChildren.push(children[1])
-    console.log('allChildren 0 =', allChildren[0]);
-    console.log('allChildren 1=', allChildren[1]);
-    //console.log('allChildren=', allChildren.length);
 
     // return the created video node
-    //console.log('VIDEO allAttributes = ', allAttributes);
-    //console.log('VIDEO allChildren = ', allChildren);
     return {
       nodeName,
       'attributes': allAttributes,
@@ -211,30 +197,24 @@ function mediaNodeUntravel(nodeName: string, attributes: Record<string, string>,
     }
 
     const allAudioChildren: JDita[] = [];
-    //console.log('mediaNodeUntravel audio attributes =', JSON.stringify(attributes, null, 4));
-    //console.log('mediaNodeUntravel audio children =', JSON.stringify(children, null, 4));
 
     if (attributes.desc !== undefined) {
       const desc: JDita = createMediaChild('desc', attributes.desc);
-      //console.log('desc =', JSON.stringify(desc, null, 4));
       allAudioChildren.push(desc);
     }
 
     if (attributes.fallback !== undefined) {
       const fallback: JDita = createMediaChild('fallback', attributes.fallback);
-      //console.log('fallback =', JSON.stringify(fallback, null, 4));
       allAudioChildren.push(fallback);
     }
 
     if (attributes.source !== undefined) {
       const source: JDita = createMediaChild('media-source', attributes.source);
-      console.log('source =', JSON.stringify(source, null, 4));
       allAudioChildren.push(source);
     }
 
     if (attributes.track !== undefined) {
       const track: JDita = createMediaChild('media-track', attributes.track);
-      console.log('track =', JSON.stringify(track, null, 4));
       allAudioChildren.push(track);
     }
 
@@ -286,7 +266,6 @@ function mediaNodeUntravel(nodeName: string, attributes: Record<string, string>,
         }
       ]
     })
-
     return {
       nodeName,
       'attributes': allImageAttributes,
