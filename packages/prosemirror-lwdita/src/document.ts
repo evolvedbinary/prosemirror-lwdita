@@ -48,8 +48,9 @@ function deleteUndefined(object?: any) {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const NODES: Record<string, (value: JDita, parent: JDita) => any> = {
   video: (value) => {
-    // Create a new object with title and poster attributes:
+    // Create a new object with title and poster attributes, if they exist:
     // the desc and the video-poster children will be assigned as new attributes to the video element
+    // undefined attributes will be removed
     const attrs = deleteUndefined({
     ...value.attributes,
     title: value.children?.find(child => child.nodeName === 'desc')?.children?.[0]?.content,
@@ -65,7 +66,7 @@ export const NODES: Record<string, (value: JDita, parent: JDita) => any> = {
       }
     });
 
-    // Return the video element with the new attributes and content
+    // Return the video object with the new attributes and content
     return { type: value.nodeName, attrs, content: content?.map(child => travel(child, value)) };
   },
   audio: (value) => {
