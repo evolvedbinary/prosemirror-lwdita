@@ -93,7 +93,7 @@ export function shortcuts(schema: Schema) {
     'Ctrl-z': undo,
     'Ctrl-y': redo,
     'Ctrl-Shift-z': redo,
-    'Alt-n': insertImage(schema.nodes.image),
+    'Alt-p': insertImage(schema.nodes.image),
   });
 }
 

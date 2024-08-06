@@ -87,7 +87,7 @@ describe('handling images', () => {
     cy.visit('http://localhost:1234/')
     .get('#editor > div > div.ProseMirror > article > div > section > p')
     .click()
-    .type('{alt}n')
+    .type('{alt}p')
     .get('#dialog')
     .should('be.visible')
   });
