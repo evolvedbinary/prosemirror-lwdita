@@ -275,30 +275,58 @@ function createMediaJDITAObject(nodeName: string, attributes: Record<string, str
 }
 
 /**
- * Creates children for media nodes
- * Children like media-autoplay, media-controls, media-loop, media-muted, video-poster, media-source share all the same structure
- * This is a helper function to create these children
+ * Creates a media child node based on the provided node name, value, and additional attributes.
  *
- * @param nodeName - string
- * @param value - string
- * @returns media child node
+ * @param nodeName - The name of the node to be created
+ * @param value - The value associated with the node
+ * @param additionalAttributes - Additional attributes for the node (optional)
+ * @returns The created media child node (JDita)
  */
-function createMediaChild(nodeName: string, value: string): JDita {
-  console.log('createMediaChild => nodeName:', nodeName, ', value:', value);
+function createMediaChild(nodeName: string, value: string, additionalAttributes?: { [key: string]: string | undefined }): JDita {
+  // create an attributes object by merging the commonAttributes object,
+  // and additional attributes based on the nodeName,
+  // for media-source and video-poster add a href attribute
+  const attributes = {
+    ...commonAttributes,
+    ...(nodeName === "desc" ? descAttributes : {}),
+    ...(nodeName === "fallback" ? fallbackAttributes : {}),
+    ...(nodeName === "video-poster" ? { href: value } : {}),
+    ...(nodeName === "media-source" ? { href: value } : {}),
+    ...(nodeName === "media-track" ? mediaTrackAttributes : {}),
+    ...(additionalAttributes || {})
+  };
+
+  // create a node object based on the nodeName and attributes
+  // in case of desc and fallback, the value will be wrapped in a text node
+  const node = {
+    nodeName: nodeName,
+    attributes: attributes,
+    children: (() => {
+      if (nodeName === "desc") {
+        return [{
+          nodeName: "text",
+          content: `${value}`
+        }];
+      } else if (nodeName === "fallback") {
+        return [{
+          nodeName: "p",
+          attributes: {},
+          children: [{
+            nodeName: "text",
+            content: `${value}`
+          }]
+        }];
+      } else {
+        // if the 'nodeName' is neither "desc" nor "fallback", return undefined
+        return undefined;
+      }
+    })()
+  };
+
+  // return the created child node
   return {
     nodeName: nodeName,
-    attributes: {
-      dir: undefined,
-      "xml:lang": undefined,
-      translate: undefined,
-      name: undefined,
-      href: value,
-      outputclass: undefined,
-      class: undefined,
-      title: undefined,
-    },
-    // TODO: In case of desc we expect the children to be a single text node
-    // and the passed value parameter is the new content of the text node
-    children: undefined
+    attributes: attributes,
+    children: node.children
   };
 }
