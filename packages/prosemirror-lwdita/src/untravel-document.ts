@@ -17,6 +17,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import { JDita } from "@evolvedbinary/lwdita-ast";
 import { inspect } from 'util';
+import { deleteUndefined } from './document';
 import { commonAttributes, descAttributes, fallbackAttributes, mediaTrackAttributes } from "./attributes";
 
 /**

@@ -25,7 +25,7 @@ import { IS_MARK, defaultNodeName } from "./schema";
  * @returns object - The object with undefined attributes removed
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function deleteUndefined(object?: any) {
+export function deleteUndefined(object?: any) {
   if (object) {
     for (const key in object) {
       if (typeof object[key] === 'undefined') {
