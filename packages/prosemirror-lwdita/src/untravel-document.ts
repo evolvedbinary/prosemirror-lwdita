@@ -16,6 +16,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 import { JDita } from "@evolvedbinary/lwdita-ast";
+import { inspect } from 'util';
+import { commonAttributes, descAttributes, fallbackAttributes, mediaTrackAttributes } from "./attributes";
 
 /**
 * Recursively traverse through all items in the Prosemirror DOM
@@ -37,7 +39,7 @@ export function unTravel(prosemirrorDocument: Record<string, any>): JDita {
   const nodeName = getJditaNodeName(prosemirrorDocument.type);
 
   if (nodeName === 'video' || nodeName === 'audio' || nodeName === 'image') {
-    return mediaNodeUntravel(nodeName, attributes, children)
+    return createMediaJDITAObject(nodeName, attributes, children)
   }
 
   // handle the attributes
