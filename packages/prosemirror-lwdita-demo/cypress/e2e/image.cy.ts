@@ -24,7 +24,7 @@ describe('handling images', () => {
     .click()
     .get('figure img')
     .should('have.attr', 'src', 'https://static.evolvedbinary.com/petal/eb-rose-small.png')
-    .should('have.attr', 'scope', 'external')
+    .should('have.attr', 'data-j-scope', 'external')
   });
 
   it('embeds remote image using the toolbar button', () => {
@@ -41,7 +41,7 @@ describe('handling images', () => {
     .click()
     .get('figure img')
     .should('be.visible')
-    .should('have.attr', 'scope', 'peer')
+    .should('have.attr', 'data-j-scope', 'peer')
     // the test is crashing here and can not compare the base64 string to image src
   });
 
@@ -80,7 +80,7 @@ describe('handling images', () => {
     .click()
     .get('figure img')
     .should('have.attr', 'src', `data:image/png;base64;filename=small.png,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII=`)
-    .should('have.attr', 'scope', 'peer')
+    .should('have.attr', 'data-j-scope', 'peer')
   });
 
   it('launch image upload dialog using the shortcut', () => {
