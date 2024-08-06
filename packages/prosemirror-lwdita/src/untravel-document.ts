@@ -110,8 +110,7 @@ function getJditaNodeName(type: string): string {
  * @returns JDita node
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function mediaNodeUntravel(nodeName: string, attributes: Record<string, string>, children: JDita[]): JDita {
-  console.log('mediaNodeUntravel => nodeName:', nodeName, ', attributes:', attributes, ', children:', children);
+function createMediaJDITAObject(nodeName: string, attributes: Record<string, string>, children: JDita[]): JDita {
   if (nodeName === 'video') {
     // we must populate the video node with the necessary attributes and children
     const allAttributes = {
