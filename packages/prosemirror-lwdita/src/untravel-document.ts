@@ -16,7 +16,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 import { JDita } from "@evolvedbinary/lwdita-ast";
-import { inspect } from 'util';
 import { deleteUndefined } from './document';
 import { commonAttributes, descAttributes, fallbackAttributes, mediaTrackAttributes } from "./attributes";
 
@@ -65,7 +64,7 @@ export function unTravel(prosemirrorDocument: Record<string, any>): JDita {
       const mark = prosemirrorDocument.marks[0].type;
       return {
         nodeName: mark,
-        attributes: attributes,
+        attributes: deleteUndefined(attributes),
         children: [
           {
             nodeName: "text",
@@ -111,9 +110,10 @@ function getJditaNodeName(type: string): string {
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function createMediaJDITAObject(nodeName: string, attributes: Record<string, string>, children: JDita[]): JDita {
+  console.log('children', children);
   if (nodeName === 'video') {
     // we must populate the video node with the necessary attributes and children
-    const allAttributes = {
+    const allVideoAttributes = {
       props: attributes.props,
       dir: attributes.dir,
       "xml:lang": attributes['xml:lang'],
@@ -167,7 +167,7 @@ function createMediaJDITAObject(nodeName: string, attributes: Record<string, str
     // return the created video node
     return {
       nodeName,
-      'attributes': allAttributes,
+      'attributes': deleteUndefined(allVideoAttributes),
       'children': allChildren
     }
   }
@@ -213,15 +213,18 @@ function createMediaJDITAObject(nodeName: string, attributes: Record<string, str
     }
 
     if (attributes.track !== undefined) {
+      console.log('attributes.track', attributes.track)
       const track: JDita = createMediaChild('media-track', attributes.track);
       allAudioChildren.push(track);
+      console.log('allAudioChildren', allAudioChildren)
     }
 
     allAudioChildren.push(children[1])
-
+    console.log('allAudioChildren', allAudioChildren);
+    console.log('attributes', attributes);
     return {
       nodeName,
-      'attributes': allAudioAttributes,
+      'attributes': deleteUndefined(allAudioAttributes),
       'children': allAudioChildren
     }
   }
@@ -267,7 +270,7 @@ function createMediaJDITAObject(nodeName: string, attributes: Record<string, str
     })
     return {
       nodeName,
-      'attributes': allImageAttributes,
+      'attributes': deleteUndefined(allImageAttributes),
       'children': allImageChildren
     }
   }
