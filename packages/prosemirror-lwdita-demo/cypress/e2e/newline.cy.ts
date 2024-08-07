@@ -23,10 +23,11 @@ describe('inserts a line break', () => {
 
   it('can insert a line break in the body', () => {
     cy.visit('http://localhost:1234/')
-    .get('#editor > div > div.ProseMirror > article > div > section > p')
+
+    cy.get('#editor > div > div.ProseMirror > article > div > section > p')
     .click()
     cy.focused()
-    .type('{leftArrow}{enter}body')
+    .type('body{enter}')
     .should('contain.html', '<br>')
   })
 })
