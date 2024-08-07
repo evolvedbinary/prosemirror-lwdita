@@ -110,7 +110,6 @@ function getJditaNodeName(type: string): string {
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function createMediaJDITAObject(nodeName: string, attributes: Record<string, string>, children: JDita[]): JDita {
-  console.log('children', children);
   if (nodeName === 'video') {
     // we must populate the video node with the necessary attributes and children
     const allVideoAttributes = {
@@ -134,41 +133,36 @@ function createMediaJDITAObject(nodeName: string, attributes: Record<string, str
       tabindex: attributes.tabindex,
     }
 
-    const allChildren: JDita[] = [];
-    allChildren.push(children[0])
+    const allVideoChildren: JDita[] = [];
+    allVideoChildren.push(children[0])
 
     if (attributes.title !== undefined) {
       const desc: JDita = createMediaChild('desc', attributes.title);
-      allChildren.unshift(desc); // Add 'desc' at the beginning of the array to create the expected order
-    }
-
-    if (attributes.fallback !== undefined) {
-      const fallback: JDita = createMediaChild('fallback', attributes.fallback);
-      allChildren.push(fallback);
+      allVideoChildren.unshift(desc); // Add 'desc' at the beginning of the array to create the expected order
     }
 
     if (attributes.poster !== undefined) {
       const poster: JDita = createMediaChild('video-poster', attributes.poster);
-      allChildren.push(poster);
+      allVideoChildren.push(poster);
     }
 
-    if (attributes.track !== undefined) {
-      const track: JDita = createMediaChild('media-track', attributes.track);
-      allChildren.push(track);
+    const mediaSourceChild = children.find(child => child.nodeName === "media-source");
+    if (mediaSourceChild) {
+      const mediaSource: JDita = mediaSourceChild;
+      allVideoChildren.push(mediaSource);
     }
 
-    if (attributes.source !== undefined) {
-      const source: JDita = createMediaChild('media-source', attributes.source);
-      allChildren.push(source);
+    const mediaTrackChild = children.find(child => child.nodeName === "media-track");
+    if (mediaTrackChild) {
+      const track: JDita = mediaTrackChild;
+      allVideoChildren.push(track);
     }
-
-    allChildren.push(children[1])
 
     // return the created video node
     return {
       nodeName,
       'attributes': deleteUndefined(allVideoAttributes),
-      'children': allChildren
+      'children': allVideoChildren
     }
   }
 
@@ -197,31 +191,35 @@ function createMediaJDITAObject(nodeName: string, attributes: Record<string, str
 
     const allAudioChildren: JDita[] = [];
 
-    if (attributes.desc !== undefined) {
-      const desc: JDita = createMediaChild('desc', attributes.desc);
+    if (attributes.title !== undefined) {
+      const desc: JDita = createMediaChild('desc', attributes.title);
       allAudioChildren.push(desc);
     }
 
-    if (attributes.fallback !== undefined) {
-      const fallback: JDita = createMediaChild('fallback', attributes.fallback);
+    const mediaFallbackChild = children.find(child => child.nodeName === "fallback");
+    if (mediaFallbackChild) {
+      const fallback: JDita = mediaFallbackChild;
       allAudioChildren.push(fallback);
     }
 
+    const mediaSourceChild = children.find(child => child.nodeName === "media-source");
+    if (mediaSourceChild) {
+      const mediaSource: JDita = mediaSourceChild;
+      allAudioChildren.push(mediaSource);
+    }
+
+    // "source" can be an audio attribute, or a source element, both is allowed
     if (attributes.source !== undefined) {
       const source: JDita = createMediaChild('media-source', attributes.source);
       allAudioChildren.push(source);
     }
 
-    if (attributes.track !== undefined) {
-      console.log('attributes.track', attributes.track)
-      const track: JDita = createMediaChild('media-track', attributes.track);
+    const mediaTrackChild = children.find(child => child.nodeName === "media-track");
+    if (mediaTrackChild) {
+      const track: JDita = mediaTrackChild;
       allAudioChildren.push(track);
-      console.log('allAudioChildren', allAudioChildren)
     }
 
-    allAudioChildren.push(children[1])
-    console.log('allAudioChildren', allAudioChildren);
-    console.log('attributes', attributes);
     return {
       nodeName,
       'attributes': deleteUndefined(allAudioAttributes),
@@ -239,13 +237,11 @@ function createMediaJDITAObject(nodeName: string, attributes: Record<string, str
       href: attributes.href,
       format: attributes.format,
       scope: attributes.scope,
-      // class attributes
-      outputclass: attributes.outputclass,
       class: attributes.class,
-      // custom attributes
       keyref: attributes.keyref,
       width: attributes.width,
       height: attributes.height,
+      outputclass: attributes.outputclass,
     }
 
     const allImageChildren: JDita[] = [];
@@ -300,7 +296,7 @@ function createMediaChild(nodeName: string, value: string, additionalAttributes?
   };
 
   // create a node object based on the nodeName and attributes
-  // in case of desc and fallback, the value will be wrapped in a text node
+  // in case of desc the value will be wrapped in a text node
   const node = {
     nodeName: nodeName,
     attributes: attributes,
@@ -310,22 +306,11 @@ function createMediaChild(nodeName: string, value: string, additionalAttributes?
           nodeName: "text",
           content: `${value}`
         }];
-      } else if (nodeName === "fallback") {
-        return [{
-          nodeName: "p",
-          attributes: {},
-          children: [{
-            nodeName: "text",
-            content: `${value}`
-          }]
-        }];
       } else {
-        // if the 'nodeName' is neither "desc" nor "fallback", return undefined
         return undefined;
       }
     })()
   };
-
   // return the created child node
   return {
     nodeName: nodeName,
