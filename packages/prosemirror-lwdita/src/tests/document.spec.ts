@@ -35,6 +35,7 @@ import {
   parentVideoObject,
   originalVideoObject
 } from './test-utils';
+
 import { xditaToJdita } from '@evolvedbinary/lwdita-xdita'
 import { JDita } from '@evolvedbinary/lwdita-ast';
 
@@ -149,27 +150,9 @@ describe('Function unTravel()', () => {
       const transformedJdita = document(originalJdita);
       // untransform the transformed JDita document
       const result = unTravel(transformedJdita);
-
       //compare the original JDita with the result
-      expect(result).to.deep.equal(originalJdita);
+      expect(JSON.stringify(result)).to.deep.equal(JSON.stringify(originalJdita));
 
-    });
-
-    it('handles a JDita document containing a video element', async () => {
-
-      // original JDita to compare against
-      const originalJdita = await xditaToJdita(videoXdita);
-
-      // process the JDita document and do the round trip
-      // clean the attributes from the top node to compare
-      originalJdita.attributes = {};
-      // transform the JDita document
-      const transformedJdita = document(originalJdita);
-      // untransform the transformed JDita document
-      const result = unTravel(transformedJdita);
-
-      //compare the original JDita with the result
-      expect(result).to.deep.equal(originalJdita);
     });
 
     it('handles a JDita document containing an b mark', async () => {
@@ -187,6 +170,23 @@ describe('Function unTravel()', () => {
 
       //compare the original JDita with the result
       expect(result).to.deep.equal(originalJdita);
+    });
+
+    it('handles a JDita document containing a video element', async () => {
+
+      // original JDita to compare against
+      const originalJdita = await xditaToJdita(videoXdita);
+
+      // process the JDita document and do the round trip
+      // clean the attributes from the top node to compare
+      originalJdita.attributes = {};
+      // transform the JDita document
+      const transformedJdita = document(originalJdita);
+      // untransform the transformed JDita document
+      const result = unTravel(transformedJdita);
+
+      //compare the original JDita with the result
+      expect(JSON.stringify(result)).to.deep.equal(JSON.stringify(originalJdita));
     });
 
     it('handles a JDita document containing an audio element', async () => {
