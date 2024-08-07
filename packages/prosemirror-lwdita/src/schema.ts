@@ -87,7 +87,9 @@ export const NODE_ATTR_NAMES: Record<string, Record<string, string>> = {
   image: {
     _: '*',
     href: 'src',
-    alt: 'alt'
+    alt: 'alt',
+    width: 'width',
+    height: 'height',
   },
 }
 /**
