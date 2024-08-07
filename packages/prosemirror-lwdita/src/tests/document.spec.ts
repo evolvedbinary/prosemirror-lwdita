@@ -184,7 +184,6 @@ describe('Function unTravel()', () => {
       const transformedJdita = document(originalJdita);
       // untransform the transformed JDita document
       const result = unTravel(transformedJdita);
-
       //compare the original JDita with the result
       expect(JSON.stringify(result)).to.deep.equal(JSON.stringify(originalJdita));
     });
@@ -193,7 +192,6 @@ describe('Function unTravel()', () => {
 
       // original JDita to compare against
       const originalJdita = await xditaToJdita(audioXdita);
-
       // process the JDita document and do the round trip
       //clean the attributes from the top node to compare
       originalJdita.attributes = {};
@@ -201,9 +199,8 @@ describe('Function unTravel()', () => {
       const transformedJdita = document(originalJdita);
       // untransform the transformed JDita document
       const result = unTravel(transformedJdita);
-
       //compare the original JDita with the result
-      expect(result).to.deep.equal(originalJdita);
+      expect(JSON.stringify(result)).to.deep.equal(JSON.stringify(originalJdita));
     });
 
     it('handles a JDita document containing an image', async () => {
@@ -218,9 +215,8 @@ describe('Function unTravel()', () => {
       const transformedJdita = document(originalJdita);
       // untransform the transformed JDita document
       const result = unTravel(transformedJdita);
-
       //compare the original JDita with the result
-      expect(result).to.deep.equal(originalJdita);
+      expect(JSON.stringify(result)).to.deep.equal(JSON.stringify(originalJdita));
     });
   });
 
