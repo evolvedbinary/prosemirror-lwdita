@@ -288,8 +288,10 @@ export function imageInputOverlay(callback: (args: any) => void, node?: Node): v
   // Append dialog to overlay
   overlay.appendChild(dialog);
 
-  // Append overlay to body
-  document.body.appendChild(overlay);
+  if(document.getElementById('overlay') === null) {
+    // Append overlay to body
+    document.body.appendChild(overlay);
+  }
 
   if(node) {
     //extract the image attributes
