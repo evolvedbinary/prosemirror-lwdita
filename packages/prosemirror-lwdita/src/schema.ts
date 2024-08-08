@@ -75,9 +75,10 @@ export const NODE_ATTR_NAMES: Record<string, Record<string, string>> = {
   },
   'media-source': {
     keyref: 'src',
+    type: 'type',
   },
   'media-track': {
-    kind: '*',
+    kind: 'data-j-kind',
     keyref: 'src',
     srclang: '*',
   },
