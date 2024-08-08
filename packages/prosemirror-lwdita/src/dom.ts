@@ -19,6 +19,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * DOM nodes mapping from JDITA to HTML
  */
 export const DOM_NODES: Record<string, string | ((parent?: string) => string)> = {
+  alt: 'alt',
   audio: 'audio',
   body: 'div',
   b: 'strong',

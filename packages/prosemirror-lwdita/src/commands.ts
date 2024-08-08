@@ -43,7 +43,9 @@ export function createNode(type: NodeType, args: Record<string, any> = {}): Node
     case 'ol': return type.createAndFill({}, createNode(type.schema.nodes['li'])) as Node;
     case 'section': return type.createAndFill({}, createNode(type.schema.nodes['ul'])) as Node;
     case 'strow': return type.createAndFill({}, createNode(type.schema.nodes['stentry'])) as Node;
-    case 'image': return type.createAndFill({ href: args.src }) as Node;
+    case 'image': return type.createAndFill({ href: args.src, height: args.height, width: args.width, scope: args.scope }, createNode(type.schema.nodes['alt'], {content: args.alt})) as Node;
+    case 'fig': return type.createAndFill({}, createNode(type.schema.nodes['image'], args)) as Node;
+    case 'alt': return type.createAndFill({}, type.schema.text(`${args.content || " "}`)) as Node;
   }
   throw new Error('unkown node type: ' + type.name);
 }
@@ -177,6 +179,225 @@ export class InputContainer {
 }
 
 /**
+ * Render an image upload dialog with an overlay
+ * upload an image from local machine or a URL
+ * set the image attributes like height, width, alt text
+ * @param callback - callback function to handle the image attributes
+ * @param node - Node selected node to edit
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function imageInputOverlay(callback: (args: any) => void, node?: Node): void {
+  // show the image upload dialog
+  // Create overlay
+  const overlay = document.createElement('div');
+  overlay.id = 'overlay';
+
+  // Create dialog
+  const dialog = document.createElement('div');
+  dialog.id = 'dialog';
+
+  // Create dialog content
+  const title = document.createElement('h1');
+  title.textContent = 'Upload Image';
+
+  const fileLabel = document.createElement('label');
+  fileLabel.textContent = 'File:';
+  fileLabel.htmlFor = 'fileInput';
+  const fileInput = document.createElement('input');
+  fileInput.type = 'file';
+  fileInput.id = 'fileInput';
+  fileInput.accept = 'image/*';
+
+  const urlLabel = document.createElement('label');
+  urlLabel.textContent = 'URL:';
+  urlLabel.htmlFor = 'urlInput';
+  const urlInput = document.createElement('input');
+  urlInput.type = 'text';
+  urlInput.id = 'urlInput';
+  urlInput.placeholder = 'url';
+
+  const embeddedLabel = document.createElement('label');
+  embeddedLabel.textContent = 'Embed a copy:';
+  embeddedLabel.htmlFor = 'embeddedInput';
+  const embeddedInput = document.createElement('input');
+  embeddedInput.type = 'checkbox';
+  embeddedInput.id = 'embeddedInput';
+  embeddedInput.title = "this option will embed the image from an external source and store a copy in the document as base64 string"
+
+  const heightLabel = document.createElement('label');
+  heightLabel.textContent = 'Height:';
+  heightLabel.htmlFor = 'heightInput';
+  const heightInput = document.createElement('input');
+  heightInput.type = 'number';
+  heightInput.id = 'heightInput';
+  heightInput.placeholder = 'Height';
+
+  const widthLabel = document.createElement('label');
+  widthLabel.textContent = 'Width:';
+  widthLabel.htmlFor = 'widthInput';
+  const widthInput = document.createElement('input');
+  widthInput.type = 'number';
+  widthInput.id = 'widthInput';
+  widthInput.placeholder = 'Width';
+
+  const altTextLabel = document.createElement('label');
+  altTextLabel.textContent = 'Alt Text:';
+  altTextLabel.htmlFor = 'altTextInput';
+  const altTextInput = document.createElement('input');
+  altTextInput.type = 'text';
+  altTextInput.id = 'altTextInput';
+  altTextInput.placeholder = 'Alt Text';
+
+  const btnConatiner = document.createElement('div');
+  btnConatiner.id = 'btnConatiner';
+
+  const closeButton = document.createElement('button');
+  closeButton.id = 'closeButton';
+  closeButton.textContent = 'Dismiss';
+
+  const okButton = document.createElement('button');
+  okButton.id = 'okButton';
+  okButton.textContent = 'Insert';
+
+  btnConatiner.appendChild(closeButton);
+  btnConatiner.appendChild(okButton);
+
+  // Append dialog content to dialog
+  dialog.appendChild(title);
+
+  const fields = [
+    { label: fileLabel, input: fileInput },
+    { label: urlLabel, input: urlInput },
+    { label: embeddedLabel, input: embeddedInput },
+    { label: heightLabel, input: heightInput },
+    { label: widthLabel, input: widthInput },
+    { label: altTextLabel, input: altTextInput },
+  ];
+
+  fields.forEach(field => {
+    const container = document.createElement('div');
+    container.classList.add('field-container');
+    container.appendChild(field.label);
+    container.appendChild(field.input);
+    dialog.appendChild(container);
+  });
+
+  dialog.appendChild(btnConatiner);
+
+  // Append dialog to overlay
+  overlay.appendChild(dialog);
+
+  if(document.getElementById('overlay') === null) {
+    // Append overlay to body
+    document.body.appendChild(overlay);
+  }
+
+  if(node) {
+    //extract the image attributes
+    const src = node.attrs.href;
+    const alt = node.firstChild?.textContent || '';
+    const height = node.attrs.height;
+    const width = node.attrs.width;
+    //set the input fields
+    urlInput.value = src;
+    altTextInput.value = alt;
+    heightInput.value = height;
+    widthInput.value = width;
+  }
+
+  // Add event listener to close button
+  closeButton.addEventListener('click', function () {
+    document.body.removeChild(overlay);
+    return null;
+  });
+
+  urlInput.addEventListener('change', () => {
+
+  });
+
+  overlay.addEventListener('click', function (e) {
+    if (e.target === overlay) {
+      document.body.removeChild(overlay);
+      return null;
+    }
+  });
+
+  // Add event listener to ok button
+  fileInput.addEventListener('change', function () {
+    if (!fileInput.files || !fileInput.files.length) return false;
+    const file = fileInput.files[0];
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onerror = () => {
+    };
+    reader.onload = () => {
+      const img = new Image();
+      img.onload = function () {
+        const width = img.width;
+        const height = img.height;
+        // Update the input fields with the image dimensions
+        widthInput.value = width as unknown as string;
+        heightInput.value = height as unknown as string;
+      };
+      img.src = reader.result as string;
+    };
+  });
+
+  okButton.addEventListener('click', () => {
+    if (fileInput.files?.length) {
+      const reader = new FileReader();
+      const file = fileInput.files[0];
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        // capture the file name in the base64 string
+        // edit the image base64 to include a url copy
+        const imageBuffer = reader.result as string;
+        const base64 = imageBuffer.split(',');
+        const base64withName = base64[0] + `;filename=${file.name}` + ',' + base64[1];
+        callback({
+          src: base64withName,
+          scope: 'peer',
+          alt: altTextInput.value,
+          height: heightInput.value,
+          width: widthInput.value
+        })
+      }
+    } else if (urlInput.value.length && !embeddedInput.checked) {
+      callback({
+        src: urlInput.value,
+        scope: 'external',
+        alt: altTextInput.value,
+        height: heightInput.value,
+        width: widthInput.value
+      })
+    } else if (urlInput.value.length && embeddedInput.checked) {
+      // handled the case where the user wants to embed the image from an external source
+      fetch(urlInput.value)
+        .then(response => response.blob())
+        .then(blob => {
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            // edit the image base64 to include a url copy
+            const imageBuffer = reader.result as string;
+            const base64 = imageBuffer.split(',');
+            const base64withurl = base64[0] + `;url=${urlInput.value}` + ',' + base64[1];
+            callback({
+              src: base64withurl,
+              scope: 'peer',
+              alt: altTextInput.value,
+              height: heightInput.value,
+              width: widthInput.value
+            })
+          };
+          reader.readAsDataURL(blob);
+        })
+    }
+    document.body.removeChild(overlay);
+  });
+}
+
+
+/**
  * Creates a command to insert a new Image node at the current cursor position.
  *
  * @remarks
@@ -186,38 +407,23 @@ export class InputContainer {
  * Error handling should be improved in `reader.onerror = () => {};`
  *
  * @param type - NodeType
- * @param input - InputContainer
  * @returns Command
  */
-export function insertImage(type: NodeType, input: InputContainer): Command {
+export function insertImage(type: NodeType): Command {
   return function (state, dispatch) {
-    function fileSelected(this: HTMLInputElement) {
-      if (input.el?.files?.length === 1) {
-        const file = input.el.files[0];
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onerror = () => {
-        };
-        reader.onload = () => {
-          if (dispatch && typeof reader.result === 'string') {
-            const node = createNode(type, { src: reader.result });
-            const tr = state.tr.insert(state.selection.$to.pos, node);
-            dispatch(tr.scrollIntoView());
-          }
-        };
-      }
-    }
+    // on click, the cursor selection should be empty
     try {
       if (!state.selection.empty) {
         return false;
       }
       if (dispatch) {
-        if (!input.el) {
-          return false;
-        }
-        input.el.value = '';
-        input.on('command', fileSelected);
-        return true;
+        // show the image upload dialog
+        imageInputOverlay((imageInfo) => {
+          if (!imageInfo) return false;
+          const node = createNode(type.schema.nodes['fig'], { src: imageInfo.src, scope: imageInfo.scope, alt: imageInfo.alt, height: imageInfo.height, width: imageInfo.width });
+          const tr = state.tr.insert(state.selection.$to.pos, node);
+          dispatch(tr.scrollIntoView());
+        });
       }
       return true;
     } catch (e) {
@@ -410,7 +616,7 @@ export function enterSplit(tr: Transaction, dispatch = false, depth = 0): Transa
     if (atEnd && depth > 1 && $from.depth - depth > 2) {
       const defaultType = $from.node(-depth + 1).type;
       return deleteEmptyLine(tr, depth - 1)
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         .split(tr.mapping.map($from.pos), depth, [{ type: defaultType }] as any);
     }
     if (tr.selection instanceof TextSelection) tr.deleteSelection();
@@ -527,7 +733,7 @@ export function isPrevEmpty(tr: Transaction, depth = 0) {
 export function getDepth(tr: Transaction, empty = false) {
   let depth = 0;
 
-  while((empty ? isEmpty : isEOL)(tr, depth + 1)) {
+  while ((empty ? isEmpty : isEOL)(tr, depth + 1)) {
     depth++;
   }
 
@@ -542,7 +748,7 @@ export function getDepth(tr: Transaction, empty = false) {
  */
 export function getPrevDepth(tr: Transaction) {
   let depth = 0;
-  while(isPrevEmpty(tr, depth + 1)) {
+  while (isPrevEmpty(tr, depth + 1)) {
     depth++;
 
   }
@@ -595,7 +801,7 @@ export function enterPressed(state: EditorState, dispatch?: (tr: Transaction) =>
   }
 
   // prepare the transaction
-    let resultTr: false | Transaction
+  let resultTr: false | Transaction
  
   if(isEOL(state.tr, depth)) {
     if($from.parentOffset === 0 ) {
@@ -610,6 +816,7 @@ export function enterPressed(state: EditorState, dispatch?: (tr: Transaction) =>
       resultTr = tr.replaceSelectionWith(state.schema.nodes.hard_break.create()).scrollIntoView();
     }
   }
+
   // if the transaction is triggered, then dispatch the transaction
   if (dispatch && resultTr !== false) {
     dispatch(resultTr);

@@ -90,6 +90,7 @@ export const NODE_ATTR_NAMES: Record<string, Record<string, string>> = {
     alt: 'alt',
     width: 'width',
     height: 'height',
+    scope: 'data-j-scope'
   },
 }
 /**
