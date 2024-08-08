@@ -7,6 +7,10 @@
 
 This tool generates ProseMirror documents from JDITA objects. It also provides Schema Definition for proper display and editing of JDITA data.
 
+## Schema
+
+The implemented schema complies with the LwDITA specs v0.3.0.2, see: [https://github.com/oasis-tcs/dita-lwdita/releases/tag/v0.3.0.2](https://github.com/oasis-tcs/dita-lwdita/releases/tag/v0.3.0.2)
+
 ## Usage
 
 Add the library to your project using Yarn or Npm:

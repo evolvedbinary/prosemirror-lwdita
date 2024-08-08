@@ -25,3 +25,7 @@ import { document } from "@evolvedbinary/prosemirror-lwdita";
 //Transform library
 import { xditaToJson } from "lwdita";
 ```
+
+## Schema
+
+The implemented schema complies with the LwDITA specs v0.3.0.2, see: [https://github.com/oasis-tcs/dita-lwdita/releases/tag/v0.3.0.2](https://github.com/oasis-tcs/dita-lwdita/releases/tag/v0.3.0.2)

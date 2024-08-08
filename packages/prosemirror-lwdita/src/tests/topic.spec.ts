@@ -28,7 +28,6 @@ const attrs = {
   id: 'topic-id',
   'xmlns:ditaarch': 'http://dita.oasis-open.org/architecture/2005/',
   'ditaarch:DITAArchVersion': '1.3',
-  domains: '(topic xdita-c)',
   outputclass: 'topic-outputclass',
   dir: 'topic-dir',
   'xml:lang': 'topic-lang',

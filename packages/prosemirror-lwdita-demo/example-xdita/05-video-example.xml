@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE topic PUBLIC "-//OASIS//DTD LIGHTWEIGHT DITA Topic//EN" "lw-topic.dtd">
+<topic id="sensei-promise">
+  <title>The Sensei Sushi Promise</title>
+  <body>
+    <video height="300px" controls="true" loop="false" muted="false"  width="400px" tabindex="1">
+      <desc>Video about the Sensei Sushi promise.</desc>
+      <fallback>
+        <p>Sorry, the audio could not be played.</p>
+      </fallback>
+      <video-poster href="some-poster.jpg"/>
+      <media-source href="sensei-video.mp4"/>
+      <media-source href="sensei-video.ogg"/>
+      <media-source href="sensei-video.webm"/>
+      <media-track srclang="en" value="sensei-video.vtt"/>
+    </video>
+  </body>
+</topic>
