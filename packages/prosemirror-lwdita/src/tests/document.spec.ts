@@ -138,8 +138,7 @@ describe('Function unTravel()', () => {
       expect(result).to.deep.equal(originalJdita);
     });
 
-    it('handles a complex JDita document', async () => {
-
+    it('handles a fully-featured JDita document', async () => {
       // original JDita to compare against
       const originalJdita = await xditaToJdita(complexXdita);
 
@@ -152,7 +151,6 @@ describe('Function unTravel()', () => {
       const result = unTravel(transformedJdita);
       //compare the original JDita with the result
       expect(JSON.stringify(result)).to.deep.equal(JSON.stringify(originalJdita));
-
     });
 
     it('handles a JDita document containing an b mark', async () => {

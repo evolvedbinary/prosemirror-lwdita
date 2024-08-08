@@ -118,62 +118,153 @@ export const shortXdita = `<?xml version="1.0" encoding="UTF-8"?>
   </body>
 </topic>`;
 
-export const complexXdita =  `<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE topic PUBLIC "-//OASIS//DTD LIGHTWEIGHT DITA Topic//EN" "lw-topic.dtd"><topic id="intro-product"><title><ph keyref="product-name"/>Overview</title><shortdesc>The<ph keyref="product-name"/> kit allows you to operate network-based home lighting through a remote control</shortdesc><body><p id="cdataTest"><![CDATA[ &%<tagname/><!--comment-->]]>The<ph keyref="product-name"/> kit includes a wireless smart lighting system that helps make the lighting in your home more energy efficient and easier to manage. The kit includes the following components:</p><dl><dlentry><dt>Remote Control</dt><dd><p>Allows you to power on, power off, and dim groups of lights on your network.</p></dd></dlentry><dlentry><dt>LED Light Bulbs</dt><dd><p>Energy-efficient network light bulbs you can install into standard light fixtures.</p></dd></dlentry></dl><fig><title><ph keyref="product-name"/>ready for installation</title><image href="../images/kit.png"><alt>Remote Lighting Kit</alt></image></fig><p id="warning">Electrical hazards can cause burns, shocks and electrocution (death).</p></body></topic>`
-
-/* `<?xml version="1.0" encoding="UTF-8"?>
+export const complexXdita = `<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE topic PUBLIC "-//OASIS//DTD LIGHTWEIGHT DITA Topic//EN" "lw-topic.dtd">
-<topic id="program-bulbs-to-groups">
-  <title>Test File: Programming Light Bulbs to a Lighting Group</title>
-  <shortdesc>You can program one or more light bulbs to a lighting group to operate that group
-    with your remote control.</shortdesc>
-  <body>
-    <section id="context">
-      <p>Your <ph keyref="product-name"/> remote control can manage up to <pre>250 network light bulbs on the same lighting
-      network</pre>. When you add a light bulb to the network, you can program it to one or more
-        lighting groups. You must assign a light bulb to at least one lighting group to
-        operate that light bulb  A network light bulb that is not programmed to a
-        lighting group will still operate when controlling all network light bulbs from
-        the remote control.</p>
-    </section>
-    <section id="steps">
-   <ol>
-     <li><p>Make sure your remote control is in range of the light bulbs you are
-        adding.</p></li>
-     <li><p>If a network light bulb is new, you must install it by performing the following
-          steps:</p>
-          <ol>
-            <li><p>Make sure power to the fixture where you are installing the light bulb
-              is turned OFF.</p>
+<topic id="fullTopic">
+    <title>
+        <b>bold</b>
+        and <em>emphasized</em> and <i>italic</i> and <ph>Phrase content</ph> and
+        <strong>strong</strong>
+        and <sub>subscript</sub> and <sup>superscipt</sup> and <tt>tele type</tt> and
+        <u>underline</u>
+        <image href="images/image.png">
+            <alt>alt text</alt>
+        </image>
+    </title>
+    <shortdesc>Short description of the full topic.</shortdesc>
+    <prolog>
+        <metadata>
+            <othermeta name="test" content="test"/>
+        </metadata>
+    </prolog>
+    <body dir="ltr">
+        <!--
+        ((%list-blocks;)*, section*, div?)
+        list-blocks = p|ul|ol|dl|pre|audio|video|example|simpletable|fig|note
+        -->
+        <p>Paragraph content</p>
+        <p>
+            <b>Bold</b>
+            and <em>emphasized</em> and <i>italic</i> and <ph>Phrase content</ph> and
+            <strong>strong</strong>
+            and <sub>subscript</sub> and <sup>superscipt</sup> and <tt>tele type</tt> and
+            <u>underline</u>.
+        </p>
+        <ul>
+            <li>
+                <p>Unordered list item</p>
             </li>
-              <li><p>Remove any existing light bulb from the light fixture.</p></li>
-              <li><p>Install the network light bulb into the light fixture as you would any
-              standard light bulb.</p></li>
-              <li><p>Turn power to the light fixture on.</p>
-              <p>The light bulb begins to brighten and dim while finding the
-              remote control's network.</p></li>
-          <li><p>Repeat steps for each new network light bulb.</p></li>
-          </ol></li>
-        <li><p>Turn power on to the fixtures containing network light bulbs you want added to
-          the light group.</p></li>
-          <li><p>Turn power off to the fixtures containing light bulbs you do not want added to
-          the light group. </p></li>
-          <li><p>On the remote control, press and hold the desired lighting group button for 5
-          seconds.</p>
-        <p>The button indicator for the selected lighting group flashes green while
-          the light bulb(s) are added to the group. If the indicator flashes red, the
-          lighting group was not activated and you must try again. Light flashes red for 3
-          seconds if programming fails.</p>
-      </li>
-      <li><p>Leave the light fixture switches ON so that power is available when using your
-          remote control to turn the light bulbs on and off.</p></li>
-      <li><p>remember to turn on any excluded fixtures that you turned off.</p></li>
-    </ol>
-    </section>
-
-  </body>
-</topic>
-` */
-  ;
+        </ul>
+        <ol>
+            <li>
+                <p>Ordered list item</p>
+            </li>
+        </ol>
+        <dl>
+            <dlentry>
+                <dt>Definition term</dt>
+                <dd>
+                    <p>Definition description</p>
+                </dd>
+            </dlentry>
+        </dl>
+        <pre>Preformatted content</pre>
+        <audio autoplay="false" controls="true" loop="false" muted="false">
+            <!--
+            ((desc)?,(fallback)?,(media-source)*,(media-track)*)*
+            -->
+            <desc>Theme song for the LwDITA podcast</desc>
+            <fallback>
+                <p>The theme song is not available.</p>
+            </fallback>
+            <media-source value="theme-song.mp3"/>
+            <media-track srclang="en" value="theme-song.vtt"/>
+        </audio>
+        <video height="300px" width="400px" autoplay="false" controls="true" loop="false" muted="false">
+            <!--
+            ((desc)?,(fallback)?,(video-poster)?,(media-source)*,(media-track)*)*       >
+            -->
+            <desc>Video about the Sensei Sushi promise.</desc>
+            <fallback>
+                <image href="video-not-available.png">
+                    <alt>This video cannot be displayed.</alt>
+                </image>
+            </fallback>
+            <video-poster href="sensei-video.jpg"/>
+            <media-source href="sensei-video.mp4"/>
+            <!--media-source href="sensei-video.ogg"/-->
+            <!--media-source href="sensei-video.webm"/-->
+            <media-track srclang="en" href="sensei-video.vtt"/>
+        </video>
+        <example>
+            <title>title</title>
+            <!--
+            p|ul|ol|dl|pre|audio|video|simpletable|fig|note
+            -->
+        </example>
+        <simpletable>
+            <title>Table title</title>
+            <sthead>
+                <stentry>
+                    <p>Header 1</p>
+                </stentry>
+                <stentry>
+                    <p>Header 2</p>
+                </stentry>
+            </sthead>
+            <strow>
+                <stentry>
+                    <p>Row 1, Cell 1</p>
+                </stentry>
+                <stentry>
+                    <p>Row 1, Cell 2</p>
+                </stentry>
+            </strow>
+            <strow>
+                <stentry>
+                    <p>Row 2, Cell 1</p>
+                </stentry>
+                <stentry>
+                    <p>Row 2, Cell 2</p>
+                </stentry>
+            </strow>
+        </simpletable>
+        <fig>
+            <!--
+            (title?, desc?, (%fig-blocks;|image|xref)*)
+            -->
+            <title>Figure title</title>
+            <desc>Figure description</desc>
+            <image href="images/image.png">
+                <alt>alt text</alt>
+            </image>
+        </fig>
+        <note>
+            <!--
+            <!ENTITY % simple-blocks  "p|ul|ol|dl|pre|audio|video|example|note">
+            -->
+            <p>Note content</p>
+        </note>
+        <section>
+            <title>Section title</title>
+            <!--
+            p|ul|ol|dl|pre|audio|video|example|simpletable|fig|note
+            -->
+            <p>Section content</p>
+        </section>
+        <div>
+            <!--
+            p|ul|ol|dl|pre|audio|video|example|simpletable|fig|note
+            -->
+            <fn id="footnote">
+                <!--
+                "p|ul|ol|dl"
+                -->
+                <p>A footnote</p>
+            </fn>
+        </div>
+    </body>
+</topic>`;
 
 export const videoXdita = `<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE topic PUBLIC "-//OASIS//DTD LIGHTWEIGHT DITA Topic//EN" "lw-topic.dtd">
