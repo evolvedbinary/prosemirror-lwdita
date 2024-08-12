@@ -55,10 +55,10 @@ export const NODE_ATTRS: Record<string, (attrs: string[]) => Attrs> = {
 export const NODE_ATTR_NAMES: Record<string, Record<string, string>> = {
   video: {
     _: '*',
-    autoplay: '*',
-    controls: '*',
-    loop: '*',
-    muted: '*',
+    autoplay: 'autoplay',
+    controls: 'controls',
+    loop: 'loop',
+    muted: 'muted',
     tabindex: '*',
     height: 'height',
     width: 'width',
@@ -66,11 +66,11 @@ export const NODE_ATTR_NAMES: Record<string, Record<string, string>> = {
   },
   audio: {
     _: '*',
-    autoplay: '*',
-    controls: '*',
-    loop: '*',
-    muted: '*',
-    tabindex: '*',
+    autoplay: 'autoplay',
+    controls: 'controls',
+    loop: 'loop',
+    muted: 'muted',
+    tabindex: 'tabindex',
     keyref: 'src',
   },
   'media-source': {
@@ -80,7 +80,7 @@ export const NODE_ATTR_NAMES: Record<string, Record<string, string>> = {
   'media-track': {
     kind: 'data-j-kind',
     keyref: 'src',
-    srclang: '*',
+    srclang: 'srclang',
   },
   xref: {
     keyref: 'href',
