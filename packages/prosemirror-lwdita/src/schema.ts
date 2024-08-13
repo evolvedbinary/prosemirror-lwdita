@@ -50,7 +50,14 @@ export const NODE_ATTRS: Record<string, (attrs: string[]) => Attrs> = {
 }
 
 /**
- * A map of attributes for special nodes
+ * A map of attributes for special nodes and their
+ * corresponding attribute names in the Prosemirror DOM
+ *
+ * @privateRemarks
+ * TODO: autoplay, controls, loop, muted are boolean attributes in XDITA, but they don't require a value in HTML5.
+ * As soon as they are rendered in the DOM, browsers will render them as true, even if they have a value "false".
+ * This needs to be fixed where handling the attribute values:
+ * If attribute value === false, then prefix it with a `data-j-*` attribute.
  */
 export const NODE_ATTR_NAMES: Record<string, Record<string, string>> = {
   video: {
@@ -59,10 +66,12 @@ export const NODE_ATTR_NAMES: Record<string, Record<string, string>> = {
     controls: 'controls',
     loop: 'loop',
     muted: 'muted',
-    tabindex: '*',
+    tabindex: 'tabindex',
     height: 'height',
     width: 'width',
     poster: 'poster',
+    parent: '*',
+    outputclass: 'class',
   },
   audio: {
     _: '*',
@@ -72,14 +81,16 @@ export const NODE_ATTR_NAMES: Record<string, Record<string, string>> = {
     muted: 'muted',
     tabindex: 'tabindex',
     keyref: 'src',
+    parent: '*',
+    outputclass: 'class',
   },
   'media-source': {
-    keyref: 'src',
-    type: 'type',
+    href: 'src',
+    format: 'type',
   },
   'media-track': {
-    kind: 'data-j-kind',
-    keyref: 'src',
+    kind: 'kind',
+    href: 'src',
     srclang: 'srclang',
   },
   xref: {
@@ -91,9 +102,12 @@ export const NODE_ATTR_NAMES: Record<string, Record<string, string>> = {
     alt: 'alt',
     width: 'width',
     height: 'height',
-    scope: 'data-j-scope'
+    scope: '*',
+    parent: '*',
+    outputclass: 'class',
   },
 }
+
 /**
  * Provide a map of special nodes to their corresponding Schema
  */
