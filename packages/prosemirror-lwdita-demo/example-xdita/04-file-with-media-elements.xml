@@ -9,12 +9,12 @@
         Video Element
       </title>
       <fig>
-        <video outputclass="videoElement" width="640" height="360" autoplay="false" controls="true" loop="false" muted="false" tabindex="1">
-          <desc outputclass="videoElementDescriptor">Xiaomi Yeelight YLDP06YL Smart Light Bulb White</desc>
+        <video outputclass="videoElement" width="320" height="240" autoplay="false" controls="true" loop="false" muted="false" tabindex="1">
+          <desc>Kool-Aid Commercial, Debut of Pitcher Man</desc>
           <video-poster href="https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/1954_Kool-Aid_Commercial._Debut_of_Pitcher_Man.webm/120px--1954_Kool-Aid_Commercial._Debut_of_Pitcher_Man.webm.jpg" />
-          <media-source href="https://commons.wikimedia.org/wiki/File:1954_Kool-Aid_Commercial._Debut_of_Pitcher_Man.webm" />
+          <media-source href="https://upload.wikimedia.org/wikipedia/commons/7/74/1954_Kool-Aid_Commercial._Debut_of_Pitcher_Man.webm" />
         </video>
-        </fig>
+      </fig>
     </section>
 
     <section>
