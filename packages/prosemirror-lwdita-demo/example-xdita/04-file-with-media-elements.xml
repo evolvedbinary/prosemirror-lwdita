@@ -21,11 +21,11 @@
       <title>Audio Element</title>
       <note>
         <audio outputclass="audioElement" autoplay="false" controls="true" loop="false" muted="false" tabindex="1">
-          <desc outputclass="audioElementDescriptor">An Audio Track</desc>
+          <desc>An Audio Track</desc>
           <fallback>
             <p>Sorry, the audio could not be played.</p>
           </fallback>
-          <media-source href="https://commons.wikimedia.org/wiki/File:1943_Nov_14_NYPhil_Bernstein.ogg" format="audio/ogg"/>
+          <media-source href="https://upload.wikimedia.org/wikipedia/commons/a/aa/1943_Nov_14_NYPhil_Bernstein.ogg" format="application/ogg"/>
         </audio>
       </note>
     </section>
@@ -33,8 +33,8 @@
     <section>
       <title>An Image</title>
       <fig>
-        <image outputclass="imageElement" height="300" width="300" href="https://placekitten.com/300/300">
-          <alt>A kitten</alt>
+        <image outputclass="imageElement" height="300" width="300" href="https://placehold.co/300x300" scope="external">
+          <alt>A Placeholder</alt>
         </image>
       </fig>
     </section>
