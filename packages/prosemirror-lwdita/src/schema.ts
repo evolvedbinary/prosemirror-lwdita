@@ -157,7 +157,7 @@ export const SCHEMA_CONTENT: Record<string, [content: string, groups: string]> =
   example: ['title? example_blocks*', 'simple_blocks all_blocks list_blocks fig_blocks'],
   fig: ['title? desc? (fig_blocks|image|xref)*', 'all_blocks list_blocks example_blocks'],
   fn: ['fn_blocks*', ''],
-  image: ['', 'inline_noimage inline_noxref inline fallback_blocks'],
+  image: ['alt?', 'in line_noxref inline fallback_blocks'],
   keydef: ['topicmeta?', ''],
   keytext: ['(text|ph)*', ''],
   li: ['list_blocks*', ''],
@@ -384,7 +384,7 @@ export function schema(): Schema {
     // the node types in this schema
     nodes: {
       text: {
-        group: 'inline_noimage inline_noxref',
+        group: 'inline inline_noimage inline_noxref',
         inline: true,
       },
       hard_break: {
