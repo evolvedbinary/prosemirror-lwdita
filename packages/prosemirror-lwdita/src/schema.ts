@@ -157,7 +157,7 @@ export const SCHEMA_CONTENT: Record<string, [content: string, groups: string]> =
   example: ['title? example_blocks*', 'simple_blocks all_blocks list_blocks fig_blocks'],
   fig: ['title? desc? (fig_blocks|image|xref)*', 'all_blocks list_blocks example_blocks'],
   fn: ['fn_blocks*', ''],
-  image: ['alt?', 'in line_noxref inline fallback_blocks'],
+  image: ['alt?', 'line_noxref inline fallback_blocks'],
   keydef: ['topicmeta?', ''],
   keytext: ['(text|ph)*', ''],
   li: ['list_blocks*', ''],
