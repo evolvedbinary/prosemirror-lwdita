@@ -95,6 +95,7 @@ export const NODE_ATTR_NAMES: Record<string, Record<string, string>> = {
   },
   xref: {
     keyref: 'href',
+    href: 'href',
   },
   image: {
     _: '*',
