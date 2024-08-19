@@ -104,8 +104,8 @@ describe('handling images', () => {
     .type('A small block')
     .get('#okButton')
     .click()
-    .get('figure img alt')
-    .should('have.text', 'A small block')
+    .get('figure img')
+    .should('have.attr', 'alt', 'A small block')
   });
 
 });
