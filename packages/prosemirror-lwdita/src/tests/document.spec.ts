@@ -135,13 +135,12 @@ describe('Function unTravel()', () => {
       const result = unTravel(transformedJdita);
 
       //compare the original JDita with the result
-      expect(result).to.deep.equal(originalJdita);
+      expect(JSON.stringify(result)).to.deep.equal(JSON.stringify(originalJdita));
     });
 
     it('handles a fully-featured JDita document', async () => {
       // original JDita to compare against
       const originalJdita = await xditaToJdita(complexXdita);
-
       // process the JDita document and do the round trip
       //clean the attributes from the top node to compare
       originalJdita.attributes = {};
