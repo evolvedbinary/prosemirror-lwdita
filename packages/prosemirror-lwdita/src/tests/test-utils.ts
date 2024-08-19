@@ -138,10 +138,6 @@ export const complexXdita = `<?xml version="1.0" encoding="UTF-8"?>
         </metadata>
     </prolog>
     <body dir="ltr">
-        <!--
-        ((%list-blocks;)*, section*, div?)
-        list-blocks = p|ul|ol|dl|pre|audio|video|example|simpletable|fig|note
-        -->
         <p>Paragraph content</p>
         <p>
             <b>Bold</b>
@@ -170,9 +166,6 @@ export const complexXdita = `<?xml version="1.0" encoding="UTF-8"?>
         </dl>
         <pre>Preformatted content</pre>
         <audio autoplay="false" controls="true" loop="false" muted="false">
-            <!--
-            ((desc)?,(fallback)?,(media-source)*,(media-track)*)*
-            -->
             <desc>Theme song for the LwDITA podcast</desc>
             <fallback>
                 <p>The theme song is not available.</p>
@@ -181,9 +174,6 @@ export const complexXdita = `<?xml version="1.0" encoding="UTF-8"?>
             <media-track srclang="en" value="theme-song.vtt"/>
         </audio>
         <video height="300px" width="400px" autoplay="false" controls="true" loop="false" muted="false">
-            <!--
-            ((desc)?,(fallback)?,(video-poster)?,(media-source)*,(media-track)*)*       >
-            -->
             <desc>Video about the Sensei Sushi promise.</desc>
             <fallback>
                 <image href="video-not-available.png">
@@ -192,15 +182,10 @@ export const complexXdita = `<?xml version="1.0" encoding="UTF-8"?>
             </fallback>
             <video-poster href="sensei-video.jpg"/>
             <media-source href="sensei-video.mp4"/>
-            <!--media-source href="sensei-video.ogg"/-->
-            <!--media-source href="sensei-video.webm"/-->
             <media-track srclang="en" href="sensei-video.vtt"/>
         </video>
         <example>
             <title>title</title>
-            <!--
-            p|ul|ol|dl|pre|audio|video|simpletable|fig|note
-            -->
         </example>
         <simpletable>
             <title>Table title</title>
@@ -230,9 +215,6 @@ export const complexXdita = `<?xml version="1.0" encoding="UTF-8"?>
             </strow>
         </simpletable>
         <fig>
-            <!--
-            (title?, desc?, (%fig-blocks;|image|xref)*)
-            -->
             <title>Figure title</title>
             <desc>Figure description</desc>
             <image href="images/image.png">
@@ -240,26 +222,14 @@ export const complexXdita = `<?xml version="1.0" encoding="UTF-8"?>
             </image>
         </fig>
         <note>
-            <!--
-            <!ENTITY % simple-blocks  "p|ul|ol|dl|pre|audio|video|example|note">
-            -->
             <p>Note content</p>
         </note>
         <section>
             <title>Section title</title>
-            <!--
-            p|ul|ol|dl|pre|audio|video|example|simpletable|fig|note
-            -->
             <p>Section content</p>
         </section>
         <div>
-            <!--
-            p|ul|ol|dl|pre|audio|video|example|simpletable|fig|note
-            -->
             <fn id="footnote">
-                <!--
-                "p|ul|ol|dl"
-                -->
                 <p>A footnote</p>
             </fn>
         </div>
