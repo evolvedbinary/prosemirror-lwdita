@@ -134,11 +134,16 @@ function createMediaJDITAObject(nodeName: string, attributes: Record<string, str
     }
 
     const allVideoChildren: JDita[] = [];
-    allVideoChildren.push(children[0])
 
     if (attributes.title !== undefined) {
       const desc: JDita = createMediaChild('desc', attributes.title);
       allVideoChildren.unshift(desc); // Add 'desc' at the beginning of the array to create the expected order
+    }
+
+    const fallbackChild = children.find(child => child.nodeName === "fallback");
+    if (fallbackChild) {
+      const fallback: JDita = fallbackChild;
+      allVideoChildren.push(fallback);
     }
 
     if (attributes.poster !== undefined) {
