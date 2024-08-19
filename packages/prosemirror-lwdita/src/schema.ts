@@ -46,8 +46,8 @@ export const TO_DOM: Record<string, (node: typeof AbstractBaseNode, attrs: Attrs
  * in the schema and render them in the DOM
  */
 export const NODE_ATTRS: Record<string, (attrs: string[]) => Attrs> = {
-  video: node => defaultNodeAttrs([...node, 'poster']),
-  audio: node => defaultNodeAttrs([...node]),
+  video: node => defaultNodeAttrs([...node, 'poster', 'title']),
+  audio: node => defaultNodeAttrs([...node, 'title']),
   image: node => defaultNodeAttrs([...node, 'alt'])
 }
 
