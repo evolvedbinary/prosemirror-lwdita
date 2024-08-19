@@ -42,11 +42,13 @@ export const TO_DOM: Record<string, (node: typeof AbstractBaseNode, attrs: Attrs
 
 /**
  * Some nodes have special attributes.
- * This is a list of those nodes and their special attributes
+ * This List allows to add special attributes to the node if it's not 
+ * in the schema and render them in the DOM
  */
 export const NODE_ATTRS: Record<string, (attrs: string[]) => Attrs> = {
-  video: node => defaultNodeAttrs([...node,  'autoplay', 'controls', 'loop', 'muted', 'poster', 'tabindex', 'height', 'width']),
-  audio: node => defaultNodeAttrs([...node,  'autoplay', 'controls', 'loop', 'muted', 'tabindex', 'keyref']),
+  video: node => defaultNodeAttrs([...node, 'poster']),
+  audio: node => defaultNodeAttrs([...node]),
+  image: node => defaultNodeAttrs([...node, 'alt'])
 }
 
 /**

@@ -101,7 +101,6 @@ export const NODES: Record<string, (value: JDita, parent: JDita) => any> = {
         alt: value.children[0].children[0].content,
       });
       const result = { type: 'image', attrs };
-      console.log('image result', result.type === 'image' ? JSON.stringify(result, null, 2) : '');
       return result;
     }
     return defaultTravel(value);
@@ -163,7 +162,6 @@ function travel(value: JDita, parent: JDita): any {
     result.attrs.parent = parent.nodeName;
   }
 
-  if (value.nodeName === 'image') { console.log('travel result', JSON.stringify(result, null, 2)) }
   return result;
 }
 
