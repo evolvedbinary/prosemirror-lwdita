@@ -26,6 +26,7 @@
             <p>Sorry, the audio could not be played.</p>
           </fallback>
           <media-source href="https://upload.wikimedia.org/wikipedia/commons/a/aa/1943_Nov_14_NYPhil_Bernstein.ogg" format="application/ogg"/>
+          <media-track srclang="en" href="theme-song.vtt"/>
         </audio>
       </note>
     </section>
