@@ -54,11 +54,13 @@ describe('Function createNode()', () => {
 // and test against expected node name
 describe('Function createNodesTree()', () => {
   it('creates a node tree', () => {
-    const nodeTypes = [schemaObject.nodes.p, schemaObject.nodes.li, schemaObject.nodes.ul];
+    const nodeTypes = [
+      schemaObject.nodes.p,
+      schemaObject.nodes.li,
+      schemaObject.nodes.ul
+    ];
 
     const node = createNodesTree(nodeTypes);
-
-
     const li = node.content.firstChild;
     const p = li?.content.firstChild;
 
@@ -71,8 +73,16 @@ describe('Function createNodesTree()', () => {
 // Pass a NodeType
 // and test against expected node index number
 describe('Function canCreateIndex()', () => {
-  it('returns the correct index for allowed node types', () => {
-    const knownTypes = [schemaObject.nodes.data, schemaObject.nodes.ul, schemaObject.nodes.li, schemaObject.nodes.p, schemaObject.nodes.section, schemaObject.nodes.stentry, schemaObject.nodes.strow, schemaObject.nodes.simpletable]
+  it('returns the correct index for allowed node types ul, li, p, section, stentry, strow, simpletable', () => {
+    const knownTypes = [
+      schemaObject.nodes.ul,
+      schemaObject.nodes.li,
+      schemaObject.nodes.p,
+      schemaObject.nodes.section,
+      schemaObject.nodes.stentry,
+      schemaObject.nodes.strow,
+      schemaObject.nodes.simpletable
+    ]
     knownTypes.forEach((type) => {
       const index = _test_private_commands.canCreateIndex(type);
       expect(index).to.equal(knownTypes.indexOf(type));
@@ -88,7 +98,15 @@ describe('Function canCreateIndex()', () => {
 // Pass a NodeType and test against expected Boolean
 describe('Function canCreate()', () => {
   it('returns "true" for allowed types', () => {
-    const knownTypes = [schemaObject.nodes.data, schemaObject.nodes.ul, schemaObject.nodes.li, schemaObject.nodes.p, schemaObject.nodes.section, schemaObject.nodes.stentry, schemaObject.nodes.strow, schemaObject.nodes.simpletable]
+    const knownTypes = [
+      schemaObject.nodes.ul,
+      schemaObject.nodes.li,
+      schemaObject.nodes.p,
+      schemaObject.nodes.section,
+      schemaObject.nodes.stentry,
+      schemaObject.nodes.strow,
+      schemaObject.nodes.simpletable
+    ]
     knownTypes.forEach((type) => {
       const result = _test_private_commands.canCreate(type);
       expect(result).to.be.true;

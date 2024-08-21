@@ -15,9 +15,14 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import { AbstractBaseNode, ChildTypes, DocumentNode, UnknownNodeError, getNodeClassType, nodeGroups } from '@evolvedbinary/lwdita-ast';
+import { AbstractBaseNode, ChildTypes, DocumentNode, MapNode, UnknownNodeError, getNodeClassType, nodeGroups } from '@evolvedbinary/lwdita-ast';
 import { getDomNode } from './dom';
 import { NodeSpec, Schema, SchemaSpec, Node, MarkSpec, DOMOutputSpec, Attrs } from 'prosemirror-model';
+
+
+/**
+ * Referenced schema: https://github.com/oasis-tcs/dita-lwdita/tree/spec/org.oasis.xdita/dtd
+ */
 
 /**
  * Set the root node `document` to string "doc"
@@ -30,41 +35,82 @@ export const NODE_NAMES: Record<string, string> = {
 }
 
 /**
- * Provide a map of special nodes to their corresponding DOM node
+ * Provide a map of special (media) nodes to their corresponding DOM node
  */
 export const TO_DOM: Record<string, (node: typeof AbstractBaseNode, attrs: Attrs)
   => (node: Node) => DOMOutputSpec> = {}
 
 /**
  * Some nodes have special attributes.
- * This is a list of those nodes and their special attributes
+ * This List allows to add special attributes to the node if it's not 
+ * in the schema and render them in the DOM
  */
 export const NODE_ATTRS: Record<string, (attrs: string[]) => Attrs> = {
-  video: node => defaultNodeAttrs([...node, 'controls', 'autoplay', 'loop', 'muted', 'poster']),
-  audio: node => defaultNodeAttrs([...node, 'controls', 'autoplay', 'loop', 'muted']),
+  video: node => defaultNodeAttrs([...node, 'poster', 'title']),
+  audio: node => defaultNodeAttrs([...node, 'title']),
+  image: node => defaultNodeAttrs([...node, 'alt'])
 }
 
 /**
- * A map of attributes for special nodes
+ * A map of attributes for special nodes and their
+ * corresponding attribute names in the Prosemirror DOM
+ *
+ * @privateRemarks
+ * TODO: autoplay, controls, loop, muted are boolean attributes in XDITA, but they don't require a value in HTML5.
+ * As soon as they are rendered in the DOM, browsers will render them as true, even if they have a value "false".
+ * This needs to be fixed where handling the attribute values:
+ * If attribute value === false, then prefix it with a `data-j-*` attribute.
  */
 export const NODE_ATTR_NAMES: Record<string, Record<string, string>> = {
   video: {
     _: '*',
-    autoplay: '*',
-    controls: '*',
+    autoplay: 'autoplay',
+    controls: 'controls',
+    loop: 'loop',
+    muted: 'muted',
+    tabindex: 'tabindex',
+    height: 'height',
+    width: 'width',
+    poster: 'poster',
+    parent: '*',
+    outputclass: 'class',
+  },
+  audio: {
+    _: '*',
+    autoplay: 'autoplay',
+    controls: 'controls',
+    loop: 'loop',
+    muted: 'muted',
+    tabindex: 'tabindex',
+    keyref: 'src',
+    parent: '*',
+    outputclass: 'class',
   },
   'media-source': {
-    value: 'src',
+    href: 'src',
+    format: 'type',
+  },
+  'media-track': {
+    kind: 'kind',
+    href: 'src',
+    srclang: 'srclang',
   },
   xref: {
     keyref: 'href',
+    href: 'href',
   },
   image: {
     _: '*',
     href: 'src',
-    scope: 'data-j-scope'
+    alt: 'alt',
+    width: 'width',
+    height: 'height',
+    scope: '*',
+    parent: '*',
+    outputclass: 'class',
   },
 }
+
 /**
  * Provide a map of special nodes to their corresponding Schema
  */
@@ -81,49 +127,79 @@ export const SCHEMAS: Record<string, (node: typeof AbstractBaseNode, next: (node
 
 /**
  * The LwDITA Schema. Describes parent-child relationships.
+ * content: The allowed child elements of the element
+ * groups: The content-groups, the element is allowed to be part of
  */
 export const SCHEMA_CONTENT: Record<string, [content: string, groups: string]> = {
-  alt: ['(text|ph|data)*', ''],
-  audio: ['desc? media_source* media_track*', 'simple_blocks fig_blocks list_blocks all_blocks'],
-  body: ['list_blocks* section* fn*', ''],
-  data: ['(text|data)*', 'common_inline all_inline fn_blocks simple_blocks fig_blocks list_blocks all_blocks'],
+/*
+  lwdita-ast node groups:
+  'ph': ['b', 'em', 'i', 'ph', 'strong', 'sub', 'sup', 'tt', 'u'],
+  'inline.noimage': ['text', 'b', 'em', 'i', 'ph', 'strong', 'sub', 'sup', 'tt', 'u', 'xref'],
+  'inline.noxref': ['text', 'b', 'em', 'i', 'ph', 'strong', 'sub', 'sup', 'tt', 'u', 'image'],
+  'inline': ['text', 'b', 'em', 'i', 'ph', 'strong', 'sub', 'sup', 'tt', 'u', 'image', 'xref'],
+  'simple_blocks': ['p', 'ul', 'ol', 'dl', 'pre', 'audio', 'video', 'example', 'note'],
+  'fn-blocks': ['p', 'ul', 'ol', 'dl'],
+  'all-blocks': ['p','ul','ol','dl','pre','audio','video','example','simpletable','fig','note'],
+  'list-blocks': ['p','ul', 'ol', 'dl', 'pre', 'audio', 'video', 'example', 'simpletable', 'fig', 'note'],
+  'fig-blocks': ['p', 'ul', 'ol', 'dl', 'pre', 'audio', 'video', 'example', 'simpletable'],
+  'example-blocks': ['p','ul','ol','dl','pre','audio','video','simpletable','fig','note'],
+  'fallback-blocks': ['image','alt','p','ul','ol','dl','pre','note'],
+ */
+  alt: ['(text|ph)*', 'fallback_blocks'],
+  audio: ['desc? fallback? media_source* media_track*', 'simple_blocks all_blocks list_blocks fig_blocks example_blocks'],
+  body: ['list_blocks* section* div?', ''],
   dd: ['list_blocks*', ''],
-  desc: ['common_inline*', ''],
-  dl: ['dlentry+', 'fn_blocks simple_blocks fig_blocks list_blocks all_blocks'],
+  desc: ['inline_noxref*', ''],
+  div: ['fn+', ''],
+  dl: ['dlentry+', 'simple_blocks fn_blocks all_blocks list_blocks fig_blocks example_blocks fallback_blocks'],
   dlentry: ['dt dd', ''],
-  dt: ['all_inline*', ''],
+  dt: ['inline*', ''],
   document: ['topic', ''],
-  fig: ['title? desc? (fig_blocks|image|xref)*', 'list_blocks all_blocks'],
-  fn: ['fn_blocks*', 'simple_blocks all_blocks'],
-  image: ['alt?', 'common_inline all_inline'],
+  fallback: ['fallback_blocks', ''],
+  em: ['inline_noimage*', 'ph '],
+  example: ['title? example_blocks*', 'simple_blocks all_blocks list_blocks fig_blocks'],
+  fig: ['title? desc? (fig_blocks|image|xref)*', 'all_blocks list_blocks example_blocks'],
+  fn: ['fn_blocks*', ''],
+  image: ['alt?', 'inline_noxref inline fallback_blocks'],
+  keydef: ['topicmeta?', ''],
+  keytext: ['(text|ph)*', ''],
+  li: ['list_blocks*', ''],
+  map: ['(topicmeta? (topicref|keydef)*)', ''],
   'media-source': ['', ''],
   'media-track': ['', ''],
-  li: ['list_blocks*', ''],
-  note: ['simple_blocks*', 'simple_blocks list_blocks all_blocks'],
-  ol: ['li+', 'fn_blocks simple_blocks fig_blocks list_blocks all_blocks'],
-  p: ['all_inline*', 'fn_blocks simple_blocks fig_blocks list_blocks all_blocks'],
-  ph: ['all_inline*', 'common_inline all_inline'],
-  pre: ['(text|ph|xref|data)*', 'simple_blocks fig_blocks list_blocks all_blocks'],
-  prolog: ['data*', ''],
+  metadata: ['othermeta*', ''],
+  navtitle: ['(text|ph)*', ''],
+  note: ['simple_blocks*', 'simple_blocks all_blocks list_blocks example_blocks fallback_blocks'],
+  ol: ['li+', 'simple_blocks fn_blocks all_blocks list_blocks fig_blocks example_blocks fallback_blocks'],
+  othermeta: ['', ''],
+  p: ['inline*', 'fn_blocks simple_blocks fig_blocks list_blocks all_blocks'],
+  ph: ['inline*', 'ph inline_noimage inline_noxref inline'],
+  pre: ['(text|ph|xref)*', 'simple_blocks all_blocks list_blocks fig_blocks example_blocks fallback_blocks'],
+  prolog: ['metadata*', ''],
   section: ['title? all_blocks*', ''],
-  simpletable: ['sthead? strow+', 'fig_blocks list_blocks all_blocks'],
-  shortdesc: ['all_inline*', ''],
+  simpletable: ['title? sthead? strow+', ' all_blocks list_blocks fig_blocks example_blocks'],
+  shortdesc: ['inline*', ''],
   stentry: ['simple_blocks*', ''],
   sthead: ['stentry+', ''],
+  strong: ['inline_noimage*', ''],
   strow: ['(stentry*)', ''],
-  title: ['common_inline*', ''],
+  title: ['inline_noxref*', ''],
   topic: ['title shortdesc? prolog? body?', ''],
-  ul: ['li+', 'fn_blocks simple_blocks fig_blocks list_blocks all_blocks'],
-  video: ['desc? media_source* media_track*', 'simple_blocks fig_blocks list_blocks all_blocks'],
-  xref: ['common_inline*', 'all_inline'],
+  topicmeta: ['navtitle? keytext? othermeta*', ''],
+  topicref: ['topicmeta? topicref*', ''],
+  tt: ['inline_noimage*', ''],
+  ul: ['li+', 'simple_blocks fn_blocks  all_blocks list_blocks fig_blocks example_blocks fallback_blocks'],
+  video: ['desc? fallback? video_poster? media_source* media_track*', 'simple_blocks all_blocks list_blocks fig_blocks example_blocks'],
+  'video-poster': ['', ''],
+  xref: ['inline_noxref', 'inline_noimage inline'],
 }
 
 /**
  * A map of special children for certain media nodes
  */
 export const SCHEMA_CHILDREN: Record<string, (type: ChildTypes) => string[]> = {
-  video: () => ['media-source', 'media-track', 'desc'],
-  audio: () => ['media-source', 'media-track', 'desc'],
+  video: () => ['desc', 'fallback', 'video-poster', 'media-source', 'media-track' ],
+  audio: () => ['desc', 'fallback', 'media-source', 'media-track' ],
 }
 
 /**
@@ -311,12 +387,12 @@ export function schema(): Schema {
     // the node types in this schema
     nodes: {
       text: {
-        group: 'common_inline all_inline',
+        group: 'inline inline_noimage inline_noxref',
         inline: true,
       },
       hard_break: {
         inline: true,
-        group: 'common_inline all_inline',
+        group: 'inline inline_noxref inline_noimage',
         selectable: false,
         parseDOM: [{tag: "br"}],
         toDOM() { return ["br"] }
@@ -367,6 +443,7 @@ export function schema(): Schema {
 
   // start the process of populating the schema spec using the jdita nodes from the document node
   browse(DocumentNode);
+  browse(MapNode);
 
   (spec.nodes as NodeSpec).topic.content = 'title shortdesc? prolog? body?';
   (spec.nodes as NodeSpec).doc.content = 'topic+';

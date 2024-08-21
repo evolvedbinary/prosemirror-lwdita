@@ -25,7 +25,7 @@ import { IS_MARK, defaultNodeName } from "./schema";
  * @returns object - The object with undefined attributes removed
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function deleteUndefined(object?: any) {
+export function deleteUndefined(object?: any) {
   if (object) {
     for (const key in object) {
       if (typeof object[key] === 'undefined') {
@@ -37,82 +37,58 @@ function deleteUndefined(object?: any) {
 }
 
 /**
- * A map of special nodes that need to be handled differently.
+ * A map of JDita nodes that require a customized transformation into ProseMirror nodes,
+ * e.g. because their content model can't be applied directly as valid HTML:
+ * `audio`, `video`, `image`, `text`.
+ *
  * Instead of using the defaultTravel function, we use the special node function
  * The following 4 nodes (audio, video, image, text) are
  * treated in a customized way instead of applying the defaultTravel() function:
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const NODES: Record<string, (value: JDita, parent: JDita) => any> = {
-  audio: (value) => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const attrs: any = deleteUndefined({ ...value.attributes });
-    const content: JDita[] = [];
-    if (value.children) {
-      value.children.forEach(child => {
-        if (child.nodeName === 'media-autoplay') {
-          attrs.autoplay = child.attributes?.value;
-          return;
-        }
-        if (child.nodeName === 'media-controls') {
-          attrs.controls = child.attributes?.value;
-          return;
-        }
-        if (child.nodeName === 'media-loop') {
-          attrs.loop = child.attributes?.value;
-          return;
-        }
-        if (child.nodeName === 'media-muted') {
-          attrs.muted = child.attributes?.value;
-          return;
-        }
-        if (['desc', 'media-track', 'media-source'].indexOf(child.nodeName) > -1) {
-          content.push(child);
-          return;
-        }
-      });
-    }
-    const result = { type: value.nodeName, attrs, content: content.map(child => travel(child, value)) };
-
-    if (attrs && Object.keys(attrs).length) {
-      result.attrs = attrs;
-    }
-    return result;
-  },
   video: (value) => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const attrs: any = deleteUndefined({ ...value.attributes });
+    // Create a new object with title and poster attributes, if they exist:
+    // the desc and the video-poster children will be assigned as new attributes to the video element
+    // undefined attributes will be removed
+    const attrs = deleteUndefined({
+      ...value.attributes,
+      title: value.children?.find(child => child.nodeName === 'desc')?.children?.[0]?.content,
+      poster: value.children?.find(child => child.nodeName === 'video-poster')?.attributes?.href,
+    });
+
+    // Create a new array with the fallback, media-source and media-track children
+    // that will be assigned as the content of the video element
     const content: JDita[] = [];
-    if (value.children) {
-      value.children.forEach(child => {
-        if (child.nodeName === 'media-autoplay') {
-          attrs.autoplay = child.attributes?.value;
-          return;
-        }
-        if (child.nodeName === 'media-controls') {
-          attrs.controls = child.attributes?.value;
-          return;
-        }
-        if (child.nodeName === 'media-loop') {
-          attrs.loop = child.attributes?.value;
-          return;
-        }
-        if (child.nodeName === 'media-muted') {
-          attrs.muted = child.attributes?.value;
-          return;
-        }
-        if (child.nodeName === 'video-poster') {
-          attrs.poster = child.attributes?.value;
-          return;
-        }
-        if (['desc', 'media-track', 'media-source'].indexOf(child.nodeName) > -1) {
-          content.push(child);
-          return;
-        }
-      });
-    }
-    const result = { type: value.nodeName, attrs, content: content.map(child => travel(child, value)) };
-    return result;
+    value.children?.forEach(child => {
+      if (['fallback', 'media-source', 'media-track'].includes(child.nodeName)) {
+        content.push(child);
+      }
+    });
+
+    // Return the video object with the new attributes and content
+    return { type: value.nodeName, attrs, content: content?.map(child => travel(child, value)) };
+  },
+  audio: (value) => {
+    // Create a new object with a title attribute, if it exists:
+    // the `desc` child will be assigned as a new attribute to the audio element,
+    // undefined attributes will be removed
+    const attrs = deleteUndefined({
+      ...value.attributes,
+      title: value.children?.find(child => child.nodeName === 'desc')?.children?.[0]?.content,
+    });
+
+    // Create a new array with the fallback, media-source and media-track children
+    // that will be assigned as the content of the audio element
+    const content: JDita[] = [];
+    value.children?.forEach(child => {
+      if (['fallback', 'media-source', 'media-track'].includes(child.nodeName)) {
+        content.push(child);
+      }
+    });
+
+    // Return the audio object with the new attributes and content
+    return { type: value.nodeName, attrs, content: content?.map(child => travel(child, value)) };
   },
   image: (value) => {
     if (value.children
@@ -120,7 +96,10 @@ export const NODES: Record<string, (value: JDita, parent: JDita) => any> = {
       && value.children[0]?.children
       && value.children[0].children[0].nodeName == 'text'
     ) {
-      const attrs = deleteUndefined({ ...value.attributes, alt: value.children[0].children[0].content });
+      const attrs = deleteUndefined({
+        ...value.attributes,
+        alt: value.children[0].children[0].content,
+      });
       const result = { type: 'image', attrs };
       return result;
     }
@@ -179,9 +158,10 @@ function travel(value: JDita, parent: JDita): any {
   // otherwise use the default travel function
   const result = (NODES[value.nodeName] || defaultTravel)(value, parent);
   // if the node is not a document and has attributes, set the parent attribute
-  if (value.nodeName !== 'doc' && result.attrs) {
+  if (value.nodeName !== 'doc' && result && result.attrs) {
     result.attrs.parent = parent.nodeName;
   }
+
   return result;
 }
 
@@ -266,238 +246,6 @@ export function document(jdita: JDita): Record<string, any> {
   }
   throw new Error('jdita must be a document');
 }
-
-/**
- * Replace underscores with hyphens in node names
- *
- * @param type - The string to be modified
- * @returns The sanitized node name with hyphens
- */
-function getJditaNodeName(type: string): string {
-  return type.replace(/_/g, '-');
-}
-
-/**
-* Recursively traverse through all items in the Prosemirror DOM
-* and create a JDITA object
-*
-* @param prosemirrorDocument - The Prosemirror DOM object
-* @returns The JDITA object
-*/
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function unTravel(prosemirrorDocument: Record<string, any>): JDita {
-
-  // Prosemirror content will become JDITA children
-  const children = prosemirrorDocument.content?.map(unTravel);
-
-  // attrs will become attributes
-  const attributes = prosemirrorDocument.attrs || {};
-
-  // get the node name
-  const nodeName = getJditaNodeName(prosemirrorDocument.type);
-
-  if (nodeName === 'video' || nodeName === 'audio' || nodeName === 'image') {
-    return mediaNodeUntravel(nodeName, attributes, children)
-  }
-
-  // handle the attributes
-  delete attributes['parent'];
-  for (const key in attributes) {
-    if (!attributes[key]) {
-      delete attributes[key];
-    }
-  }
-
-  if(nodeName === 'hard-break') {
-    return {
-      nodeName: 'text',
-      content: '\n'
-    }
-  }
-
-  if (nodeName === 'text') {
-    // check for marks and wrap the content in the mark node
-
-    if (prosemirrorDocument.marks) {
-      const mark = prosemirrorDocument.marks[0].type;
-      return {
-        nodeName: mark,
-        attributes: attributes,
-        children: [
-          {
-            nodeName: "text",
-            content: prosemirrorDocument.text
-          }
-        ]
-      }
-    }
-    return {
-      nodeName,
-      'content': prosemirrorDocument.text
-    }
-  }
-
-  const nodeObject: JDita = {
-    nodeName,
-    attributes,
-    children
-  }
-
-  return nodeObject;
-}
-
-/**
- * Special untravel function for media nodes.
- * Reverses the transformation done by the NODES[value.nodeName] in the travel function
- * 
- * @param nodeName - string node name
- * @param attributes -  node attributes
- * @param children - JDita[] node children
- * @param prosemirrorDocument -  prosemirror document 
- * @returns JDita node
- */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function mediaNodeUntravel(nodeName: string, attributes: Record<string, string>, children: JDita[]): JDita {
-  if (nodeName === 'video') {
-    // we must populate the video node with the necessary attributes and children
-    const allAttributes = { props: attributes.props, dir: attributes.dir, "xml:lang": attributes['xml:lang'], translate: attributes.translate, id: attributes.id, conref: attributes.conref, outputclass: attributes.outputclass, class: attributes.class, width: attributes.width, height: attributes.height }
-
-    const allChildren: JDita[] = [];
-    //children[0] resembles the video desc this value does not change
-    allChildren.push(children[0]) // video desc node
-
-    if (attributes.poster !== undefined) {
-      const poster: JDita = createMediaChild('video-poster', attributes.poster);
-      allChildren.push(poster);
-    }
-
-    if (attributes.controls !== undefined) {
-      const controls: JDita = createMediaChild('media-controls', attributes.controls);
-      allChildren.push(controls);
-    }
-
-    if (attributes.autoplay !== undefined) {
-      const autoplay: JDita = createMediaChild('media-autoplay', attributes.autoplay);
-      allChildren.push(autoplay);
-    }
-
-    if (attributes.loop !== undefined) {
-      const loop: JDita = createMediaChild('media-loop', attributes.loop);
-      allChildren.push(loop);
-    }
-
-    if (attributes.muted !== undefined) {
-      const muted: JDita = createMediaChild('media-muted', attributes.muted);
-      allChildren.push(muted);
-    }
-
-    allChildren.push(children[1])
-
-    // return the created video node
-    return {
-      nodeName,
-      'attributes': allAttributes,
-      'children': allChildren
-    }
-  }
-
-  if (nodeName === 'audio') {
-    const allAudioAttributes = { class: attributes.class, conref: attributes.conref, "xml:lang": attributes['xml:lang'], dir: attributes.dir, id: attributes.id, outputclass: attributes.outputclass, props: attributes.props, translate: attributes.translate }
-
-    const allAudioChildren: JDita[] = [];
-    allAudioChildren.push(children[0])
-
-    if (attributes.controls !== undefined) {
-      const controls: JDita = createMediaChild('media-controls', attributes.controls);
-      allAudioChildren.push(controls);
-    }
-
-    if (attributes.autoplay !== undefined) {
-      const autoplay: JDita = createMediaChild('media-autoplay', attributes.autoplay);
-      allAudioChildren.push(autoplay);
-    }
-
-    if (attributes.loop !== undefined) {
-      const loop: JDita = createMediaChild('media-loop', attributes.loop);
-      allAudioChildren.push(loop);
-    }
-
-    if (attributes.muted !== undefined) {
-      const muted: JDita = createMediaChild('media-muted', attributes.muted);
-      allAudioChildren.push(muted);
-    }
-
-    if (attributes.source !== undefined) {
-      const source: JDita = createMediaChild('media-source', attributes.source);
-      allAudioChildren.push(source);
-    }
-
-    allAudioChildren.push(children[1])
-
-    return {
-      nodeName,
-      'attributes': allAudioAttributes,
-      'children': allAudioChildren
-    }
-  }
-
-  if (nodeName === 'image') {
-    const allImageAttributes = { props: attributes.props, dir: attributes.dir, "xml:lang": attributes['xml:lang'], translate: attributes.translate, keyref: attributes.keyref, href: attributes.href, format: attributes.format, scope: attributes.scope, outputclass: attributes.outputclass, class: attributes.class, width: attributes.width, height: attributes.height }
-
-    const allImageChildren: JDita[] = [];
-    allImageChildren.push({
-      nodeName: 'alt',
-      // all of the attributes will be undefined as the alt node only contains text
-      attributes: {
-        dir: undefined,
-        "xml:lang": undefined,
-        translate: undefined,
-        props: undefined,
-        keyref: undefined,
-        outputclass: undefined,
-        class: undefined,
-      },
-      children: [
-        {
-          nodeName: 'text',
-          content: attributes.alt
-        }
-      ]
-    })
-
-    return {
-      nodeName,
-      'attributes': allImageAttributes,
-      'children': allImageChildren
-    }
-  }
-  throw new Error('Invalid node name');
-}
-
-/**
- * Creates children for media nodes
- * Children like media-autoplay, media-controls, media-loop, media-muted, video-poster, media-source share all the same structure
- * This is a helper function to create these children
- * 
- * @param nodeName - string 
- * @param value - string
- * @returns media child node
- */
-function createMediaChild(nodeName: string,value: string): JDita {
-  return {
-    nodeName: nodeName,
-    attributes: {
-      dir: undefined,
-      "xml:lang": undefined,
-      translate: undefined,
-      name: undefined,
-      value: value,
-      outputclass: undefined,
-      class: undefined,
-    },
-    children: undefined
-  };
-} 
 
 //Escape hatch for Unit Testing due to a lack of “package-private” accessibility scope in TypeScript
 export const _test_private_document = {

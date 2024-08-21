@@ -4,38 +4,38 @@
   <title>Test File: Media Elements in XDita</title>
   <body>
 
-    <section id="demo">
+    <section outputclass="demo">
       <title>
         Video Element
       </title>
       <fig>
-        <video outputclass="videoElement" width="640" height="360" autoplay="false" muted="false">
-          <desc outputclass="videoElementDescriptor">Xiaomi Yeelight YLDP06YL Smart Light Bulb White</desc>
-          <video-poster value="https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/1954_Kool-Aid_Commercial._Debut_of_Pitcher_Man.webm/120px--1954_Kool-Aid_Commercial._Debut_of_Pitcher_Man.webm.jpg" />
-          <media-source value="https://commons.wikimedia.org/wiki/File:1954_Kool-Aid_Commercial._Debut_of_Pitcher_Man.webm" />
+        <video outputclass="videoElement" width="320" height="240" controls="true" tabindex="1">
+          <desc>Kool-Aid Commercial, Debut of Pitcher Man</desc>
+          <video-poster href="https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/1954_Kool-Aid_Commercial._Debut_of_Pitcher_Man.webm/120px--1954_Kool-Aid_Commercial._Debut_of_Pitcher_Man.webm.jpg" />
+          <media-source href="https://upload.wikimedia.org/wikipedia/commons/7/74/1954_Kool-Aid_Commercial._Debut_of_Pitcher_Man.webm" />
         </video>
-        </fig>
+      </fig>
     </section>
 
     <section>
       <title>Audio Element</title>
-      <fig>
-        <audio outputclass="audioElement">
-          <desc outputclass="audioElementDescriptor">An Audio Track</desc>
-          <media-controls value="true"/>
-          <media-autoplay value="false"/>
-          <media-loop value="false"/>
-          <media-muted value="false"/>
-          <media-source value="https://commons.wikimedia.org/wiki/File:1943_Nov_14_NYPhil_Bernstein.ogg" />
+      <note type="note">
+        <audio outputclass="audioElement" controls="true" tabindex="1">
+          <desc>An Audio Track</desc>
+          <fallback>
+            <p>Sorry, the audio could not be played.</p>
+          </fallback>
+          <media-source href="https://upload.wikimedia.org/wikipedia/commons/a/aa/1943_Nov_14_NYPhil_Bernstein.ogg" format="application/ogg"/>
+          <media-track srclang="en" href="theme-song.vtt"/>
         </audio>
-      </fig>
+      </note>
     </section>
 
     <section>
       <title>An Image</title>
       <fig>
-        <image outputclass="imageElement" height="300px" width="300px" href="https://placekitten.com/300/300">
-          <alt>A kitten</alt>
+        <image outputclass="imageElement" height="300" width="300" href="https://placehold.co/300x300" scope="external">
+          <alt>A Placeholder</alt>
         </image>
       </fig>
     </section>

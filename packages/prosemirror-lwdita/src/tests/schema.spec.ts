@@ -42,8 +42,8 @@ describe('Function getChildren()', () => {
     // DD node children are %list-blocks
     const type = DdNode.childTypes;
     const children = _test_private_schema.getChildren(type);
-    // %list-blocks are p  ul  ol  dl  pre  audio  video  simpletable  fig  note  data
-    assert.deepEqual(children, ['p', 'ul', 'ol', 'dl', 'pre', 'audio', 'video', 'simpletable', 'fig', 'note', 'data']);
+    // %list-blocks are 'p','ul', 'ol', 'dl', 'pre', 'audio', 'video', 'example', 'simpletable', 'fig', 'note'
+    assert.deepEqual(children, ['p','ul', 'ol', 'dl', 'pre', 'audio', 'video', 'example', 'simpletable', 'fig', 'note']);
   });
 });
 
@@ -108,6 +108,7 @@ describe('Function schema()', () => {
   let result: Schema;
   before(() => {
     result = schema();
+    //console.log('schema= ', result)
   });
 
   it('is the correct instance of class "Schema"', () => {
@@ -118,30 +119,36 @@ describe('Function schema()', () => {
     expect(result).to.have.property('marks');
   });
 
-
   it('contains "nodes" property', () => {
     expect(result).to.have.property('nodes');
   });
 
   it('contains all JDita nodes', () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const nodes = result.spec.nodes as any; 
+    const nodes = result.spec.nodes as any;
     // nodeNames are strings in the content array
     const nodeNames = nodes.content.filter((node: NodeSpec) => typeof node === 'string')
+
     const expectedNodes = [
-      'text',         'data',        'alt',
-      'image',        'hard_break',  
-      'xref',         'ph',          'title',
-      'shortdesc',    'prolog',      'p',
-      'ol',           'dt',          'pre',
-      'media_source', 'media_track', 'desc',
-      'audio',        'video',       'fn',
-      'note',         'stentry',     'sthead',
-      'strow',        'simpletable', 'fig',
-      'dd',           'dlentry',     'dl',
-      'li',           'ul',          'section',
-      'body',         'topic',       'doc',
+      'alt',          'audio',       'body',
+      'dd',           'desc',        'div',
+      'dl',           'dlentry',     'doc',
+      'dt',           'em',          'example',
+      'fallback',     'fig',         'fn',
+      'hard_break',   'image',       'keydef',
+      'keytext',      'li',          'map',
+      'media_source', 'media_track', 'metadata',
+      'navtitle',     'note',        'ol',
+      'othermeta',    'p',           'ph',
+      'pre',          'prolog',      'section',
+      'shortdesc',    'simpletable', 'stentry',
+      'sthead',       'strong',      'strow',
+      'text',         'title',       'topic',
+      'topicmeta',    'topicref',    'tt',
+      'ul',           'video',       'video_poster',
+      'xref'
     ];
+
     expect(nodeNames).to.have.members(expectedNodes);
   });
 
@@ -160,7 +167,7 @@ describe('Function schema()', () => {
     expect(nodesObject['dd'].content).to.equal('list_blocks*');
 
     // title node
-    expect(nodesObject['title'].content).to.equal('common_inline*');
+    expect(nodesObject['title'].content).to.equal('inline_noxref*');
   });
 
   it('returns a node spec with a schema-compliant inline property', () => {
@@ -195,15 +202,15 @@ describe('Function schema()', () => {
     // topic node
     expect(nodesObject['topic'].attrs).to.have.keys(
       'id',
-      'domains',
+      'xmlns:ditaarch',
+      'ditaarch:DITAArchVersion',
+      'specializations',
       'outputclass',
       'translate',
       'dir',
       'parent',
       'class',
-      'xml:lang',
-      'xmlns:ditaarch',
-      'ditaarch:DITAArchVersion'
+      'xml:lang'
     );
 
     // body node

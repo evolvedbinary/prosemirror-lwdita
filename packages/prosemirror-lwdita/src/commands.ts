@@ -36,7 +36,6 @@ import { Command, EditorState, TextSelection, Transaction } from 'prosemirror-st
 export function createNode(type: NodeType, args: Record<string, any> = {}): Node {
   switch (type.name) {
     case 'p': return type.createAndFill() as Node;
-    case 'data': return type.createAndFill({}, type.schema.text('text')) as Node;
     case 'simpletable': return type.createAndFill({}, createNode(type.schema.nodes['strow'])) as Node;
     case 'li': return type.createAndFill({}, createNode(type.schema.nodes['p'])) as Node;
     case 'stentry': return type.createAndFill({}, createNode(type.schema.nodes['p'])) as Node;
@@ -44,9 +43,8 @@ export function createNode(type: NodeType, args: Record<string, any> = {}): Node
     case 'ol': return type.createAndFill({}, createNode(type.schema.nodes['li'])) as Node;
     case 'section': return type.createAndFill({}, createNode(type.schema.nodes['ul'])) as Node;
     case 'strow': return type.createAndFill({}, createNode(type.schema.nodes['stentry'])) as Node;
-    case 'image': return type.createAndFill({ href: args.src, height: args.height, width: args.width, scope: args.scope }, createNode(type.schema.nodes['alt'], {content: args.alt})) as Node;
+    case 'image': return type.createAndFill({ href: args.src, height: args.height, width: args.width, scope: args.scope, alt: args.alt }) as Node;
     case 'fig': return type.createAndFill({}, createNode(type.schema.nodes['image'], args)) as Node;
-    case 'alt': return type.createAndFill({}, type.schema.text(`${args.content || " "}`)) as Node;
   }
   throw new Error('unkown node type: ' + type.name);
 }
@@ -442,9 +440,8 @@ export function insertImage(type: NodeType): Command {
  * @returns node index from the list of nodes
  */
 function canCreateIndex(type: NodeType) {
-  return ['data', 'ul', 'li', 'p', 'section', 'stentry', 'strow', 'simpletable'].indexOf(type.name);
+  return ['ul', 'li', 'p', 'section', 'stentry', 'strow', 'simpletable'].indexOf(type.name);
 }
-
 
 /**
  * Check if the node can be created or not.

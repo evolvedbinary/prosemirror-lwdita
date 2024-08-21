@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE topic PUBLIC "-//OASIS//DTD LIGHTWEIGHT DITA Topic//EN" "lw-topic.dtd">
+<topic id="program">
+  <title>Image Test File</title>
+  <body>
+    <section>
+      <title>An Image</title>
+      <fig>
+        <image outputclass="imageElement" height="300" width="300" href="https://placehold.co/300x300" scope="external">
+          <alt>A Placeholder</alt>
+        </image>
+      </fig>
+    </section>
+  </body>
+</topic>

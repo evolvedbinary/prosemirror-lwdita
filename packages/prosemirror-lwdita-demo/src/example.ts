@@ -70,6 +70,8 @@ jsonDocLoader.then(jsonDoc => {
   a.href = '/';
   a.addEventListener('click', () => location.reload());
   const el: HTMLDivElement | null = document.querySelector("#editor");
+  localStorage.clear();
+
   if (el) {
     el.innerHTML = '';
     el.style.flexDirection = 'column';

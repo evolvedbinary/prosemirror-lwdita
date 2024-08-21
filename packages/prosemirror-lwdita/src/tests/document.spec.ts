@@ -17,7 +17,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import ChaiPromised from 'chai-as-promised';
 import { use, expect, assert } from 'chai';
-import { document, NODES, _test_private_document, unTravel } from '../document';
+import { document, NODES, _test_private_document } from '../document';
+import { unTravel } from '../untravel-document';
 import {
   JDITA_OBJECT,
   TRANSFORMED_JDITA_OBJECT,
@@ -29,8 +30,12 @@ import {
   videoXdita,
   complexXdita,
   shortXdita,
-  bXdita
+  bXdita,
+  expectedVideoObject,
+  parentVideoObject,
+  originalVideoObject
 } from './test-utils';
+
 import { xditaToJdita } from '@evolvedbinary/lwdita-xdita'
 import { JDita } from '@evolvedbinary/lwdita-ast';
 
@@ -130,14 +135,12 @@ describe('Function unTravel()', () => {
       const result = unTravel(transformedJdita);
 
       //compare the original JDita with the result
-      expect(result).to.deep.equal(originalJdita);
+      expect(JSON.stringify(result)).to.deep.equal(JSON.stringify(originalJdita));
     });
 
-    it('handles a complex JDita document', async () => {
-
+    it('handles a fully-featured JDita document', async () => {
       // original JDita to compare against
       const originalJdita = await xditaToJdita(complexXdita);
-
       // process the JDita document and do the round trip
       //clean the attributes from the top node to compare
       originalJdita.attributes = {};
@@ -145,27 +148,8 @@ describe('Function unTravel()', () => {
       const transformedJdita = document(originalJdita);
       // untransform the transformed JDita document
       const result = unTravel(transformedJdita);
-
       //compare the original JDita with the result
-      expect(result).to.deep.equal(originalJdita);
-
-    });
-
-    it('handles a JDita document containing a video element', async () => {
-
-      // original JDita to compare against
-      const originalJdita = await xditaToJdita(videoXdita);
-
-      // process the JDita document and do the round trip
-      // clean the attributes from the top node to compare
-      originalJdita.attributes = {};
-      // transform the JDita document
-      const transformedJdita = document(originalJdita);
-      // untransform the transformed JDita document
-      const result = unTravel(transformedJdita);
-
-      //compare the original JDita with the result
-      expect(result).to.deep.equal(originalJdita);
+      expect(JSON.stringify(result)).to.deep.equal(JSON.stringify(originalJdita));
     });
 
     it('handles a JDita document containing an b mark', async () => {
@@ -185,11 +169,26 @@ describe('Function unTravel()', () => {
       expect(result).to.deep.equal(originalJdita);
     });
 
+    it('handles a JDita document containing a video element', async () => {
+
+      // original JDita to compare against
+      const originalJdita = await xditaToJdita(videoXdita);
+
+      // process the JDita document and do the round trip
+      // clean the attributes from the top node to compare
+      originalJdita.attributes = {};
+      // transform the JDita document
+      const transformedJdita = document(originalJdita);
+      // untransform the transformed JDita document
+      const result = unTravel(transformedJdita);
+      //compare the original JDita with the result
+      expect(JSON.stringify(result)).to.deep.equal(JSON.stringify(originalJdita));
+    });
+
     it('handles a JDita document containing an audio element', async () => {
 
       // original JDita to compare against
       const originalJdita = await xditaToJdita(audioXdita);
-
       // process the JDita document and do the round trip
       //clean the attributes from the top node to compare
       originalJdita.attributes = {};
@@ -197,9 +196,8 @@ describe('Function unTravel()', () => {
       const transformedJdita = document(originalJdita);
       // untransform the transformed JDita document
       const result = unTravel(transformedJdita);
-
       //compare the original JDita with the result
-      expect(result).to.deep.equal(originalJdita);
+      expect(JSON.stringify(result)).to.deep.equal(JSON.stringify(originalJdita));
     });
 
     it('handles a JDita document containing an image', async () => {
@@ -214,9 +212,8 @@ describe('Function unTravel()', () => {
       const transformedJdita = document(originalJdita);
       // untransform the transformed JDita document
       const result = unTravel(transformedJdita);
-
       //compare the original JDita with the result
-      expect(result).to.deep.equal(originalJdita);
+      expect(JSON.stringify(result)).to.deep.equal(JSON.stringify(originalJdita));
     });
   });
 
@@ -227,9 +224,9 @@ describe('Const NODES handles', () => {
 
   describe('function video()', () => {
     it('returns a video node', () => {
-      value = JSON.parse('{"nodeName":"video","attributes":{"width":"640","height":"360"},"children":[{"nodeName":"desc","attributes":{},"children":[{"nodeName":"text","content":"Your browser does not support the video tag."}]}]}');
-      parent = JSON.parse('{"nodeName":"body","attributes":{},"children":[{"nodeName":"p","attributes":{"parent":"body"},"children":[{"nodeName":"text","content":"Paragraph"}]},{"nodeName":"audio","attributes":{}},{"nodeName":"video","attributes":{"width":"640","height":"360"},"children":[{"nodeName":"desc","attributes":{},"children":[{"nodeName":"text","content":"Your browser does not support the video tag."}]}]},{"nodeName":"p","attributes":{},"children":[{"nodeName":"image","attributes":{}}]}]}');
-      expected = JSON.parse('{"type":"video","attrs":{"width":"640","height":"360"},"content":[{"type":"desc","attrs":{"parent":"video"},"content":[{"type":"text","text":"Your browser does not support the video tag.","attrs":{"parent":"desc"}}]}]}');
+      value = JSON.parse(originalVideoObject);
+      parent = JSON.parse(parentVideoObject);
+      expected = JSON.parse(expectedVideoObject);
       result = NODES.video(value, parent);
       assert.deepEqual(result, expected);
     });
