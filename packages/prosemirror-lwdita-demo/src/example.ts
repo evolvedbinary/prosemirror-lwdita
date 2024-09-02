@@ -9,16 +9,25 @@ import { history } from "prosemirror-history";
 import { doubleClickImagePlugin } from '@evolvedbinary/prosemirror-lwdita'
 import { xditaToJdita } from "@evolvedbinary/lwdita-xdita";
 
+const clientId = 'Iv23li0Pvl3E4crXIBQ0';
+
 const schemaObject = schema();
 
 
 const urlParams = new URLSearchParams(window.location.search);
 
-const urlValue = urlParams.get('url');
+const urlValue = `https://raw.githubusercontent.com/oasis-tcs/dita-lwdita/spec/org.oasis.xdita/samples/xdita/intro-product.dita`
 
+export const githubAppCode = urlParams.get('code');
 
 // the url should be 
 //http://localhost:1234/?url=https://raw.githubusercontent.com/oasis-tcs/dita-lwdita/spec/org.oasis.xdita/samples/xdita/intro-product.dita
+
+//https://github.com/apps/petal-demo/installations/select_target?state=localhost%3A1234
+if(!githubAppCode) {
+  window.open(`https://github.com/login/oauth/authorize?client_id=Iv23li0Pvl3E4crXIBQ0`, '_self');
+}
+
 
 if(urlValue) {
   console.log(urlValue); 

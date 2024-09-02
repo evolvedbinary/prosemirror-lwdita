@@ -21,6 +21,7 @@ import { InputContainer } from "@evolvedbinary/prosemirror-lwdita";
 import { unTravel } from "@evolvedbinary/prosemirror-lwdita";
 import { JditaSerializer } from "@evolvedbinary/lwdita-xdita";
 import { InMemoryTextSimpleOutputStreamCollector } from "@evolvedbinary/lwdita-xdita/dist/stream";
+import { githubAppCode } from "./example";
 
 /**
  * Open file selection dialog and select and file to insert into the local storage.
@@ -147,6 +148,17 @@ function saveFile(input: InputContainer): Command {
       const data = new Blob([file], { type: 'text/plain' });
       const url = window.URL.createObjectURL(data);
       const link = document.getElementById('saveFile');
+
+      fetch('http://localhost:3000/github',{
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          document: documentNode,
+          code: githubAppCode
+        })
+      })
       if (link) {
         link.setAttribute('href', url);
       } else {
