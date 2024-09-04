@@ -179,6 +179,10 @@ module.exports = {
 
           this.context.stdout.write(`Released version: ${this.version} OK!\n`);
         }
+
+        async catch(error) {
+          throw error;
+        }
       }
   
       return {
