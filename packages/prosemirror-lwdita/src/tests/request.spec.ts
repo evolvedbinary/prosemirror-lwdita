@@ -70,3 +70,6 @@ it('returns the URL parameter values', () => {
     expect(() => getParameterValues(invalidUrl)).to.throw();
   });
 })
+
+// Process the request
+// TODO: check if the request was successful
