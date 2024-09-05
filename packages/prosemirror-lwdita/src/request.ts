@@ -75,3 +75,39 @@ export function getParameterValues(url: string): { key: string, value: string }[
     throw new Error('Invalid parameters');
   }
 }
+
+/**
+ * Process the URL and redirect to GitHub OAuth
+ * or show notifications if the URL is invalid
+ */
+export function processRequest(): void {
+  // Check if the window object is defined (i.e. it is not in Mocha tests!)
+  if (typeof window !== 'undefined') {
+    const currentUrl = window.location.href;
+    //console.log('currentUrl', currentUrl);
+
+    try {
+      const parameters = getParameterValues(currentUrl);
+      // TODO: Process the parameters for redirecting to GitHub OAuth
+      console.log('parameters', parameters);
+      notyf.success('Success! You will be redirected to GitHub OAuth');
+    } catch (error) {
+
+      if (error instanceof Error) {
+        if (error.message === 'Missing values for parameters') {
+          notyf.error('Your request is invalid. Please check if you have missing values for parameters');
+        } else if (error.message === 'Invalid parameters') {
+          // Redirect to Petal website
+          // window.location.href = 'http://localhost:1234/';
+          notyf.error('Your request is invalid. You are being redirected to http://localhost:1234/');
+        }
+      } else {
+        console.error(error);
+      }
+    }
+  } else {
+    console.log('Window is not defined');
+  }
+}
+
+processRequest();
