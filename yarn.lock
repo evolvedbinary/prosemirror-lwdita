@@ -416,6 +416,7 @@ __metadata:
     eslint-plugin-tsdoc: "npm:^0.3.0"
     mocha: "npm:^10.6.0"
     nodemon: "npm:^3.1.4"
+    notyf: "npm:^3.10.0"
     nyc: "npm:^17.0.0"
     prosemirror-commands: "npm:^1.5.2"
     prosemirror-history: "npm:^1.4.1"
@@ -5930,6 +5931,13 @@ __metadata:
   version: 3.0.0
   resolution: "normalize-path@npm:3.0.0"
   checksum: 10c0/e008c8142bcc335b5e38cf0d63cfd39d6cf2d97480af9abdbe9a439221fd4d749763bab492a8ee708ce7a194bb00c9da6d0a115018672310850489137b3da046
+  languageName: node
+  linkType: hard
+
+"notyf@npm:^3.10.0":
+  version: 3.10.0
+  resolution: "notyf@npm:3.10.0"
+  checksum: 10c0/949e767f84f409f6b6e00026a82268afebf29385bcbd711491ca9a11a30e8545cf186253740ece9b89ce066bcb4ac79ab7b5170a7d56c0013f1ed7501788c313
   languageName: node
   linkType: hard
 
