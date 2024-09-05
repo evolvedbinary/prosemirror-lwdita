@@ -16,13 +16,57 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 /**
- * Checks if the URL has any parameters or not and returns a boolean
- * @param url - URL string
- * @returns Boolean
+ * List of valid URL parameters
+ * ghrepo = GitHub repository,
+ * source = GitHub resource,
+ * referer = Referer of the request
  */
-export const hasParameters = (url: string): boolean => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [path, queryString] = url.split('?');
-  return !!queryString;
-};
+const validParameters = ['ghrepo', 'source', 'referer'];
 
+/**
+ * Parses the URL and checks if the URL has all the expected parameters
+ * `ghrepo`, `source`, and `referer`
+ * Will return a string with the parsing result
+ *
+ * @param url - URL string
+ * @returns String with parsing result
+ */
+export function hasValidParameters(url: string): string {
+  const parsedUrl = new URL(url);
+  if (parsedUrl.search !== '') {
+    for (const parameter of validParameters) {
+      // Some of the expected parameters are missing
+      if (!parsedUrl.searchParams.has(parameter)) {
+        return 'invalidParams';
+      }
+    }
+    // Every expected parameter has been found
+    return 'validParams';
+  }
+  // Will be the case when requsting the the Petal website link
+  return 'noParams';
+}
+
+/**
+ * Retrieves the values of the valid URL parameters
+ * `ghrepo`, `source`, and `referer`.
+ * Will throw an error if the URL has missing values or invalid parameters
+ *
+ * @param url - URL string
+ * @returns Array with the URL parameter values
+ */
+export function getParameterValues(url: string): { key: string, value: string }[] {
+  if (hasValidParameters(url) === 'validParams') {
+    const parsedUrl = new URL(url);
+    const parameters = validParameters.map((key) => ({
+      key,
+      value: parsedUrl.searchParams.get(key)!,
+    }));
+    if (parameters.some(({ value }) => value === null)) {
+      throw new Error('Missing values for parameters');
+    }
+    return parameters;
+  } else {
+    throw new Error('Invalid parameters');
+  }
+}
