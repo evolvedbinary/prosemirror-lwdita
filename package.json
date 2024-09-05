@@ -42,7 +42,8 @@
   },
   "workspaces": [
     "packages/prosemirror-lwdita",
-    "packages/prosemirror-lwdita-demo"
+    "packages/prosemirror-lwdita-demo",
+    "packages/prosemirror-lwdita-backend"
   ],
   "devDependencies": {
     "@tsconfig/recommended": "^1.0.7",
