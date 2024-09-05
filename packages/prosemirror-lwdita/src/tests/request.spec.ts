@@ -15,25 +15,58 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import { hasParameters } from '../request';
+import { hasValidParameters, getParameterValues } from '../request';
 import ChaiPromised from 'chai-as-promised';
 import { use, expect } from 'chai';
 
 use(ChaiPromised);
 
-let urlWithoutParameters: string, urlWithParameters : string;
+let validUrl: string, invalidUrl: string;
 
-// check if the URL has parameters
-describe('Function hasParameters()', () => {
-  urlWithoutParameters = 'https://example.com/';
-  urlWithParameters = 'https://example.com/?ghrepo=repo1&source=source1&referer=referer1';
+// Parse the URL and check for expected parameters
 
-  it('returns false if the URL has no parameters', () => {
-    expect(hasParameters(urlWithoutParameters)).to.equal(false);
+
+// check all the URL parameter values
+describe('Function hasValidParameters()', () => {
+  it('returns String "validParams" if the URL has all the expected parameters', () => {
+    validUrl = 'https://example.com/?ghrepo=repo1&source=source1&referer=referer1';
+    expect(hasValidParameters(validUrl)).to.equal('validParams');
   });
 
-  it('returns true if the URL has parameters', () => {
-    expect(hasParameters(urlWithParameters)).to.equal(true);
+  it('returns string "invalidParams" if the URL has not all the expected parameters', () => {
+    invalidUrl = 'https://example.com/?ghrepo=repo1&source=source1';
+    expect(hasValidParameters(invalidUrl)).to.equal('invalidParams');
+  });
+
+  it('returns string "noParams" if the URL has no parameters at all', () => {
+    invalidUrl = 'https://example.com/';
+    expect(hasValidParameters(invalidUrl)).to.equal('noParams');
   });
 })
 
+// Get the values of the valid URL parameters
+describe('Function getParameterValues()', () => {
+  it('returns the correct amount of valid URL parameter values', () => {
+    validUrl = 'https://example.com/?ghrepo=repo1&source=source1&referer=referer1';
+    expect(getParameterValues(validUrl)).to.have.lengthOf(3);
+  });
+
+it('returns the URL parameter values', () => {
+  validUrl = 'https://example.com/?ghrepo=repo1&source=source1&referer=referer1';
+  expect(getParameterValues(validUrl)).to.deep.equal([
+    { key: 'ghrepo', value: 'repo1' },
+    { key: 'source', value: 'source1' },
+    { key: 'referer', value: 'referer1' },
+  ]);
+});
+
+  it('throws an error if the URL has missing parameter values', () => {
+    invalidUrl = 'https://example.com/?ghrepo=&source=source1';
+    expect(() => getParameterValues(invalidUrl)).to.throw();
+  });
+
+  it('throws an error if the URL has invalid parameters', () => {
+    invalidUrl = 'https://example.com/?ghrepo=repo1&source=source1';
+    expect(() => getParameterValues(invalidUrl)).to.throw();
+  });
+})
