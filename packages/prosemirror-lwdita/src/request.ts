@@ -15,10 +15,14 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-export * from './schema';
-export * from './document';
-export * from './plugin';
-export * from './commands';
-export * from './untravel-document';
-export * from './attributes';
-export * from './request';
+/**
+ * Checks if the URL has any parameters or not and returns a boolean
+ * @param url - URL string
+ * @returns Boolean
+ */
+export const hasParameters = (url: string): boolean => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [path, queryString] = url.split('?');
+  return !!queryString;
+};
+
