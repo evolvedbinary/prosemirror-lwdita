@@ -24,7 +24,7 @@ use(ChaiPromised);
 let urlWithoutParameters: string, urlWithParameters : string;
 
 // check if the URL has parameters
-describe.only('Function hasParameters()', () => {
+describe('Function hasParameters()', () => {
   urlWithoutParameters = 'https://example.com/';
   urlWithParameters = 'https://example.com/?ghrepo=repo1&source=source1&referer=referer1';
 
