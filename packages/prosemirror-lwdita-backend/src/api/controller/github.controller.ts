@@ -20,3 +20,15 @@ export const authenticateUserWithOctokit = async (req: Request, res: Response) =
 
   res.json(token);
 };
+
+export const getUserInformation = async (req: Request, res: Response) => {
+  const token = req.query.token;
+  if (!token) {
+    return res.status(400).json({ message: "Missing token" });
+  }
+  // dynamically import the module
+  const { getUserInfo } = await import('../modules/octokit.module.mjs');
+
+  const userInfo = await getUserInfo(token as string);
+  res.json(userInfo);
+};
