@@ -361,6 +361,7 @@ __metadata:
   dependencies:
     "@octokit/auth-oauth-user": "npm:^5.1.1"
     "@octokit/rest": "npm:^21.0.2"
+    "@octokit/types": "npm:^13.5.0"
     "@types/dotenv": "npm:^8.2.0"
     "@types/express": "npm:^4.17.21"
     dotenv: "npm:^16.4.5"
