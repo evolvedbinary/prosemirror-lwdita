@@ -21,12 +21,20 @@ export const authenticateUserWithOctokit = async (req: Request, res: Response) =
   res.json(token);
 };
 
+/**
+ * Retrieves authenticated user information using the provided token.
+ * @param req - The request object.
+ * @param res - The response object.
+ * @returns A JSON response containing the user information.
+ */
 export const getUserInformation = async (req: Request, res: Response) => {
-  const token = req.query.token;
-  if (!token) {
-    return res.status(400).json({ message: "Missing token" });
+  if (!req.headers.authorization) {
+    return res.status(403).json({ error: 'No credentials sent!' });
   }
-  // dynamically import the module
+  // the token is sent as a Bearer token in the Authorization header
+  const token = req.headers.authorization.split(' ')[1];
+  
+  // dynamically import the module to avoid EMS and CJS incompatibility
   const { getUserInfo } = await import('../modules/octokit.module.mjs');
 
   const userInfo = await getUserInfo(token as string);
