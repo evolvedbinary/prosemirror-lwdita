@@ -39,7 +39,10 @@
   },
   "dependencies": {
     "dotenv": "^16.4.5",
-    "express": "^4.19.2"
+    "express": "^4.19.2",
+    "octokit": "^4.0.2",
+    "@octokit/auth-oauth-user": "^5.1.1",
+    "@octokit/rest": "^21.0.2"
   },
   "devDependencies": {
     "@types/dotenv": "^8.2.0",
