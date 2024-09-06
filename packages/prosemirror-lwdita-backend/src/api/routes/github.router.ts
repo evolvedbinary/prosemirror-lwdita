@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { authenticateUserWithOctokit } from '../controller/github.controller';
+import { authenticateUserWithOctokit, getUserInformation } from '../controller/github.controller';
 
 const router = Router();
 
@@ -11,5 +11,8 @@ router.get('/', (req, res) => {
 
 // GET /api/github/token exchange user code for token
 router.get('/token', authenticateUserWithOctokit);
+
+// GET /api/github/user get user information
+router.get('/user', getUserInformation);
 
 export default router;

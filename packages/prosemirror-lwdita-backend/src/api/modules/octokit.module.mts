@@ -1,9 +1,10 @@
 import { Octokit } from "@octokit/rest";
 import { App } from 'octokit';
+import { Endpoints } from "@octokit/types";
 import dotenv from 'dotenv'; 
 dotenv.config();  // Load environment variables from .env file 
 
-
+export type UserData = Endpoints["GET /user"]["response"]["data"];
 /**
  * Authenticates with OAuth using the provided code.
  * @param code - The OAuth code to authenticate with.
@@ -38,3 +39,21 @@ export const authenticateWithOAuth = async (code: string): Promise<string | unde
     console.error("Error during OAuth authentication", error);
   }
 }
+
+/**
+ * Gets information about the authenticated user.
+ * @param token - The authentication token.
+ * @returns A promise that resolves to the user information.
+ */
+export const getUserInfo = async (token: string): Promise<UserData | undefined> => {
+  try {
+    const octokit = new Octokit({
+      auth: token
+    });
+
+    const { data } = await octokit.users.getAuthenticated();
+    return data;
+  } catch (error) {
+    console.error("Error getting user information", error);
+  }
+};
