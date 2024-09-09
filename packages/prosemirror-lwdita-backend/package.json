@@ -1,0 +1,50 @@
+{
+  "name": "@evolvedbinary/prosemirror-lwdita-backend",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Use LwDITA in ProseMirror",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "start": "node ./dist/server.js",
+    "clean": "rimraf dist",
+    "build": "tsc"
+  },
+  "engines": {
+    "node": ">=20.1.0 <21",
+    "yarn": ">=4.2.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/evolvedbinary/prosemirror-lwdita.git"
+  },
+  "keywords": [
+    "ProseMirror",
+    "LwDITA",
+    "DITA",
+    "XDITA",
+    "XML",
+    "JDITA",
+    "JSON"
+  ],
+  "author": "Evolved Binary",
+  "license": "AGPL-3.0",
+  "bugs": {
+    "url": "https://github.com/evolvedbinary/prosemirror-lwdita/issues"
+  },
+  "homepage": "https://github.com/evolvedbinary/prosemirror-lwdita#readme",
+  "directories": {
+    "src": "./src",
+    "test": "./test"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2"
+  },
+  "devDependencies": {
+    "@types/dotenv": "^8.2.0",
+    "@types/express": "^4.17.21",
+    "typescript": "^5.5.4"
+  },
+  "packageManager": "yarn@4.2.2"
+}
