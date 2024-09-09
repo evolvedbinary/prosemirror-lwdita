@@ -15,7 +15,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import { hasValidParameters, getParameterValues } from '../request';
+import { parseParameters, getParameterValues } from '../request';
 import ChaiPromised from 'chai-as-promised';
 import { use, expect } from 'chai';
 
@@ -27,20 +27,20 @@ let validUrl: string, invalidUrl: string;
 
 
 // check all the URL parameter values
-describe('Function hasValidParameters()', () => {
+describe('Function parseParameters()', () => {
   it('returns String "validParams" if the URL has all the expected parameters', () => {
     validUrl = 'https://example.com/?ghrepo=repo1&source=source1&referer=referer1';
-    expect(hasValidParameters(validUrl)).to.equal('validParams');
+    expect(parseParameters(validUrl)).to.equal('validParams');
   });
 
   it('returns string "invalidParams" if the URL has not all the expected parameters', () => {
     invalidUrl = 'https://example.com/?ghrepo=repo1&source=source1';
-    expect(hasValidParameters(invalidUrl)).to.equal('invalidParams');
+    expect(parseParameters(invalidUrl)).to.equal('invalidParams');
   });
 
   it('returns string "noParams" if the URL has no parameters at all', () => {
     invalidUrl = 'https://example.com/';
-    expect(hasValidParameters(invalidUrl)).to.equal('noParams');
+    expect(parseParameters(invalidUrl)).to.equal('noParams');
   });
 })
 
@@ -72,4 +72,6 @@ it('returns the URL parameter values', () => {
 })
 
 // Process the request
+
+
 // TODO: check if the request was successful
