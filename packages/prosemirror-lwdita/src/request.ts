@@ -33,20 +33,25 @@ const validParameters = ['ghrepo', 'source', 'referer'];
  * @param url - URL string
  * @returns String with parsing result
  */
-export function hasValidParameters(url: string): string {
+export function parseParameters(url: string): string {
   const parsedUrl = new URL(url);
-  if (parsedUrl.search !== '') {
-    for (const parameter of validParameters) {
-      // Some of the expected parameters are missing
-      if (!parsedUrl.searchParams.has(parameter)) {
-        return 'invalidParams';
-      }
+  let allParametersPresent = true;
+  for (const parameter of validParameters) {
+    if (!parsedUrl.searchParams.has(parameter)) {
+      allParametersPresent = false;
+      break;
     }
-    // Every expected parameter has been found
-    return 'validParams';
   }
-  // Will be the case when requsting the the Petal website link
-  return 'noParams';
+  if (allParametersPresent) {
+    // All required params are present
+    return 'validParams';
+  } else if (parsedUrl.search === '') {
+    // No params are present
+    return 'noParams';
+  } else {
+    // One or more params are missing
+    return 'invalidParams';
+  }
 }
 
 /**
@@ -58,13 +63,15 @@ export function hasValidParameters(url: string): string {
  * @returns Array with the URL parameter values
  */
 export function getParameterValues(url: string): { key: string, value: string }[] {
-  if (hasValidParameters(url) === 'validParams') {
+  if (parseParameters(url) === 'validParams') {
     const parsedUrl = new URL(url);
     const parameters = validParameters.map((key) => ({
       key,
       value: parsedUrl.searchParams.get(key)!,
     }));
+    console.log('validParams')
     if (parameters.some(({ value }) => value === null)) {
+      console.log('Missing values for parameters')
       throw new Error('Missing values for parameters');
     }
     return parameters;
