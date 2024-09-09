@@ -15,11 +15,17 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-export * from './schema';
-export * from './document';
-export * from './plugin';
-export * from './commands';
-export * from './untravel-document';
-export * from './attributes';
-export * from './request';
-export * from './toast';
+import Toastify from 'toastify-js';
+
+// Function to display a toast message with 'Toastify' library
+export function showToast(message: string, type: 'success' | 'error' | 'warning' | 'info') {
+  const toast = Toastify({
+    text: message,
+    duration: 10000,
+    gravity: 'bottom',
+    position: 'right',
+    style: {
+      background: type === 'success' ? 'linear-gradient(to right, #00b09b, #96c93d)' : 'linear-gradient(to right, #ff5f5f, #ffc390)',
+    },
+  }).showToast();
+}

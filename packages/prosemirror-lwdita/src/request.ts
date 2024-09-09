@@ -15,10 +15,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import { Notyf } from 'notyf';
-import 'notyf/notyf.min.css';
-
-const notyf = new Notyf();
+import { showToast } from './toast';
 
 /**
  * List of valid URL parameters
@@ -90,16 +87,16 @@ export function processRequest(): void {
       const parameters = getParameterValues(currentUrl);
       // TODO: Process the parameters for redirecting to GitHub OAuth
       console.log('parameters', parameters);
-      notyf.success('Success! You will be redirected to GitHub OAuth');
+      showToast('Success! You will be redirected to GitHub OAuth', 'success');
     } catch (error) {
 
       if (error instanceof Error) {
         if (error.message === 'Missing values for parameters') {
-          notyf.error('Your request is invalid. Please check if you have missing values for parameters');
+          showToast('Your request is invalid. Please check if you have missing values for parameters', 'warning');
         } else if (error.message === 'Invalid parameters') {
           // Redirect to Petal website
           // window.location.href = 'http://localhost:1234/';
-          notyf.error('Your request is invalid. You are being redirected to http://localhost:1234/');
+          showToast('Your request is invalid. You are being redirected to http://localhost:1234/', 'error');
         }
       } else {
         console.error(error);
