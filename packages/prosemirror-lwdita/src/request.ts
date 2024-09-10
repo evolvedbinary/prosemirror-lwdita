@@ -18,100 +18,102 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import { showToast } from './toast';
 
 /**
- * List of valid URL parameters
+ * List of valid URL key names in parameters
  * ghrepo = GitHub repository,
  * source = GitHub resource,
  * referer = Referer of the request
  */
-const validParameters = ['ghrepo', 'source', 'referer'];
+export const validKeys = ['ghrepo', 'source', 'referer'];
 
 /**
- * Parses the URL and checks if the URL has all the expected parameters
- * `ghrepo`, `source`, and `referer`
- * Will return a string with the parsing result
+ * Retrieves the values of the valid URL parameters `ghrepo`, `source`, and `referer`
+ * and returns a status string for handling the notifications
+ * in case the URL has missing values or invalid parameters
  *
  * @param url - URL string
- * @returns String with parsing result
+ * @returns An array with key-value objects of the URL parameter values or a status string for handling the notifications
  */
-export function parseParameters(url: string): string {
-  const parsedUrl = new URL(url);
-  let allParametersPresent = true;
-  for (const parameter of validParameters) {
-    if (!parsedUrl.searchParams.has(parameter)) {
-      allParametersPresent = false;
-      break;
-    }
-  }
-  if (allParametersPresent) {
-    // All required params are present
-    return 'validParams';
-  } else if (parsedUrl.search === '') {
-    // No params are present
+export function getParameterValues(url: string): 'validParams' | 'invalidParams' | 'noParams' | { key: string, value: string }[] {
+  const parameters: { key: string, value: string }[] = [];
+
+  const urlParts = url.split('?');
+  if (urlParts.length === 1) {
     return 'noParams';
-  } else {
-    // One or more params are missing
+  }
+
+  const queryString = urlParts[1];
+  const params = new URLSearchParams(queryString);
+
+  // Loop through the parameters and add them to the array
+  for (const [key, value] of params.entries()) {
+    parameters.push({ key, value });
+  }
+
+  const hasMissingValues = parameters.some(({ value }) => value === null || value === '');
+  const hasInvalidParams = parameters.some(({ key }) => !isValidParam(key));
+
+  // Return the status string for the notifications
+  if (hasMissingValues || hasInvalidParams) {
     return 'invalidParams';
   }
+
+  if (!hasMissingValues && !hasInvalidParams) {
+    return parameters;
+  }
+  return parameters;
 }
 
 /**
- * Retrieves the values of the valid URL parameters
- * `ghrepo`, `source`, and `referer`.
- * Will throw an error if the URL has missing values or invalid parameters
+ * Helper function to check if the URL parameter key is valid
+ * Returns true if the key is valid, false otherwise
  *
- * @param url - URL string
- * @returns Array with the URL parameter values
+ * @param key - URL parameter key
+ * @returns Boolean
  */
-export function getParameterValues(url: string): { key: string, value: string }[] {
-  if (parseParameters(url) === 'validParams') {
-    const parsedUrl = new URL(url);
-    const parameters = validParameters.map((key) => ({
-      key,
-      value: parsedUrl.searchParams.get(key)!,
-    }));
-    console.log('validParams')
-    if (parameters.some(({ value }) => value === null)) {
-      console.log('Missing values for parameters')
-      throw new Error('Missing values for parameters');
-    }
-    return parameters;
-  } else {
-    throw new Error('Invalid parameters');
+export function isValidParam(key: string): boolean {
+  return validKeys.includes(key);
+}
+
+/**
+ * Shows a toast notification based on the given parameters
+ *
+ * @param parameters - The URL parameters
+ */
+export function showNotification(parameters: 'validParams' | 'invalidParams' | 'noParams' | { key: string, value: string }[]): void {
+  if (typeof parameters === 'object') {
+    showToast('Success! You will be redirected to GitHub OAuth', 'success');
+  } else if (parameters === 'invalidParams') {
+    showToast('Your request is invalid.', 'error');
+  } else if (parameters === 'noParams') {
+    showToast('Welcome to the Petal Demo Website.', 'info');
   }
 }
 
 /**
- * Process the URL and redirect to GitHub OAuth
- * or show notifications if the URL is invalid
+ * Process the URL parameters and handle the notifications
  */
 export function processRequest(): void {
   // Check if the window object is defined (i.e. it is not in Mocha tests!)
   if (typeof window !== 'undefined') {
     const currentUrl = window.location.href;
-    //console.log('currentUrl', currentUrl);
 
     try {
       const parameters = getParameterValues(currentUrl);
-      // TODO: Process the parameters for redirecting to GitHub OAuth
-      console.log('parameters', parameters);
-      showToast('Success! You will be redirected to GitHub OAuth', 'success');
+      showNotification(parameters);
+      console.log('Parameters =', JSON.stringify(parameters));
     } catch (error) {
-
       if (error instanceof Error) {
-        if (error.message === 'Missing values for parameters') {
-          showToast('Your request is invalid. Please check if you have missing values for parameters', 'warning');
-        } else if (error.message === 'Invalid parameters') {
-          // Redirect to Petal website
-          // window.location.href = 'http://localhost:1234/';
-          showToast('Your request is invalid. You are being redirected to http://localhost:1234/', 'error');
-        }
+        showToast('An unknown error has occurred. Please check the console.', 'error');
+        console.error(error.message);
       } else {
-        console.error(error);
+        showToast('An unknown error has occurred. Please check the console.', 'error');
+        console.error('Unknown error:', error);
       }
     }
-  } else {
-    console.log('Window is not defined');
   }
 }
 
-processRequest();
+ /**
+  * Start the process of processing the URL parameters
+  */
+export const inititalRequest = processRequest();
