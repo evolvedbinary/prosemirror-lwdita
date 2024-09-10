@@ -15,63 +15,63 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import { parseParameters, getParameterValues } from '../request';
+import { getParameterValues, isValidParam } from '../request';
 import ChaiPromised from 'chai-as-promised';
 import { use, expect } from 'chai';
 
 use(ChaiPromised);
 
 let validUrl: string, invalidUrl: string;
+const url: string = 'https://example.com/';
 
-// Parse the URL and check for expected parameters
-
-
-// check all the URL parameter values
-describe('Function parseParameters()', () => {
-  it('returns String "validParams" if the URL has all the expected parameters', () => {
-    validUrl = 'https://example.com/?ghrepo=repo1&source=source1&referer=referer1';
-    expect(parseParameters(validUrl)).to.equal('validParams');
+// Function getParameterValues()
+describe('When function getParameterValues() is passed a URL with', () => {
+  it('valid parameters, it returns an object containing key-value pairs', () => {
+    validUrl = url + '?ghrepo=repo1&source=source1&referer=referer1';
+      expect(getParameterValues(validUrl)).to.deep.equal([
+      { key: 'ghrepo', value: 'repo1' },
+      { key: 'source', value: 'source1' },
+      { key: 'referer', value: 'referer1' },
+    ]);
   });
 
-  it('returns string "invalidParams" if the URL has not all the expected parameters', () => {
-    invalidUrl = 'https://example.com/?ghrepo=repo1&source=source1';
-    expect(parseParameters(invalidUrl)).to.equal('invalidParams');
+  it('a missing value of any of the keys, it returns string "invalidParams"', () => {
+    invalidUrl = url + '?ghrepo=ghrepo1&source=source1&referer=';
+    expect(getParameterValues(invalidUrl)).to.equal('invalidParams');
   });
 
-  it('returns string "noParams" if the URL has no parameters at all', () => {
-    invalidUrl = 'https://example.com/';
-    expect(parseParameters(invalidUrl)).to.equal('noParams');
-  });
-})
-
-// Get the values of the valid URL parameters
-describe('Function getParameterValues()', () => {
-  it('returns the correct amount of valid URL parameter values', () => {
-    validUrl = 'https://example.com/?ghrepo=repo1&source=source1&referer=referer1';
-    expect(getParameterValues(validUrl)).to.have.lengthOf(3);
+  it('one missing parameter, it returns string "invalidParams"', () => {
+    invalidUrl = url + '?ghrepo=ghrepo1&source=source1&referer';
+    expect(getParameterValues(invalidUrl)).to.equal('invalidParams');
   });
 
-it('returns the URL parameter values', () => {
-  validUrl = 'https://example.com/?ghrepo=repo1&source=source1&referer=referer1';
-  expect(getParameterValues(validUrl)).to.deep.equal([
-    { key: 'ghrepo', value: 'repo1' },
-    { key: 'source', value: 'source1' },
-    { key: 'referer', value: 'referer1' },
-  ]);
-});
-
-  it('throws an error if the URL has missing parameter values', () => {
-    invalidUrl = 'https://example.com/?ghrepo=&source=source1';
-    expect(() => getParameterValues(invalidUrl)).to.throw();
+  it('two missing parameters, it returns string "invalidParams"', () => {
+    invalidUrl = url + '?ghrepo';
+    expect(getParameterValues(invalidUrl)).to.equal('invalidParams');
   });
 
-  it('throws an error if the URL has invalid parameters', () => {
-    invalidUrl = 'https://example.com/?ghrepo=repo1&source=source1';
-    expect(() => getParameterValues(invalidUrl)).to.throw();
+  it('any parameter that is not matching any of the expected keys, it returns string "invalidParams"', () => {
+    invalidUrl = url + '?xyz';
+    expect(getParameterValues(invalidUrl)).to.equal('invalidParams');
+  });
+
+  it('no parameters at all, it returns string "noParams"', () => {
+    invalidUrl = url;
+    expect(getParameterValues(invalidUrl)).to.equal('noParams');
   });
 })
 
-// Process the request
+// Function isValidParam()
+describe('When function isValidParam() is passed a key', () => {
+  it('that is a valid key, it returns true', () => {
+    expect(isValidParam('ghrepo')).to.equal(true);
+    expect(isValidParam('source')).to.equal(true);
+    expect(isValidParam('referer')).to.equal(true);
+  });
+  it('that is a invalid key, it returns true', () => {
+    expect(isValidParam('xyz')).to.equal(false);
+  });
+})
 
-
-// TODO: check if the request was successful
+// Function showNotification()
+// TODO: This needs to be tested in Cypress as it requires browser testing.
