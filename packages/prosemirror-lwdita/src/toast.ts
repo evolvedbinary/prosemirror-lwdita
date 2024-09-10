@@ -31,8 +31,6 @@ export function showToast(message: string, type: 'success' | 'error' | 'warning'
     duration: 10000,
     gravity: 'bottom',
     position: 'right',
-    style: {
-      background: type === 'success' ? 'linear-gradient(to right, #00b09b, #96c93d)' : 'linear-gradient(to right, #ff5f5f, #ffc390)',
-    },
+    className: `toast toast--${type}`,
   }).showToast();
 }
