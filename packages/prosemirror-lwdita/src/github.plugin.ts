@@ -46,6 +46,7 @@ export const fetchRawDocumentFromGitHub = async (ghrepo: string, source: string)
  * @param rawDocument - The raw xdita document as a string.
  * @returns A promise that resolves to a record containing the ProseMirror state save.
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const transformGitHubDocumentToProsemirrorJson = async (rawDocument: string): Promise<Record<string, any>> => {
   // convert the raw xdita document to jdita
   const jdita = await xditaToJdita(rawDocument);

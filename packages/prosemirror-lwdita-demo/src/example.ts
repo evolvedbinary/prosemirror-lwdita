@@ -10,11 +10,15 @@ import { doubleClickImagePlugin } from '@evolvedbinary/prosemirror-lwdita'
 
 const schemaObject = schema();
 
+// if the user passes a file in the URL, load that file
+// otherwise load the default file
+const loadJsonDoc = jsonDocLoader;
+
 /**
  * Load the json document and create a new EditorView.
  * The json document is transformed from JDITA to ProseMirror Schema
  */
-jsonDocLoader.then(jsonDoc => {
+loadJsonDoc.then(jsonDoc => {
   // get the editor element from the DOM
   const domEl = document.querySelector("#editor") as HTMLElement;
   // clear the element innerHTML
