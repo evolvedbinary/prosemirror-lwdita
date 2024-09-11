@@ -307,3 +307,115 @@ body {
     justify-content: space-between;
   }
 }
+
+/* TODO: Customize styling for toastify */
+
+/*!
+ * Toastify js 1.12.0
+ * https://github.com/apvarun/toastify-js
+ * @license MIT licensed
+ *
+ * Copyright (C) 2018 Varun A P
+ */
+
+.toastify {
+  padding: 12px 20px;
+  color: #ffffff;
+  display: inline-block;
+  box-shadow: 0 3px 6px -1px rgba(0, 0, 0, 0.12), 0 10px 36px -4px rgba(77, 96, 232, 0.3);
+  // Original toastify default:
+  //background: -webkit-linear-gradient(315deg, #73a5ff, #5477f5);
+  //background: linear-gradient(135deg, #73a5ff, #5477f5);
+  //Custom Types, "saved for later"
+  //background: linear-gradient(to right, #00b09b, #96c93d);
+  //background: linear-gradient(to right, #17a2b8, #63f2f1);
+  //background: linear-gradient(to right, #ffc107, #ff9800);
+  //background: linear-gradient(to right, #ff5f5f, #ffc390);
+  position: fixed;
+  opacity: 0;
+  transition: all 0.4s cubic-bezier(0.215, 0.61, 0.355, 1);
+  border-radius: 2px;
+  cursor: pointer;
+  text-decoration: none;
+  max-width: calc(50% - 20px);
+  z-index: 2147483647;
+}
+
+.toastify.on {
+  opacity: 1;
+}
+
+.toast-close {
+  background: transparent;
+  border: 0;
+  color: white;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 1em;
+  opacity: 0.4;
+  padding: 0 5px;
+}
+
+.toastify-right {
+  right: 15px;
+}
+
+.toastify-left {
+  left: 15px;
+}
+
+.toastify-top {
+  top: -150px;
+}
+
+.toastify-bottom {
+  bottom: -150px;
+}
+
+.toastify-rounded {
+  border-radius: 25px;
+}
+
+.toastify-avatar {
+  width: 1.5em;
+  height: 1.5em;
+  margin: -7px 5px;
+  border-radius: 2px;
+}
+
+.toastify-center {
+  margin-left: auto;
+  margin-right: auto;
+  left: 0;
+  right: 0;
+  max-width: fit-content;
+  max-width: -moz-fit-content;
+}
+
+// Custom types of toasts
+.toast {
+  &--success {
+    background-color: #4caf50;
+  }
+  &--error {
+    background-color: #f44336;
+  }
+  &--warning {
+    background-color: #ff9800;
+  }
+  &--info {
+    background-color: #00bcd4;
+  }
+}
+
+@media only screen and (max-width: 360px) {
+
+  .toastify-right,
+  .toastify-left {
+    margin-left: auto;
+    margin-right: auto;
+    left: 0;
+    right: 0;
+    max-width: fit-content;
+  }
+}

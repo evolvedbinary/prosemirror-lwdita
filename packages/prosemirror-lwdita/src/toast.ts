@@ -15,11 +15,22 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-export * from './schema';
-export * from './document';
-export * from './plugin';
-export * from './commands';
-export * from './untravel-document';
-export * from './attributes';
-export * from './request';
-export * from './toast';
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
+import Toastify from 'toastify-js';
+
+/**
+ * Displays a toast message with 'Toastify' library
+ *
+ * @param message - Message to display
+ * @param type - Type of toast
+ */
+export function showToast(message: string, type: 'success' | 'error' | 'warning' | 'info') {
+  const toast = Toastify({
+    text: message,
+    duration: 10000,
+    gravity: 'bottom',
+    position: 'right',
+    className: `toast toast--${type}`,
+  }).showToast();
+}
