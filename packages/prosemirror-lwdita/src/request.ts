@@ -116,4 +116,4 @@ export function processRequest(): void {
  /**
   * Start the process of processing the URL parameters
   */
-export const inititalRequest = processRequest();
+export const initialRequest = processRequest();
