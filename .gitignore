@@ -40,3 +40,6 @@ Dockerfile
 
 # parcel
 .parcel-cache
+
+# environment variables
+.env
