@@ -51,7 +51,7 @@
     "@types/dotenv": "^8.2.0",
     "@types/express": "^4.17.21",
     "@typescript-eslint/eslint-plugin": "^7.16.0",
-    "@typescript-eslint/parser": "^7.16.0",
+    "@typescript-eslint/parser": "^8.5.0",
     "eslint": "^8.57.0",
     "eslint-plugin-notice": "^1.0.0",
     "eslint-plugin-tsdoc": "^0.3.0",
