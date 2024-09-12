@@ -115,7 +115,9 @@ const createBranch = async (octokit: Octokit, owner: string, repo: string, newBr
     });
 
     // get the default branch
-    const defaultBranch = repoData.default_branch;  
+    // there's an existing issue with the github API where the default branch is returned as 'master' instead of 'main'
+    //TODO(YB): Ask the GitHub API team to fix this issue
+    const defaultBranch = repoData.default_branch === 'master'? 'main' : repoData.default_branch; 
 
     // get the default branch ref
     const { data: branchData } = await octokit.repos.getBranch({
