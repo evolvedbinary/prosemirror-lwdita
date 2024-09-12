@@ -6,13 +6,12 @@ import jsonDocLoader from "./doc";
 import { menu, shortcuts } from "@evolvedbinary/prosemirror-lwdita";
 import { githubMenuItem, openFileMenuItem, publishFileMenuItem, saveFileMenuItem} from "./demo-plugin";
 import { history } from "prosemirror-history";
-import { doubleClickImagePlugin } from '@evolvedbinary/prosemirror-lwdita'
+import { doubleClickImagePlugin, processRequest } from '@evolvedbinary/prosemirror-lwdita'
 
 const schemaObject = schema();
 
 // flag whether the url params are set or not
-//TODO(YB): this should be set based on the URL params
-const urlParams = false;
+const urlParams = processRequest();
 
 /**
  * Load the json document and create a new EditorView.
