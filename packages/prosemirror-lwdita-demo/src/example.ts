@@ -11,7 +11,7 @@ import { doubleClickImagePlugin } from '@evolvedbinary/prosemirror-lwdita'
 const schemaObject = schema();
 
 // flag whether the url params are set or not
-const urlParams = true;
+const urlParams = false;
 
 /**
  * Load the json document and create a new EditorView.
@@ -40,7 +40,7 @@ jsonDocLoader.then(jsonDoc => {
             githubMenuItem({ label: 'prosemirror-lwdita', url: 'https://github.com/evolvedbinary/prosemirror-lwdita' }),
           ]],
           start: [[
-            urlParams? openFileMenuItem() : publishFileMenuItem(),
+            urlParams? publishFileMenuItem() : openFileMenuItem(),
             saveFileMenuItem()
           ]],
         }),
