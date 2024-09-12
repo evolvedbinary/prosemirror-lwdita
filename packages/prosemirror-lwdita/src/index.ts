@@ -23,3 +23,4 @@ export * from './untravel-document';
 export * from './attributes';
 export * from './request';
 export * from './toast';
+export * from './github.plugin';

@@ -118,6 +118,68 @@ export const shortXdita = `<?xml version="1.0" encoding="UTF-8"?>
   </body>
 </topic>`;
 
+export const shortXditaProsemirroJson = {
+  type: "doc",
+  attrs: {
+  },
+  content: [
+    {
+      type: "topic",
+      attrs: {
+        id: "program",
+        parent: "doc",
+      },
+      content: [
+        {
+          type: "title",
+          attrs: {
+            parent: "topic",
+          },
+          content: [
+            {
+              type: "text",
+              text: "Test File 2",
+              attrs: {
+                parent: "title",
+              },
+            },
+          ],
+        },
+        {
+          type: "body",
+          attrs: {
+            parent: "topic",
+          },
+          content: [
+            {
+              type: "section",
+              attrs: {
+                parent: "body",
+              },
+              content: [
+                {
+                  type: "p",
+                  attrs: {
+                    parent: "section",
+                  },
+                  content: [
+                    {
+                      type: "text",
+                      text: "A test paragraph.",
+                      attrs: {
+                        parent: "p",
+                      },
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+  ],
+};
 export const complexXdita = `<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE topic PUBLIC "-//OASIS//DTD LIGHTWEIGHT DITA Topic//EN" "lw-topic.dtd">
 <topic id="fullTopic">
