@@ -1,3 +1,20 @@
+/*!
+Copyright (C) 2020 Evolved Binary
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
+
 import {Request, Response} from 'express';
 
 /**
@@ -44,25 +61,34 @@ export const getUserInformation = async (req: Request, res: Response) => {
 };
 
 /**
- * Commits changes and creates a pull request.
- * Controller for POST /api/github/integration
- * expects the following body:
- * {
- *  owner: string,
- *  repo: string,
- *  newOwner: string,
- *  newBranch: string,
- *  commitMessage: string,
- *  change: { path: string, content: string },
- *  title: string,
- *  body: string
- * }
- * and the following headers:
- * Authorization: Bearer <token>
+ * Commits changes to a specified GitHub repository and creates a pull request (PR).
+ *
+ * This controller handles the `POST /api/github/integration` endpoint.
+ *
+ * @remarks
+ * The request body must include the following fields:
  * 
- * @param req - The request object.
- * @param res - The response object.
- * @returns A JSON response containing the result of the operation.
+ * - `owner: string` - The GitHub username or organization that owns the repository.
+ * - `repo: string` - The name of the repository where the changes are made.
+ * - `newOwner: string` - The owner of the fork where the new branch is created (can be the same as the original owner).
+ * - `newBranch: string` - The name of the new branch where the commit will be applied.
+ * - `commitMessage: string` - A message describing the changes in the commit.
+ * - `change: { path: string, content: string }` - An object describing the file change:
+ *   - `path: string` - The file path in the repository to be modified.
+ *   - `content: string` - The new content for the specified file.
+ * - `title: string` - The title of the pull request.
+ * - `body: string` - The description of the pull request.
+ * 
+ * The request must also include the following headers:
+ * 
+ * - `Authorization: Bearer <token>` - A valid GitHub access token for authentication.
+ *
+ * @param req - The incoming HTTP request object, containing the request body and headers.
+ * @param res - The outgoing HTTP response object, used to send the result back to the client.
+ * 
+ * @returns A JSON response with the result of the operation. If successful, it contains 
+ *          the details of the created pull request. If there's an error, an appropriate 
+ *          error message will be returned.
  */
 export const commitChangesAndCreatePR = async (req: Request, res: Response) => {
   //TODO(YB): Add validation
