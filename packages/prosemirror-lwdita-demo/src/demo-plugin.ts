@@ -139,6 +139,7 @@ function publishGithubDocument(): Command {
     if (dispatch) {
       dispatch(state.tr);
       console.log('Publishing the document to GitHub...');
+      //window.location.href = 'https://github.com/login/oauth/authorize?client_id=Iv23li0Pvl3E4crXIBQ0'
       // show the publishing dialog
     } else {
       console.log('Nothing to publish, no EditorState has been dispatched.');
@@ -221,7 +222,7 @@ function transformToJditaDocumentNode(state: { [x: string]: any; tr?: any; selec
   const serializer = new JditaSerializer(outStream, true);
 
   serializer.serializeFromJdita(documentNode);
-  
+
   return outStream.getText();
   ;
 };
