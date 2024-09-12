@@ -10,7 +10,9 @@ import { doubleClickImagePlugin, processRequest } from '@evolvedbinary/prosemirr
 
 const schemaObject = schema();
 
-// flag whether the url params are set or not
+/**
+ * Process the URL parameters and handle the notifications
+ */
 const urlParams = processRequest();
 
 /**
