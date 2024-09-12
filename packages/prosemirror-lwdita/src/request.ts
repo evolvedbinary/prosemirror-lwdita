@@ -50,7 +50,7 @@ export function getParameterValues(url: string): 'validParams' | 'invalidParams'
   }
 
   const hasMissingValues = parameters.some(({ value }) => value === null || value === '');
-  const hasInvalidParams = parameters.some(({ key }) => !isValidParam(key));
+  const hasInvalidParams = validKeys.some(key => !params.has(key));
 
   // Return the status string for the notifications
   if (hasMissingValues || hasInvalidParams) {
