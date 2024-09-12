@@ -84,3 +84,50 @@ export const exchangeOAuthCodeForAccessToken = async (code: string): Promise<str
   //TODO: Handle errors
   return json;
 };
+
+/**
+ * Publishes a document to a specified GitHub repository.
+ * Makes a POST request to the `/api/github/integration` endpoint with the necessary details to create a pull request.
+ * 
+ * @param ghrepo - The GitHub repository in the format "owner/repo".
+ * @param source - The path to the source document.
+ * @param changedDocument - The content of the changed document.
+ * @returns A promise that resolves when the document has been published.
+ */
+export const createPrFromContribution = async (ghrepo: string, source: string, changedDocument: string): Promise<void> => {
+  const owner = ghrepo.split('/')[0];
+  const repo = ghrepo.split('/')[1];
+  const newOwner = "marmoure";
+  const newBranch = "new-branch";
+  const commitMessage = "Update the document";
+  const path = source;
+  const content = changedDocument;
+  const change = {
+    path,
+    content
+  };
+  const title = "Update the document";
+  const body = "Update the document ------------------ This is an automated PR made by the prosemirror-lwdita demo"; 
+
+  // get the token from the local storage
+  const token = localStorage.getItem('token');
+
+  // make a post request to  /api/github/integration
+  fetch('/api/github/integration', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    },
+    body: JSON.stringify({
+      owner,
+      repo,
+      newOwner,
+      newBranch,
+      commitMessage,
+      change,
+      title,
+      body
+    })
+  });
+};
