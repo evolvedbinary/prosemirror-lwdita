@@ -11,6 +11,7 @@ import { doubleClickImagePlugin } from '@evolvedbinary/prosemirror-lwdita'
 const schemaObject = schema();
 
 // flag whether the url params are set or not
+//TODO(YB): this should be set based on the URL params
 const urlParams = false;
 
 /**
