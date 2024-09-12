@@ -4,11 +4,16 @@ import { Node } from "prosemirror-model";
 import { schema } from "@evolvedbinary/prosemirror-lwdita";
 import jsonDocLoader from "./doc";
 import { menu, shortcuts } from "@evolvedbinary/prosemirror-lwdita";
-import { githubMenuItem, openFileMenuItem, saveFileMenuItem} from "./demo-plugin";
+import { githubMenuItem, openFileMenuItem, publishFileMenuItem, saveFileMenuItem} from "./demo-plugin";
 import { history } from "prosemirror-history";
-import { doubleClickImagePlugin } from '@evolvedbinary/prosemirror-lwdita'
+import { doubleClickImagePlugin, processRequest } from '@evolvedbinary/prosemirror-lwdita'
 
 const schemaObject = schema();
+
+/**
+ * Process the URL parameters and handle the notifications
+ */
+const urlParams = processRequest();
 
 /**
  * Load the json document and create a new EditorView.
@@ -37,7 +42,7 @@ jsonDocLoader.then(jsonDoc => {
             githubMenuItem({ label: 'prosemirror-lwdita', url: 'https://github.com/evolvedbinary/prosemirror-lwdita' }),
           ]],
           start: [[
-            openFileMenuItem(),
+            urlParams? publishFileMenuItem() : openFileMenuItem(),
             saveFileMenuItem()
           ]],
         }),

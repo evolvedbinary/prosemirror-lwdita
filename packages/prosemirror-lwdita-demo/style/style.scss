@@ -77,6 +77,17 @@ body {
                 text-decoration: none;
               }
             }
+            .ic-github {
+              margin-left: 1rem;
+              display:flex;
+              align-items: center;
+              gap: .4rem;
+
+              a {
+                color: inherit;
+                text-decoration: none;
+              }
+            }
             & > * {
               cursor: pointer;
               line-height: $height;

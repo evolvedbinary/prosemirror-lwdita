@@ -92,7 +92,7 @@ export function showNotification(parameters: 'validParams' | 'invalidParams' | '
 /**
  * Process the URL parameters and handle the notifications
  */
-export function processRequest(): void {
+export function processRequest(): undefined | { key: string, value: string }[] {
   // Check if the window object is defined (i.e. it is not in Mocha tests!)
   if (typeof window !== 'undefined') {
     const currentUrl = window.location.href;
@@ -101,6 +101,10 @@ export function processRequest(): void {
       const parameters = getParameterValues(currentUrl);
       showNotification(parameters);
       console.log('Parameters =', JSON.stringify(parameters));
+      if(typeof parameters === 'object') {
+        return parameters;
+      }
+      
     } catch (error) {
       if (error instanceof Error) {
         showToast('An unknown error has occurred. Please check the console.', 'error');
@@ -112,8 +116,3 @@ export function processRequest(): void {
     }
   }
 }
-
- /**
-  * Start the process of processing the URL parameters
-  */
-export const initialRequest = processRequest();

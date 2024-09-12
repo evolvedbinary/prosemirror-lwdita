@@ -103,6 +103,50 @@ export function openFileMenuItem(): MenuElement {
 }
 
 /**
+ * Creates a menu item for publishing to Github.
+ * This function generates a menu item that allows users to publish a file
+ *
+ * @returns {MenuElement} The menu item for publishing the file.
+ */
+export function publishFileMenuItem(): MenuElement {
+  //const storedFile = localStorage.getItem('file') ? localStorage.getItem('file') : console.log('No file in the localStorage to save.');
+  const storedFileName = localStorage.getItem('fileName') ? localStorage.getItem('fileName') : 'Petal';
+
+  return new MenuItem({
+    enable: () => true,
+    render(editorView) {
+      const el = document.createElement('div');
+      el.classList.add('ProseMirror-menuitem-file');
+      const link = document.createElement('a');
+      link.download = storedFileName + '.xml';
+      link.textContent = 'Publish "' + storedFileName + '.xml"';
+      link.id = 'publishFile';
+      el.appendChild(link);
+      return el;
+    },
+    class: 'ic-github',
+    run: publishGithubDocument()
+  });
+}
+
+/**
+ * Creates a command that publishes the current document to GitHub.
+ *
+ * @returns {Command} A ProseMirror command function.
+ */
+function publishGithubDocument(): Command {
+  return (state: {[x: string]: any; tr: any; selection: { empty: any; };}, dispatch: (arg0: any) => void) => {
+    if (dispatch) {
+      dispatch(state.tr);
+      console.log('Publishing the document to GitHub...');
+      // show the publishing dialog
+    } else {
+      console.log('Nothing to publish, no EditorState has been dispatched.');
+    }
+  }
+}
+
+/**
  * Create a menu item to save a file to the filesystem
  * @returns A MenuElement
  */
