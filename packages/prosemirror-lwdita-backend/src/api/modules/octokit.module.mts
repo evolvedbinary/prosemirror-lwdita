@@ -199,6 +199,10 @@ const commitChanges = async (octokit: Octokit, owner: string, repo: string, bran
       message: commitMessage,
       tree: treeData.sha,
       parents: [lastCommit.sha],
+      committer: {
+        name: "Petal GitHub App",
+        email: "petal@evolvedbianry.com"
+      }
     });
 
     // update the reference
