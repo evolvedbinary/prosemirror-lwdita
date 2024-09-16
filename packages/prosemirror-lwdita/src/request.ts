@@ -16,6 +16,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 import { showToast } from './toast';
+import { clientID } from './config';
 
 /**
  * List of valid URL key names in parameters
@@ -33,7 +34,7 @@ export const validKeys = ['ghrepo', 'source', 'referer'];
  * @param url - URL string
  * @returns An array with key-value objects of the URL parameter values or a status string for handling the notifications
  */
-export function getParameterValues(url: string): 'validParams' | 'invalidParams' | 'noParams' | { key: string, value: string }[] {
+export function getAndValidateParameterValues(url: string): 'validParams' | 'invalidParams' | 'noParams' | { key: string, value: string }[] {
   const parameters: { key: string, value: string }[] = [];
 
   const urlParts = url.split('?');
@@ -89,6 +90,15 @@ export function showNotification(parameters: 'validParams' | 'invalidParams' | '
   }
 }
 
+
+/**
+ * Redirects the user to GitHub OAuth
+ */
+export function redirectToGitHubOAuth(): void {
+  const { id, value } = clientID;
+  window.location.href = 'https://github.com/login/oauth/authorize?' + id + '=' + value;
+}
+
 /**
  * Process the URL parameters and handle the notifications
  */
@@ -98,13 +108,20 @@ export function processRequest(): undefined | { key: string, value: string }[] {
     const currentUrl = window.location.href;
 
     try {
-      const parameters = getParameterValues(currentUrl);
-      showNotification(parameters);
-      console.log('Parameters =', JSON.stringify(parameters));
-      if(typeof parameters === 'object') {
-        return parameters;
+      const parameters = getAndValidateParameterValues(currentUrl);
+      if (typeof parameters === 'string') {
+        showNotification(parameters);
       }
-      
+
+      if (typeof parameters === 'object') {
+        // Store the parameters in localStorage for reading the values after the OAuth flow
+        // TODO: After a successful GitHub Authentication, read the user parameters from localStorage and clear it afterwards
+        localStorage.setItem('userParams', JSON.stringify(parameters));
+
+        // Redirect to GitHub OAuth page
+        redirectToGitHubOAuth();
+      }
+
     } catch (error) {
       if (error instanceof Error) {
         showToast('An unknown error has occurred. Please check the console.', 'error');
@@ -115,4 +132,5 @@ export function processRequest(): undefined | { key: string, value: string }[] {
       }
     }
   }
+  return undefined;
 }
