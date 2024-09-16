@@ -94,7 +94,7 @@ export const exchangeOAuthCodeForAccessToken = async (code: string): Promise<str
  * @param changedDocument - The content of the changed document.
  * @returns A promise that resolves when the document has been published.
  */
-export const createPrFromContribution = async (ghrepo: string, source: string, changedDocument: string): Promise<void> => {
+export const createPrFromContribution = async (ghrepo: string, source: string, changedDocument: string): Promise<string> => {
   const owner = ghrepo.split('/')[0];
   const repo = ghrepo.split('/')[1];
   const newOwner = "marmoure";
@@ -107,13 +107,13 @@ export const createPrFromContribution = async (ghrepo: string, source: string, c
     content
   };
   const title = "Update the document";
-  const body = "Update the document ------------------ This is an automated PR made by the prosemirror-lwdita demo"; 
+  const body = "Update the document\n ------------------ \nThis is an automated PR made by the prosemirror-lwdita demo"; 
 
   // get the token from the local storage
   const token = localStorage.getItem('token');
 
   // make a post request to  /api/github/integration
-  fetch('/api/github/integration', {
+  const response = await fetch('http://localhost:3000/api/github/integration', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -130,4 +130,6 @@ export const createPrFromContribution = async (ghrepo: string, source: string, c
       body
     })
   });
+
+  return response.json();
 };

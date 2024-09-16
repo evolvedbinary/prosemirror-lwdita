@@ -17,8 +17,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import { Command } from "prosemirror-commands";
 import { MenuElement, MenuItem, MenuItemSpec } from "prosemirror-menu";
-import { InputContainer, renderPrDialog } from "@evolvedbinary/prosemirror-lwdita";
-import { unTravel } from "@evolvedbinary/prosemirror-lwdita";
+import { InputContainer } from "@evolvedbinary/prosemirror-lwdita";
+import { unTravel, createPrFromContribution} from "@evolvedbinary/prosemirror-lwdita";
 import { JditaSerializer } from "@evolvedbinary/lwdita-xdita";
 import { InMemoryTextSimpleOutputStreamCollector } from "@evolvedbinary/lwdita-xdita/dist/stream";
 
@@ -140,6 +140,24 @@ function publishGithubDocument(): Command {
       dispatch(state.tr);
       // show the publishing dialog
       renderPrDialog();
+
+      // Temp solution to  test publishing the document
+      //TODO(YB): Implement the actual publishing mechanism in the submit 
+      const xditaPrefix = `<?xml version="1.0" encoding="UTF-8"?>\n<!DOCTYPE topic PUBLIC "-//OASIS//DTD LIGHTWEIGHT DITA Topic//EN" "lw-topic.dtd">\n`;
+      const documentNode = transformToJditaDocumentNode(state);
+      const file = xditaPrefix + documentNode;
+      
+      //fetch the GitHub repository and source from the local storage???
+      const ghrepo = 'evolvedbinary/prosemirror-lwdita';
+      const source = 'packages/prosemirror-lwdita-demo/example-xdita/02-short-file.xml';
+
+      // Create a PR from the contribution
+      createPrFromContribution(ghrepo, source, file)
+      .then((pr: string) => {
+        console.log('The document has been published to GitHub.');
+        console.log('pr url:', pr);
+        // show a toast notification
+      })
     } else {
       console.log('Nothing to publish, no EditorState has been dispatched.');
     }
