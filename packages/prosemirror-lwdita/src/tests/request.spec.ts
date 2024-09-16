@@ -15,7 +15,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import { getParameterValues, isValidParam } from '../request';
+import { getAndValidateParameterValues, isValidParam } from '../request';
 import ChaiPromised from 'chai-as-promised';
 import { use, expect } from 'chai';
 
@@ -28,7 +28,7 @@ const url: string = 'https://example.com/';
 describe('When function getParameterValues() is passed a URL with', () => {
   it('valid parameters, it returns an object containing key-value pairs', () => {
     validUrl = url + '?ghrepo=repo1&source=source1&referer=referer1';
-      expect(getParameterValues(validUrl)).to.deep.equal([
+    expect(getAndValidateParameterValues(validUrl)).to.deep.equal([
       { key: 'ghrepo', value: 'repo1' },
       { key: 'source', value: 'source1' },
       { key: 'referer', value: 'referer1' },
@@ -37,32 +37,32 @@ describe('When function getParameterValues() is passed a URL with', () => {
 
   it('a missing value of any of the keys, it returns string "invalidParams"', () => {
     invalidUrl = url + '?ghrepo=ghrepo1&source=source1&referer=';
-    expect(getParameterValues(invalidUrl)).to.equal('invalidParams');
+    expect(getAndValidateParameterValues(invalidUrl)).to.equal('invalidParams');
   });
 
   it('one missing parameter, it returns string "invalidParams"', () => {
     invalidUrl = url + '?ghrepo=ghrepo1&source=source1&referer';
-    expect(getParameterValues(invalidUrl)).to.equal('invalidParams');
+    expect(getAndValidateParameterValues(invalidUrl)).to.equal('invalidParams');
   });
 
   it('one valid parameter, but the rest is missing, it returns string "invalidParams"', () => {
     invalidUrl = url + '?ghrepo=xyz';
-    expect(getParameterValues(invalidUrl)).to.equal('invalidParams');
+    expect(getAndValidateParameterValues(invalidUrl)).to.equal('invalidParams');
   });
 
   it('two missing parameters, it returns string "invalidParams"', () => {
     invalidUrl = url + '?ghrepo';
-    expect(getParameterValues(invalidUrl)).to.equal('invalidParams');
+    expect(getAndValidateParameterValues(invalidUrl)).to.equal('invalidParams');
   });
 
   it('any parameter that is not matching any of the expected keys, it returns string "invalidParams"', () => {
     invalidUrl = url + '?xyz';
-    expect(getParameterValues(invalidUrl)).to.equal('invalidParams');
+    expect(getAndValidateParameterValues(invalidUrl)).to.equal('invalidParams');
   });
 
   it('no parameters at all, it returns string "noParams"', () => {
     invalidUrl = url;
-    expect(getParameterValues(invalidUrl)).to.equal('noParams');
+    expect(getAndValidateParameterValues(invalidUrl)).to.equal('noParams');
   });
 })
 
