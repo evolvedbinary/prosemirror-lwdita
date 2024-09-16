@@ -178,6 +178,43 @@ export class InputContainer {
 }
 
 /**
+ * Render a dialog form for inserting the PR metadata
+ */
+export function renderPrDialog(): void {
+  const overlay = document.createElement('div');
+  overlay.id = 'prOverlay';
+  document.body.appendChild(overlay);
+
+  // Create a form
+  const form = document.createElement('form');
+  form.id = 'prForm';
+
+  // Create the form content
+  const title = document.createElement('h1');
+  title.textContent = 'What are your changes?';
+
+  const titleLabel = document.createElement('label');
+  titleLabel.textContent = 'Please provide a title for your changes';
+  titleLabel.htmlFor = 'titleInput';
+
+  const titleInput = document.createElement('input');
+  titleInput.id = 'titleInput';
+  titleInput.type = 'text';
+  titleInput.required = true;
+  titleInput.size = 50;
+  titleInput.name = 'titleInput';
+  titleInput.placeholder = 'title';
+
+  form.appendChild(title);
+  form.appendChild(titleLabel);
+  form.appendChild(titleInput);
+
+  // Add dialog to document body
+  document.body.appendChild(overlay);
+  overlay.appendChild(form);
+}
+
+/**
  * Render an image upload dialog with an overlay
  * upload an image from local machine or a URL
  * set the image attributes like height, width, alt text
@@ -801,7 +838,7 @@ export function enterPressed(state: EditorState, dispatch?: (tr: Transaction) =>
 
   // prepare the transaction
   let resultTr: false | Transaction
- 
+
   if(isEOL(state.tr, depth)) {
     if($from.parentOffset === 0 ) {
       resultTr = enterEmpty(tr, !!dispatch, depth)
