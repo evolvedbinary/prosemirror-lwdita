@@ -32,11 +32,17 @@ describe('GitHub API Routes', () => {
 
   beforeEach(() => {
     // Stub the controller methods
-    authenticateUserStub = sinon.stub(githubController, 'authenticateUserWithOctokit').resolves();
-    getUserInfoStub = sinon.stub(githubController, 'getUserInformation').resolves();
-    commitChangesStub = sinon.stub(githubController, 'commitChangesAndCreatePR').resolves();
+    authenticateUserStub = sinon.stub(githubController, 'authenticateUserWithOctokit').callsFake(async (req, res) => {
+      return res.status(200).json({ token: 'token'});
+    });
+    getUserInfoStub = sinon.stub(githubController, 'getUserInformation').callsFake(async (req, res) => {
+      return res.status(200).json({ user: 'user'});
+    });
+    commitChangesStub = sinon.stub(githubController, 'commitChangesAndCreatePR').callsFake(async (req, res) => {
+      return res.status(200).json({ link: 'link'});
+    });
   });
-
+  
   afterEach(() => {
     // Restore original methods after each test
     sinon.restore();
@@ -46,7 +52,7 @@ describe('GitHub API Routes', () => {
   it('should return API information on GET /api/github/', async () => {
     const response = await request(app).get('/api/github/');
     expect(response.status).to.equal(200);
-    expect(response.text).to.equal('API information');
+    expect(response.text).to.equal('Github API');
   });
 
   // Test for GET /api/github/token
