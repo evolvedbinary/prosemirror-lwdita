@@ -181,76 +181,41 @@ export class InputContainer {
  * Render a dialog form for inserting the PR metadata
  */
 export function renderPrDialog(): void {
-  const overlay = document.createElement('div');
+  const overlay = document.createElement('section');
   overlay.id = 'prOverlay';
   document.body.appendChild(overlay);
 
-  // Create a form
-  const form = document.createElement('form');
-  form.id = 'prForm';
+  const dialog = document.createElement('div');
+  dialog.id = 'prDialog';
 
-  // Create the form content
-  const title = document.createElement('h1');
-  title.textContent = 'Please describe your changes';
+  const dialogHtml = `
+    <h1>Please describe your changes</h1>
+    <form id="prForm">
+      <div class="pt__form-field pt__flex--column">
+        <label for="titleInput">Title (required)</label>
+        <input type="text" id="titleInput" name="prData" placeholder="Title" required size="50" maxLength="50" minLength="1">
+      </div>
+      <div class="pt__form-field pt__flex--column">
+        <label for="descField">Description (optional)</label>
+        <textarea id="descField" name="prData" placeholder="Description" rows="5" cols="48"></textarea>
+      </div>
+      <div id="btnContainer" class="pt__form-field pt__flex--row">
+        <input type="button" class="pt__button" id="closeButton" value="Cancel and return to Editor">
+        <input type="submit" class="pt__button" id="okButton" value="Publish your changes">
+      </div>
+    </form>
+  `;
 
-  const titleLabel = document.createElement('label');
-  titleLabel.textContent = 'Title (required)';
-  titleLabel.htmlFor = 'titleInput';
+  dialog.innerHTML = dialogHtml;
 
-  const titleInput = document.createElement('input');
-  titleInput.id = 'titleInput';
-  titleInput.type = 'text';
-  titleInput.required = true;
-  titleInput.size = 50;
-  titleInput.maxLength = 50;
-  titleInput.minLength = 1;
-  titleInput.name = 'prData';
-  titleInput.placeholder = 'Title';
-
-  const descriptionLabel = document.createElement('label');
-  descriptionLabel.textContent = 'Description (optional)';
-  descriptionLabel.htmlFor = 'descField';
-
-  const descriptionInput = document.createElement('textarea');
-  descriptionInput.id = 'descField';
-  descriptionInput.rows = 5;
-  descriptionInput.cols = 40;
-  descriptionInput.name = 'prData';
-  descriptionInput.placeholder = 'Description';
-
-  form.appendChild(title);
-  form.appendChild(titleLabel);
-  form.appendChild(titleInput);
-  form.appendChild(descriptionLabel);
-  form.appendChild(descriptionInput);
-
-  const btnContainer = document.createElement('div');
-  btnContainer.id = 'btnContainer';
-
-  const closeButton = document.createElement('input');
-  closeButton.type = 'button';
-  closeButton.className = 'p__button';
-  closeButton.id = 'closeButton';
-  closeButton.value = 'Cancel and return to editor';
-
-  const okButton = document.createElement('input');
-  okButton.type = 'submit';
-  okButton.className = 'p__button';
-  okButton.id = 'okButton';
-  okButton.textContent = 'Publish your changes';
-
-  btnContainer.appendChild(closeButton);
-  btnContainer.appendChild(okButton);
-
-  // Add dialog to document body
   document.body.appendChild(overlay);
-  overlay.appendChild(form);
-  form.appendChild(btnContainer);
+  overlay.appendChild(dialog);
 
-  // Add event listener to close button
-  closeButton.addEventListener('click', function () {
-    document.body.removeChild(overlay);
-    return null;
+  overlay.addEventListener('click', function (e) {
+    if ((e.target as HTMLElement).matches('#closeButton')) {
+      document.body.removeChild(overlay);
+      return null;
+    }
   });
 
   overlay.addEventListener('click', function (e) {
@@ -259,7 +224,26 @@ export function renderPrDialog(): void {
       return null;
     }
   });
+
+  dialog.addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    const titleInput = document.getElementById('titleInput') as HTMLInputElement;
+    const descField = document.getElementById('descField') as HTMLTextAreaElement;
+
+    if (titleInput && descField) {
+      const title = titleInput.value;
+      const description = descField.value;
+
+      // Start the API request here
+      console.log('Title:', title);
+      console.log('Description:', description);
+
+      document.body.removeChild(overlay);
+    }
+  });
 }
+
 
 /**
  * Render an image upload dialog with an overlay
