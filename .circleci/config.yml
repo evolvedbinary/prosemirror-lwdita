@@ -97,12 +97,24 @@ jobs:
           package-manager: "yarn-berry"
       - cypress/run-tests:
           cypress-command: yarn run test:demo
+  test-backend:
+    docker:
+      - image: cimg/node:<< pipeline.parameters.node-image-tag >>
+    resource_class: << pipeline.parameters.resource-class >>
+    steps:
+      - checkout
+      - install-yarn
+      - install-dependencies
+      - run:
+          name: test backend
+          command: yarn test:backend
 workflows:
   build-and-test:
     jobs:
       - lint
       - build
       - coverage
+      - test-backend
       - generate-docs
       - build-demo
       - run-cypress
