@@ -271,7 +271,8 @@ body {
   border: 1 solid transparent;
 }
 
-/* Modal dialogs */
+
+/*** Modal dialogs ***/
 
 #overlay,
 #prOverlay {
@@ -288,14 +289,85 @@ body {
   text-align: center;
 }
 
-#prForm {
-  background: white;
-  padding: 20px;
+/* PR Dialog for GitHub Integration */
+
+#prDialog {
+  background: #ffffff;
+  padding: 2.5rem 2rem;
   border-radius: 8px;
   display: flex;
   flex-direction: column;
   align-items: start;
+  min-width: 26rem;
+
+  h1 {
+    text-align: left;
+    margin: 0 0 2rem 0;
+  }
+
+  label, input, textarea {
+    font-size: 1rem;
+  }
+
+  label {
+    font-weight: 600;
+  }
 }
+
+#prForm {
+  min-width: 26rem;
+}
+
+.pt {
+  &__form-field {
+    &:not(:last-child) {
+      margin-bottom: 2rem;
+    }
+    &:last-child {
+      margin-top: 3.5rem;
+    }
+
+    > input,
+    > textarea {
+      padding: 0.5rem;
+      resize: vertical;
+      font-family: inherit;
+    }
+  }
+
+  &__flex {
+    &--column {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: .7rem;
+    }
+
+    &--row {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+    }
+  }
+}
+
+.pt__button {
+  appearance: none;
+  border-radius: 4px;
+  border: 1px solid #767676;
+  font-size: 1rem;
+  font-weight: 400;
+}
+
+// Branded submit buttons
+input[type="submit"] {
+  color: #ffffff;
+  background-color: #a43e62;
+  border: 1px solid #a43e62;
+}
+
+
+/* Insert Image dialog */
 
 #dialog {
   background: white;
