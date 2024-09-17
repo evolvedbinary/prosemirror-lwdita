@@ -191,10 +191,10 @@ export function renderPrDialog(): void {
 
   // Create the form content
   const title = document.createElement('h1');
-  title.textContent = 'What are your changes?';
+  title.textContent = 'Please describe your changes';
 
   const titleLabel = document.createElement('label');
-  titleLabel.textContent = 'Please provide a title for your changes';
+  titleLabel.textContent = 'Title (required)';
   titleLabel.htmlFor = 'titleInput';
 
   const titleInput = document.createElement('input');
@@ -202,16 +202,63 @@ export function renderPrDialog(): void {
   titleInput.type = 'text';
   titleInput.required = true;
   titleInput.size = 50;
-  titleInput.name = 'titleInput';
-  titleInput.placeholder = 'title';
+  titleInput.maxLength = 50;
+  titleInput.minLength = 1;
+  titleInput.name = 'prData';
+  titleInput.placeholder = 'Title';
+
+  const descriptionLabel = document.createElement('label');
+  descriptionLabel.textContent = 'Description (optional)';
+  descriptionLabel.htmlFor = 'descField';
+
+  const descriptionInput = document.createElement('textarea');
+  descriptionInput.id = 'descField';
+  descriptionInput.rows = 5;
+  descriptionInput.cols = 40;
+  descriptionInput.name = 'prData';
+  descriptionInput.placeholder = 'Description';
 
   form.appendChild(title);
   form.appendChild(titleLabel);
   form.appendChild(titleInput);
+  form.appendChild(descriptionLabel);
+  form.appendChild(descriptionInput);
+
+  const btnContainer = document.createElement('div');
+  btnContainer.id = 'btnContainer';
+
+  const closeButton = document.createElement('input');
+  closeButton.type = 'button';
+  closeButton.className = 'p__button';
+  closeButton.id = 'closeButton';
+  closeButton.value = 'Cancel and return to editor';
+
+  const okButton = document.createElement('input');
+  okButton.type = 'submit';
+  okButton.className = 'p__button';
+  okButton.id = 'okButton';
+  okButton.textContent = 'Publish your changes';
+
+  btnContainer.appendChild(closeButton);
+  btnContainer.appendChild(okButton);
 
   // Add dialog to document body
   document.body.appendChild(overlay);
   overlay.appendChild(form);
+  form.appendChild(btnContainer);
+
+  // Add event listener to close button
+  closeButton.addEventListener('click', function () {
+    document.body.removeChild(overlay);
+    return null;
+  });
+
+  overlay.addEventListener('click', function (e) {
+    if (e.target === overlay) {
+      document.body.removeChild(overlay);
+      return null;
+    }
+  });
 }
 
 /**
