@@ -116,7 +116,7 @@ export function publishFileMenuItem(): MenuElement {
     enable: () => true,
     render(editorView) {
       const el = document.createElement('div');
-      el.classList.add('ProseMirror-menuitem-file');
+      el.classList.add('ProseMirror-menuitem-file', 'publish');
       const link = document.createElement('a');
       link.download = storedFileName + '.xml';
       link.textContent = 'Publish "' + storedFileName + '.xml"';
