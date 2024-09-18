@@ -10,14 +10,15 @@ import { doubleClickImagePlugin, processRequest } from '@evolvedbinary/prosemirr
 
 const schemaObject = schema();
 
-// if the user passes a file in the URL, load that file
-// otherwise load the default file
-const loadJsonDoc = jsonDocLoader;
-
 /**
  * Process the URL parameters and handle the notifications
  */
 const urlParams = processRequest();
+// TODO(YB): fetch and render the file from the URL
+
+// if the user passes a file in the URL, load that file
+// otherwise load the default file
+const loadJsonDoc = jsonDocLoader;
 
 /**
  * Load the json document and create a new EditorView.

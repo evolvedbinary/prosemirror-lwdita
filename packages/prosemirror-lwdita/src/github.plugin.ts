@@ -30,9 +30,7 @@ import { document as jditaToProsemirrorJson } from "./document";
  * should use the GitHub API to dynamically determine the default branch of the repository.
  */
 export const fetchRawDocumentFromGitHub = async (ghrepo: string, source: string): Promise<string> => {
-  // https://raw.githubusercontent.com/evolvedbinary/prosemirror-lwdita/main/packages/prosemirror-lwdita-demo/example-xdita/02-short-file.xml
-  // We have an issue of the branch, we should use the default branch of the repo
-  //TODO(YB): We should use the GitHub API to get the default branch of the repo
+  //TODO(YB): the branch should be passed as a parameter
   const url = `https://raw.githubusercontent.com/${ghrepo}/main/${source}`;
   const response = await fetch(url);
 
@@ -55,4 +53,21 @@ export const transformGitHubDocumentToProsemirrorJson = async (rawDocument: stri
   const prosemirrorJson = await jditaToProsemirrorJson(jdita);
 
   return prosemirrorJson;
+};
+
+/**
+ * Exchanges an OAuth code for an access token.
+ *
+ * @param code - The OAuth code to exchange for an access token.
+ * @returns A promise that resolves to the access token as a string.
+ * @throws Will throw an error if the fetch request fails or if the response is not in the expected format.
+ */
+export const exchangeOAuthCodeForAccessToken = async (code: string): Promise<string> => {
+  // build the URL to exchange the code for an access token
+  const url = `http://localhost:3000/api/github/token?code=${code}`;
+  // fetch the access token
+  const response = await fetch(url);
+  const json = await response.json();
+  //TODO: Handle errors
+  return json;
 };

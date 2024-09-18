@@ -17,6 +17,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import { showToast } from './toast';
 import { clientID } from './config';
+import { exchangeOAuthCodeForAccessToken } from './github.plugin';
 
 /**
  * List of valid URL key names in parameters
@@ -34,7 +35,7 @@ export const validKeys = ['ghrepo', 'source', 'referer'];
  * @param url - URL string
  * @returns An array with key-value objects of the URL parameter values or a status string for handling the notifications
  */
-export function getAndValidateParameterValues(url: string): 'validParams' | 'invalidParams' | 'noParams' | { key: string, value: string }[] {
+export function getAndValidateParameterValues(url: string): 'invalidParams' | 'noParams' | { key: string, value: string }[] {
   const parameters: { key: string, value: string }[] = [];
 
   const urlParts = url.split('?');
@@ -50,6 +51,13 @@ export function getAndValidateParameterValues(url: string): 'validParams' | 'inv
     parameters.push({ key, value });
   }
 
+  // check if the URL parameters are from oauth redirect
+  for (const param of parameters) {
+    if (isOAuthCodeParam(param.key)) {
+      return parameters;
+    }
+  }
+
   const hasMissingValues = parameters.some(({ value }) => value === null || value === '');
   const hasInvalidParams = validKeys.some(key => !params.has(key));
 
@@ -58,9 +66,6 @@ export function getAndValidateParameterValues(url: string): 'validParams' | 'inv
     return 'invalidParams';
   }
 
-  if (!hasMissingValues && !hasInvalidParams) {
-    return parameters;
-  }
   return parameters;
 }
 
@@ -75,18 +80,24 @@ export function isValidParam(key: string): boolean {
   return validKeys.includes(key);
 }
 
+export function isOAuthCodeParam(key: string): boolean {
+  return key === 'code' || key === 'error';
+}
+
 /**
  * Shows a toast notification based on the given parameters
  *
  * @param parameters - The URL parameters
  */
-export function showNotification(parameters: 'validParams' | 'invalidParams' | 'noParams' | { key: string, value: string }[]): void {
+export function showNotification(parameters: 'authenticated' | 'invalidParams' | 'noParams' | { key: string, value: string }[]): void {
   if (typeof parameters === 'object') {
     showToast('Success! You will be redirected to GitHub OAuth', 'success');
   } else if (parameters === 'invalidParams') {
     showToast('Your request is invalid.', 'error');
   } else if (parameters === 'noParams') {
     showToast('Welcome to the Petal Demo Website.', 'info');
+  } else if(parameters === 'authenticated') {
+    showToast('You are authenticated.', 'success');
   }
 }
 
@@ -109,17 +120,56 @@ export function processRequest(): undefined | { key: string, value: string }[] {
 
     try {
       const parameters = getAndValidateParameterValues(currentUrl);
+      
       if (typeof parameters === 'string') {
+        if(parameters === 'invalidParams') {
+          //TODO(YB): Redirect to referer if it exists
+          //TODO(YB): Redirect to Petal error page if referer doesn't exist
+        }
         showNotification(parameters);
-      }
 
-      if (typeof parameters === 'object') {
+        return undefined;
+      } else if (typeof parameters === 'object' && !parameters.some(param => isOAuthCodeParam(param.key))) {
         // Store the parameters in localStorage for reading the values after the OAuth flow
         // TODO: After a successful GitHub Authentication, read the user parameters from localStorage and clear it afterwards
         localStorage.setItem('userParams', JSON.stringify(parameters));
 
         // Redirect to GitHub OAuth page
         redirectToGitHubOAuth();
+      } else if (typeof parameters === 'object' && parameters.some(param => isOAuthCodeParam(param.key))) {
+        //TODO(YB): These Params should passed with the OAuth redirect URL
+        // get the stored parameters from localStorage
+        const storedParams = localStorage.getItem('userParams');
+        if(!storedParams) {
+          // TODO: Redirect to Petal error page
+          // we should never reach here
+          return undefined;
+        }
+        // in case of an error, the user did not authenticate the app
+        const errorParam = parameters.find(param => param.key === 'error');
+        if(errorParam) {
+          //TODO(YB): redirect to petal error page
+          // Petal error page should have a button to redirect to the referer
+          return undefined;
+        }
+
+        // exchange the code for an access token
+        const codeParam = parameters.find(param => param.key === 'code');
+        if (!codeParam) return undefined; // I don't understand why this is necessary as the previous if statement should have caught this
+        const code = codeParam.value;
+        
+
+        exchangeOAuthCodeForAccessToken(code).then(token => {
+          localStorage.setItem('token', token);
+        }).catch(e => {
+          console.error(e);
+        });
+
+        // Show a success notification
+        showNotification("authenticated");
+
+        // return the stored parameters and the new parameters from the URL
+        return JSON.parse(storedParams);
       }
 
     } catch (error) {
