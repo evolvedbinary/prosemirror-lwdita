@@ -16,7 +16,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 import { showToast } from './toast';
-import { clientID } from './config';
+import { clientID } from '../config';
 import { exchangeOAuthCodeForAccessToken } from './github.plugin';
 
 /**
@@ -120,7 +120,7 @@ export function processRequest(): undefined | { key: string, value: string }[] {
 
     try {
       const parameters = getAndValidateParameterValues(currentUrl);
-      
+
       if (typeof parameters === 'string') {
         if(parameters === 'invalidParams') {
           //TODO(YB): Redirect to referer if it exists
@@ -157,7 +157,7 @@ export function processRequest(): undefined | { key: string, value: string }[] {
         const codeParam = parameters.find(param => param.key === 'code');
         if (!codeParam) return undefined; // I don't understand why this is necessary as the previous if statement should have caught this
         const code = codeParam.value;
-        
+
 
         exchangeOAuthCodeForAccessToken(code).then(token => {
           localStorage.setItem('token', token);

@@ -15,7 +15,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import { getAndValidateParameterValues, isOAuthCodeParam, isValidParam } from '../src/request';
+import { getAndValidateParameterValues, isOAuthCodeParam, isValidParam } from '../src/github-integration/request';
 import ChaiPromised from 'chai-as-promised';
 import { use, expect } from 'chai';
 

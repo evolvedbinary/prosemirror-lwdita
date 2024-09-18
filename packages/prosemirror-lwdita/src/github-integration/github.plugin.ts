@@ -16,7 +16,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 import { xditaToJdita } from "@evolvedbinary/lwdita-xdita";
-import { document as jditaToProsemirrorJson } from "./document";
+import { document as jditaToProsemirrorJson } from "../document";
 
 /**
  * Fetches the raw content of a document from a GitHub repository.
