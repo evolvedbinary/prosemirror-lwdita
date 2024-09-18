@@ -15,7 +15,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import { getAndValidateParameterValues, isValidParam } from '../request';
+import { getAndValidateParameterValues, isOAuthCodeParam, isValidParam } from '../request';
 import ChaiPromised from 'chai-as-promised';
 import { use, expect } from 'chai';
 
@@ -64,6 +64,11 @@ describe('When function getParameterValues() is passed a URL with', () => {
     invalidUrl = url;
     expect(getAndValidateParameterValues(invalidUrl)).to.equal('noParams');
   });
+
+  it('OAuth code parameter, it returns an object containing key-value pairs', () => {
+    validUrl = url + '?code=xyz';
+    expect(getAndValidateParameterValues(validUrl)).to.deep.equal([{ key: 'code', value: 'xyz' }]);
+  });
 })
 
 // Function isValidParam()
@@ -77,6 +82,16 @@ describe('When function isValidParam() is passed a key', () => {
     expect(isValidParam('xyz')).to.equal(false);
   });
 })
+
+describe('When function isOAuthCodeParam() is passed a key', () => {
+  it('that is an OAuth code key, it returns true', () => {
+    expect(isOAuthCodeParam('code')).to.equal(true);
+  });
+
+  it('that is not an OAuth code key, it returns false', () => {
+    expect(isOAuthCodeParam('xyz')).to.equal(false);
+  });
+});
 
 // Function showNotification()
 // TODO: This needs to be tested in Cypress as it requires browser testing.
