@@ -91,12 +91,16 @@ export const getUserInformation = async (req: Request, res: Response) => {
  *          error message will be returned.
  */
 export const commitChangesAndCreatePR = async (req: Request, res: Response) => {
-  //TODO(YB): Add validation
-  const { owner, repo, newOwner, newBranch, commitMessage, change, title, body } = req.body;
-
   if (!req.headers.authorization) {
     return res.status(403).json({ error: 'No credentials sent!' });
   }
+
+  //TODO(YB): Add validation
+  const { owner, repo, newOwner, newBranch, commitMessage, change, title, body } = req.body;
+  if(!owner || !repo || !newOwner || !newBranch || !commitMessage || !change || !title || !body) {
+    return res.status(400).json({ error: 'Bad Request : Invalid argument' });
+  }
+
   // the token is sent as a Bearer token in the Authorization header
   const token = req.headers.authorization.split(' ')[1];
 

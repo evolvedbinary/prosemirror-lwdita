@@ -16,23 +16,22 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 import { Router } from 'express';
-import { authenticateUserWithOctokit, commitChangesAndCreatePR, getUserInformation } from '../controller/github.controller';
+import * as githubController from '../controller/github.controller';
 
 const router = Router();
 
 // GET /api/github/
 router.get('/', (req, res) => {
-  //TODO: send API information
-  res.send('API information');
+  res.send('Github API');
 });
 
 // GET /api/github/token exchange user code for token
-router.get('/token', authenticateUserWithOctokit);
+router.get('/token', (req, res) => githubController.authenticateUserWithOctokit(req, res));
 
 // GET /api/github/user get user information
-router.get('/user', getUserInformation);
+router.get('/user', (req, res) => githubController.getUserInformation(req, res));
 
 // POST /api/github/integration commit changes and create PR
-router.post('/integration', commitChangesAndCreatePR)
+router.post('/integration', (req, res) => githubController.commitChangesAndCreatePR(req, res))
 
 export default router;
