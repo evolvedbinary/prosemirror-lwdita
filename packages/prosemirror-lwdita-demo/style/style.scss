@@ -375,6 +375,11 @@ input[type="submit"] {
   border: 1px solid #a43e62;
 }
 
+input[type="button"],
+input[type="submit"],
+button {
+  cursor: pointer;
+}
 
 /* Insert Image dialog */
 
