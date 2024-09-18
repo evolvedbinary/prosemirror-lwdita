@@ -192,15 +192,15 @@ export function renderPrDialog(): void {
     <h1>Please describe your changes</h1>
     <form id="prForm">
       <div class="pt__form-field pt__flex--column">
-        <label for="titleInput">Title (required)</label>
-        <input type="text" id="titleInput" name="prData" placeholder="Title" required size="50" maxLength="50" minLength="1">
+        <label class="pt__label" for="titleInput">Title <br><span class="pt__label--info">Required, max. 50 characters</span></label>
+        <input type="text" id="titleInput" name="prData" required size="50" maxLength="50" minLength="1">
       </div>
       <div class="pt__form-field pt__flex--column">
-        <label for="descField">Description (optional)</label>
-        <textarea id="descField" name="prData" placeholder="Description" rows="5" cols="48"></textarea>
+        <label class="pt__label" for="descField">Description <br><span class="pt__label--info">Optional</span></label>
+        <textarea id="descField" name="prData" rows="5" cols="48"></textarea>
       </div>
       <div id="btnContainer" class="pt__form-field pt__flex--row">
-        <input type="button" class="pt__button" id="closeButton" value="Cancel and return to Editor">
+        <input type="button" class="pt__button" id="closeButton" value="Cancel & return to Editor">
         <input type="submit" class="pt__button" id="okButton" value="Publish your changes">
       </div>
     </form>

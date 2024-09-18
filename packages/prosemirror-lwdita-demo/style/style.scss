@@ -359,6 +359,15 @@ body {
   font-weight: 400;
 }
 
+.pt__label {
+  text-align: left;
+
+  &--info {
+    font-weight: 400;
+    font-style: italic;
+  }
+}
+
 // Branded submit buttons
 input[type="submit"] {
   color: #ffffff;
