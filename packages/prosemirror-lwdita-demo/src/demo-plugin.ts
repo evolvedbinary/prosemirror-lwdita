@@ -138,8 +138,6 @@ function publishGithubDocument(): Command {
   return (state: {[x: string]: any; tr: any; selection: { empty: any; };}, dispatch: (arg0: any) => void) => {
     if (dispatch) {
       dispatch(state.tr);
-      console.log('Publishing the document to GitHub...');
-      //window.location.href = 'https://github.com/login/oauth/authorize?client_id=Iv23li0Pvl3E4crXIBQ0'
       // show the publishing dialog
       renderPrDialog();
     } else {
