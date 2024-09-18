@@ -178,6 +178,74 @@ export class InputContainer {
 }
 
 /**
+ * Render a dialog form for inserting the PR metadata
+ */
+export function renderPrDialog(): void {
+  const overlay = document.createElement('section');
+  overlay.id = 'prOverlay';
+  document.body.appendChild(overlay);
+
+  const dialog = document.createElement('div');
+  dialog.id = 'prDialog';
+
+  const dialogHtml = `
+    <h1>Please describe your changes</h1>
+    <form id="prForm">
+      <div class="pt__form-field pt__flex--column">
+        <label class="pt__label" for="titleInput">Title <br><span class="pt__label--info">Required, max. 50 characters</span></label>
+        <input type="text" id="titleInput" name="prData" required size="50" maxLength="50" minLength="1">
+      </div>
+      <div class="pt__form-field pt__flex--column">
+        <label class="pt__label" for="descField">Description <br><span class="pt__label--info">Optional</span></label>
+        <textarea id="descField" name="prData" rows="5" cols="48"></textarea>
+      </div>
+      <div id="btnContainer" class="pt__form-field pt__flex--row">
+        <input type="button" class="pt__button" id="closeButton" value="Cancel & return to Editor">
+        <input type="submit" class="pt__button" id="okButton" value="Publish your changes">
+      </div>
+    </form>
+  `;
+
+  dialog.innerHTML = dialogHtml;
+
+  document.body.appendChild(overlay);
+  overlay.appendChild(dialog);
+
+  overlay.addEventListener('click', function (e) {
+    if ((e.target as HTMLElement).matches('#closeButton')) {
+      document.body.removeChild(overlay);
+      return null;
+    }
+  });
+
+  overlay.addEventListener('click', function (e) {
+    if (e.target === overlay) {
+      document.body.removeChild(overlay);
+      return null;
+    }
+  });
+
+  dialog.addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    const titleInput = document.getElementById('titleInput') as HTMLInputElement;
+    const descField = document.getElementById('descField') as HTMLTextAreaElement;
+
+    if (titleInput && descField) {
+      const title = titleInput.value;
+      const description = descField.value;
+
+      // Start the API request here
+      console.log('Title:', title);
+      console.log('Description:', description);
+
+      document.body.removeChild(overlay);
+    }
+  });
+}
+
+
+/**
  * Render an image upload dialog with an overlay
  * upload an image from local machine or a URL
  * set the image attributes like height, width, alt text
@@ -801,7 +869,7 @@ export function enterPressed(state: EditorState, dispatch?: (tr: Transaction) =>
 
   // prepare the transaction
   let resultTr: false | Transaction
- 
+
   if(isEOL(state.tr, depth)) {
     if($from.parentOffset === 0 ) {
       resultTr = enterEmpty(tr, !!dispatch, depth)

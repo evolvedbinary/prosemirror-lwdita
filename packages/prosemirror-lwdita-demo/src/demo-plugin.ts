@@ -17,7 +17,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import { Command } from "prosemirror-commands";
 import { MenuElement, MenuItem, MenuItemSpec } from "prosemirror-menu";
-import { InputContainer } from "@evolvedbinary/prosemirror-lwdita";
+import { InputContainer, renderPrDialog } from "@evolvedbinary/prosemirror-lwdita";
 import { unTravel } from "@evolvedbinary/prosemirror-lwdita";
 import { JditaSerializer } from "@evolvedbinary/lwdita-xdita";
 import { InMemoryTextSimpleOutputStreamCollector } from "@evolvedbinary/lwdita-xdita/dist/stream";
@@ -138,9 +138,8 @@ function publishGithubDocument(): Command {
   return (state: {[x: string]: any; tr: any; selection: { empty: any; };}, dispatch: (arg0: any) => void) => {
     if (dispatch) {
       dispatch(state.tr);
-      console.log('Publishing the document to GitHub...');
-      //window.location.href = 'https://github.com/login/oauth/authorize?client_id=Iv23li0Pvl3E4crXIBQ0'
       // show the publishing dialog
+      renderPrDialog();
     } else {
       console.log('Nothing to publish, no EditorState has been dispatched.');
     }
