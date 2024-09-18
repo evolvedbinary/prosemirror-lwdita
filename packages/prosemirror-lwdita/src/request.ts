@@ -66,9 +66,6 @@ export function getAndValidateParameterValues(url: string): 'invalidParams' | 'n
     return 'invalidParams';
   }
 
-  if (!hasMissingValues && !hasInvalidParams) {
-    return parameters;
-  }
   return parameters;
 }
 
@@ -84,7 +81,7 @@ export function isValidParam(key: string): boolean {
 }
 
 export function isOAuthCodeParam(key: string): boolean {
-  return key === 'code';
+  return key === 'code' || key === 'error';
 }
 
 /**
@@ -146,6 +143,13 @@ export function processRequest(): undefined | { key: string, value: string }[] {
         if(!storedParams) {
           // TODO: Redirect to Petal error page
           // we should never reach here
+          return undefined;
+        }
+        // in case of an error, the user did not authenticate the app
+        const errorParam = parameters.find(param => param.key === 'error');
+        if(errorParam) {
+          //TODO(YB): redirect to petal error page
+          // Petal error page should have a button to redirect to the referer
           return undefined;
         }
 

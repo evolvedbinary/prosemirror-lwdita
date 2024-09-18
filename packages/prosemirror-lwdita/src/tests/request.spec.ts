@@ -69,6 +69,11 @@ describe('When function getParameterValues() is passed a URL with', () => {
     validUrl = url + '?code=xyz';
     expect(getAndValidateParameterValues(validUrl)).to.deep.equal([{ key: 'code', value: 'xyz' }]);
   });
+
+  it('OAuth code parameter, it returns an object containing key-value pairs', () => {
+    invalidUrl = url + '?error=xyz';
+    expect(getAndValidateParameterValues(invalidUrl)).to.deep.equal([{ key: 'error', value: 'xyz' }]);
+  });
 })
 
 // Function isValidParam()
@@ -86,6 +91,10 @@ describe('When function isValidParam() is passed a key', () => {
 describe('When function isOAuthCodeParam() is passed a key', () => {
   it('that is an OAuth code key, it returns true', () => {
     expect(isOAuthCodeParam('code')).to.equal(true);
+  });
+
+  it('that is an OAuth code key, it returns true', () => {
+    expect(isOAuthCodeParam('error')).to.equal(true);
   });
 
   it('that is not an OAuth code key, it returns false', () => {
