@@ -16,7 +16,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 import { assert } from 'chai';
-import { getDomNode } from '../dom';
+import { getDomNode } from '../src/dom';
 
 /**
  * Unit tests for dom.ts

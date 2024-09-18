@@ -17,8 +17,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import ChaiPromised from 'chai-as-promised';
 import { use, expect, assert } from 'chai';
-import { document, NODES, _test_private_document } from '../document';
-import { unTravel } from '../untravel-document';
+import { document, NODES, _test_private_document } from '../src/document';
+import { unTravel } from '../src/untravel-document';
 import {
   JDITA_OBJECT,
   TRANSFORMED_JDITA_OBJECT,

@@ -19,8 +19,8 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 import request from 'supertest';
 import express from 'express';
-import githubRoutes from '../api/routes/github.router';
-import * as githubController from '../api/controller/github.controller';
+import githubRoutes from '../src/api/routes/github.router';
+import * as githubController from '../src/api/controller/github.controller';
 
 const app = express();
 app.use(express.json());
@@ -42,7 +42,7 @@ describe('GitHub API Routes', () => {
       return res.status(200).json({ link: 'link'});
     });
   });
-  
+
   afterEach(() => {
     // Restore original methods after each test
     sinon.restore();

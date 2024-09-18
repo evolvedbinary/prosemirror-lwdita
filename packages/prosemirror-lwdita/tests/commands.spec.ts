@@ -20,8 +20,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 import { expect } from "chai";
-import { schema } from "../schema";
-import { _test_private_commands, createNode, createNodesTree } from '../commands';
+import { schema } from "../src/schema";
+import { _test_private_commands, createNode, createNodesTree } from '../src/commands';
 
 const schemaObject = schema();
 

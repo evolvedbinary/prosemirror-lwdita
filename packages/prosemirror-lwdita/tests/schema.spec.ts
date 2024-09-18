@@ -16,9 +16,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 import { assert, expect } from 'chai';
-import { defaultNodeAttrs, defaultNodeName, defaultToDom, getDomAttr, schema, _test_private_schema, SchemaNode } from '../schema';
+import { defaultNodeAttrs, defaultNodeName, defaultToDom, getDomAttr, schema, _test_private_schema, SchemaNode } from '../src/schema';
 import { DOMOutputSpec, MarkSpec, NodeSpec, Schema } from 'prosemirror-model';
-import { createNode } from '../commands';
+import { createNode } from '../src/commands';
 import { AbstractBaseNode, DdNode, TextNode, TopicNode } from '@evolvedbinary/lwdita-ast';
 
 /**
