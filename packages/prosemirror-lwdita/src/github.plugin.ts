@@ -64,10 +64,10 @@ export const transformGitHubDocumentToProsemirrorJson = async (rawDocument: stri
  */
 export const exchangeOAuthCodeForAccessToken = async (code: string): Promise<string> => {
   // build the URL to exchange the code for an access token
-  const url = `/api/github/token?code=${code}`;
+  const url = `http://localhost:3000/api/github/token?code=${code}`;
   // fetch the access token
   const response = await fetch(url);
   const json = await response.json();
   //TODO: Handle errors
-  return json.token;
+  return json;
 };
