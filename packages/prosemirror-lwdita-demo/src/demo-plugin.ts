@@ -108,7 +108,7 @@ export function openFileMenuItem(): MenuElement {
  *
  * @returns {MenuElement} The menu item for publishing the file.
  */
-export function publishFileMenuItem(): MenuElement {
+export function publishFileMenuItem(urlParams: { key: string, value: string }[]): MenuElement {
   //const storedFile = localStorage.getItem('file') ? localStorage.getItem('file') : console.log('No file in the localStorage to save.');
   const storedFileName = localStorage.getItem('fileName') ? localStorage.getItem('fileName') : 'Petal';
 
@@ -125,7 +125,7 @@ export function publishFileMenuItem(): MenuElement {
       return el;
     },
     class: 'ic-github',
-    run: publishGithubDocument()
+    run: publishGithubDocument(urlParams)
   });
 }
 
@@ -134,12 +134,19 @@ export function publishFileMenuItem(): MenuElement {
  *
  * @returns {Command} A ProseMirror command function.
  */
-function publishGithubDocument(): Command {
+function publishGithubDocument(urlParams: { key: string, value: string }[]): Command {
   return (state: {[x: string]: any; tr: any; selection: { empty: any; };}, dispatch: (arg0: any) => void) => {
     if (dispatch) {
       dispatch(state.tr);
+      const xditaPrefix = `<?xml version="1.0" encoding="UTF-8"?>\n<!DOCTYPE topic PUBLIC "-//OASIS//DTD LIGHTWEIGHT DITA Topic//EN" "lw-topic.dtd">\n`;
+      const documentNode = transformToJditaDocumentNode(state);
+      const updatedXdita = xditaPrefix + documentNode;
+
+      const ghrepo = urlParams.find(param => param.key === 'ghrepo')?.value;
+      const source = urlParams.find(param => param.key === 'source')?.value;
+
       // show the publishing dialog
-      renderPrDialog();
+      renderPrDialog(ghrepo, source, updatedXdita);
     } else {
       console.log('Nothing to publish, no EditorState has been dispatched.');
     }

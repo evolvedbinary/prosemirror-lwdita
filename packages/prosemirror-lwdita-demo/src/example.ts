@@ -50,7 +50,7 @@ loadJsonDoc.then(jsonDoc => {
             githubMenuItem({ label: 'prosemirror-lwdita', url: 'https://github.com/evolvedbinary/prosemirror-lwdita' }),
           ]],
           start: [[
-            urlParams? publishFileMenuItem() : openFileMenuItem(),
+            urlParams? publishFileMenuItem(urlParams) : openFileMenuItem(),
             saveFileMenuItem()
           ]],
         }),
