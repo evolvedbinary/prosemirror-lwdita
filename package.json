@@ -36,7 +36,8 @@
     "generate-docs": "yarn workspace @evolvedbinary/prosemirror-lwdita generate-docs",
     "lint": "yarn workspace @evolvedbinary/prosemirror-lwdita lint",
     "start:backend": "yarn workspace @evolvedbinary/prosemirror-lwdita-backend start",
-    "test:backend": "yarn workspace @evolvedbinary/prosemirror-lwdita-backend test"
+    "test:backend": "yarn workspace @evolvedbinary/prosemirror-lwdita-backend test",
+    "clean:backend": "yarn workspace @evolvedbinary/prosemirror-lwdita-backend run clean"
   },
   "engines": {
     "node": ">=20.10.0 <21",
