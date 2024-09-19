@@ -16,7 +16,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 import { expect } from 'chai';
-import { fetchRawDocumentFromGitHub, transformGitHubDocumentToProsemirrorJson } from '../github.plugin';
+import { fetchRawDocumentFromGitHub, transformGitHubDocumentToProsemirrorJson } from '../src/github-integration/github.plugin';
 import fetchMock from 'fetch-mock';
 import { shortXdita, shortXditaProsemirroJson } from './test-utils';
 
@@ -57,7 +57,7 @@ describe('fetchRawDocumentFromGitHub', () => {
 describe('transformGitHubDocumentToProsemirrorJson', () => {
   it('should transform a raw GitHub document into a ProseMirror state save', async () => {
     const mockXdita = shortXdita;
-    
+
     const prosemirrorJson = await transformGitHubDocumentToProsemirrorJson(mockXdita)
 
     const mockJson = shortXditaProsemirroJson;

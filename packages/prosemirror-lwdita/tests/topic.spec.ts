@@ -19,7 +19,7 @@ import ChaiPromised from 'chai-as-promised';
 import { use } from 'chai';
 import { expect } from 'chai';
 import { xditaToJdita } from "@evolvedbinary/lwdita-xdita";
-import { document } from '../document';
+import { document } from '../src/document';
 import { topic } from './test-utils';
 
 use(ChaiPromised);

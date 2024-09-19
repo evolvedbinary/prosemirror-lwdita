@@ -18,7 +18,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import { expect } from 'chai';
 import sinon from 'sinon';
 import { Request, Response } from 'express';
-import { authenticateUserWithOctokit, commitChangesAndCreatePR, getUserInformation } from '../api/controller/github.controller';
+import { authenticateUserWithOctokit, commitChangesAndCreatePR, getUserInformation } from '../src/api/controller/github.controller';
 
 describe('authenticateUserWithOctokit', () => {
   let req: Partial<Request>;
