@@ -91,7 +91,7 @@ export const exchangeOAuthCodeForAccessToken = async (code: string): Promise<str
  * @param token - The authorization token to access the GitHub API.
  * @returns A promise that resolves to a record containing user information.
  */
-const getUserInfo = async (token: string): Promise<Record<string, string>> => {
+export const getUserInfo = async (token: string): Promise<Record<string, string>> => {
   const url = `http://localhost:3000/api/github/user`;
   const response = await fetch(url, {
     headers: {
