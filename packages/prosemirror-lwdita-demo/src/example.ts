@@ -6,7 +6,7 @@ import jsonDocLoader from "./doc";
 import { menu, shortcuts } from "@evolvedbinary/prosemirror-lwdita";
 import { githubMenuItem, openFileMenuItem, publishFileMenuItem, saveFileMenuItem} from "./demo-plugin";
 import { history } from "prosemirror-history";
-import { doubleClickImagePlugin, processRequest, fetchRawDocumentFromGitHub, transformGitHubDocumentToProsemirrorJson } from '@evolvedbinary/prosemirror-lwdita'
+import { doubleClickImagePlugin, processRequest, fetchAndTransform } from '@evolvedbinary/prosemirror-lwdita'
 
 const schemaObject = schema();
 
@@ -23,7 +23,7 @@ if(urlParams) {
   const source = urlParams.find((param) => param.key === 'source');
 
   // create a new promise to fetch the raw document from GitHub then transform it to ProseMirror JSON
-  loadJsonDoc = fetchRawDocumentFromGitHub(ghrepo?.value, source?.value).then((rawDoc: string) => transformGitHubDocumentToProsemirrorJson(rawDoc));
+  loadJsonDoc = fetchAndTransform(ghrepo?.value, source?.value);
 }
 
 /**
@@ -66,6 +66,7 @@ loadJsonDoc.then(jsonDoc => {
     });
   }
 }).catch(e => {
+  //TODO(YB): This should be the fall back page when we can't load the file
   console.error(e);
   const h2 = document.createElement('h2');
   h2.innerText = 'Failed to load the file';
