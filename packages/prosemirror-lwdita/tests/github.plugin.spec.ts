@@ -124,6 +124,7 @@ describe('createPrFromContribution', () => {
   it('should create a pull request from a contribution', async () => {
     const ghrepo = 'evolvedbinary/prosemirror-lwdita';
     const source = 'packages/prosemirror-lwdita-demo/example-xdita/02-short-file.xml';
+    const branch = 'main';
     const title = 'Update the document';
     const description = 'Update the document';
     const changedDocument = '<xml>Changed Content</xml>';
@@ -142,7 +143,7 @@ describe('createPrFromContribution', () => {
         login: 'marmoure',
       },
     }); 
-    await createPrFromContribution(ghrepo, source, changedDocument, title, description);
+    await createPrFromContribution(ghrepo, source, branch, changedDocument, title, description);
     const lastCall = fetchMock.lastCall('http://localhost:3000/api/github/integration') as fetchMock.MockCall;
     if (!lastCall) {
       throw new Error('No fetch call found for /api/github/integration');
