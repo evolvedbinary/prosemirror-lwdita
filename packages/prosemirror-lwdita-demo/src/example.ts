@@ -10,7 +10,6 @@ import { doubleClickImagePlugin, processRequest, fetchAndTransform, URLParams } 
 
 const schemaObject = schema();
 
-
 // Check if the "welcome" note has not yet been dismissed
 // and show it on page load
 if (!hasConfirmedNotification()) {

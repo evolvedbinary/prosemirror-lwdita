@@ -113,13 +113,13 @@ export const getUserInfo = async (token: string): Promise<Record<string, string>
  * @param changedDocument - The content of the changed document.
  * @returns A promise that resolves when the document has been published.
  */
-export const createPrFromContribution = async (ghrepo: string, source: string, changedDocument: string, title: string, desc: string): Promise<string> => {
+export const createPrFromContribution = async (ghrepo: string, source: string, branch: string, changedDocument: string, title: string, desc: string): Promise<string> => {
   const authenticatedUserInfo = await getUserInfo(localStorage.getItem('token') as string);
   
   const owner = ghrepo.split('/')[0];
   const repo = ghrepo.split('/')[1];
   const newOwner = authenticatedUserInfo.login;
-  const newBranch = "new-branch-petal-app";
+  const newBranch = "new-branch-petal" + Math.floor(Math.random() * 1000);
   const commitMessage = title;
   const path = source;
   const content = changedDocument;
@@ -141,6 +141,7 @@ export const createPrFromContribution = async (ghrepo: string, source: string, c
       owner,
       repo,
       newOwner,
+      branch,
       newBranch,
       commitMessage,
       change,

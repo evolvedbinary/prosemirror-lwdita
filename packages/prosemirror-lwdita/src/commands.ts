@@ -181,7 +181,7 @@ export class InputContainer {
 /**
  * Render a dialog form for inserting the PR metadata
  */
-export function renderPrDialog(ghrepo: string, source: string, updatedXdita: string): void {
+export function renderPrDialog(ghrepo: string, source: string, branch: string, updatedXdita: string): void {
   const overlay = document.createElement('section');
   overlay.id = 'prOverlay';
   document.body.appendChild(overlay);
@@ -241,7 +241,7 @@ export function renderPrDialog(ghrepo: string, source: string, updatedXdita: str
       console.log('Description:', description);
 
       // Create a PR from the contribution
-      createPrFromContribution(ghrepo, source, updatedXdita, title, description)
+      createPrFromContribution(ghrepo, source, branch, updatedXdita, title, description)
       .then((prURL: string) => {
         console.log('The document has been published to GitHub.');
         console.log('pr url:', prURL);
