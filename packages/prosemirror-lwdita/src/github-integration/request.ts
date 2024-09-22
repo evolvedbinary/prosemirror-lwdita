@@ -32,7 +32,7 @@ export interface URLParams {
  * source = GitHub resource,
  * referer = Referer of the request
  */
-export const validKeys = ['ghrepo', 'source', 'referer'];
+export const validKeys = ['ghrepo', 'source', 'branch', 'referer'];
 
 /**
  * Retrieves the values of the valid URL parameters `ghrepo`, `source`, and `referer`
