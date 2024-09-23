@@ -16,7 +16,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 import { showToast } from './toast';
-import { clientID } from '../config';
+import { clientID, serverURL } from '../config';
 import { exchangeOAuthCodeForAccessToken } from './github.plugin';
 
 /**
@@ -35,7 +35,7 @@ export const validKeys = ['ghrepo', 'source', 'referer'];
  * @param url - URL string
  * @returns An array with key-value objects of the URL parameter values or a status string for handling the notifications
  */
-export function getAndValidateParameterValues(url: string): 'invalidParams' | 'noParams' | { key: string, value: string }[] {
+export function getAndValidateParameterValues(url: string): 'invalidParams' | 'refererMissing' | 'noParams' | { key: string, value: string }[] {
   const parameters: { key: string, value: string }[] = [];
 
   const urlParts = url.split('?');
@@ -58,14 +58,19 @@ export function getAndValidateParameterValues(url: string): 'invalidParams' | 'n
     }
   }
 
+  // Check if referer parameter is missing
+  const hasMissingReferer = !params.has('referer');
   const hasMissingValues = parameters.some(({ value }) => value === null || value === '');
   const hasInvalidParams = validKeys.some(key => !params.has(key));
 
   // Return the status string for the notifications
+  if (hasMissingReferer) {
+    return 'refererMissing';
+  }
+
   if (hasMissingValues || hasInvalidParams) {
     return 'invalidParams';
   }
-
   return parameters;
 }
 
@@ -89,11 +94,13 @@ export function isOAuthCodeParam(key: string): boolean {
  *
  * @param parameters - The URL parameters
  */
-export function showNotification(parameters: 'authenticated' | 'invalidParams' | 'noParams' | { key: string, value: string }[]): void {
+export function showNotification(parameters: 'authenticated' | 'invalidParams' | 'noParams' | 'refererMissing' |{ key: string, value: string }[]): void {
   if (typeof parameters === 'object') {
     showToast('Success! You will be redirected to GitHub OAuth', 'success');
   } else if (parameters === 'invalidParams') {
     showToast('Your request is invalid.', 'error');
+  } else if (parameters === 'refererMissing') {
+    showToast('Missing referer parameter.', 'error');
   } else if (parameters === 'noParams') {
     showToast('Welcome to the Petal Demo Website.', 'info');
   } else if(parameters === 'authenticated') {
@@ -101,13 +108,45 @@ export function showNotification(parameters: 'authenticated' | 'invalidParams' |
   }
 }
 
-
 /**
  * Redirects the user to GitHub OAuth
  */
 export function redirectToGitHubOAuth(): void {
   const { id, value } = clientID;
   window.location.href = 'https://github.com/login/oauth/authorize?' + id + '=' + value;
+}
+
+/**
+ * Redirects the user to the referer parameter from URL params
+ */
+export function handleInvalidRequest(): void {
+  const userParamsString = localStorage.getItem('userParams');
+  if (userParamsString) {
+    const userParams = JSON.parse(userParamsString);
+    const storedReferer = userParams.find((item: { key: string; }) => item.key === 'referer')?.value;
+    if (storedReferer) {
+      window.location.href = storedReferer;
+    } else {
+      // If the 'referer' key is not found in userParams, show error page
+      window.location.href = serverURL.value + 'auth-error.html';
+    }
+
+  } else {
+    // Send back to referer parameter from URL params
+    const referer = new URLSearchParams(window.location.search).get('referer');
+    if (referer) {
+      window.location.href = referer;
+    } else {
+      window.location.href = serverURL.value + 'auth-error.html';
+    }
+  }
+}
+
+/**
+ * Redirects the user to the error page
+ */
+export function showErrorPage(): void {
+  window.location.href = serverURL.value + 'auth-error.html';
 }
 
 /**
@@ -122,9 +161,11 @@ export function processRequest(): undefined | { key: string, value: string }[] {
       const parameters = getAndValidateParameterValues(currentUrl);
 
       if (typeof parameters === 'string') {
-        if(parameters === 'invalidParams') {
-          //TODO(YB): Redirect to referer if it exists
-          //TODO(YB): Redirect to Petal error page if referer doesn't exist
+        if (parameters === 'invalidParams') {
+          handleInvalidRequest();
+        }
+        if (parameters === 'refererMissing') {
+          showErrorPage();
         }
         showNotification(parameters);
 
@@ -140,9 +181,8 @@ export function processRequest(): undefined | { key: string, value: string }[] {
         //TODO(YB): These Params should passed with the OAuth redirect URL
         // get the stored parameters from localStorage
         const storedParams = localStorage.getItem('userParams');
-        if(!storedParams) {
-          // TODO: Redirect to Petal error page
-          // we should never reach here
+        if (!storedParams) {
+          showErrorPage();
           return undefined;
         }
         // in case of an error, the user did not authenticate the app
@@ -156,10 +196,8 @@ export function processRequest(): undefined | { key: string, value: string }[] {
         // exchange the code for an access token
         const codeParam = parameters.find(param => param.key === 'code');
         if (!codeParam) return undefined; // I don't understand why this is necessary as the previous if statement should have caught this
-        const code = codeParam.value;
-
-
-        exchangeOAuthCodeForAccessToken(code).then(token => {
+          const code = codeParam.value;
+          exchangeOAuthCodeForAccessToken(code).then(token => {
           localStorage.setItem('token', token);
         }).catch(e => {
           console.error(e);

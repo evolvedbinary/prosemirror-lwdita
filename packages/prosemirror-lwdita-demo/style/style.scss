@@ -14,18 +14,34 @@ body {
   display: flex;
 }
 
+.pt-container {
+  width: 100%;
+  @media screen and (min-width: 400px) {
+    width: 60vw;
+    margin: 4rem auto;
+  }
+
+  > h2 {
+    margin-top: 0;
+  }
+}
+
 .main {
   display: flex;
   flex: 1;
   background-color: whitesmoke;
+  &.error {
+    background-color: #fff;
+  }
   .editor-container {
     display: flex;
     flex-direction: column;
     flex: 1;
     // background-color: #2b579a;
-    background-color: #f16999;
+
     .header {
       color: white;
+      background-color: #f16999;
       padding: 12px 24px;
       h1 {
         display: inline;
