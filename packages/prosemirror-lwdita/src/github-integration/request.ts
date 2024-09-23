@@ -65,15 +65,12 @@ export function getAndValidateParameterValues(url: string): 'invalidParams' | 'r
 
   // Return the status string for the notifications
   if (hasMissingReferer) {
-    console.log('hasMissingReferer')
     return 'refererMissing';
   }
 
   if (hasMissingValues || hasInvalidParams) {
-    console.log('invalidParams')
     return 'invalidParams';
   }
-  console.log('parameters:', parameters)
   return parameters;
 }
 
