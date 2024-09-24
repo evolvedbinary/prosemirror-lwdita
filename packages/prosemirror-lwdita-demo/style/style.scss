@@ -531,7 +531,31 @@ button {
   &--info {
     background-color: #00bcd4;
   }
+  &--welcome {
+    background-color: #1c3f7c; // EB blue
+    padding: 1.5rem 2.5rem 2rem 2.5rem;
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: flex-end;
+    top: 75px !important;
+    width: 22rem;
+
+    // Customized toastify-right behavior: Reset position
+    &.toastify-right{
+      right: 0 !important;
+    }
+  }
+  &--dismiss {
+    @extend .pt__button;
+    font-family: inherit;
+    padding: .5rem;
+    margin: 0.3rem 0 0 0;
+  }
+  &-close {
+    flex: 0 2rem;
+  }
 }
+
 
 @media only screen and (max-width: 360px) {
 

@@ -17,7 +17,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import Toastify from 'toastify-js';
+import Toastify, { Options } from 'toastify-js';
+import { messageKeys } from '../config';
 
 /**
  * Displays a toast message with 'Toastify' library
@@ -33,4 +34,48 @@ export function showToast(message: string, type: 'success' | 'error' | 'warning'
     position: 'right',
     className: `toast toast--${type}`,
   }).showToast();
+}
+
+/**
+ * Displays a customized Tostify message
+ * with customized markup
+ * that users can confirm to never show again
+ * by storing it in the localStorage
+ */
+export const showWelcomeNote = () => {
+  const customNote = document.createElement('section');
+  customNote.innerHTML = `
+  <h2>${messageKeys.welcomeNote.title}</h2>
+  <p>${messageKeys.welcomeNote.paragraph1}</p>
+  <p>${messageKeys.welcomeNote.paragraph2}</p>
+  <button type="button" class="toast--dismiss">${messageKeys.welcomeNote.buttonLabel}</button>
+  `;
+
+  const parentNode = document.body;
+  parentNode.appendChild(customNote);
+
+  Toastify({
+    text: '',
+    duration: -1,
+    gravity: 'top',
+    position: 'right',
+    className: 'toast toast--welcome',
+    close: true,
+    node: customNote,
+    onClick: function () {
+      const toastElement = document.querySelector('.toast--welcome');
+      if (toastElement) {
+        toastElement.remove();
+        localStorage.setItem('welcomeNoteConfirmed', 'true');
+      }
+    }
+  }).showToast();
+};
+
+/**
+ * Checks if the welcome note has been confirmed
+ * @returns True if the welcome note has been confirmed
+ */
+export function hasConfirmedNotification(): boolean {
+  return localStorage.getItem('welcomeNoteConfirmed') === 'true';
 }

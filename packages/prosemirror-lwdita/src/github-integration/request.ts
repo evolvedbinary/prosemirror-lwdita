@@ -15,8 +15,8 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import { showToast } from './toast';
-import { clientID, serverURL } from '../config';
+import { hasConfirmedNotification, showToast, showWelcomeNote } from './toast';
+import { clientID, serverURL, messageKeys } from '../config';
 import { exchangeOAuthCodeForAccessToken } from './github.plugin';
 
 /**
@@ -108,8 +108,6 @@ export function showNotification(parameters: 'authenticated' | 'invalidParams' |
     showToast('Your request is invalid.', 'error');
   } else if (parameters === 'refererMissing') {
     showToast('Missing referer parameter.', 'error');
-  } else if (parameters === 'noParams') {
-    showToast('Welcome to the Petal Demo Website.', 'info');
   } else if(parameters === 'authenticated') {
     showToast('You are authenticated.', 'success');
   }
@@ -166,6 +164,12 @@ export function processRequest(): undefined | URLParams {
 
     try {
       const parameters = getAndValidateParameterValues(currentUrl);
+
+      // Check if the "welcome" note has not yet been dismissed
+      // and show it on page load
+      if (!hasConfirmedNotification()) {
+        showWelcomeNote();
+      }
 
       if (typeof parameters === 'string') {
         if (parameters === 'invalidParams') {
