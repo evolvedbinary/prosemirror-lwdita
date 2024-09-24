@@ -6,24 +6,21 @@ import jsonDocLoader from "./doc";
 import { menu, shortcuts } from "@evolvedbinary/prosemirror-lwdita";
 import { githubMenuItem, openFileMenuItem, publishFileMenuItem, saveFileMenuItem} from "./demo-plugin";
 import { history } from "prosemirror-history";
-import { doubleClickImagePlugin, processRequest, fetchAndTransform } from '@evolvedbinary/prosemirror-lwdita'
+import { doubleClickImagePlugin, processRequest, fetchAndTransform, URLParams } from '@evolvedbinary/prosemirror-lwdita'
 
 const schemaObject = schema();
 
 /**
  * Process the URL parameters and handle the notifications
  */
-const urlParams = processRequest() as { key: string, value: string }[];
+const urlParams = processRequest() as URLParams | undefined;
 
 // if the user passes a file in the URL, load that file
 // otherwise load the default file
 let loadJsonDoc = jsonDocLoader;
 if(urlParams) {
-  const ghrepo = urlParams.find((param) => param.key === 'ghrepo');
-  const source = urlParams.find((param) => param.key === 'source');
-
   // create a new promise to fetch the raw document from GitHub then transform it to ProseMirror JSON
-  loadJsonDoc = fetchAndTransform(ghrepo?.value, source?.value);
+  loadJsonDoc = fetchAndTransform(urlParams.ghrepo, urlParams.source);
 }
 
 /**

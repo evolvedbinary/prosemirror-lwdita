@@ -20,6 +20,13 @@ import { clientID } from '../config';
 import { exchangeOAuthCodeForAccessToken } from './github.plugin';
 
 /**
+ * Interface for the URL parameters
+ */
+export interface URLParams {
+  [key: string]: string;
+}
+
+/**
  * List of valid URL key names in parameters
  * ghrepo = GitHub repository,
  * source = GitHub resource,
@@ -113,7 +120,7 @@ export function redirectToGitHubOAuth(): void {
 /**
  * Process the URL parameters and handle the notifications
  */
-export function processRequest(): undefined | { key: string, value: string }[] {
+export function processRequest(): undefined | URLParams {
   // Check if the window object is defined (i.e. it is not in Mocha tests!)
   if (typeof window !== 'undefined') {
     const currentUrl = window.location.href;
@@ -168,8 +175,18 @@ export function processRequest(): undefined | { key: string, value: string }[] {
         // Show a success notification
         showNotification("authenticated");
 
+        const returnParams: URLParams = {};
+
+        // Add the stored parameters to the returnParams object
+        if (storedParams) {
+          const stored = JSON.parse(storedParams);
+          for (const param of stored) {
+            returnParams[param.key] = param.value;
+          }
+        }
+
         // return the stored parameters and the new parameters from the URL
-        return JSON.parse(storedParams);
+        return returnParams;
       }
 
     } catch (error) {
