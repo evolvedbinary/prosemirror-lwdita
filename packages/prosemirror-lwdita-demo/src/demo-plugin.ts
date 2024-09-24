@@ -18,7 +18,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import { Command } from "prosemirror-commands";
 import { MenuElement, MenuItem, MenuItemSpec } from "prosemirror-menu";
 import { InputContainer, renderPrDialog } from "@evolvedbinary/prosemirror-lwdita";
-import { unTravel } from "@evolvedbinary/prosemirror-lwdita";
+import { unTravel, URLParams } from "@evolvedbinary/prosemirror-lwdita";
 import { JditaSerializer } from "@evolvedbinary/lwdita-xdita";
 import { InMemoryTextSimpleOutputStreamCollector } from "@evolvedbinary/lwdita-xdita/dist/stream";
 
@@ -108,7 +108,7 @@ export function openFileMenuItem(): MenuElement {
  *
  * @returns {MenuElement} The menu item for publishing the file.
  */
-export function publishFileMenuItem(urlParams: { key: string, value: string }[]): MenuElement {
+export function publishFileMenuItem(urlParams: URLParams): MenuElement {
   //const storedFile = localStorage.getItem('file') ? localStorage.getItem('file') : console.log('No file in the localStorage to save.');
   const storedFileName = localStorage.getItem('fileName') ? localStorage.getItem('fileName') : 'Petal';
 
@@ -134,7 +134,7 @@ export function publishFileMenuItem(urlParams: { key: string, value: string }[])
  *
  * @returns {Command} A ProseMirror command function.
  */
-function publishGithubDocument(urlParams: { key: string, value: string }[]): Command {
+function publishGithubDocument(urlParams: URLParams): Command {
   return (state: {[x: string]: any; tr: any; selection: { empty: any; };}, dispatch: (arg0: any) => void) => {
     if (dispatch) {
       dispatch(state.tr);
@@ -142,11 +142,9 @@ function publishGithubDocument(urlParams: { key: string, value: string }[]): Com
       const documentNode = transformToJditaDocumentNode(state);
       const updatedXdita = xditaPrefix + documentNode;
 
-      const ghrepo = urlParams.find(param => param.key === 'ghrepo')?.value;
-      const source = urlParams.find(param => param.key === 'source')?.value;
 
       // show the publishing dialog
-      renderPrDialog(ghrepo, source, updatedXdita);
+      renderPrDialog(urlParams.ghrepo, urlParams.source, updatedXdita);
     } else {
       console.log('Nothing to publish, no EditorState has been dispatched.');
     }
