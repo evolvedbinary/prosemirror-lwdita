@@ -6,19 +6,22 @@ import jsonDocLoader from "./doc";
 import { menu, shortcuts } from "@evolvedbinary/prosemirror-lwdita";
 import { githubMenuItem, openFileMenuItem, publishFileMenuItem, saveFileMenuItem} from "./demo-plugin";
 import { history } from "prosemirror-history";
-import { doubleClickImagePlugin, processRequest } from '@evolvedbinary/prosemirror-lwdita'
+import { doubleClickImagePlugin, processRequest, fetchAndTransform, URLParams } from '@evolvedbinary/prosemirror-lwdita'
 
 const schemaObject = schema();
 
 /**
  * Process the URL parameters and handle the notifications
  */
-const urlParams = processRequest();
-// TODO(YB): fetch and render the file from the URL
+const urlParams = processRequest() as URLParams | undefined;
 
 // if the user passes a file in the URL, load that file
 // otherwise load the default file
-const loadJsonDoc = jsonDocLoader;
+let loadJsonDoc = jsonDocLoader;
+if(urlParams) {
+  // create a new promise to fetch the raw document from GitHub then transform it to ProseMirror JSON
+  loadJsonDoc = fetchAndTransform(urlParams.ghrepo, urlParams.source);
+}
 
 /**
  * Load the json document and create a new EditorView.
@@ -60,6 +63,7 @@ loadJsonDoc.then(jsonDoc => {
     });
   }
 }).catch(e => {
+  //TODO(YB): This should be the fall back page when we can't load the file
   console.error(e);
   const h2 = document.createElement('h2');
   h2.innerText = 'Failed to load the file';

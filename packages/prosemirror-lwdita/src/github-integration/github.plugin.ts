@@ -46,13 +46,26 @@ export const fetchRawDocumentFromGitHub = async (ghrepo: string, source: string)
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const transformGitHubDocumentToProsemirrorJson = async (rawDocument: string): Promise<Record<string, any>> => {
-  // convert the raw xdita document to jdita
-  const jdita = await xditaToJdita(rawDocument);
+    // convert the raw xdita document to jdita
+    const jdita = await xditaToJdita(rawDocument);
+    
+    // convert the jdita document to prosemirror state save
+    const prosemirrorJson = await jditaToProsemirrorJson(jdita);
+    
+    return prosemirrorJson;
+};
 
-  // convert the jdita document to prosemirror state save
-  const prosemirrorJson = await jditaToProsemirrorJson(jdita);
-
-  return prosemirrorJson;
+/**
+ * Fetches a raw document from a GitHub repository and transforms it into a ProseMirror JSON document.
+ *
+ * @param ghrepo - The GitHub repository from which to fetch the document.
+ * @param source - The source path of the document within the repository.
+ * @returns A promise that resolves to the transformed ProseMirror JSON document.
+ */
+export const fetchAndTransform = async (ghrepo: string, source: string) => {
+  const rawDoc = await fetchRawDocumentFromGitHub(ghrepo, source);
+  const jsonDoc = await transformGitHubDocumentToProsemirrorJson(rawDoc);
+  return jsonDoc;
 };
 
 /**
