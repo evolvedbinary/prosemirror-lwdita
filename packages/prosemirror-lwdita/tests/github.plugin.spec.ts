@@ -28,6 +28,7 @@ describe('fetchRawDocumentFromGitHub', () => {
   it('should fetch the raw content of a document from a GitHub repository', async () => {
     const ghrepo = 'evolvedbinary/prosemirror-lwdita';
     const source = 'packages/prosemirror-lwdita-demo/example-xdita/02-short-file.xml';
+    const branch = 'main';
     const mockResponse = '<xml>Mock Content</xml>';
     // this will mock the next fetch request
     fetchMock.getOnce(`https://raw.githubusercontent.com/${ghrepo}/main/${source}`, {
@@ -35,18 +36,19 @@ describe('fetchRawDocumentFromGitHub', () => {
       headers: { 'Content-Type': 'text/plain' },
     });
 
-    const result = await fetchRawDocumentFromGitHub(ghrepo, source);
+    const result = await fetchRawDocumentFromGitHub(ghrepo, source, branch);
     expect(result).to.equal(mockResponse);
   });
 
   it('should handle errors when fetching the document', async () => {
     const ghrepo = 'evolvedbinary/prosemirror-lwdita';
     const source = 'packages/prosemirror-lwdita-demo/example-xdita/02-short-file.xml';
+    const branch = 'main';
     // this will mock the next fetch request
     fetchMock.getOnce(`https://raw.githubusercontent.com/${ghrepo}/main/${source}`, 404);
 
     try {
-      await fetchRawDocumentFromGitHub(ghrepo, source);
+      await fetchRawDocumentFromGitHub(ghrepo, source, branch);
       throw new Error('Expected fetchRawDocumentFromGitHub to throw an error');
     } catch (error) {
       expect(error).to.be.instanceOf(Error);
@@ -162,7 +164,7 @@ describe('createPrFromContribution', () => {
       expect(body.owner).to.equal('evolvedbinary');
       expect(body.repo).to.equal('prosemirror-lwdita');
       expect(body.newOwner).to.equal('marmoure');
-      expect(body.newBranch).to.equal('new-branch-petal-app');
+      expect(body.newBranch).to.equal('new-branch-petal');
       expect(body.commitMessage).to.equal('Update the document');
       expect(body.change.path).to.equal(source);
       expect(body.change.content).to.equal(changedDocument);
