@@ -144,7 +144,7 @@ function publishGithubDocument(urlParams: URLParams): Command {
 
 
       // show the publishing dialog
-      renderPrDialog(urlParams.ghrepo, urlParams.source, updatedXdita);
+      renderPrDialog(urlParams.ghrepo, urlParams.source, urlParams.branch, updatedXdita);
     } else {
       console.log('Nothing to publish, no EditorState has been dispatched.');
     }
