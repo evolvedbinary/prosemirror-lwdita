@@ -84,3 +84,72 @@ export const exchangeOAuthCodeForAccessToken = async (code: string): Promise<str
   //TODO: Handle errors
   return json;
 };
+
+/**
+ * Fetches user information from the backend API.
+ *
+ * @param token - The authorization token to access the GitHub API.
+ * @returns A promise that resolves to a record containing user information.
+ */
+export const getUserInfo = async (token: string): Promise<Record<string, string>> => {
+  const url = `http://localhost:3000/api/github/user`;
+  const response = await fetch(url, {
+    headers: {
+      'authorization': `Bearer ${token}`
+    }
+  });
+  const json = await response.json();
+  return json;
+};
+
+/**
+ * Publishes a document to a specified GitHub repository.
+ * Makes a POST request to the `/api/github/integration` endpoint with the necessary details to create a pull request.
+ * 
+ * @param ghrepo - The GitHub repository in the format "owner/repo".
+ * @param source - The path to the source document.
+ * @param title - The title of the pull request and the commit message.
+ * @param desc - The description of the pull request.
+ * @param changedDocument - The content of the changed document.
+ * @returns A promise that resolves when the document has been published.
+ */
+export const createPrFromContribution = async (ghrepo: string, source: string, changedDocument: string, title: string, desc: string): Promise<string> => {
+  const authenticatedUserInfo = await getUserInfo(localStorage.getItem('token') as string);
+  
+  const owner = ghrepo.split('/')[0];
+  const repo = ghrepo.split('/')[1];
+  const newOwner = authenticatedUserInfo.login;
+  const newBranch = "new-branch-petal-app";
+  const commitMessage = title;
+  const path = source;
+  const content = changedDocument;
+  const change = {
+    path,
+    content
+  };
+  const body = `${desc} \n ------------------\n This is an automated PR made by the prosemirror-lwdita demo`; 
+  // get the token from the local storage
+  const token = localStorage.getItem('token');
+  // make a post request to  /api/github/integration
+  const response = await fetch('http://localhost:3000/api/github/integration', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    },
+    body: JSON.stringify({
+      owner,
+      repo,
+      newOwner,
+      newBranch,
+      commitMessage,
+      change,
+      title,
+      body
+    })
+  });
+
+
+  const json = await response.json();
+  return json;
+};

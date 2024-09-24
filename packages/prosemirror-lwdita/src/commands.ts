@@ -20,6 +20,7 @@ import { canSplit } from 'prosemirror-transform';
 import { chainCommands } from 'prosemirror-commands';
 import { Fragment, MarkType, Node, NodeType, ResolvedPos } from 'prosemirror-model';
 import { Command, EditorState, TextSelection, Transaction } from 'prosemirror-state';
+import { createPrFromContribution } from './github-integration/github.plugin';
 
 /**
  * Create a new Node and fill it with the args as attributes.
@@ -180,7 +181,7 @@ export class InputContainer {
 /**
  * Render a dialog form for inserting the PR metadata
  */
-export function renderPrDialog(): void {
+export function renderPrDialog(ghrepo: string, source: string, updatedXdita: string): void {
   const overlay = document.createElement('section');
   overlay.id = 'prOverlay';
   document.body.appendChild(overlay);
@@ -238,6 +239,19 @@ export function renderPrDialog(): void {
       // Start the API request here
       console.log('Title:', title);
       console.log('Description:', description);
+
+      // Create a PR from the contribution
+      createPrFromContribution(ghrepo, source, updatedXdita, title, description)
+      .then((prURL: string) => {
+        console.log('The document has been published to GitHub.');
+        console.log('pr url:', prURL);
+        // show a toast notification
+        // show success dialog
+      }).catch((error: Error) => {
+        console.error('Error:', error);
+        // show a toast notification
+        // show error dialog
+      });
 
       document.body.removeChild(overlay);
     }
