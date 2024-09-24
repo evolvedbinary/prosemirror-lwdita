@@ -26,7 +26,7 @@ const urlParams = processRequest() as URLParams | undefined;
 let loadJsonDoc = jsonDocLoader;
 if(urlParams) {
   // create a new promise to fetch the raw document from GitHub then transform it to ProseMirror JSON
-  loadJsonDoc = fetchAndTransform(urlParams.ghrepo, urlParams.source);
+  loadJsonDoc = fetchAndTransform(urlParams.ghrepo, urlParams.source, urlParams.branch);
 }
 
 /**

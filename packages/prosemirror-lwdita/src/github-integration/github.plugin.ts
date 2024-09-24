@@ -29,9 +29,9 @@ import { document as jditaToProsemirrorJson } from "../document";
  * This function currently fetches the document from the 'main' branch of the repository.
  * should use the GitHub API to dynamically determine the default branch of the repository.
  */
-export const fetchRawDocumentFromGitHub = async (ghrepo: string, source: string): Promise<string> => {
+export const fetchRawDocumentFromGitHub = async (ghrepo: string, source: string, branch: string): Promise<string> => {
   //TODO(YB): the branch should be passed as a parameter
-  const url = `https://raw.githubusercontent.com/${ghrepo}/main/${source}`;
+  const url = `https://raw.githubusercontent.com/${ghrepo}/${branch}/${source}`;
   const response = await fetch(url);
 
   //TODO: Handle errors
@@ -62,8 +62,8 @@ export const transformGitHubDocumentToProsemirrorJson = async (rawDocument: stri
  * @param source - The source path of the document within the repository.
  * @returns A promise that resolves to the transformed ProseMirror JSON document.
  */
-export const fetchAndTransform = async (ghrepo: string, source: string) => {
-  const rawDoc = await fetchRawDocumentFromGitHub(ghrepo, source);
+export const fetchAndTransform = async (ghrepo: string, source: string, branch: string) => {
+  const rawDoc = await fetchRawDocumentFromGitHub(ghrepo, source, branch);
   const jsonDoc = await transformGitHubDocumentToProsemirrorJson(rawDoc);
   return jsonDoc;
 };
@@ -119,7 +119,7 @@ export const createPrFromContribution = async (ghrepo: string, source: string, b
   const owner = ghrepo.split('/')[0];
   const repo = ghrepo.split('/')[1];
   const newOwner = authenticatedUserInfo.login;
-  const newBranch = "new-branch-petal" + Math.floor(Math.random() * 1000);
+  const newBranch = "new-branch-petal";
   const commitMessage = title;
   const path = source;
   const content = changedDocument;
