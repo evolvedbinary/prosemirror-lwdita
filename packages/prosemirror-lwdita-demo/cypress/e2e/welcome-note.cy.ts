@@ -20,12 +20,12 @@ function clearLocalStorage() {
 }
 
 describe('The Welcome note:', () => {
-  let loadPage,
-      note,
-      noteSelector,
-      dismissButton,
-      dismissSelector,
-      crossIconSelector;
+  let loadPage: Cypress.Chainable<Cypress.AUTWindow>,
+      note: { should: (arg0: string) => void; find: (arg0: any) => any; },
+      noteSelector: string,
+      dismissButton: { click: () => void; },
+      dismissSelector: string,
+      crossIconSelector: string;
 
   beforeEach(() => {
     loadPage = cy.visit('http://localhost:1234/');
