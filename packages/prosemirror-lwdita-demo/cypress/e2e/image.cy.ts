@@ -1,15 +1,19 @@
 describe('handling images', () => {
   beforeEach(() => {
     window.localStorage.setItem('file', `<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE topic PUBLIC "-//OASIS//DTD LIGHTWEIGHT DITA Topic//EN" "lw-topic.dtd">
-<topic id="program">
-  <title>Test File 2</title>
-  <body>
-    <section>
-      <p>A test paragraph.</p>
-    </section>
-  </body>
-</topic>`);
+    <!DOCTYPE topic PUBLIC "-//OASIS//DTD LIGHTWEIGHT DITA Topic//EN" "lw-topic.dtd">
+    <topic id="program">
+      <title>Test File 2</title>
+      <body>
+        <section>
+          <p>A test paragraph.</p>
+        </section>
+      </body>
+    </topic>`);
+
+    // set the welcome note as confirmed to not show it on page load
+    // because it will cover the test target in the editor
+    window.localStorage.setItem('welcomeNoteConfirmed', 'true');
   })
 
   it('inserting remote image using the toolbar button', () => {
