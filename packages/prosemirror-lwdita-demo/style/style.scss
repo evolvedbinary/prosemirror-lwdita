@@ -1,5 +1,7 @@
 $nodes: "audio", "body", "data", "dd", "desc", "dl", "dlentry", "dt", "document", "fig", "fn", "image", "media-source", "media-track", "li", "note", "ol", "p", "ph", "pre", "prolog", "section", "simpletable", "shortdesc", "stentry", "sthead", "strow", "title", "topic", "ul", "video", "xref", "b", "i", "u", "sub", "sup";
-$height: 36px;
+$toolbar-height: 36px;
+$header-height: 50px;
+$header-padding-top: 12px;
 
 html {
   height: 100%;
@@ -42,7 +44,8 @@ body {
     .header {
       color: white;
       background-color: #f16999;
-      padding: 12px 24px;
+      padding: $header-padding-top 24px;
+      height: $header-height;
       h1 {
         display: inline;
         margin: 0;
@@ -106,9 +109,9 @@ body {
             }
             & > * {
               cursor: pointer;
-              line-height: $height;
-              height: $height;
-              min-width: $height;
+              line-height: $toolbar-height;
+              height: $toolbar-height;
+              min-width: $toolbar-height;
               white-space: nowrap;
               &.separator {
                 min-width: auto;
@@ -170,7 +173,7 @@ body {
                 left: 0;
                 right: 0;
                 bottom: 0;
-                height: $height;
+                height: $toolbar-height;
 
                 &[type="button"] {
                   appearance: none;
@@ -189,7 +192,7 @@ body {
           .ProseMirror-menuseparator {
             background-color: #c8c8c8;
             width: 1px;
-            height: $height - 8px;
+            height: $toolbar-height - 8px;
             margin: 0 12px;
           }
         }
@@ -537,7 +540,7 @@ button {
     display: flex;
     flex-direction: column-reverse;
     align-items: flex-end;
-    top: 75px !important;
+    top: $header-height + $toolbar-height + calc(2* $header-padding-top) !important; // Shift note below header and toolbar
     width: 22rem;
 
     // Customized toastify-right behavior: Reset position
