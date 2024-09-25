@@ -1,7 +1,7 @@
 import { EditorState } from "prosemirror-state";
 import { EditorView } from "prosemirror-view";
 import { Node } from "prosemirror-model";
-import { schema } from "@evolvedbinary/prosemirror-lwdita";
+import { hasConfirmedNotification, schema, showWelcomeNote } from "@evolvedbinary/prosemirror-lwdita";
 import jsonDocLoader from "./doc";
 import { menu, shortcuts } from "@evolvedbinary/prosemirror-lwdita";
 import { githubMenuItem, openFileMenuItem, publishFileMenuItem, saveFileMenuItem} from "./demo-plugin";
@@ -9,6 +9,13 @@ import { history } from "prosemirror-history";
 import { doubleClickImagePlugin, processRequest, fetchAndTransform, URLParams } from '@evolvedbinary/prosemirror-lwdita'
 
 const schemaObject = schema();
+
+
+// Check if the "welcome" note has not yet been dismissed
+// and show it on page load
+if (!hasConfirmedNotification()) {
+  showWelcomeNote();
+}
 
 /**
  * Process the URL parameters and handle the notifications

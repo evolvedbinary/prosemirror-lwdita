@@ -15,7 +15,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import { hasConfirmedNotification, showToast, showWelcomeNote } from './toast';
+import { showToast } from './toast';
 import { clientID, serverURL } from '../config';
 import { exchangeOAuthCodeForAccessToken } from './github.plugin';
 
@@ -164,12 +164,6 @@ export function processRequest(): undefined | URLParams {
 
     try {
       const parameters = getAndValidateParameterValues(currentUrl);
-
-      // Check if the "welcome" note has not yet been dismissed
-      // and show it on page load
-      if (!hasConfirmedNotification()) {
-        showWelcomeNote();
-      }
 
       if (typeof parameters === 'string') {
         if (parameters === 'invalidParams') {
