@@ -79,3 +79,48 @@ export const showWelcomeNote = () => {
 export function hasConfirmedNotification(): boolean {
   return localStorage.getItem('welcomeNoteConfirmed') === 'true';
 }
+
+export function showResultStatusSuccess(destination: string, linkToPR: string) {
+  const customNote = document.createElement('section');
+  customNote.innerHTML = `
+  <h2>${messageKeys.resultNote.titleSuccess}</h2>
+  <p>${messageKeys.resultNote.paragraphSuccess}</p>
+  <a href="${linkToPR}">${linkToPR}</a>
+  `;
+
+  const parentNode = document.body;
+  parentNode.appendChild(customNote);
+
+  Toastify({
+    text: '',
+    duration: -1,
+    gravity: 'top',
+    position: 'right',
+    className: `toast__status toast--success`,
+    close: true,
+    destination: destination,
+    newWindow: true,
+    node: customNote,
+  }).showToast();
+}
+
+export function showResultStatusError(message: string) {
+  const customNote = document.createElement('section');
+  customNote.innerHTML = `
+  <h2>${messageKeys.resultNote.titleError}</h2>
+  <p>${messageKeys.resultNote.paragraphError}</p>
+  <p>${message}</p>`;
+
+  const parentNode = document.body;
+  parentNode.appendChild(customNote);
+
+  Toastify({
+    text: message,
+    duration: -1,
+    gravity: 'top',
+    position: 'right',
+    className: `toast__status toast--error`,
+    close: true,
+    node: customNote,
+  }).showToast();
+}
