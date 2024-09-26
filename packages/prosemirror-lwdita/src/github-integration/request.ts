@@ -124,36 +124,22 @@ export function redirectToGitHubOAuth(parameters: URLParams): void {
 }
 
 /**
- * Redirects the user to the referer parameter from URL params
- */
-export function handleInvalidRequest(): void {
-  const userParamsString = localStorage.getItem('userParams');
-  if (userParamsString) {
-    const userParams = JSON.parse(userParamsString);
-    const storedReferer = userParams.find((item: { key: string; }) => item.key === 'referer')?.value;
-    if (storedReferer) {
-      window.location.href = storedReferer;
-    } else {
-      // If the 'referer' key is not found in userParams, show error page
-      window.location.href = serverURL.value + 'auth-error.html';
-    }
-
-  } else {
-    // Send back to referer parameter from URL params
-    const referer = new URLSearchParams(window.location.search).get('referer');
-    if (referer) {
-      window.location.href = referer;
-    } else {
-      window.location.href = serverURL.value + 'auth-error.html';
-    }
-  }
-}
-
-/**
  * Redirects the user to the error page
  */
 export function showErrorPage(): void {
   window.location.href = serverURL.value + 'auth-error.html';
+}
+
+/**
+ * Redirects the user to the referer parameter from URL params
+ */
+export function handleInvalidRequest(referer: string | null): void {
+    if (referer) {
+      window.location.href = referer;
+    } else {
+      // If the 'referer' key is not found in userParams, show error page
+      showErrorPage();
+    }
 }
 
 /**
@@ -169,14 +155,12 @@ export function processRequest(): undefined | URLParams {
 
       if (typeof parameters === 'string') {
         if (parameters === 'invalidParams') {
-          handleInvalidRequest();
+          const referer = new URLSearchParams(window.location.search).get('referer');
+          handleInvalidRequest(referer);
         }
         if (parameters === 'refererMissing') {
           showErrorPage();
         }
-        showNotification(parameters);
-
-        return undefined;
       } else if (typeof parameters === 'object') {
         const returnParams: URLParams = {};
         for (const param of parameters) {
@@ -190,9 +174,7 @@ export function processRequest(): undefined | URLParams {
           // in case of an error, the user did not authenticate the app
           const errorParam = parameters.find(param => param.key === 'error');
           if(errorParam) {
-            //TODO(YB): redirect to petal error page
-            // Petal error page should have a button to redirect to the referer
-            return undefined;
+            showErrorPage();
           }
 
           exchangeOAuthCodeForAccessToken(returnParams.code).then(token => {
