@@ -38,7 +38,7 @@ export const messageKeys = {
   resultNote: {
     titleSuccess: "Your changes have been successfully published.",
     titleError: "Your changes could not be published.",
-    paragraphSuccess: "You can visit this link to see the PR: ",
-    paragraphError: "Something went wrong with publishing your PR because of following error:",
+    paragraphSuccess: "You can check your published changes here: ",
+    paragraphError: "Something went wrong with publishing your changes because of following error:",
   },
 }

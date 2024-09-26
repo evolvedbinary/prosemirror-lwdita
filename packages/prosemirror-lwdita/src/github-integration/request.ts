@@ -16,7 +16,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 import { showToast } from './toast';
-import { clientID, serverURL } from '../config';
+import { clientID, serverURL } from '../app-config';
 import { exchangeOAuthCodeForAccessToken } from './github.plugin';
 
 /**
