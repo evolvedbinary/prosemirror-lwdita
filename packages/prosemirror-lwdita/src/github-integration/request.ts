@@ -116,9 +116,11 @@ export function showNotification(parameters: 'authenticated' | 'invalidParams' |
 /**
  * Redirects the user to GitHub OAuth
  */
-export function redirectToGitHubOAuth(): void {
+export function redirectToGitHubOAuth(parameters: URLParams): void {
   const { id, value } = clientID;
-  window.location.href = 'https://github.com/login/oauth/authorize?' + id + '=' + value;
+  // Store the parameters in state to pass them to the redirect URL
+  const state = btoa(`${JSON.stringify({ ...parameters })}`);
+  window.location.href = `https://github.com/login/oauth/authorize?${id}=${value}&state=${state}`;
 }
 
 /**
@@ -175,54 +177,37 @@ export function processRequest(): undefined | URLParams {
         showNotification(parameters);
 
         return undefined;
-      } else if (typeof parameters === 'object' && !parameters.some(param => isOAuthCodeParam(param.key))) {
-        // Store the parameters in localStorage for reading the values after the OAuth flow
-        // TODO: After a successful GitHub Authentication, read the user parameters from localStorage and clear it afterwards
-        localStorage.setItem('userParams', JSON.stringify(parameters));
-
-        // Redirect to GitHub OAuth page
-        redirectToGitHubOAuth();
-      } else if (typeof parameters === 'object' && parameters.some(param => isOAuthCodeParam(param.key))) {
-        //TODO(YB): These Params should passed with the OAuth redirect URL
-        // get the stored parameters from localStorage
-        const storedParams = localStorage.getItem('userParams');
-        if (!storedParams) {
-          showErrorPage();
-          return undefined;
-        }
-        // in case of an error, the user did not authenticate the app
-        const errorParam = parameters.find(param => param.key === 'error');
-        if(errorParam) {
-          //TODO(YB): redirect to petal error page
-          // Petal error page should have a button to redirect to the referer
-          return undefined;
-        }
-
-        // exchange the code for an access token
-        const codeParam = parameters.find(param => param.key === 'code');
-        if (!codeParam) return undefined; // I don't understand why this is necessary as the previous if statement should have caught this
-          const code = codeParam.value;
-          exchangeOAuthCodeForAccessToken(code).then(token => {
-          localStorage.setItem('token', token);
-        }).catch(e => {
-          console.error(e);
-        });
-
-        // Show a success notification
-        showNotification("authenticated");
-
+      } else if (typeof parameters === 'object') {
         const returnParams: URLParams = {};
-
-        // Add the stored parameters to the returnParams object
-        if (storedParams) {
-          const stored = JSON.parse(storedParams);
-          for (const param of stored) {
-            returnParams[param.key] = param.value;
-          }
+        for (const param of parameters) {
+          returnParams[param.key] = param.value;
         }
+        if (!parameters.some(param => isOAuthCodeParam(param.key))) {
 
-        // return the stored parameters and the new parameters from the URL
-        return returnParams;
+          // Redirect to GitHub OAuth page
+          redirectToGitHubOAuth(returnParams);
+        } else if (parameters.some(param => isOAuthCodeParam(param.key))) {
+          // in case of an error, the user did not authenticate the app
+          const errorParam = parameters.find(param => param.key === 'error');
+          if(errorParam) {
+            //TODO(YB): redirect to petal error page
+            // Petal error page should have a button to redirect to the referer
+            return undefined;
+          }
+
+          exchangeOAuthCodeForAccessToken(returnParams.code).then(token => {
+            localStorage.setItem('token', token);
+          }).catch(e => {
+            console.error(e);
+          });
+  
+          // Show a success notification
+          showNotification("authenticated");
+
+          // return the parameters from the URL
+          const state = JSON.parse(atob(returnParams.state));
+          return state;
+        }
       }
 
     } catch (error) {
