@@ -108,8 +108,6 @@ export function showNotification(parameters: 'authenticated' | 'invalidParams' |
     showToast('Your request is invalid.', 'error');
   } else if (parameters === 'refererMissing') {
     showToast('Missing referer parameter.', 'error');
-  } else if (parameters === 'noParams') {
-    showToast('Welcome to the Petal Demo Website.', 'info');
   } else if(parameters === 'authenticated') {
     showToast('You are authenticated.', 'success');
   }

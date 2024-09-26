@@ -24,3 +24,15 @@ export const serverURL: { id: string, value: string } = {
   id: 'server_url',
   value: 'http://localhost:1234/',
 };
+
+/**
+ * Store all messages strings for the application
+ */
+export const messageKeys = {
+  welcomeNote : {
+    title: "Welcome to the Petal Editor.",
+    paragraph1: "You can edit the file and publish your changes by clicking the 'Publish File' button.",
+    paragraph2: "Your changes will be published to GitHub in your GitHub repository. After successful publication you will notified with a link to the PR. Happy editing!",
+    buttonLabel: "Don't show again",
+  },
+}
