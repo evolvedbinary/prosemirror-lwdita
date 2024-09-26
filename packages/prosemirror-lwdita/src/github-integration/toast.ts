@@ -59,7 +59,7 @@ export const showWelcomeNote = () => {
     duration: -1,
     gravity: 'top',
     position: 'right',
-    className: 'toast toast--welcome',
+    className: 'toast toast__panel toast--welcome',
     close: true,
     node: customNote,
     onClick: function () {
@@ -101,7 +101,7 @@ export function showPublicationResultSuccess(destination: string) {
     duration: -1,
     gravity: 'top',
     position: 'right',
-    className: `toast__status toast--success`,
+    className: `toast__panel toast--success`,
     close: true,
     destination: destination,
     newWindow: true,
