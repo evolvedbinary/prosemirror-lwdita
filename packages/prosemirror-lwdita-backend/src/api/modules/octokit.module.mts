@@ -119,6 +119,7 @@ const createFork = async (octokit: Octokit, owner: string, repo: string): Promis
  * @param octokit - The Octokit instance used for making API requests.
  * @param owner - The authenticated user name.
  * @param repo - The name of the repository.
+ * @param branch - The name of the base branch.
  * @param newBranch - The name of the new branch to be created.
  * @returns A Promise that resolves to a BranchInfo object representing the newly created branch, or undefined if an error occurs.
  */
@@ -270,6 +271,7 @@ const createPullRequest = async (octokit: Octokit, owner: string, repo: string, 
  * @param repo - The name of the repository.
  * @param newOwner - The owner of the new branch.
  * @param newBranch - The name of the new branch.
+ * @param branch - The name of the base branch for the PR.
  * @param commitMessage - The commit message.
  * @param change - The change object containing the path and content of the changes.
  * @param title - The title of the pull request.

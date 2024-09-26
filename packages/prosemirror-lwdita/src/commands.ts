@@ -180,6 +180,11 @@ export class InputContainer {
 
 /**
  * Render a dialog form for inserting the PR metadata
+ * 
+ * @param ghrepo - The GitHub repository in the format "owner/repo".
+ * @param source - The source file path in the repository.
+ * @param branch - The Base branch name for the PR.
+ * @param updatedXdita - The updated XDITA content.
  */
 export function renderPrDialog(ghrepo: string, source: string, branch: string, updatedXdita: string): void {
   const overlay = document.createElement('section');
