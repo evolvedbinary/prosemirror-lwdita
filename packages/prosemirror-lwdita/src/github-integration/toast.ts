@@ -80,12 +80,17 @@ export function hasConfirmedNotification(): boolean {
   return localStorage.getItem('welcomeNoteConfirmed') === 'true';
 }
 
-export function showResultStatusSuccess(destination: string, linkToPR: string) {
+/**
+ * Shows a user notification containing a custom,
+ * static message and a dynamic link
+ * @param destination - URL to which the browser should be navigated on click of the toast
+ */
+export function showPublicationResultSuccess(destination: string) {
   const customNote = document.createElement('section');
   customNote.innerHTML = `
   <h2>${messageKeys.resultNote.titleSuccess}</h2>
   <p>${messageKeys.resultNote.paragraphSuccess}</p>
-  <a href="${linkToPR}">${linkToPR}</a>
+  <a href="${destination}"></span>${destination}</a>
   `;
 
   const parentNode = document.body;
@@ -104,7 +109,11 @@ export function showResultStatusSuccess(destination: string, linkToPR: string) {
   }).showToast();
 }
 
-export function showResultStatusError(message: string) {
+/**
+ * Shows a user notification containing a dynamic message
+ * @param message - Error message
+ */
+export function showPublicationResultError(message: string) {
   const customNote = document.createElement('section');
   customNote.innerHTML = `
   <h2>${messageKeys.resultNote.titleError}</h2>
@@ -119,7 +128,7 @@ export function showResultStatusError(message: string) {
     duration: -1,
     gravity: 'top',
     position: 'right',
-    className: `toast__status toast--error`,
+    className: `toast__panel toast--error`,
     close: true,
     node: customNote,
   }).showToast();

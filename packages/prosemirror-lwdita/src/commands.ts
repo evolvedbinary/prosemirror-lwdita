@@ -21,7 +21,7 @@ import { chainCommands } from 'prosemirror-commands';
 import { Fragment, MarkType, Node, NodeType, ResolvedPos } from 'prosemirror-model';
 import { Command, EditorState, TextSelection, Transaction } from 'prosemirror-state';
 import { createPrFromContribution } from './github-integration/github.plugin';
-import { showResultStatusError, showResultStatusSuccess } from './github-integration/toast';
+import { showPublicationResultError, showPublicationResultSuccess } from './github-integration/toast';
 
 /**
  * Create a new Node and fill it with the args as attributes.
@@ -237,21 +237,17 @@ export function renderPrDialog(ghrepo: string, source: string, updatedXdita: str
       const title = titleInput.value;
       const description = descField.value;
 
-      // Start the API request here
-      console.log('Title:', title);
-      console.log('Description:', description);
-
       // Create a PR from the contribution
       createPrFromContribution(ghrepo, source, updatedXdita, title, description)
       .then((prURL: string) => {
         console.log('The document has been published to GitHub.');
         console.log('pr url:', prURL);
-        // show success dialog
-        showResultStatusSuccess(prURL, prURL)
+        // Show a user notification with the successful result and a link to the PR
+        showPublicationResultSuccess(prURL)
       }).catch((error: Error) => {
         console.error('Error:', error);
         // show error dialog
-        showResultStatusError(error.message)
+        showPublicationResultError(error.message)
       });
 
       document.body.removeChild(overlay);
