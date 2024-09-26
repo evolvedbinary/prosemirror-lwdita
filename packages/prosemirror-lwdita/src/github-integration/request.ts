@@ -120,7 +120,8 @@ export function redirectToGitHubOAuth(parameters: URLParams): void {
   const { id, value } = clientID;
   // Store the parameters in state to pass them to the redirect URL
   const state = btoa(`${JSON.stringify({ ...parameters })}`);
-  window.location.href = `https://github.com/login/oauth/authorize?${id}=${value}&state=${state}`;
+  const redirectURL = serverURL.value;
+  window.location.href = `https://github.com/login/oauth/authorize?${id}=${value}&state=${state}&redirect_uri=${redirectURL}`;
 }
 
 /**
