@@ -30,9 +30,10 @@ export interface URLParams {
  * List of valid URL key names in parameters
  * ghrepo = GitHub repository,
  * source = GitHub resource,
+ * branch = Branch of the repository to fetch the document from, and use as base branch for PRs 
  * referer = Referer of the request
  */
-export const validKeys = ['ghrepo', 'source', 'referer'];
+export const validKeys = ['ghrepo', 'source', 'branch', 'referer'];
 
 /**
  * Retrieves the values of the valid URL parameters `ghrepo`, `source`, and `referer`

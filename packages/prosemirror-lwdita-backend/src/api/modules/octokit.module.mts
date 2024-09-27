@@ -105,7 +105,6 @@ const createFork = async (octokit: Octokit, owner: string, repo: string): Promis
     const response = await octokit.repos.createFork({
       owner,
       repo,
-      default_branch_only: true, // fork only the default branch
     });
 
     return response.data.html_url;
@@ -120,10 +119,11 @@ const createFork = async (octokit: Octokit, owner: string, repo: string): Promis
  * @param octokit - The Octokit instance used for making API requests.
  * @param owner - The authenticated user name.
  * @param repo - The name of the repository.
+ * @param branch - The name of the base branch.
  * @param newBranch - The name of the new branch to be created.
  * @returns A Promise that resolves to a BranchInfo object representing the newly created branch, or undefined if an error occurs.
  */
-const createBranch = async (octokit: Octokit, owner: string, repo: string, newBranch: string): Promise<BranchInfo | undefined> => {
+const createBranch = async (octokit: Octokit, owner: string, repo: string, branch: string, newBranch: string): Promise<BranchInfo | undefined> => {
   try {
     // get the repo data
     const { data: repoData } = await octokit.repos.get({
@@ -131,16 +131,11 @@ const createBranch = async (octokit: Octokit, owner: string, repo: string, newBr
       repo,
     });
 
-    // get the default branch
-    // there's an existing issue with the github API where the default branch is returned as 'master' instead of 'main'
-    //TODO(YB): Ask the GitHub API team to fix this issue
-    const defaultBranch = repoData.default_branch === 'master'? 'main' : repoData.default_branch; 
-
     // get the default branch ref
     const { data: branchData } = await octokit.repos.getBranch({
       owner,
       repo,
-      branch: defaultBranch,
+      branch: branch,
     });
 
     // get the last commit sha
@@ -156,7 +151,7 @@ const createBranch = async (octokit: Octokit, owner: string, repo: string, newBr
     });
 
     return {
-      defaultBranch: defaultBranch,
+      defaultBranch: branch,
       commit: {
         sha: lastCommitSha,
         treeSha: branchData.commit.commit.tree.sha,
@@ -276,13 +271,14 @@ const createPullRequest = async (octokit: Octokit, owner: string, repo: string, 
  * @param repo - The name of the repository.
  * @param newOwner - The owner of the new branch.
  * @param newBranch - The name of the new branch.
+ * @param branch - The name of the base branch for the PR.
  * @param commitMessage - The commit message.
  * @param change - The change object containing the path and content of the changes.
  * @param title - The title of the pull request.
  * @param body - The body of the pull request.
  * @returns The URL of the created pull request, or undefined if an error occurred.
  */
-export const pushChangesAndCreatePullRequest = async (octokit: Octokit, owner: string, repo: string, newOwner:string, newBranch: string, commitMessage: string, change: { path: string, content: string }, title: string, body: string): Promise<string | undefined> => {
+export const pushChangesAndCreatePullRequest = async (octokit: Octokit, owner: string, repo: string, newOwner:string, branch: string, newBranch: string, commitMessage: string, change: { path: string, content: string }, title: string, body: string): Promise<string | undefined> => {
   try {
     // create a fork
     const forkUrl = await createFork(octokit, owner, repo);
@@ -290,13 +286,12 @@ export const pushChangesAndCreatePullRequest = async (octokit: Octokit, owner: s
       throw new Error("Error during fork creation");
     }
     // create a new branch
-    const branch = await createBranch(octokit, newOwner, repo, newBranch);
-    if(!branch) {
+    const createdBranch = await createBranch(octokit, newOwner, repo, branch, newBranch);
+    if(!createdBranch) {
       throw new Error("Error during branch creation");
     }
-    const defaultBranch = branch.defaultBranch;
     // commit the changes
-    const commit = await commitChanges(octokit, newOwner, repo, newBranch, branch.commit, commitMessage, change);
+    const commit = await commitChanges(octokit, newOwner, repo, newBranch, createdBranch.commit, commitMessage, change);
     if(!commit) {
       throw new Error("Error during commit");
     }
@@ -304,7 +299,7 @@ export const pushChangesAndCreatePullRequest = async (octokit: Octokit, owner: s
     // the PR will be opened from the new branch to the default branch
     const head = `${newOwner}:${newBranch}`;
     // create a pull request
-    const pullRequestUrl = await createPullRequest(octokit, newOwner, repo, defaultBranch, head, title, body);
+    const pullRequestUrl = await createPullRequest(octokit, newOwner, repo, branch, head, title, body);
     if(!pullRequestUrl) {
       throw new Error("Error during pull request creation");
     }

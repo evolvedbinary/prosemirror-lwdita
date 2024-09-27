@@ -23,15 +23,15 @@ import { document as jditaToProsemirrorJson } from "../document";
  *
  * @param ghrepo - The GitHub repository in the format "owner/repo".
  * @param source - The path to the file within the repository.
+ * @param branch - The branch from which to fetch the document.
  * @returns A promise that resolves to the raw content of the document as a string.
  *
  * @remarks
  * This function currently fetches the document from the 'main' branch of the repository.
  * should use the GitHub API to dynamically determine the default branch of the repository.
  */
-export const fetchRawDocumentFromGitHub = async (ghrepo: string, source: string): Promise<string> => {
-  //TODO(YB): the branch should be passed as a parameter
-  const url = `https://raw.githubusercontent.com/${ghrepo}/main/${source}`;
+export const fetchRawDocumentFromGitHub = async (ghrepo: string, source: string, branch: string): Promise<string> => {
+  const url = `https://raw.githubusercontent.com/${ghrepo}/${branch}/${source}`;
   const response = await fetch(url);
 
   //TODO: Handle errors
@@ -60,10 +60,11 @@ export const transformGitHubDocumentToProsemirrorJson = async (rawDocument: stri
  *
  * @param ghrepo - The GitHub repository from which to fetch the document.
  * @param source - The source path of the document within the repository.
+ * @param branch - The branch from which to fetch the document.
  * @returns A promise that resolves to the transformed ProseMirror JSON document.
  */
-export const fetchAndTransform = async (ghrepo: string, source: string) => {
-  const rawDoc = await fetchRawDocumentFromGitHub(ghrepo, source);
+export const fetchAndTransform = async (ghrepo: string, source: string, branch: string) => {
+  const rawDoc = await fetchRawDocumentFromGitHub(ghrepo, source, branch);
   const jsonDoc = await transformGitHubDocumentToProsemirrorJson(rawDoc);
   return jsonDoc;
 };
@@ -108,18 +109,20 @@ export const getUserInfo = async (token: string): Promise<Record<string, string>
  * 
  * @param ghrepo - The GitHub repository in the format "owner/repo".
  * @param source - The path to the source document.
+ * @param branch - The branch used as base for the PR.
  * @param title - The title of the pull request and the commit message.
  * @param desc - The description of the pull request.
  * @param changedDocument - The content of the changed document.
  * @returns A promise that resolves when the document has been published.
  */
-export const createPrFromContribution = async (ghrepo: string, source: string, changedDocument: string, title: string, desc: string): Promise<string> => {
+export const createPrFromContribution = async (ghrepo: string, source: string, branch: string, changedDocument: string, title: string, desc: string): Promise<string> => {
   const authenticatedUserInfo = await getUserInfo(localStorage.getItem('token') as string);
   
   const owner = ghrepo.split('/')[0];
   const repo = ghrepo.split('/')[1];
   const newOwner = authenticatedUserInfo.login;
-  const newBranch = "new-branch-petal-app";
+  const date = new Date();
+  const newBranch = `doc/petal-${date.getFullYear()}${date.getMonth()}${date.getDate()}${date.getHours()}${date.getMinutes()}${date.getSeconds()}`;
   const commitMessage = title;
   const path = source;
   const content = changedDocument;
@@ -141,6 +144,7 @@ export const createPrFromContribution = async (ghrepo: string, source: string, c
       owner,
       repo,
       newOwner,
+      branch,
       newBranch,
       commitMessage,
       change,

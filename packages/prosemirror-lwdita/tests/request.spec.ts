@@ -27,10 +27,11 @@ const url: string = 'https://example.com/';
 // Function getParameterValues()
 describe('When function getParameterValues() is passed a URL with', () => {
   it('valid parameters, it returns an object containing key-value pairs', () => {
-    validUrl = url + '?ghrepo=repo1&source=source1&referer=referer1';
+    validUrl = url + '?ghrepo=repo1&source=source1&branch=main&referer=referer1';
     expect(getAndValidateParameterValues(validUrl)).to.deep.equal([
       { key: 'ghrepo', value: 'repo1' },
       { key: 'source', value: 'source1' },
+      { key: 'branch', value: 'main' },
       { key: 'referer', value: 'referer1' },
     ]);
   });
@@ -81,6 +82,7 @@ describe('When function isValidParam() is passed a key', () => {
   it('that is a valid key, it returns true', () => {
     expect(isValidParam('ghrepo')).to.equal(true);
     expect(isValidParam('source')).to.equal(true);
+    expect(isValidParam('branch')).to.equal(true);
     expect(isValidParam('referer')).to.equal(true);
   });
   it('that is a invalid key, it returns true', () => {

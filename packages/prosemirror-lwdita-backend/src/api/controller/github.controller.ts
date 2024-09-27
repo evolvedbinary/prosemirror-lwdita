@@ -72,6 +72,7 @@ export const getUserInformation = async (req: Request, res: Response) => {
  * - `repo: string` - The name of the repository where the changes are made.
  * - `newOwner: string` - The owner of the fork where the new branch is created (can be the same as the original owner).
  * - `newBranch: string` - The name of the new branch where the commit will be applied.
+ * - `branch: string` - The name of the base branch.
  * - `commitMessage: string` - A message describing the changes in the commit.
  * - `change: { path: string, content: string }` - An object describing the file change:
  *   - `path: string` - The file path in the repository to be modified.
@@ -96,8 +97,8 @@ export const commitChangesAndCreatePR = async (req: Request, res: Response) => {
   }
 
   //TODO(YB): Add validation
-  const { owner, repo, newOwner, newBranch, commitMessage, change, title, body } = req.body;
-  if(!owner || !repo || !newOwner || !newBranch || !commitMessage || !change || !title || !body) {
+  const { owner, repo, newOwner, branch, newBranch, commitMessage, change, title, body } = req.body;
+  if(!owner || !repo || !newOwner || !branch || !newBranch || !commitMessage || !change || !title || !body) {
     return res.status(400).json({ error: 'Bad Request : Invalid argument' });
   }
 
@@ -111,7 +112,7 @@ export const commitChangesAndCreatePR = async (req: Request, res: Response) => {
     auth: token,
   });
 
-  const response = await pushChangesAndCreatePullRequest(octokit, owner, repo, newOwner, newBranch, commitMessage, change, title, body);
+  const response = await pushChangesAndCreatePullRequest(octokit, owner, repo, newOwner, branch, newBranch, commitMessage, change, title, body);
 
   res.json(response);
 };
