@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE topic PUBLIC "-//OASIS//DTD LIGHTWEIGHT DITA Topic//EN" "lw-topic.dtd">
 <topic id="program">
-  <title>Test File 2</title>
+  <title>content from ignore/link</title>
   <body>
     <section>
-      <p>A test paragraph.</p>
+      <p>changes specifi to ignore/link</p>
     </section>
   </body>
 </topic>
