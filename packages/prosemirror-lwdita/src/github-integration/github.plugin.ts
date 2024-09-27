@@ -78,7 +78,7 @@ export const fetchAndTransform = async (ghrepo: string, source: string, branch: 
  */
 export const exchangeOAuthCodeForAccessToken = async (code: string): Promise<string> => {
   // build the URL to exchange the code for an access token
-  const url = `http://localhost:3000/api/github/token?code=${code}`;
+  const url = `http://pineapple.evolvedbinary.com:3000/api/github/token?code=${code}`;
   // fetch the access token
   const response = await fetch(url);
   const json = await response.json();
@@ -93,7 +93,7 @@ export const exchangeOAuthCodeForAccessToken = async (code: string): Promise<str
  * @returns A promise that resolves to a record containing user information.
  */
 export const getUserInfo = async (token: string): Promise<Record<string, string>> => {
-  const url = `http://localhost:3000/api/github/user`;
+  const url = `http://pineapple.evolvedbinary.com:3000/api/github/user`;
   const response = await fetch(url, {
     headers: {
       'authorization': `Bearer ${token}`
@@ -134,7 +134,7 @@ export const createPrFromContribution = async (ghrepo: string, source: string, b
   // get the token from the local storage
   const token = localStorage.getItem('token');
   // make a post request to  /api/github/integration
-  const response = await fetch('http://localhost:3000/api/github/integration', {
+  const response = await fetch('http://pineapple.evolvedbinary.com:3000/api/github/integration', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

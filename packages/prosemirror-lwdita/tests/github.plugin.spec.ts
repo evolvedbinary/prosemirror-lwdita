@@ -77,7 +77,7 @@ describe('getUserInfo', () => {
     const mockResponse = { login: 'marmoure', id: '12345' };
 
     // Mock the API response
-    fetchMock.getOnce('http://localhost:3000/api/github/user', {
+    fetchMock.getOnce('http://pineapple.evolvedbinary.com:3000/api/github/user', {
       body: mockResponse,
       headers: { 'Content-Type': 'application/json' },
     });
@@ -85,12 +85,12 @@ describe('getUserInfo', () => {
     const result = await getUserInfo(token);
 
     expect(result).to.deep.equal(mockResponse);
-    const lastCall = fetchMock.lastCall('http://localhost:3000/api/github/user') as fetchMock.MockCall;
+    const lastCall = fetchMock.lastCall('http://pineapple.evolvedbinary.com:3000/api/github/user') as fetchMock.MockCall;
     if (!lastCall) {
       throw new Error('No fetch call found for /api/github/user');
     }
     const [url, options] = lastCall;
-    expect(url).to.equal('http://localhost:3000/api/github/user');
+    expect(url).to.equal('http://pineapple.evolvedbinary.com:3000/api/github/user');
     // @ts-expect-error TS7053 happens because the headers are not typed
     expect(options?.headers?.authorization).to.equal(`Bearer ${token}`);
   });
@@ -99,7 +99,7 @@ describe('getUserInfo', () => {
     const token = 'mock-token';
 
     // Mock a failed API response
-    fetchMock.getOnce('http://localhost:3000/api/github/user', 401);
+    fetchMock.getOnce('http://pineapple.evolvedbinary.com:3000/api/github/user', 401);
 
     try {
       await getUserInfo(token);
@@ -132,21 +132,21 @@ describe('createPrFromContribution', () => {
     const changedDocument = '<xml>Changed Content</xml>';
     const token = 'mock-token';
     // Mock fetch request
-    fetchMock.postOnce('http://localhost:3000/api/github/integration', {
+    fetchMock.postOnce('http://pineapple.evolvedbinary.com:3000/api/github/integration', {
       status: 200,
       body: {
         url: "mockUrl"
       }
     });
 
-    fetchMock.getOnce('http://localhost:3000/api/github/user', {
+    fetchMock.getOnce('http://pineapple.evolvedbinary.com:3000/api/github/user', {
       status: 200,
       body: {
         login: 'marmoure',
       },
     }); 
     await createPrFromContribution(ghrepo, source, branch, changedDocument, title, description);
-    const lastCall = fetchMock.lastCall('http://localhost:3000/api/github/integration') as fetchMock.MockCall;
+    const lastCall = fetchMock.lastCall('http://pineapple.evolvedbinary.com:3000/api/github/integration') as fetchMock.MockCall;
     if (!lastCall) {
       throw new Error('No fetch call found for /api/github/integration');
     }
@@ -154,7 +154,7 @@ describe('createPrFromContribution', () => {
     if(options) {
       if(!options.headers) return;
       if(!options.body) return;
-      expect(url).to.equal('http://localhost:3000/api/github/integration');
+      expect(url).to.equal('http://pineapple.evolvedbinary.com:3000/api/github/integration');
       expect(options.method).to.equal('POST');
       // @ts-expect-error TS7053 happens because the headers are not typed
       expect(options.headers['Content-Type']).to.equal('application/json'); 
