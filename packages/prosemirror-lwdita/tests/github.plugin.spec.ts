@@ -164,7 +164,8 @@ describe('createPrFromContribution', () => {
       expect(body.owner).to.equal('evolvedbinary');
       expect(body.repo).to.equal('prosemirror-lwdita');
       expect(body.newOwner).to.equal('marmoure');
-      expect(body.newBranch).to.equal('new-branch-petal');
+      const date = new Date();
+      expect(body.newBranch).to.equal(`doc/petal-${date.getFullYear()}${date.getMonth()}${date.getDate()}${date.getHours()}${date.getMinutes()}${date.getSeconds()}`);
       expect(body.commitMessage).to.equal('Update the document');
       expect(body.change.path).to.equal(source);
       expect(body.change.content).to.equal(changedDocument);
