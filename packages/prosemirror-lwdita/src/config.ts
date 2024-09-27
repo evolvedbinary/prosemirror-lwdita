@@ -22,7 +22,7 @@ export const clientID: { id: string, value: string } = {
 
 export const serverURL: { id: string, value: string } = {
   id: 'server_url',
-  value: 'http://localhost:1234/',
+  value: 'http://pineapple.evolvedbinary.com:1234/',
 };
 
 /**
