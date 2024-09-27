@@ -184,10 +184,6 @@ export function processRequest(): undefined | URLParams {
           }).catch(e => {
             console.error(e);
           });
-  
-          // Show a success notification
-          showNotification("authenticated");
-
           // return the parameters from the URL
           const state = JSON.parse(atob(returnParams.state));
           return state;
