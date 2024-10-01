@@ -246,16 +246,44 @@ const commitChanges = async (octokit: Octokit, owner: string, repo: string, bran
  * @param body - The body of the pull request.
  * @returns A Promise that resolves to the URL of the created pull request, or undefined if an error occurred.
  */
-const createPullRequest = async (octokit: Octokit, owner: string, repo: string, targetBranch :string, head: string, title: string, body: string): Promise<string | undefined> => {
+const createPullRequest = async (accessToken: string, owner: string, repo: string, targetBranch :string, head: string, title: string, body: string): Promise<string | undefined> => {
   try {
+    const octokit = new Octokit({
+      auth: accessToken
+    });
+
     const response = await octokit.pulls.create({
       owner,
       repo,
       title,
-      body,
+      body: `This pull request was created by **Petal-demo bot** on behalf of **[marmoure]**.\n\nAdditional details about the update...`,
       head: head,
       base: targetBranch,
+      // labels: ["PetalBot"]
     });
+
+    await octokit.issues.addLabels({
+      owner,
+      repo,
+      issue_number: response.data.number,  // PR number
+      labels: ["bot"],  // You can customize or add more labels
+    });
+
+    await octokit.issues.addLabels({
+      owner: 'marmoure',
+      repo: 'prosemirror-lwdita',
+      issue_number: response.data.number,  // PR number
+      labels: ['on behalf of GitHub'],  // Your custom label
+    });
+
+    const comment = await octokit.issues.createComment({
+      owner,
+      repo,
+      issue_number: response.data.number,  // PR number
+      body: `This action was performed by **marmoure** with assistance from **Petal-demo bot**.`,
+    });
+    console.log("Comment added to PR:", comment.data.id);
+
 
     return response.data.html_url;
   } catch (error) {
@@ -299,7 +327,12 @@ export const pushChangesAndCreatePullRequest = async (octokit: Octokit, owner: s
     // the PR will be opened from the new branch to the default branch
     const head = `${newOwner}:${newBranch}`;
     // create a pull request
-    const pullRequestUrl = await createPullRequest(octokit, newOwner, repo, branch, head, title, body);
+
+    // get the access token for the installation
+    const installationId = 55447850;
+    const accessToken = await getInstallationAccessToken(installationId) as string;
+
+    const pullRequestUrl = await createPullRequest(accessToken, 'marmoure', repo, branch, head, title, body);
     if(!pullRequestUrl) {
       throw new Error("Error during pull request creation");
     }
@@ -308,3 +341,27 @@ export const pushChangesAndCreatePullRequest = async (octokit: Octokit, owner: s
     console.error("Error during push changes and create pull request", error);
   }
 };
+
+
+
+// Get the installation access token
+async function getInstallationAccessToken(installationId: number) {
+  // Authenticate as the GitHub App using the JWT
+  const jwttoken = ``
+
+  const octokitApp = new Octokit({
+    auth: jwttoken,
+  });
+
+  try {
+    const response = await octokitApp.request('POST /app/installations/{installation_id}/access_tokens', {
+      installation_id: installationId, // Your installation ID
+    });
+
+    const accessToken = response.data.token;
+    console.log("Installation Access Token:", accessToken);
+    return accessToken;
+  } catch (error) {
+    console.error("Error fetching installation access token:", error);
+  }
+}
