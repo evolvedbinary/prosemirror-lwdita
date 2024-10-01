@@ -183,6 +183,9 @@ export function processRequest(): undefined | URLParams {
             localStorage.setItem('token', token);
           }).catch(e => {
             console.error(e);
+            //TODO(YB): make sure the error page can redirect back to the referer
+            //TODO(YB): the error page should prompt the user to authenticate again
+            showErrorPage();
           });
           // return the parameters from the URL
           const state = JSON.parse(atob(returnParams.state));
