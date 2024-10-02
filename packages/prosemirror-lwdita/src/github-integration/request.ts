@@ -117,35 +117,12 @@ export function showNotification(parameters: 'authenticated' | 'invalidParams' |
 /**
  * Redirects the user to GitHub OAuth
  */
-export function redirectToGitHubOAuth(): void {
+export function redirectToGitHubOAuth(parameters: URLParams): void {
   const { id, value } = clientID;
-  window.location.href = 'https://github.com/login/oauth/authorize?' + id + '=' + value;
-}
-
-/**
- * Redirects the user to the referer parameter from URL params
- */
-export function handleInvalidRequest(): void {
-  const userParamsString = localStorage.getItem('userParams');
-  if (userParamsString) {
-    const userParams = JSON.parse(userParamsString);
-    const storedReferer = userParams.find((item: { key: string; }) => item.key === 'referer')?.value;
-    if (storedReferer) {
-      window.location.href = storedReferer;
-    } else {
-      // If the 'referer' key is not found in userParams, show error page
-      window.location.href = serverURL.value + 'auth-error.html';
-    }
-
-  } else {
-    // Send back to referer parameter from URL params
-    const referer = new URLSearchParams(window.location.search).get('referer');
-    if (referer) {
-      window.location.href = referer;
-    } else {
-      window.location.href = serverURL.value + 'auth-error.html';
-    }
-  }
+  // Store the parameters in state to pass them to the redirect URL
+  const state = btoa(`${JSON.stringify({ ...parameters })}`);
+  const redirectURL = serverURL.value;
+  window.location.href = `https://github.com/login/oauth/authorize?${id}=${value}&state=${state}&redirect_uri=${redirectURL}`;
 }
 
 /**
@@ -153,6 +130,18 @@ export function handleInvalidRequest(): void {
  */
 export function showErrorPage(): void {
   window.location.href = serverURL.value + 'auth-error.html';
+}
+
+/**
+ * Redirects the user to the referer parameter from URL params
+ */
+export function handleInvalidRequest(referer: string | null): void {
+    if (referer) {
+      window.location.href = referer;
+    } else {
+      // If the 'referer' key is not found in userParams, show error page
+      showErrorPage();
+    }
 }
 
 /**
@@ -168,62 +157,40 @@ export function processRequest(): undefined | URLParams {
 
       if (typeof parameters === 'string') {
         if (parameters === 'invalidParams') {
-          handleInvalidRequest();
+          const referer = new URLSearchParams(window.location.search).get('referer');
+          handleInvalidRequest(referer);
         }
         if (parameters === 'refererMissing') {
           showErrorPage();
         }
-        showNotification(parameters);
-
-        return undefined;
-      } else if (typeof parameters === 'object' && !parameters.some(param => isOAuthCodeParam(param.key))) {
-        // Store the parameters in localStorage for reading the values after the OAuth flow
-        // TODO: After a successful GitHub Authentication, read the user parameters from localStorage and clear it afterwards
-        localStorage.setItem('userParams', JSON.stringify(parameters));
-
-        // Redirect to GitHub OAuth page
-        redirectToGitHubOAuth();
-      } else if (typeof parameters === 'object' && parameters.some(param => isOAuthCodeParam(param.key))) {
-        //TODO(YB): These Params should passed with the OAuth redirect URL
-        // get the stored parameters from localStorage
-        const storedParams = localStorage.getItem('userParams');
-        if (!storedParams) {
-          showErrorPage();
-          return undefined;
-        }
-        // in case of an error, the user did not authenticate the app
-        const errorParam = parameters.find(param => param.key === 'error');
-        if(errorParam) {
-          //TODO(YB): redirect to petal error page
-          // Petal error page should have a button to redirect to the referer
-          return undefined;
-        }
-
-        // exchange the code for an access token
-        const codeParam = parameters.find(param => param.key === 'code');
-        if (!codeParam) return undefined; // I don't understand why this is necessary as the previous if statement should have caught this
-          const code = codeParam.value;
-          exchangeOAuthCodeForAccessToken(code).then(token => {
-          localStorage.setItem('token', token);
-        }).catch(e => {
-          console.error(e);
-        });
-
-        // Show a success notification
-        showNotification("authenticated");
-
+      } else if (typeof parameters === 'object') {
         const returnParams: URLParams = {};
-
-        // Add the stored parameters to the returnParams object
-        if (storedParams) {
-          const stored = JSON.parse(storedParams);
-          for (const param of stored) {
-            returnParams[param.key] = param.value;
-          }
+        for (const param of parameters) {
+          returnParams[param.key] = param.value;
         }
+        if (!parameters.some(param => isOAuthCodeParam(param.key))) {
 
-        // return the stored parameters and the new parameters from the URL
-        return returnParams;
+          // Redirect to GitHub OAuth page
+          redirectToGitHubOAuth(returnParams);
+        } else if (parameters.some(param => isOAuthCodeParam(param.key))) {
+          // in case of an error, the user did not authenticate the app
+          const errorParam = parameters.find(param => param.key === 'error');
+          if(errorParam) {
+            showErrorPage();
+          }
+
+          exchangeOAuthCodeForAccessToken(returnParams.code).then(token => {
+            localStorage.setItem('token', token);
+          }).catch(e => {
+            console.error(e);
+            //TODO(YB): make sure the error page can redirect back to the referer
+            //TODO(YB): the error page should prompt the user to authenticate again
+            showErrorPage();
+          });
+          // return the parameters from the URL
+          const state = JSON.parse(atob(returnParams.state));
+          return state;
+        }
       }
 
     } catch (error) {
