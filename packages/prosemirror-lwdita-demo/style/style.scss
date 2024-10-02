@@ -18,7 +18,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 $nodes: "audio", "body", "data", "dd", "desc", "dl", "dlentry", "dt", "document", "fig", "fn", "image", "media-source", "media-track", "li", "note", "ol", "p", "ph", "pre", "prolog", "section", "simpletable", "shortdesc", "stentry", "sthead", "strow", "title", "topic", "ul", "video", "xref", "b", "i", "u", "sub", "sup";
 $toolbar-height: 36px;
 $header-height: 50px;
-$header-padding-top: 12px;
+$header-padding-top: 10px;
 
 html {
   height: 100%;
@@ -484,6 +484,11 @@ button {
   text-decoration: none;
   max-width: calc(50% - 20px);
   z-index: 2147483647;
+
+  // Customize links
+  a {
+    color: inherit;
+  }
 }
 
 .toastify.on {
@@ -541,18 +546,24 @@ button {
 .toast {
   &--success {
     background-color: #4caf50;
+    color: #ffffff;
   }
   &--error {
-    background-color: #f44336;
+    background-color: #a5395e;
+    color: #ffffff;
   }
   &--warning {
     background-color: #ff9800;
   }
   &--info {
-    background-color: #00bcd4;
+    background-color: #00bcd4; // EB light blue
   }
   &--welcome {
     background-color: #1c3f7c; // EB blue
+    color: #ffffff
+  }
+
+  &__panel {
     padding: 1.5rem 2.5rem 2rem 2.5rem;
     display: flex;
     flex-direction: column-reverse;
@@ -561,10 +572,11 @@ button {
     width: 22rem;
 
     // Customized toastify-right behavior: Reset position
-    &.toastify-right{
+    &.toastify-right {
       right: 0 !important;
     }
   }
+
   &--dismiss {
     @extend .pt__button;
     font-family: inherit;

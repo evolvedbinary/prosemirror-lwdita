@@ -35,4 +35,10 @@ export const messageKeys = {
     paragraph2: "Your changes will be published to GitHub in your GitHub repository. After successful publication you will notified with a link to the PR. Happy editing!",
     buttonLabel: "Don't show again",
   },
+  resultNote: {
+    titleSuccess: "Your changes have been successfully published.",
+    titleError: "Your changes could not be published.",
+    paragraphSuccess: "You can check your published changes here: ",
+    paragraphError: "Something went wrong with publishing your changes because of following error:",
+  },
 }

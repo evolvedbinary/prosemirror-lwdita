@@ -18,7 +18,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 import Toastify, { Options } from 'toastify-js';
-import { messageKeys } from '../config';
+import { messageKeys } from '../app-config';
 
 /**
  * Displays a toast message with 'Toastify' library
@@ -59,7 +59,7 @@ export const showWelcomeNote = () => {
     duration: -1,
     gravity: 'top',
     position: 'right',
-    className: 'toast toast--welcome',
+    className: 'toast toast__panel toast--welcome',
     close: true,
     node: customNote,
     onClick: function () {
@@ -78,4 +78,58 @@ export const showWelcomeNote = () => {
  */
 export function hasConfirmedNotification(): boolean {
   return localStorage.getItem('welcomeNoteConfirmed') === 'true';
+}
+
+/**
+ * Shows a user notification containing a custom,
+ * static message and a dynamic link
+ * @param destination - URL to which the browser should be navigated on click of the toast
+ */
+export function showPublicationResultSuccess(destination: string) {
+  const customNote = document.createElement('section');
+  customNote.innerHTML = `
+  <h2>${messageKeys.resultNote.titleSuccess}</h2>
+  <p>${messageKeys.resultNote.paragraphSuccess}</p>
+  <a href="${destination}"></span>${destination}</a>
+  `;
+
+  const parentNode = document.body;
+  parentNode.appendChild(customNote);
+
+  Toastify({
+    text: '',
+    duration: -1,
+    gravity: 'top',
+    position: 'right',
+    className: `toast__panel toast--success`,
+    close: true,
+    destination: destination,
+    newWindow: true,
+    node: customNote,
+  }).showToast();
+}
+
+/**
+ * Shows a user notification containing a dynamic message
+ * @param message - Error message
+ */
+export function showPublicationResultError(message: string) {
+  const customNote = document.createElement('section');
+  customNote.innerHTML = `
+  <h2>${messageKeys.resultNote.titleError}</h2>
+  <p>${messageKeys.resultNote.paragraphError}</p>
+  <p>${message}</p>`;
+
+  const parentNode = document.body;
+  parentNode.appendChild(customNote);
+
+  Toastify({
+    text: message,
+    duration: -1,
+    gravity: 'top',
+    position: 'right',
+    className: `toast__panel toast--error`,
+    close: true,
+    node: customNote,
+  }).showToast();
 }
