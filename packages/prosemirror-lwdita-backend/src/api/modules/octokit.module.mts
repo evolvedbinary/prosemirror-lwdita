@@ -16,9 +16,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 import { Octokit } from "@octokit/rest";
-import { App } from 'octokit';
+import { createOAuthAppAuth } from "@octokit/auth-oauth-app";
 import { Endpoints } from "@octokit/types";
 import dotenv from 'dotenv'; 
+import { retry } from "@octokit/plugin-retry";
 dotenv.config();  // Load environment variables from .env file 
 
 // user data type
@@ -44,28 +45,34 @@ export type BranchInfo = {
 export const authenticateWithOAuth = async (code: string): Promise<string | undefined> => {
   try {
 
+    //TODO(YB): Check if env variables are set and valid
     const appId = process.env.GITHUB_APP_ID as string;
-    
     // the private key is base64 encoded, so we need to decode it
     const privateKey = Buffer.from(process.env.PRIVATE_KEY_64Encoded as string, 'base64').toString('ascii');
     
-    //TODO(YB): Check if env variables are set and valid
-    const app = new App({
-      appId,
-      privateKey,
-      oauth: {
+    // create an Octokit instance with the retry plugin
+    const OctokitWithRetry = Octokit.plugin(retry);
+
+    const octokit = new OctokitWithRetry({
+      authStrategy: createOAuthAppAuth,
+      auth: {
         clientId: process.env.GITHUB_CLIENT_ID as string,
         clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
+        privateKey: privateKey,
+        appId: parseInt(appId),
+        clientType: 'github-app',
+        code: code,
       }
     });
 
-    const { authentication } = await app.oauth.createToken({
-      code: code
+    const authResponse = await octokit.auth({
+      type: 'token',
+      code: code,
     });
 
     //TODO(YB): make sure the token is valid and has the right permissions
-
-    return authentication.token;
+    const token = (authResponse as { token: string }).token;    
+    return token;
   } catch (error) {
     console.error("Error during OAuth authentication", error);
   }
@@ -78,8 +85,13 @@ export const authenticateWithOAuth = async (code: string): Promise<string | unde
  */
 export const getUserInfo = async (token: string): Promise<UserData | undefined> => {
   try {
-    const octokit = new Octokit({
-      auth: token
+    const OctokitWithRetry = Octokit.plugin(retry);
+    const octokit = new OctokitWithRetry({
+      auth: token,
+      request: {
+        retries: 3,
+        retryAfter: 1,   
+      }
     });
 
     const { data } = await octokit.users.getAuthenticated();
