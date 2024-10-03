@@ -108,8 +108,16 @@ export const commitChangesAndCreatePR = async (req: Request, res: Response) => {
   // dynamically import the module to avoid EMS and CJS incompatibility
   const { pushChangesAndCreatePullRequest } = await import('../modules/octokit.module.mjs');
   const { Octokit } = await import('@octokit/rest');
-  const octokit = new Octokit({
+  const { retry } = await import("@octokit/plugin-retry");
+
+  const OctokitWithRetry = Octokit.plugin(retry);
+
+  const octokit = new OctokitWithRetry({
     auth: token,
+    request: {
+      retries: 3,
+      retryAfter: 1, // retry after 1 second
+    },
   });
 
   const response = await pushChangesAndCreatePullRequest(octokit, owner, repo, newOwner, branch, newBranch, commitMessage, change, title, body);
