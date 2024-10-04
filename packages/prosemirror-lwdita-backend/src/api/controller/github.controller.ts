@@ -35,7 +35,7 @@ export const authenticateUserWithOctokit = async (req: Request, res: Response) =
 
   const token = await authenticateWithOAuth(code as string);
 
-  res.json(token);
+  res.json({ token });
 };
 
 /**
@@ -114,5 +114,7 @@ export const commitChangesAndCreatePR = async (req: Request, res: Response) => {
 
   const response = await pushChangesAndCreatePullRequest(octokit, owner, repo, newOwner, branch, newBranch, commitMessage, change, title, body);
 
-  res.json(response);
+  res.json({
+    url: response,
+  });
 };

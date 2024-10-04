@@ -228,13 +228,14 @@ describe('PR dialog', () => {
     cy.get('#prDialog').should('not.exist');
   });
 
+  // skip this test as the clicking outside the dialog is not working
   it.skip('should close the PR dialog when clicking outside the dialog', () => {
     cy.get('#publishFile').click();
     cy.get('#editor').click('topLeft', { force: true });
     cy.get('#prDialog').should('not.exist');
   });
 
-  it('should make the required fields red when empty', () => {
+  it('should point out the required filed', () => {
     cy.get('#publishFile').click();
     cy.get('#okButton').click();
     cy.focused().should('have.attr', 'id', 'titleInput');
