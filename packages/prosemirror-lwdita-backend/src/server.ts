@@ -17,9 +17,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import express from 'express';
 import githubRouter from './api/routes/github.router';
+import cors from 'cors';
 
 const app = express();
 app.use(express.json());
+app.use(cors())
 
 // add the github module to the http server
 // this will forward all requests starting with /api/github to the githubRouter

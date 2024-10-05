@@ -179,8 +179,12 @@ export function processRequest(): undefined | URLParams {
             showErrorPage();
           }
 
-          exchangeOAuthCodeForAccessToken(returnParams.code).then(token => {
+          exchangeOAuthCodeForAccessToken(returnParams.code).then(({token, installation}) => {
             localStorage.setItem('token', token);
+
+            if(!installation) {
+              // redirect to the OAuth error page and show the error message with instructions to install the app
+            }
           }).catch(e => {
             console.error(e);
             //TODO(YB): make sure the error page can redirect back to the referer
