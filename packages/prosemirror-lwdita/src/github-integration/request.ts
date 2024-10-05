@@ -200,14 +200,17 @@ export function processRequest(): undefined | URLParams {
             console.log('processRequest(): error', errorParam.value);
           }
 
-          exchangeOAuthCodeForAccessToken(returnParams.code).then(token => {
-            localStorage.setItem('token', token);
-          }).catch(error => {
-            console.error(error);
+          exchangeOAuthCodeForAccessToken(returnParams.code).then(({token, installation}) => {
+            localStorage.setItem('token', token); 
+            if(!installation) {
+              // redirect to the OAuth error page and show the error message with instructions to install the app
+            }
+          }).catch(e => {
+            console.error(e);
             //TODO(YB): make sure the error page can redirect back to the referer
             //TODO(YB): the error page should prompt the user to authenticate again
             // TODO (AvC): Parse the referer from the state object if available and pass it to the error page
-            showErrorPage('missingAuthentication', '', error);
+            showErrorPage('missingAuthentication', '', e);
           });
           // return the parameters from the URL
           const state = JSON.parse(atob(returnParams.state));
