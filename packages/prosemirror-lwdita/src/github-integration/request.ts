@@ -103,6 +103,9 @@ export function isOAuthCodeParam(key: string): boolean {
   return key === 'code' || key === 'error';
 }
 
+export function isInstalationParam(key: string): boolean {
+  return key === 'installation_id' || key === 'setup_action';
+}
 /**
  * Shows a toast notification based on the given parameters
  *
@@ -129,6 +132,11 @@ export function redirectToGitHubOAuth(parameters: URLParams): void {
   const state = btoa(`${JSON.stringify({ ...parameters })}`);
   const redirectURL = config.serverConfig.frontendUrl;
   window.location.href = `https://github.com/login/oauth/authorize?${id}=${value}&state=${state}&redirect_uri=${redirectURL}`;
+}
+
+export function redirectToGitHubAppInstall(parameters: URLParams): void {
+  const redirectURL = serverURL.value;
+  window.location.href = `https://github.com/apps/petal-demo/installations/new?state=${parameters.state}&redirect_uri=${redirectURL}`;
 }
 
 /**
@@ -184,10 +192,14 @@ export function processRequest(): undefined | URLParams {
           returnParams[param.key] = param.value;
         }
         if (!parameters.some(param => isOAuthCodeParam(param.key))) {
-
+          // Petal was called with github parameters but not with the OAuth code
           // Redirect to GitHub OAuth page
           redirectToGitHubOAuth(returnParams);
-        } else if (parameters.some(param => isOAuthCodeParam(param.key))) {
+        } else if (parameters.some(param => isInstalationParam(param.key))) {
+          // The user has authenticated and installed the app
+          // return the parameters from the URL
+          return JSON.parse(atob(returnParams.state));;
+        } else {
           // in case of an error, the user did not authenticate the app
           const errorParam = parameters.find(param => param.key === 'error');
           if (errorParam) {
@@ -204,6 +216,7 @@ export function processRequest(): undefined | URLParams {
             localStorage.setItem('token', token); 
             if(!installation) {
               // redirect to the OAuth error page and show the error message with instructions to install the app
+              redirectToGitHubAppInstall(returnParams);
             }
           }).catch(e => {
             console.error(e);
@@ -212,9 +225,8 @@ export function processRequest(): undefined | URLParams {
             // TODO (AvC): Parse the referer from the state object if available and pass it to the error page
             showErrorPage('missingAuthentication', '', e);
           });
-          // return the parameters from the URL
-          const state = JSON.parse(atob(returnParams.state));
-          return state;
+
+          return JSON.parse(atob(returnParams.state));
         }
       }
 
