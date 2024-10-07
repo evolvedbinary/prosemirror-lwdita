@@ -260,10 +260,9 @@ export function renderPrDialog(ghrepo: string, source: string, branch: string, u
   });
 }
 
-
 /**
  * Render an image upload dialog with an overlay
- * upload an image from local machine or a URL
+ * upload an image from the local file system or a URL
  * set the image attributes like height, width, alt text
  * @param callback - callback function to handle the image attributes
  * @param node - Node selected node to edit
