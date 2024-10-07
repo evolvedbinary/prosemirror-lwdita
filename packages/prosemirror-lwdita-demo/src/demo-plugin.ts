@@ -234,10 +234,6 @@ function transformToJditaDocumentNode(state: { [x: string]: any; tr?: any; selec
   ;
 };
 
-// TODO: Create a new function to transform the JDITA object
-// back to XDITA as soon as the JDITA version is updated!
-// Call serializeToXML() and pass the documentNode rendered by `transformToJditaDocumentNode()`.
-
 /**
  * Create a menu item to redirect to the github page of the project.
  * @param props - Menu item properties
