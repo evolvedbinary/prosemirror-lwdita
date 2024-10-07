@@ -51,7 +51,6 @@ function openFile(input: InputContainer): Command {
         };
       } else {
         showToast('Sorry, something went wrong with opening the file', 'error');
-        console.log('can not add image:', input.el?.files?.length);
       }
     }
     try {
