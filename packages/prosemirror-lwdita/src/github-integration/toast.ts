@@ -90,7 +90,7 @@ export function showPublicationResultSuccess(destination: string) {
   customNote.innerHTML = `
   <h2>${messageKeys.resultNote.titleSuccess}</h2>
   <p>${messageKeys.resultNote.paragraphSuccess}</p>
-  <a href="${destination}"></span>${destination}</a>
+  <a target="_blank" href="${destination}"></span>${destination}</a>
   `;
 
   const parentNode = document.body;
