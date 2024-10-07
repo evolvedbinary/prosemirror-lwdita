@@ -21,6 +21,7 @@ import { InputContainer, renderPrDialog } from "@evolvedbinary/prosemirror-lwdit
 import { unTravel, URLParams } from "@evolvedbinary/prosemirror-lwdita";
 import { JditaSerializer } from "@evolvedbinary/lwdita-xdita";
 import { InMemoryTextSimpleOutputStreamCollector } from "@evolvedbinary/lwdita-xdita/dist/stream";
+import { showToast } from '@evolvedbinary/prosemirror-lwdita';
 
 /**
  * Open file selection dialog and select and file to insert into the local storage.
@@ -37,7 +38,8 @@ function openFile(input: InputContainer): Command {
         const reader = new FileReader();
         reader.readAsBinaryString(file);
         reader.onerror = () => {
-          console.log('an error reading while reading the file');
+          showToast('Sorry, there was an error with reading the file. Please check if the file you tried to upload contains valid xml and try again', 'error');
+          console.log('Error reading file');
         };
         reader.onload = () => {
           if (dispatch && typeof reader.result === 'string') {
@@ -48,6 +50,7 @@ function openFile(input: InputContainer): Command {
           }
         };
       } else {
+        showToast('Sorry, something went wrong with opening the file', 'error');
         console.log('can not add image:', input.el?.files?.length);
       }
     }
@@ -57,6 +60,7 @@ function openFile(input: InputContainer): Command {
       }
       if (dispatch) {
         if (!input.el) {
+          showToast('Sorry, the editor has problems with opening the file', 'error');
           console.log('no input found');
           return false;
         }
@@ -65,8 +69,8 @@ function openFile(input: InputContainer): Command {
         return true;
       }
       return true;
-    } catch(e) {
-      console.info('Error opening file:');
+    } catch (e) {
+      showToast('Sorry, something went wrong with opening the file', 'error');
       console.error(e);
       return false;
     }
@@ -109,7 +113,6 @@ export function openFileMenuItem(): MenuElement {
  * @returns {MenuElement} The menu item for publishing the file.
  */
 export function publishFileMenuItem(urlParams: URLParams): MenuElement {
-  //const storedFile = localStorage.getItem('file') ? localStorage.getItem('file') : console.log('No file in the localStorage to save.');
   const storedFileName = localStorage.getItem('fileName') ? localStorage.getItem('fileName') : 'Petal';
 
   return new MenuItem({
@@ -142,10 +145,10 @@ function publishGithubDocument(urlParams: URLParams): Command {
       const documentNode = transformToJditaDocumentNode(state);
       const updatedXdita = xditaPrefix + documentNode;
 
-
       // show the publishing dialog
       renderPrDialog(urlParams.ghrepo, urlParams.source, urlParams.branch, updatedXdita);
     } else {
+      showToast('Sorry, it seems there is nothing in the editor to save and publish. Please try again.', 'error');
       console.log('Nothing to publish, no EditorState has been dispatched.');
     }
   }
@@ -157,7 +160,6 @@ function publishGithubDocument(urlParams: URLParams): Command {
  */
 export function saveFileMenuItem(props: Partial<MenuItemSpec & { url: string }> = {}): MenuElement {
   const link = new InputContainer();
-  //const storedFile = localStorage.getItem('file') ? localStorage.getItem('file') : console.log('No file in the localStorage to save.');
   const storedFileName = localStorage.getItem('fileName') ? localStorage.getItem('fileName') : 'Petal';
 
   return new MenuItem({
@@ -199,12 +201,14 @@ function saveFile(input: InputContainer): Command {
       if (link) {
         link.setAttribute('href', url);
       } else {
+        showToast('Apologies, something went wrong in the editor to provide you the download.', 'error');
         console.log('The URL could not be assigned to the element, the link is not available.')
       }
       // TODO: Implement a callback function to check if the download has been completed
       // After the load has completed revoke the data URL with `URL.revokeObjectURL(url);`
       // See https://w3c.github.io/FileAPI/#examplesOfCreationRevocation
     } else {
+      showToast('Apologies, something went wrong in the editor to provide you the download.', 'error');
       console.log('Nothing to download, no EditorState has been dispatched.');
     }
   }
