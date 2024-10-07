@@ -18,7 +18,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 import Toastify, { Options } from 'toastify-js';
-import { messageKeys } from '../app-config';
+import { messageKeys } from './app-config';
 
 /**
  * Displays a toast message with 'Toastify' library

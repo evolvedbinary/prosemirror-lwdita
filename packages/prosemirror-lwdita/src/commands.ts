@@ -21,7 +21,7 @@ import { chainCommands } from 'prosemirror-commands';
 import { Fragment, MarkType, Node, NodeType, ResolvedPos } from 'prosemirror-model';
 import { Command, EditorState, TextSelection, Transaction } from 'prosemirror-state';
 import { createPrFromContribution } from './github-integration/github.plugin';
-import { showPublicationResultError, showPublicationResultSuccess } from './github-integration/toast';
+import { showPublicationResultError, showPublicationResultSuccess } from './toast';
 
 /**
  * Create a new Node and fill it with the args as attributes.

@@ -22,5 +22,5 @@ export * from './commands';
 export * from './untravel-document';
 export * from './attributes';
 export * from './github-integration/request';
-export * from './github-integration/toast';
+export * from './toast';
 export * from './github-integration/github.plugin';
