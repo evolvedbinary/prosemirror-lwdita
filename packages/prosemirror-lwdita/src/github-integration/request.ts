@@ -30,7 +30,7 @@ export interface URLParams {
  * List of valid URL key names in parameters
  * ghrepo = GitHub repository,
  * source = GitHub resource,
- * branch = Branch of the repository to fetch the document from, and use as base branch for PRs 
+ * branch = Branch of the repository to fetch the document from, and use as base branch for PRs
  * referer = Referer of the request
  */
 export const validKeys = ['ghrepo', 'source', 'branch', 'referer'];
@@ -127,25 +127,33 @@ export function redirectToGitHubOAuth(parameters: URLParams): void {
 
 /**
  * Redirects the user to the error page
+ * If a referer, error type, or error message parameter are provided,
+ * they will be passed to the error page
+ *
+ * @param errorType - Error type
+ * @param referer - Referer of the request
+ * @param errorMsg - Error message
  */
-export function showErrorPage(): void {
-  window.location.href = serverURL.value + 'auth-error.html';
+export function showErrorPage(errorType: string, referer?: string, errorMsg?: string): void {
+  const errorPageUrl = `${serverURL.value}error.html?error-type=${encodeURIComponent(errorType)}&referer=${encodeURIComponent(referer || '')}&error-msg=${encodeURIComponent(errorMsg || '')}`;
+  window.location.href = errorPageUrl;
 }
 
 /**
  * Redirects the user to the referer parameter from URL params
+ * If a referer parameter is not provided, it will be passed to the error page
  */
 export function handleInvalidRequest(referer: string | null): void {
-    if (referer) {
-      window.location.href = referer;
-    } else {
-      // If the 'referer' key is not found in userParams, show error page
-      showErrorPage();
-    }
+  if (referer) {
+    showErrorPage('invalidParams', referer);
+  } else {
+    showErrorPage('missingReferer');
+  }
 }
 
 /**
  * Process the URL parameters and handle the notifications
+ * and redirects to the GitHub OAuth page or the error page
  */
 export function processRequest(): undefined | URLParams {
   // Check if the window object is defined (i.e. it is not in Mocha tests!)
@@ -154,15 +162,16 @@ export function processRequest(): undefined | URLParams {
 
     try {
       const parameters = getAndValidateParameterValues(currentUrl);
-
+      // Requests with string parameters from e.g. 'Petal Edit Button'
       if (typeof parameters === 'string') {
         if (parameters === 'invalidParams') {
           const referer = new URLSearchParams(window.location.search).get('referer');
           handleInvalidRequest(referer);
         }
         if (parameters === 'refererMissing') {
-          showErrorPage();
+          showErrorPage('refererMissing');
         }
+        // Requests with object parameters from e.g. Git
       } else if (typeof parameters === 'object') {
         const returnParams: URLParams = {};
         for (const param of parameters) {
@@ -175,17 +184,20 @@ export function processRequest(): undefined | URLParams {
         } else if (parameters.some(param => isOAuthCodeParam(param.key))) {
           // in case of an error, the user did not authenticate the app
           const errorParam = parameters.find(param => param.key === 'error');
-          if(errorParam) {
-            showErrorPage();
+          if (errorParam) {
+            // TODO (AvC): Parse the referer from the state object if available and pass it to the error page
+            // TODO (AvC): Provide the authentication redirect URL and pass it to the error page (or extend redirectToGitHubOAuth()?)
+            showErrorPage('missingAuthentication');
           }
 
           exchangeOAuthCodeForAccessToken(returnParams.code).then(token => {
             localStorage.setItem('token', token);
-          }).catch(e => {
-            console.error(e);
+          }).catch(error => {
+            console.error(error);
             //TODO(YB): make sure the error page can redirect back to the referer
             //TODO(YB): the error page should prompt the user to authenticate again
-            showErrorPage();
+            // TODO (AvC): Parse the referer from the state object if available and pass it to the error page
+            showErrorPage('missingAuthentication', error);
           });
           // return the parameters from the URL
           const state = JSON.parse(atob(returnParams.state));
@@ -195,10 +207,10 @@ export function processRequest(): undefined | URLParams {
 
     } catch (error) {
       if (error instanceof Error) {
-        showToast('An unknown error has occurred. Please check the console.', 'error');
+        showErrorPage('unknownError', error.message);
         console.error(error.message);
       } else {
-        showToast('An unknown error has occurred. Please check the console.', 'error');
+        showErrorPage('unknownError');
         console.error('Unknown error:', error);
       }
     }

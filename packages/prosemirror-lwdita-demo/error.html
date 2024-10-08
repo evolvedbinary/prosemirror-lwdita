@@ -37,17 +37,18 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
       <main class="pt-main">
         <section class="pt-section">
           <div class="pt-container">
-            <h2>Authentication Failed</h2>
-            <p>
-              We're sorry to inform you that your GitHub authentication failed, and we couldn't find the page you were trying to
-              edit.
-            </p>
-            <p>
-              No worries, you can simply close this page and reach out to the maintainers of the page if you need any assistance.
-            </p>
+            <h2 id="errorHeadline"></h2>
+            <p id="errorBody1"></p>
+            <p id="errorBody2"></p>
+            <p id="errorBody3"></p>
+            <a id="errorLink"></a>
           </div>
         </section>
       </main>
   </div>
+  <script type="module">
+    import { handleError } from '../prosemirror-lwdita/dist/github-integration/error-handler.js';
+    handleError();
+  </script>
 </body>
 </html>

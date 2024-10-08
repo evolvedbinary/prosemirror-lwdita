@@ -33,9 +33,9 @@
   "homepage": "https://github.com/evolvedbinary/prosemirror-lwdita#readme",
   "scripts": {
     "clean": "rimraf dist",
-    "build": "parcel build ./index.html",
+    "build": "parcel build ./index.html ./error.html",
     "prepack": "yarn run build",
-    "start": "parcel ./index.html ./auth-error.html",
+    "start": "parcel ./index.html ./error.html",
     "docker": "yarn build && node docker",
     "cypress": "cypress open",
     "test": "start-server-and-test start http://localhost:1234 cy:run",
