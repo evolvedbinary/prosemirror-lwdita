@@ -66,6 +66,12 @@ export function getAndValidateParameterValues(url: string): 'invalidParams' | 'r
     }
   }
 
+  // TODO (AvC): Define all expected and allowed parameters in endpoints
+  // and handle everything else as a redirect to the error page with e.g. error-type `unknownError`.
+  // Currently all parameters that are not explicitly handled
+  // are treated as a `refererMissing` error, because we are simply
+  // checking if the referer is missing as a catch-all case.
+
   // Check if referer parameter is missing
   const hasMissingReferer = !params.has('referer');
   const hasMissingValues = parameters.some(({ value }) => value === null || value === '');
