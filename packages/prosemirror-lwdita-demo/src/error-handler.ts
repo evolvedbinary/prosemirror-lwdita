@@ -34,7 +34,7 @@ export function handleError() {
   const errorLink = document.getElementById('errorLink') as HTMLAnchorElement | null;
 
   if (errorHeadline && errorBody1 && errorBody2 && errorBody3 && errorLink) {
-    if (errorType === 'refererMissing') {
+    if (errorType === 'missingReferer') {
       errorHeadline.innerText = messageKeys.error.headline1;
       errorBody1.innerText = messageKeys.error.body1;
       errorBody2.innerText = messageKeys.error.body2;
