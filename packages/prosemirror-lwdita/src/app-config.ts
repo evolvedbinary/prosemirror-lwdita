@@ -52,6 +52,7 @@ export const messageKeys = {
     body4: "You can click on the link below that will take you back to the file you were trying to edit.",
     body5: "It seems you have not been authenticated by GitHub.",
     body6: "Following error occurred: ",
+    body7: "The file you are trying to edit could not be found.",
     link1: "TODO: Content for 'messageKeys.error.link1'",
   },
 }

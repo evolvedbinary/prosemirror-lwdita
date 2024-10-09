@@ -75,6 +75,19 @@ export function handleError() {
           errorLink.innerText = referer;
         }
       }
+    } else if (errorType === 'fileNotFound') {
+      errorHeadline.innerText = messageKeys.error.headlineDefault;
+      if (errorMsg) {
+        errorBody1.innerText = messageKeys.error.body6 + errorMsg;
+      }
+      errorBody2.innerText = messageKeys.error.bodyDefault;
+      if (referer) {
+        errorBody3.innerText = messageKeys.error.body4;
+        if (errorLink) {
+          errorLink.href = referer;
+          errorLink.innerText = referer;
+        }
+      }
     } else {
       errorHeadline.innerText = messageKeys.error.headlineDefault;
       errorBody1.innerText = messageKeys.error.bodyDefault;

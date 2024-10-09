@@ -17,6 +17,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import { xditaToJdita } from "@evolvedbinary/lwdita-xdita";
 import { document as jditaToProsemirrorJson } from "../document";
+import { showErrorPage } from "./request";
+import { showToast } from "../toast";
 
 /**
  * Fetches the raw content of a document from a GitHub repository.
@@ -34,6 +36,9 @@ export const fetchRawDocumentFromGitHub = async (ghrepo: string, source: string,
   const url = `https://raw.githubusercontent.com/${ghrepo}/${branch}/${source}`;
   const response = await fetch(url);
 
+  if (!response.ok) {
+    showErrorPage('fileNotFound', null, response.statusText);
+  }
   //TODO: Handle errors
   return response.text();
 };
@@ -48,10 +53,10 @@ export const fetchRawDocumentFromGitHub = async (ghrepo: string, source: string,
 export const transformGitHubDocumentToProsemirrorJson = async (rawDocument: string): Promise<Record<string, any>> => {
     // convert the raw xdita document to jdita
     const jdita = await xditaToJdita(rawDocument);
-    
+
     // convert the jdita document to prosemirror state save
     const prosemirrorJson = await jditaToProsemirrorJson(jdita);
-    
+
     return prosemirrorJson;
 };
 
@@ -81,6 +86,13 @@ export const exchangeOAuthCodeForAccessToken = async (code: string): Promise<str
   const url = `http://localhost:3000/api/github/token?code=${code}`;
   // fetch the access token
   const response = await fetch(url);
+
+  // TODO (AvC): This error type might be changed to be more specific depending on
+  // further error handling
+  if (!response.ok) {
+    showErrorPage('unknownError', null, response.statusText);
+  }
+
   const json = await response.json();
   //TODO: Handle errors
   return json;
@@ -99,6 +111,12 @@ export const getUserInfo = async (token: string): Promise<Record<string, string>
       'authorization': `Bearer ${token}`
     }
   });
+
+  // TODO (AvC): This error type might be changed to be more specific depending on
+  // further error handling
+  if (!response.ok) {
+    showErrorPage('unknownError', null, response.statusText);
+  }
   const json = await response.json();
   return json;
 };
@@ -106,7 +124,7 @@ export const getUserInfo = async (token: string): Promise<Record<string, string>
 /**
  * Publishes a document to a specified GitHub repository.
  * Makes a POST request to the `/api/github/integration` endpoint with the necessary details to create a pull request.
- * 
+ *
  * @param ghrepo - The GitHub repository in the format "owner/repo".
  * @param source - The path to the source document.
  * @param branch - The branch used as base for the PR.
@@ -117,7 +135,7 @@ export const getUserInfo = async (token: string): Promise<Record<string, string>
  */
 export const createPrFromContribution = async (ghrepo: string, source: string, branch: string, changedDocument: string, title: string, desc: string): Promise<string> => {
   const authenticatedUserInfo = await getUserInfo(localStorage.getItem('token') as string);
-  
+
   const owner = ghrepo.split('/')[0];
   const repo = ghrepo.split('/')[1];
   const newOwner = authenticatedUserInfo.login;
@@ -130,7 +148,7 @@ export const createPrFromContribution = async (ghrepo: string, source: string, b
     path,
     content
   };
-  const body = `${desc} \n ------------------\n This is an automated PR made by the prosemirror-lwdita demo`; 
+  const body = `${desc} \n ------------------\n This is an automated PR made by the prosemirror-lwdita demo`;
   // get the token from the local storage
   const token = localStorage.getItem('token');
   // make a post request to  /api/github/integration
@@ -153,6 +171,11 @@ export const createPrFromContribution = async (ghrepo: string, source: string, b
     })
   });
 
+  // TODO (AvC): This error type might be changed to be more specific depending on
+  // further error handling
+  if (!response.ok) {
+    showErrorPage('unknownError', null, response.statusText);
+  }
 
   const json = await response.json();
   return json;
