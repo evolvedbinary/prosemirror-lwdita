@@ -51,6 +51,11 @@ body {
   background-color: whitesmoke;
   &.error {
     background-color: #fff;
+    pre {
+      padding: 1rem;
+      border: 1px solid #808080;
+      background-color: #f2f0f0;
+    }
   }
   .editor-container {
     display: flex;

@@ -52,7 +52,10 @@ export function handleError() {
     } else if (errorType === 'missingAuthentication') {
       errorHeadline.innerText = messageKeys.error.headline2;
       if (errorMsg) {
-        errorBody1.innerText = messageKeys.error.body6 + errorMsg;
+        const errorMsgPre = document.createElement('pre');
+        errorMsgPre.innerText = errorMsg;
+        errorBody1.parentNode?.insertBefore(errorMsgPre, errorBody1.nextSibling);
+        errorBody1.innerText = messageKeys.error.body6;
       }
       errorBody2.innerText = messageKeys.error.body5;
       if (referer) {
@@ -65,7 +68,10 @@ export function handleError() {
     } else if (errorType === 'unknownError') {
       errorHeadline.innerText = messageKeys.error.headlineDefault;
       if (errorMsg) {
-        errorBody1.innerText = messageKeys.error.body6 + errorMsg;
+        const errorMsgPre = document.createElement('pre');
+        errorMsgPre.innerText = errorMsg;
+        errorBody1.parentNode?.insertBefore(errorMsgPre, errorBody1.nextSibling);
+        errorBody1.innerText = messageKeys.error.body6;
       }
       errorBody2.innerText = messageKeys.error.bodyDefault;
       if (referer) {
@@ -78,7 +84,10 @@ export function handleError() {
     } else if (errorType === 'fileNotFound') {
       errorHeadline.innerText = messageKeys.error.headlineDefault;
       if (errorMsg) {
-        errorBody1.innerText = messageKeys.error.body6 + errorMsg;
+        const errorMsgPre = document.createElement('pre');
+        errorMsgPre.innerText = errorMsg;
+        errorBody1.parentNode?.insertBefore(errorMsgPre, errorBody1.nextSibling);
+        errorBody1.innerText = messageKeys.error.body6;
       }
       errorBody2.innerText = messageKeys.error.bodyDefault;
       if (referer) {
@@ -86,6 +95,29 @@ export function handleError() {
         if (errorLink) {
           errorLink.href = referer;
           errorLink.innerText = referer;
+        }
+      }
+    } else if (errorType === 'fileUploadError') {
+      errorHeadline.innerText = messageKeys.error.headlineDefault;
+      errorBody1.innerText = messageKeys.error.body8;
+      if (errorMsg) {
+        const errorMsgPre = document.createElement('pre');
+        errorMsgPre.innerText = errorMsg;
+        errorBody2.parentNode?.insertBefore(errorMsgPre, errorBody2.nextSibling);
+        errorBody2.innerText = messageKeys.error.body6;
+      }
+      errorBody3.innerText = messageKeys.error.body9;
+      if (referer) {
+        if (errorLink) {
+          errorLink.href = referer;
+          errorLink.target = '_self';
+          errorLink.innerText = referer;
+          const fileName = localStorage.getItem('fileName');
+          const file = localStorage.getItem('file');
+          if (fileName && file) {
+            localStorage.removeItem('fileName');
+            localStorage.removeItem('file');
+          }
         }
       }
     } else {
