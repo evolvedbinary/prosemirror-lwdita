@@ -25,7 +25,7 @@ export const serverConfig = {
 
 export const clientID: { id: string, value: string } = {
   id: 'client_id',
-  value: 'Iv23li0Pvl3E4crXIBQ0',
+  value: process.env.GITHUB_CLIENT_ID || 'Iv23li0Pvl3E4crXIBQ0',
 };
 
 /**
