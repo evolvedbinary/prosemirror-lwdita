@@ -17,9 +17,15 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import express from 'express';
 import githubRouter from './api/routes/github.router';
+import { serverConfig, enableCors } from '@evolvedbinary/prosemirror-lwdita';
+import cors from 'cors';
 
 const app = express();
 app.use(express.json());
+
+if (enableCors) {
+  app.use(cors());
+}
 
 // add the github module to the http server
 // this will forward all requests starting with /api/github to the githubRouter
@@ -30,5 +36,5 @@ app.get('/', (req, res) => {
 });
 
 app.listen(3000, () => {
-  console.log('Server is running on http://localhost:3000');
+  console.log('Server is running on' + serverConfig.apiUrl);
 });
