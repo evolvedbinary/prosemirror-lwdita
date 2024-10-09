@@ -145,7 +145,7 @@ export function showErrorPage(errorType: string, referer?: string, errorMsg?: st
  */
 export function handleInvalidRequest(referer: string | null): void {
   if (referer) {
-    showErrorPage('invalidParams', referer, null);
+    showErrorPage('invalidParams', referer, '');
   } else {
     showErrorPage('missingReferer');
   }
@@ -187,7 +187,7 @@ export function processRequest(): undefined | URLParams {
           if (errorParam) {
             // TODO (AvC): Parse the referer from the state object if available and pass it to the error page
             // TODO (AvC): Provide the authentication redirect URL and pass it to the error page (or extend redirectToGitHubOAuth()?)
-            showErrorPage('missingAuthentication', null, errorParam.value);
+            showErrorPage('missingAuthentication', '', errorParam.value);
           }
 
           exchangeOAuthCodeForAccessToken(returnParams.code).then(token => {
@@ -197,7 +197,7 @@ export function processRequest(): undefined | URLParams {
             //TODO(YB): make sure the error page can redirect back to the referer
             //TODO(YB): the error page should prompt the user to authenticate again
             // TODO (AvC): Parse the referer from the state object if available and pass it to the error page
-            showErrorPage('missingAuthentication', null, error);
+            showErrorPage('missingAuthentication', '', error);
           });
           // return the parameters from the URL
           const state = JSON.parse(atob(returnParams.state));
@@ -207,11 +207,11 @@ export function processRequest(): undefined | URLParams {
 
     } catch (error) {
       if (error instanceof Error) {
-        showErrorPage('unknownError', null, error.message);
+        showErrorPage('unknownError', '', error.message);
         console.error(error.message);
       } else {
         showErrorPage('unknownError');
-        console.error('Unknown error:', null, error);
+        console.error('Unknown error:', '', error);
       }
     }
   }

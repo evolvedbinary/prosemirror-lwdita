@@ -18,7 +18,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import { xditaToJdita } from "@evolvedbinary/lwdita-xdita";
 import { document as jditaToProsemirrorJson } from "../document";
 import { showErrorPage } from "./request";
-import { showToast } from "../toast";
 
 /**
  * Fetches the raw content of a document from a GitHub repository.
@@ -37,7 +36,7 @@ export const fetchRawDocumentFromGitHub = async (ghrepo: string, source: string,
   const response = await fetch(url);
 
   if (!response.ok) {
-    showErrorPage('fileNotFound', null, response.statusText);
+    showErrorPage('fileNotFound', '', response.statusText);
   }
   //TODO: Handle errors
   return response.text();
@@ -90,7 +89,7 @@ export const exchangeOAuthCodeForAccessToken = async (code: string): Promise<str
   // TODO (AvC): This error type might be changed to be more specific depending on
   // further error handling
   if (!response.ok) {
-    showErrorPage('unknownError', null, response.statusText);
+    showErrorPage('unknownError', '', response.statusText);
   }
 
   const json = await response.json();
@@ -115,7 +114,7 @@ export const getUserInfo = async (token: string): Promise<Record<string, string>
   // TODO (AvC): This error type might be changed to be more specific depending on
   // further error handling
   if (!response.ok) {
-    showErrorPage('unknownError', null, response.statusText);
+    showErrorPage('unknownError', '', response.statusText);
   }
   const json = await response.json();
   return json;
@@ -174,7 +173,7 @@ export const createPrFromContribution = async (ghrepo: string, source: string, b
   // TODO (AvC): This error type might be changed to be more specific depending on
   // further error handling
   if (!response.ok) {
-    showErrorPage('unknownError', null, response.statusText);
+    showErrorPage('unknownError', '', response.statusText);
   }
 
   const json = await response.json();
