@@ -83,5 +83,13 @@ export const messageKeys = {
     body8: "Failed to load your file.",
     body9: "You could check your file and try again, or you can click on the link below to go back to the start page.",
     link1: "TODO: Content for 'messageKeys.error.link1'",
+    toastImageUpload: "Sorry, there was an error with uploading the image. Please check the image and try again.",
+    toastImageInsert: 'Sorry, something went wrong with inserting and saving the image.',
+    toastFileUploadInvalid: 'Sorry, there was an error with reading the file. Please check if the file you tried to upload contains valid xml and try again',
+    toastFileUpload: 'Sorry, something went wrong with opening the file',
+    toastFileUploadNoInput: 'Sorry, the editor has problems with opening the file',
+    toastFileDownload: 'Apologies, something went wrong in the editor to provide you the download.',
+    toastGitHubPublishNoEditorState: 'Sorry, it seems there is nothing in the editor to save and publish. Please try again.'
+
   },
 }
