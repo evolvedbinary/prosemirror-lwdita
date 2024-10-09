@@ -15,20 +15,27 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+/**
+ * The URL of the Petal frontend and API
+ */
+export const serverConfig = {
+  frontendUrl: process.env.PARCEL_FRONTEND_URL || 'http://localhost:1234/',
+  apiUrl: process.env.PARCEL_API_URL || 'http://localhost:3000/',
+}
+
 export const clientID: { id: string, value: string } = {
   id: 'client_id',
   value: 'Iv23li0Pvl3E4crXIBQ0',
 };
 
-export const serverURL: { id: string, value: string } = {
-  id: 'server_url',
-  value: 'http://localhost:1234/',
-};
 /**
  * Whether or not to enable CORS
  */
 export const enableCors = process.env.ENABLE_CORS === 'true';
 
+export const GITHUB_API_ENPOINT_USER = 'api/github/user';
+export const GITHUB_API_ENPOINT_INTEGRATION = 'api/github/integration';
+export const GITHUB_API_ENPOINT_TOKEN = 'api/github/token';
 
 /**
  * Store all message strings for the application

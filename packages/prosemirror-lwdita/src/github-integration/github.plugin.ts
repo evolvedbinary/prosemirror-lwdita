@@ -18,6 +18,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import { xditaToJdita } from "@evolvedbinary/lwdita-xdita";
 import { document as jditaToProsemirrorJson } from "../document";
 import { showErrorPage } from "./request";
+import { GITHUB_API_ENPOINT_INTEGRATION, GITHUB_API_ENPOINT_TOKEN, GITHUB_API_ENPOINT_USER, PETAL_BRANCH_PREFIX, PETAL_COMMIT_MESSAGE_SUFFIX, serverConfig } from "../app-config";
 
 /**
  * Fetches the raw content of a document from a GitHub repository.
@@ -82,7 +83,7 @@ export const fetchAndTransform = async (ghrepo: string, source: string, branch: 
  */
 export const exchangeOAuthCodeForAccessToken = async (code: string): Promise<string> => {
   // build the URL to exchange the code for an access token
-  const url = `http://localhost:3000/api/github/token?code=${code}`;
+  const url = serverConfig.apiUrl + GITHUB_API_ENPOINT_TOKEN + `?code=${code}`;
   // fetch the access token
   const response = await fetch(url);
 
@@ -104,7 +105,7 @@ export const exchangeOAuthCodeForAccessToken = async (code: string): Promise<str
  * @returns A promise that resolves to a record containing user information.
  */
 export const getUserInfo = async (token: string): Promise<Record<string, string>> => {
-  const url = `http://localhost:3000/api/github/user`;
+  const url = serverConfig.apiUrl + GITHUB_API_ENPOINT_USER;
   const response = await fetch(url, {
     headers: {
       'authorization': `Bearer ${token}`

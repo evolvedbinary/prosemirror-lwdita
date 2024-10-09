@@ -16,7 +16,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 import { showToast } from '../toast';
-import { clientID, serverURL } from '../app-config';
+import { clientID, serverConfig } from '../app-config';
 import { exchangeOAuthCodeForAccessToken } from './github.plugin';
 
 /**
@@ -127,7 +127,7 @@ export function redirectToGitHubOAuth(parameters: URLParams): void {
   const { id, value } = clientID;
   // Store the parameters in state to pass them to the redirect URL
   const state = btoa(`${JSON.stringify({ ...parameters })}`);
-  const redirectURL = serverURL.value;
+  const redirectURL = serverConfig.frontendUrl;
   window.location.href = `https://github.com/login/oauth/authorize?${id}=${value}&state=${state}&redirect_uri=${redirectURL}`;
 }
 
@@ -141,7 +141,7 @@ export function redirectToGitHubOAuth(parameters: URLParams): void {
  * @param errorMsg - Error message
  */
 export function showErrorPage(errorType: string, referer?: string, errorMsg?: string): void {
-  const errorPageUrl = `${serverURL.value}error.html?error-type=${encodeURIComponent(errorType)}&referer=${encodeURIComponent(referer || '')}&error-msg=${encodeURIComponent(errorMsg || '')}`;
+  const errorPageUrl = `${serverConfig.frontendUrl}error.html?error-type=${encodeURIComponent(errorType)}&referer=${encodeURIComponent(referer || '')}&error-msg=${encodeURIComponent(errorMsg || '')}`;
   window.location.href = errorPageUrl;
 }
 
