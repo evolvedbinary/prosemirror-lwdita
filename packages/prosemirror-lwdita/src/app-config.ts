@@ -33,6 +33,21 @@ export const clientID: { id: string, value: string } = {
  */
 export const enableCors = process.env.ENABLE_CORS === 'true';
 
+/**
+ * The branch name prefix that Petal will generate in the user's repository
+ */
+export const PETAL_BRANCH_PREFIX = 'doc/petal-';
+
+/**
+ * The commit message subline that Petal will generate in the user's commit message
+ */
+export const PETAL_COMMIT_MESSAGE_SUFFIX = ' \n ------------------\n This is an automated PR made by the prosemirror-lwdita demo Editor';
+
+
+export const PETAL_BOT_USER = 'marmoure';
+export const PETAL_COMMITTER_NAME = 'Petal GitHub App';
+export const PETAL_COMMITTER_EMAIL = 'petal@evolvedbinary.com';
+
 export const GITHUB_API_ENPOINT_USER = 'api/github/user';
 export const GITHUB_API_ENPOINT_INTEGRATION = 'api/github/integration';
 export const GITHUB_API_ENPOINT_TOKEN = 'api/github/token';

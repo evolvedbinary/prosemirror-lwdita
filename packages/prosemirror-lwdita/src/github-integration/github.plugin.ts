@@ -140,7 +140,7 @@ export const createPrFromContribution = async (ghrepo: string, source: string, b
   const repo = ghrepo.split('/')[1];
   const newOwner = authenticatedUserInfo.login;
   const date = new Date();
-  const newBranch = `doc/petal-${date.getFullYear()}${date.getMonth()}${date.getDate()}${date.getHours()}${date.getMinutes()}${date.getSeconds()}`;
+  const newBranch = PETAL_BRANCH_PREFIX + `${date.getFullYear()}${date.getMonth()}${date.getDate()}${date.getHours()}${date.getMinutes()}${date.getSeconds()}`;
   const commitMessage = title;
   const path = source;
   const content = changedDocument;
@@ -148,11 +148,11 @@ export const createPrFromContribution = async (ghrepo: string, source: string, b
     path,
     content
   };
-  const body = `${desc} \n ------------------\n This is an automated PR made by the prosemirror-lwdita demo`;
+  const body = `${desc}` + PETAL_COMMIT_MESSAGE_SUFFIX;
   // get the token from the local storage
   const token = localStorage.getItem('token');
   // make a post request to  /api/github/integration
-  const response = await fetch('http://localhost:3000/api/github/integration', {
+  const response = await fetch(serverConfig.apiUrl + GITHUB_API_ENPOINT_INTEGRATION, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

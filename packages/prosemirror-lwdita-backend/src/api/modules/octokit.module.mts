@@ -20,7 +20,8 @@ import { createOAuthAppAuth } from "@octokit/auth-oauth-app";
 import { Endpoints } from "@octokit/types";
 import dotenv from 'dotenv'; 
 import { retry } from "@octokit/plugin-retry";
-dotenv.config();  // Load environment variables from .env file 
+import { PETAL_COMMITTER_EMAIL, PETAL_COMMITTER_NAME } from "@evolvedbinary/prosemirror-lwdita";
+dotenv.config();  // Load environment variables from .env file
 
 // user data type
 export type UserData = Endpoints["GET /user"]["response"]["data"];
@@ -224,8 +225,8 @@ const commitChanges = async (octokit: Octokit, owner: string, repo: string, bran
       tree: treeData.sha,
       parents: [lastCommit.sha],
       committer: {
-        name: "Petal GitHub App",
-        email: "petal@evolvedbianry.com"
+        name: PETAL_COMMITTER_NAME,
+        email: PETAL_COMMITTER_EMAIL
       }
     });
 

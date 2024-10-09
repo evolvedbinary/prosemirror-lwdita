@@ -143,7 +143,7 @@ describe('createPrFromContribution', () => {
     fetchMock.getOnce(serverConfig.apiUrl + GITHUB_API_ENPOINT_USER, {
       status: 200,
       body: {
-        login: 'marmoure',
+        login: PETAL_BOT_USER,
       },
     }); 
     await createPrFromContribution(ghrepo, source, branch, changedDocument, title, description);
@@ -164,14 +164,14 @@ describe('createPrFromContribution', () => {
       const body = JSON.parse(options.body as string);
       expect(body.owner).to.equal('evolvedbinary');
       expect(body.repo).to.equal('prosemirror-lwdita');
-      expect(body.newOwner).to.equal('marmoure');
+      expect(body.newOwner).to.equal(PETAL_BOT_USER);
       const date = new Date();
-      expect(body.newBranch).to.equal(`doc/petal-${date.getFullYear()}${date.getMonth()}${date.getDate()}${date.getHours()}${date.getMinutes()}${date.getSeconds()}`);
+      expect(body.newBranch).to.equal(PETAL_BRANCH_PREFIX + `${date.getFullYear()}${date.getMonth()}${date.getDate()}${date.getHours()}${date.getMinutes()}${date.getSeconds()}`);
       expect(body.commitMessage).to.equal('Update the document');
       expect(body.change.path).to.equal(source);
       expect(body.change.content).to.equal(changedDocument);
       expect(body.title).to.equal('Update the document');
-      expect(body.body).to.equal('Update the document \n ------------------\n This is an automated PR made by the prosemirror-lwdita demo');
+      expect(body.body).to.equal('Update the document' + PETAL_COMMIT_MESSAGE_SUFFIX);
     }
   });
 });
