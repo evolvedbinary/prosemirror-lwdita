@@ -24,6 +24,11 @@ export const serverURL: { id: string, value: string } = {
   id: 'server_url',
   value: 'http://localhost:1234/',
 };
+/**
+ * Whether or not to enable CORS
+ */
+export const enableCors = process.env.ENABLE_CORS === 'true';
+
 
 /**
  * Store all message strings for the application
