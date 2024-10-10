@@ -83,7 +83,7 @@ export const exchangeOAuthCodeForAccessToken = async (code: string): Promise<str
   const response = await fetch(url);
   const json = await response.json();
   //TODO: Handle errors
-  return json;
+  return json.token;
 };
 
 /**
@@ -155,5 +155,5 @@ export const createPrFromContribution = async (ghrepo: string, source: string, b
 
 
   const json = await response.json();
-  return json;
+  return json.url;
 };

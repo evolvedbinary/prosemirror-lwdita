@@ -179,7 +179,7 @@ export function processRequest(): undefined | URLParams {
             showErrorPage();
           }
 
-          exchangeOAuthCodeForAccessToken(returnParams.code).then(token => {
+          exchangeOAuthCodeForAccessToken(returnParams.code).then(token => {            
             localStorage.setItem('token', token);
           }).catch(e => {
             console.error(e);

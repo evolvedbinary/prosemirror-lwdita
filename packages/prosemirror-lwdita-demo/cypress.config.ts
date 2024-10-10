@@ -5,7 +5,8 @@ export default defineConfig({
     setupNodeEvents(on, config) {
       // implement node event listeners here
     },
+    chromeWebSecurity: false // https://docs.cypress.io/guides/guides/web-security#Set-chromeWebSecurity-to-false
 
   },
-  trashAssetsBeforeRuns: true
+  trashAssetsBeforeRuns: true,
 });
