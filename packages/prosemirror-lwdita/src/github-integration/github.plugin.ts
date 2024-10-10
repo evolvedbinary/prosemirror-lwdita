@@ -18,6 +18,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import { xditaToJdita } from "@evolvedbinary/lwdita-xdita";
 import { document as jditaToProsemirrorJson } from "../document";
 import { showErrorPage } from "./request";
+import { showToast } from "../toast";
 
 /**
  * Fetches the raw content of a document from a GitHub repository.
@@ -86,10 +87,9 @@ export const exchangeOAuthCodeForAccessToken = async (code: string): Promise<str
   // fetch the access token
   const response = await fetch(url);
 
-  // TODO (AvC): This error type might be changed to be more specific depending on
-  // further error handling
+  // TODO (AvC): Depending on further error handling, this eror might be redirected to the error page
   if (!response.ok) {
-    showErrorPage('unknownError', '', response.statusText);
+    showToast('Sorry, an error occured while publishing the document. Please try again. The error: ' + response.statusText, 'error');
   }
 
   const json = await response.json();
@@ -111,10 +111,9 @@ export const getUserInfo = async (token: string): Promise<Record<string, string>
     }
   });
 
-  // TODO (AvC): This error type might be changed to be more specific depending on
-  // further error handling
+  // TODO (AvC): Depending on further error handling, this eror might be redirected to the error page
   if (!response.ok) {
-    showErrorPage('unknownError', '', response.statusText);
+    showToast('Sorry, an error occured while publishing the document. Please try again. The error: ' + response.statusText, 'error');
   }
   const json = await response.json();
   return json;
@@ -170,10 +169,9 @@ export const createPrFromContribution = async (ghrepo: string, source: string, b
     })
   });
 
-  // TODO (AvC): This error type might be changed to be more specific depending on
-  // further error handling
+  // TODO (AvC): Depending on further error handling, this eror might be redirected to the error page
   if (!response.ok) {
-    showErrorPage('unknownError', '', response.statusText);
+    showToast('Sorry, an error occured while publishing the document. Please try again. The error: ' + response.statusText , 'error');
   }
 
   const json = await response.json();
