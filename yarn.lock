@@ -406,7 +406,7 @@ __metadata:
     prosemirror-view: "npm:^1.32.7"
     rimraf: "npm:^6.0.1"
     sass: "npm:^1.77.8"
-    start-server-and-test: "npm:^2.0.3"
+    start-server-and-test: "npm:^2.0.8"
   languageName: unknown
   linkType: soft
 
@@ -2841,14 +2841,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axios@npm:^1.6.1":
-  version: 1.7.2
-  resolution: "axios@npm:1.7.2"
+"axios@npm:^1.7.7":
+  version: 1.7.7
+  resolution: "axios@npm:1.7.7"
   dependencies:
     follow-redirects: "npm:^1.15.6"
     form-data: "npm:^4.0.0"
     proxy-from-env: "npm:^1.1.0"
-  checksum: 10c0/cbd47ce380fe045313364e740bb03b936420b8b5558c7ea36a4563db1258c658f05e40feb5ddd41f6633fdd96d37ac2a76f884dad599c5b0224b4c451b3fa7ae
+  checksum: 10c0/4499efc89e86b0b49ffddc018798de05fab26e3bf57913818266be73279a6418c3ce8f9e934c7d2d707ab8c095e837fc6c90608fb7715b94d357720b5f568af7
   languageName: node
   linkType: hard
 
@@ -3598,7 +3598,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"debug@npm:4, debug@npm:4.3.5, debug@npm:^4, debug@npm:^4.1.0, debug@npm:^4.1.1, debug@npm:^4.3.1, debug@npm:^4.3.2, debug@npm:^4.3.4, debug@npm:^4.3.5":
+"debug@npm:4, debug@npm:^4, debug@npm:^4.1.0, debug@npm:^4.1.1, debug@npm:^4.3.1, debug@npm:^4.3.2, debug@npm:^4.3.4, debug@npm:^4.3.5":
   version: 4.3.5
   resolution: "debug@npm:4.3.5"
   dependencies:
@@ -3607,6 +3607,18 @@ __metadata:
     supports-color:
       optional: true
   checksum: 10c0/082c375a2bdc4f4469c99f325ff458adad62a3fc2c482d59923c260cb08152f34e2659f72b3767db8bb2f21ca81a60a42d1019605a412132d7b9f59363a005cc
+  languageName: node
+  linkType: hard
+
+"debug@npm:4.3.7":
+  version: 4.3.7
+  resolution: "debug@npm:4.3.7"
+  dependencies:
+    ms: "npm:^2.1.3"
+  peerDependenciesMeta:
+    supports-color:
+      optional: true
+  checksum: 10c0/1471db19c3b06d485a622d62f65947a19a23fbd0dd73f7fd3eafb697eec5360cde447fb075919987899b1a2096e85d35d4eb5a4de09a57600ac9cf7e6c8e768b
   languageName: node
   linkType: hard
 
@@ -5470,16 +5482,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"joi@npm:^17.11.0":
-  version: 17.13.1
-  resolution: "joi@npm:17.13.1"
+"joi@npm:^17.13.3":
+  version: 17.13.3
+  resolution: "joi@npm:17.13.3"
   dependencies:
     "@hapi/hoek": "npm:^9.3.0"
     "@hapi/topo": "npm:^5.1.0"
     "@sideway/address": "npm:^4.1.5"
     "@sideway/formula": "npm:^3.0.1"
     "@sideway/pinpoint": "npm:^2.0.0"
-  checksum: 10c0/485627809c5e424fc4af4310e06bc31a34fe10635b0bdbfcc425336db5e06b1da3ff8b35101878ffcbcd94c0187e7134c935fb2d1aeba641c92d7f505e6ffd8d
+  checksum: 10c0/9262aef1da3f1bec5b03caf50c46368899fe03b8ff26cbe3d53af4584dd1049079fc97230bbf1500b6149db7cc765b9ee45f0deb24bb6fc3fa06229d7148c17f
   languageName: node
   linkType: hard
 
@@ -7897,23 +7909,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"start-server-and-test@npm:^2.0.3":
-  version: 2.0.4
-  resolution: "start-server-and-test@npm:2.0.4"
+"start-server-and-test@npm:^2.0.8":
+  version: 2.0.8
+  resolution: "start-server-and-test@npm:2.0.8"
   dependencies:
     arg: "npm:^5.0.2"
     bluebird: "npm:3.7.2"
     check-more-types: "npm:2.24.0"
-    debug: "npm:4.3.5"
+    debug: "npm:4.3.7"
     execa: "npm:5.1.1"
     lazy-ass: "npm:1.6.0"
     ps-tree: "npm:1.2.0"
-    wait-on: "npm:7.2.0"
+    wait-on: "npm:8.0.1"
   bin:
     server-test: src/bin/start.js
     start-server-and-test: src/bin/start.js
     start-test: src/bin/start.js
-  checksum: 10c0/d52dda98fb392d9b161d2921e8d289e5bc90b61d0161a8638f9cf25f411b60635dd26444e0b7be25cf595c3248907d834d94b1fcb063b7ad09532471ce97aceb
+  checksum: 10c0/c0b29e8f48ef3c74ab345d63f2adefa5fdc1c1fa3db0d876b31060a7c57cccbd18332a32cfd034da0c741bafc49f95ba693f54e70ec0eb74865d6e23ecfa0760
   languageName: node
   linkType: hard
 
@@ -8557,18 +8569,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"wait-on@npm:7.2.0":
-  version: 7.2.0
-  resolution: "wait-on@npm:7.2.0"
+"wait-on@npm:8.0.1":
+  version: 8.0.1
+  resolution: "wait-on@npm:8.0.1"
   dependencies:
-    axios: "npm:^1.6.1"
-    joi: "npm:^17.11.0"
+    axios: "npm:^1.7.7"
+    joi: "npm:^17.13.3"
     lodash: "npm:^4.17.21"
     minimist: "npm:^1.2.8"
     rxjs: "npm:^7.8.1"
   bin:
     wait-on: bin/wait-on
-  checksum: 10c0/1eff2189b3e4b0975889f3e480c75ca2a0d4275072779a6329e7cae8b729620594aa044509ddd89967de6ab2162169501b67b8d9562c16cac517837ffce17337
+  checksum: 10c0/e8fe78084465a5fa95b17095136dcb3942480c7d9e47a0cfb72363238e2411883630dc9ced02fb372f4cc7ec0ec2484c92c67060ea2f81d0e97e41ef21df8006
   languageName: node
   linkType: hard
 
