@@ -36,6 +36,17 @@ describe('redirect to gitHub', () => {
 describe('handle Github Oauth response', () => {
   it('should return a user code when authenticated', () => {
     const mockCode = 'mock-user-code';
+
+    const tokenRequest = /http:\/\/localhost:3000\/api\/github\/token\?.*/;
+    cy.intercept('GET', tokenRequest, {
+      statusCode: 200,
+      headers: { 'content-type': 'application/json' },
+      body: {
+        token: 'mock-token'
+      }
+    }).as('requestToken');
+
+
     // Intercept the GitHub OAuth URL
     const githubOAuthUrl = /https:\/\/github\.com\/login\/oauth\/authorize\?.*/;
 
@@ -50,7 +61,8 @@ describe('handle Github Oauth response', () => {
 
     // Wait for the interception to occur
     cy.wait('@githubOAuth');
-
+    cy.wait('@requestToken');
+    
     // Verify that the mocked redirect URL is correct
     cy.url().should('eq', `http://localhost:1234/?code=${mockCode}`);
   });
