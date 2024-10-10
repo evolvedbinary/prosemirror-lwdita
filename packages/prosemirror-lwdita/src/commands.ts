@@ -21,7 +21,7 @@ import { chainCommands } from 'prosemirror-commands';
 import { Fragment, MarkType, Node, NodeType, ResolvedPos } from 'prosemirror-model';
 import { Command, EditorState, TextSelection, Transaction } from 'prosemirror-state';
 import { createPrFromContribution } from './github-integration/github.plugin';
-import { showPublicationResultError, showPublicationResultSuccess } from './github-integration/toast';
+import { showPublicationResultError, showPublicationResultSuccess, showToast } from './toast';
 
 /**
  * Create a new Node and fill it with the args as attributes.
@@ -181,7 +181,7 @@ export class InputContainer {
 
 /**
  * Render a dialog form for inserting the PR metadata
- * 
+ *
  * @param ghrepo - The GitHub repository in the format "owner/repo".
  * @param source - The source file path in the repository.
  * @param branch - The Base branch name for the PR.
@@ -260,10 +260,9 @@ export function renderPrDialog(ghrepo: string, source: string, branch: string, u
   });
 }
 
-
 /**
  * Render an image upload dialog with an overlay
- * upload an image from local machine or a URL
+ * upload an image from the local file system or a URL
  * set the image attributes like height, width, alt text
  * @param callback - callback function to handle the image attributes
  * @param node - Node selected node to edit
@@ -412,6 +411,7 @@ export function imageInputOverlay(callback: (args: any) => void, node?: Node): v
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onerror = () => {
+      showToast('Sorry, there was an error with uploading the image. Please check the image and try again.', 'error');
     };
     reader.onload = () => {
       const img = new Image();
@@ -445,6 +445,10 @@ export function imageInputOverlay(callback: (args: any) => void, node?: Node): v
           width: widthInput.value
         })
       }
+      reader.onerror = () => {
+        showToast('Sorry, there was an error with uploading the image. Please check the image and try again.', 'error');
+      };
+
     } else if (urlInput.value.length && !embeddedInput.checked) {
       callback({
         src: urlInput.value,
@@ -511,6 +515,7 @@ export function insertImage(type: NodeType): Command {
       return true;
     } catch (e) {
       console.error(e);
+      showToast('Sorry, something went wrong with inserting and saving the image.', 'error');
       return false;
     }
   }

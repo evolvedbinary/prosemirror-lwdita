@@ -18,10 +18,17 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 import Toastify, { Options } from 'toastify-js';
-import { messageKeys } from '../app-config';
+import { messageKeys } from './app-config';
 
 /**
- * Displays a toast message with 'Toastify' library
+ * Displays a simple and basic toast message with 'Toastify' library.
+ * Requires a message string
+ * and a type string ('success', 'error', 'warning', 'info')
+ * for setting the appropriate background color.
+ * Will stick at the bottom right of the screen,
+ * disappears after 5 seconds, and is not dismissible.
+ *
+ * @see {@link https://github.com/apvarun/toastify-js/blob/master/README.md#api}
  *
  * @param message - Message to display
  * @param type - Type of toast
@@ -29,7 +36,7 @@ import { messageKeys } from '../app-config';
 export function showToast(message: string, type: 'success' | 'error' | 'warning' | 'info') {
   const toast = Toastify({
     text: message,
-    duration: 10000,
+    duration: 5000,
     gravity: 'bottom',
     position: 'right',
     className: `toast toast--${type}`,
@@ -90,7 +97,7 @@ export function showPublicationResultSuccess(destination: string) {
   customNote.innerHTML = `
   <h2>${messageKeys.resultNote.titleSuccess}</h2>
   <p>${messageKeys.resultNote.paragraphSuccess}</p>
-  <a href="${destination}"></span>${destination}</a>
+  <a target="_blank" href="${destination}"></span>${destination}</a>
   `;
 
   const parentNode = document.body;

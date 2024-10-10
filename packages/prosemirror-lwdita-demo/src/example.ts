@@ -18,12 +18,22 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import { EditorState } from "prosemirror-state";
 import { EditorView } from "prosemirror-view";
 import { Node } from "prosemirror-model";
-import { hasConfirmedNotification, schema, showWelcomeNote } from "@evolvedbinary/prosemirror-lwdita";
-import jsonDocLoader from "./doc";
-import { menu, shortcuts } from "@evolvedbinary/prosemirror-lwdita";
-import { githubMenuItem, openFileMenuItem, publishFileMenuItem, saveFileMenuItem} from "./demo-plugin";
 import { history } from "prosemirror-history";
-import { doubleClickImagePlugin, processRequest, fetchAndTransform, URLParams } from '@evolvedbinary/prosemirror-lwdita'
+import jsonDocLoader from "./doc";
+import { githubMenuItem, openFileMenuItem, publishFileMenuItem, saveFileMenuItem} from "./demo-plugin";
+import {
+  hasConfirmedNotification,
+  schema,
+  showWelcomeNote,
+  serverURL,
+  menu,
+  shortcuts,
+  showErrorPage,
+  doubleClickImagePlugin,
+  processRequest,
+  fetchAndTransform,
+  URLParams
+} from "@evolvedbinary/prosemirror-lwdita";
 
 const schemaObject = schema();
 
@@ -85,39 +95,7 @@ loadJsonDoc.then(jsonDoc => {
       state,
     });
   }
-}).catch(e => {
-  //TODO(YB): This should be the fall back page when we can't load the file
-  console.error(e);
-  const h2 = document.createElement('h2');
-  h2.innerText = 'Failed to load the file';
-  const p1 = document.createElement('p');
-  p1.innerText = 'An error occured while loading your file.';
-  // if (!e.length) {
-  //   e = [e];
-  // }
-  // const ps: HTMLLIElement[] = e.map((error: any) => {
-  //   console.log(error);
-  //   const p = document.createElement('li');
-  //   p.innerText = error;
-  //   p.style.color = 'red';
-  //   return p;
-  // });
-  const a = document.createElement('a');
-  a.innerText = 'Click here to reload the sample document';
-  a.href = '/';
-  a.addEventListener('click', () => location.reload());
-  const el: HTMLDivElement | null = document.querySelector("#editor");
-  localStorage.clear();
-
-  if (el) {
-    el.innerHTML = '';
-    el.style.flexDirection = 'column';
-    el.style.padding = '0 3em';
-    el.appendChild(h2);
-    el.appendChild(p1);
-    // const ul = document.createElement('ul');
-    // ps.forEach(p => ul.appendChild(p));
-    // el.appendChild(ul);
-    el.appendChild(a);
-  }
+}).catch(error => {
+  showErrorPage('fileUploadError', serverURL.value, error);
+  console.error(error);
 });
