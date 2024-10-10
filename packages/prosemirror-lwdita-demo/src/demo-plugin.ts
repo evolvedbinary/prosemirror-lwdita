@@ -26,11 +26,11 @@ import { showToast } from '@evolvedbinary/prosemirror-lwdita';
 /**
  * Open file selection dialog and select and file to insert into the local storage.
  * @param input - The input element
- * @returns - Command
+ * @returns The command for opening a file
  */
 function openFile(input: InputContainer): Command {
   return (state: { tr: any; selection: { empty: any; }; }, dispatch: (arg0: any) => void) => {
-    function fileSelected(this: HTMLInputElement, event: Event) {
+    function fileSelected(this: HTMLInputElement, _event: Event) {
       if (input.el?.files?.length === 1) {
         const file = input.el.files[0];
         const fileName = file.name.split('.xml');
@@ -78,13 +78,13 @@ function openFile(input: InputContainer): Command {
 
 /**
  * Create a menu item to open a file selection dialog to upload a file into the local storage.
- * @returns A MenuElement
+ * @returns The menu element for opening the file menu
  */
 export function openFileMenuItem(): MenuElement {
   const input = new InputContainer();
   return new MenuItem({
     enable: () => true,
-    render(editorView) {
+    render(_editorView) {
       const el = document.createElement('div');
       el.classList.add('ProseMirror-menuitem-file');
       el.classList.add('label');
@@ -109,14 +109,14 @@ export function openFileMenuItem(): MenuElement {
  * Creates a menu item for publishing to Github.
  * This function generates a menu item that allows users to publish a file
  *
- * @returns {MenuElement} The menu item for publishing the file.
+ * @returns The menu element for publishing the file.
  */
 export function publishFileMenuItem(urlParams: URLParams): MenuElement {
   const storedFileName = localStorage.getItem('fileName') ? localStorage.getItem('fileName') : 'Petal';
 
   return new MenuItem({
     enable: () => true,
-    render(editorView) {
+    render(_editorView) {
       const el = document.createElement('div');
       el.classList.add('ProseMirror-menuitem-file', 'publish');
       const link = document.createElement('a');
@@ -134,7 +134,7 @@ export function publishFileMenuItem(urlParams: URLParams): MenuElement {
 /**
  * Creates a command that publishes the current document to GitHub.
  *
- * @returns {Command} A ProseMirror command function.
+ * @returns The command to publish a GitHub document
  */
 function publishGithubDocument(urlParams: URLParams): Command {
   return (state: {[x: string]: any; tr: any; selection: { empty: any; };}, dispatch: (arg0: any) => void) => {
@@ -155,15 +155,15 @@ function publishGithubDocument(urlParams: URLParams): Command {
 
 /**
  * Create a menu item to save a file to the filesystem
- * @returns A MenuElement
+ * @returns The save file menu element
  */
-export function saveFileMenuItem(props: Partial<MenuItemSpec & { url: string }> = {}): MenuElement {
+export function saveFileMenuItem(_props: Partial<MenuItemSpec & { url: string }> = {}): MenuElement {
   const link = new InputContainer();
   const storedFileName = localStorage.getItem('fileName') ? localStorage.getItem('fileName') : 'Petal';
 
   return new MenuItem({
     enable: () => true,
-    render(editorView) {
+    render(_editorView) {
       const el = document.createElement('div');
       el.classList.add('ProseMirror-menuitem-file');
       const link = document.createElement('a');
@@ -186,7 +186,7 @@ export function saveFileMenuItem(props: Partial<MenuItemSpec & { url: string }> 
  * @param input - The menu item containing the download link
  * @returns The HTML data url
  */
-function saveFile(input: InputContainer): Command {
+function saveFile(_input: InputContainer): Command {
   return (state: {[x: string]: any; tr: any; selection: { empty: any; };}, dispatch: (arg0: any) => void) => {
     if (dispatch) {
       dispatch(state.tr);
@@ -231,18 +231,18 @@ function transformToJditaDocumentNode(state: { [x: string]: any; tr?: any; selec
   serializer.serializeFromJdita(documentNode);
 
   return outStream.getText();
-  ;
-};
+  
+}
 
 /**
  * Create a menu item to redirect to the github page of the project.
  * @param props - Menu item properties
- * @returns - MenuItem
+ * @returns The menu item for GitHub
  */
 export function githubMenuItem(props: Partial<MenuItemSpec & { url: string }> = {}): MenuElement {
   return new MenuItem({
     enable: () => true,
-    render(editorView) {
+    render(_editorView) {
       const el = document.createElement('div');
       el.classList.add('ProseMirror-menuitem-file');
       const icon = document.createElement('span');

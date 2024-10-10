@@ -32,13 +32,13 @@ describe('GitHub API Routes', () => {
 
   beforeEach(() => {
     // Stub the controller methods
-    authenticateUserStub = sinon.stub(githubController, 'authenticateUserWithOctokit').callsFake(async (req, res) => {
+    authenticateUserStub = sinon.stub(githubController, 'authenticateUserWithOctokit').callsFake(async (_req, res) => {
       return res.status(200).json({ token: 'token'});
     });
-    getUserInfoStub = sinon.stub(githubController, 'getUserInformation').callsFake(async (req, res) => {
+    getUserInfoStub = sinon.stub(githubController, 'getUserInformation').callsFake(async (_req, res) => {
       return res.status(200).json({ user: 'user'});
     });
-    commitChangesStub = sinon.stub(githubController, 'commitChangesAndCreatePR').callsFake(async (req, res) => {
+    commitChangesStub = sinon.stub(githubController, 'commitChangesAndCreatePR').callsFake(async (_req, res) => {
       return res.status(200).json({ link: 'link'});
     });
   });

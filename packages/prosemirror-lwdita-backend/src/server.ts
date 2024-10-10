@@ -25,7 +25,7 @@ app.use(express.json());
 // this will forward all requests starting with /api/github to the githubRouter
 app.use('/api/github', githubRouter);
 
-app.get('/', (req, res) => {
+app.get('/', (_req, res) => {
   res.send('the server is running');
 });
 
