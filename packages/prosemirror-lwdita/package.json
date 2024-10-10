@@ -70,7 +70,7 @@
   },
   "devDependencies": {
     "@types/chai": "^4.3.11",
-    "@types/mocha": "^10.0.7",
+    "@types/mocha": "^10.0.9",
     "@types/node": "^20.14.10",
     "@types/toastify-js": "^1",
     "@typescript-eslint/eslint-plugin": "^7.16.0",
@@ -80,7 +80,7 @@
     "eslint": "^8.57.0",
     "eslint-plugin-notice": "^1.0.0",
     "eslint-plugin-tsdoc": "^0.3.0",
-    "mocha": "^10.6.0",
+    "mocha": "^10.7.3",
     "nodemon": "^3.1.4",
     "nyc": "^17.0.0",
     "rimraf": "^6.0.1",
