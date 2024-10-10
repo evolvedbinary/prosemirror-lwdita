@@ -96,7 +96,6 @@ loadJsonDoc.then(jsonDoc => {
     });
   }
 }).catch(error => {
-  // TODO(AvC): Implement the default error page for this case
   showErrorPage('fileUploadError', serverURL.value, error);
   console.error(error);
 });
