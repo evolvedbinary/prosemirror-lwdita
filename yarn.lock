@@ -401,7 +401,7 @@ __metadata:
     parcel: "npm:^2.12.0"
     prosemirror-history: "npm:^1.4.1"
     prosemirror-menu: "npm:^1.2.4"
-    prosemirror-model: "npm:^1.19.4"
+    prosemirror-model: "npm:^1.23.0"
     prosemirror-state: "npm:^1.4.3"
     prosemirror-view: "npm:^1.32.7"
     rimraf: "npm:^6.0.1"
@@ -446,7 +446,7 @@ __metadata:
     prosemirror-history: "npm:^1.4.1"
     prosemirror-keymap: "npm:^1.2.2"
     prosemirror-menu: "npm:^1.2.4"
-    prosemirror-model: "npm:^1.19.4"
+    prosemirror-model: "npm:^1.23.0"
     prosemirror-schema-list: "npm:^1.4.0"
     prosemirror-state: "npm:^1.4.3"
     prosemirror-transform: "npm:^1.8.0"
@@ -7172,12 +7172,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prosemirror-model@npm:^1.0.0, prosemirror-model@npm:^1.19.4, prosemirror-model@npm:^1.20.0, prosemirror-model@npm:^1.21.0":
+"prosemirror-model@npm:^1.0.0, prosemirror-model@npm:^1.20.0, prosemirror-model@npm:^1.21.0":
   version: 1.21.1
   resolution: "prosemirror-model@npm:1.21.1"
   dependencies:
     orderedmap: "npm:^2.0.0"
   checksum: 10c0/fdf7cbd6cd9e1fd8826671257ea06fb2171afdca315ce0df36b7e15f72404818bcf2c6a4c5e2d2035e1cfaf96ea30fdde78f13eee473ca7a13eda3c12a20da15
+  languageName: node
+  linkType: hard
+
+"prosemirror-model@npm:^1.23.0":
+  version: 1.23.0
+  resolution: "prosemirror-model@npm:1.23.0"
+  dependencies:
+    orderedmap: "npm:^2.0.0"
+  checksum: 10c0/394f8921e723fb5860381cd0b2ff6988025005a6472a886a748cc1ad72055fd194801c1f12f8fbbd54f47f075c95fd23b68ad0811628e649f06f6005fb5790d6
   languageName: node
   linkType: hard
 
