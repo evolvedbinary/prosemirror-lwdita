@@ -71,7 +71,7 @@
   "devDependencies": {
     "@types/chai": "^4.3.11",
     "@types/mocha": "^10.0.9",
-    "@types/node": "^20.14.10",
+    "@types/node": "^22.7.5",
     "@types/toastify-js": "^1",
     "@typescript-eslint/eslint-plugin": "^7.16.0",
     "@typescript-eslint/parser": "^8.8.1",
