@@ -35,6 +35,7 @@
     "coveralls": "yarn workspace @evolvedbinary/prosemirror-lwdita coveralls",
     "generate-docs": "yarn workspace @evolvedbinary/prosemirror-lwdita generate-docs",
     "lint": "eslint packages/* --ext .ts",
+    "lint:fix": "eslint packages/* --ext .ts --fix",
     "start:backend": "yarn workspace @evolvedbinary/prosemirror-lwdita-backend start",
     "test:backend": "yarn workspace @evolvedbinary/prosemirror-lwdita-backend test",
     "clean:backend": "yarn workspace @evolvedbinary/prosemirror-lwdita-backend run clean"

@@ -36,8 +36,6 @@
     "build": "parcel build ./index.html ./error.html",
     "prepack": "yarn run build",
     "start": "parcel ./index.html ./error.html",
-    "lint": "eslint . --ext .ts",
-    "lint:fix": "eslint . --ext .ts --fix",
     "docker": "yarn build && node docker",
     "cypress": "cypress open",
     "test": "start-server-and-test start http://localhost:1234 cy:run",
