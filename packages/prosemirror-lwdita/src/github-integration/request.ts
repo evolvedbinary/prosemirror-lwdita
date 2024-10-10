@@ -193,10 +193,14 @@ export function processRequest(): undefined | URLParams {
           if (errorParam) {
             // TODO (AvC): Parse the referer from the state object if available and pass it to the error page
             // TODO (AvC): Provide the authentication redirect URL and pass it to the error page (or extend redirectToGitHubOAuth()?)
-            showErrorPage('missingAuthentication', '', errorParam.value);
+            // FIXME (AvC): The error page should prompt the user to authenticate again,
+            // this is currently not implemeted, thus a simple toast notification for now
+            // showErrorPage('missingAuthentication', '', errorParam.value);
+            showToast('Please authenticate with GitHub', 'error');
+            console.log('processRequest(): error', errorParam.value);
           }
 
-          exchangeOAuthCodeForAccessToken(returnParams.code).then(token => {            
+          exchangeOAuthCodeForAccessToken(returnParams.code).then(token => {
             localStorage.setItem('token', token);
           }).catch(error => {
             console.error(error);
@@ -213,10 +217,12 @@ export function processRequest(): undefined | URLParams {
 
     } catch (error) {
       if (error instanceof Error) {
-        showErrorPage('unknownError', '', error.message);
+        //showErrorPage('unknownError', '', error.message);
+        showToast('processRequest(): ' + error.message, 'error');
         console.error(error.message);
       } else {
-        showErrorPage('unknownError');
+        //showErrorPage('unknownError');
+        showToast('processRequest(): ' + 'Unknown error', 'error');
         console.error('Unknown error:', '', error);
       }
     }
