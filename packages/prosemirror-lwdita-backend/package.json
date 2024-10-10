@@ -10,7 +10,8 @@
     "serve": "node ./dist/server.js",
     "clean": "rimraf dist",
     "build": "tsc",
-    "lint": "eslint src --ext .ts",
+    "lint": "eslint . --ext .ts",
+    "lint:fix": "eslint . --ext .ts --fix",
     "test": "mocha"
   },
   "engines": {
