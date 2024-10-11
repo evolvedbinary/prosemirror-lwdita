@@ -15,7 +15,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import { document } from "@evolvedbinary/prosemirror-lwdita";
+import { document, Json } from "@evolvedbinary/prosemirror-lwdita";
 import { xditaToJdita } from "@evolvedbinary/lwdita-xdita";
 
 
@@ -102,4 +102,4 @@ if (!storedFile) {
 
 // transform the xml to Jdita object
 // then transform the Jdita object to Prosemirror schema
-export default xditaToJdita(xml, true).then(json => document(json)) as Promise<Record<string, any>>;
+export default xditaToJdita(xml, true).then(json => document(json)) as Promise<Record<string, Json>>;

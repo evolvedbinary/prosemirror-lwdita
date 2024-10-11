@@ -22,6 +22,7 @@ import { unTravel, URLParams } from "@evolvedbinary/prosemirror-lwdita";
 import { JditaSerializer } from "@evolvedbinary/lwdita-xdita";
 import { InMemoryTextSimpleOutputStreamCollector } from "@evolvedbinary/lwdita-xdita/dist/stream";
 import { showToast } from '@evolvedbinary/prosemirror-lwdita';
+import { EditorState, Transaction } from "prosemirror-state";
 
 /**
  * Open file selection dialog and select and file to insert into the local storage.
@@ -29,7 +30,7 @@ import { showToast } from '@evolvedbinary/prosemirror-lwdita';
  * @returns The command for opening a file
  */
 function openFile(input: InputContainer): Command {
-  return (state: { tr: any; selection: { empty: any; }; }, dispatch: (arg0: any) => void) => {
+  return (state: EditorState, dispatch: (arg0: Transaction) => void) => {
     function fileSelected(this: HTMLInputElement, _event: Event) {
       if (input.el?.files?.length === 1) {
         const file = input.el.files[0];
@@ -137,7 +138,7 @@ export function publishFileMenuItem(urlParams: URLParams): MenuElement {
  * @returns The command to publish a GitHub document
  */
 function publishGithubDocument(urlParams: URLParams): Command {
-  return (state: {[x: string]: any; tr: any; selection: { empty: any; };}, dispatch: (arg0: any) => void) => {
+  return (state: EditorState, dispatch: (arg0: Transaction) => void) => {
     if (dispatch) {
       dispatch(state.tr);
       const xditaPrefix = `<?xml version="1.0" encoding="UTF-8"?>\n<!DOCTYPE topic PUBLIC "-//OASIS//DTD LIGHTWEIGHT DITA Topic//EN" "lw-topic.dtd">\n`;
@@ -187,7 +188,7 @@ export function saveFileMenuItem(_props: Partial<MenuItemSpec & { url: string }>
  * @returns The HTML data url
  */
 function saveFile(_input: InputContainer): Command {
-  return (state: {[x: string]: any; tr: any; selection: { empty: any; };}, dispatch: (arg0: any) => void) => {
+  return (state: EditorState, dispatch: (arg0: Transaction) => void) => {
     if (dispatch) {
       dispatch(state.tr);
       const xditaPrefix = `<?xml version="1.0" encoding="UTF-8"?>\n<!DOCTYPE topic PUBLIC "-//OASIS//DTD LIGHTWEIGHT DITA Topic//EN" "lw-topic.dtd">\n`;
@@ -220,7 +221,7 @@ function saveFile(_input: InputContainer): Command {
  * @param state - The current editor state
  * @returns The JDITA document node object
  */
-function transformToJditaDocumentNode(state: { [x: string]: any; tr?: any; selection?: { empty: any; }; toJSON?: any; }) {
+function transformToJditaDocumentNode(state: EditorState): string {
   const prosemirrorJson = state.toJSON();
   // Change the type value from 'type: doc' to expected 'type: document' for JDITA processing
   prosemirrorJson.doc.type = 'document';

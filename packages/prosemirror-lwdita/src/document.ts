@@ -19,6 +19,19 @@ import { JDita } from "@evolvedbinary/lwdita-ast";
 import { IS_MARK, defaultNodeName } from "./schema";
 
 /**
+ * A JSON object that can be applied to ProseMirror document
+ */
+export type Json =
+    | string
+    | number
+    | boolean
+    | null
+    | Json[]
+    | { [key: string]: Json }
+    ;
+
+
+/**
  * Removes undefined attributes from an object
  *
  * @param object  - Generic object
@@ -232,8 +245,7 @@ function travel(value: JDita, parent: JDita): any {
  * @param jdita - the JDita document
  * @returns transformed JDita document
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function document(jdita: JDita): Record<string, any> {
+export function document(jdita: JDita): Record<string, Json> {
   if (jdita.nodeName === 'document') {
     jdita.nodeName = 'doc';
     /*
