@@ -438,7 +438,7 @@ __metadata:
     eslint: "npm:^8.57.0"
     eslint-plugin-notice: "npm:^1.0.0"
     eslint-plugin-tsdoc: "npm:^0.3.0"
-    fetch-mock: "npm:^11.1.3"
+    fetch-mock: "npm:^11.1.5"
     mocha: "npm:^10.7.3"
     nodemon: "npm:^3.1.7"
     nyc: "npm:^17.0.0"
@@ -4360,9 +4360,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fetch-mock@npm:^11.1.3":
-  version: 11.1.3
-  resolution: "fetch-mock@npm:11.1.3"
+"fetch-mock@npm:^11.1.5":
+  version: 11.1.5
+  resolution: "fetch-mock@npm:11.1.5"
   dependencies:
     "@types/glob-to-regexp": "npm:^0.4.4"
     dequal: "npm:^2.0.3"
@@ -4372,7 +4372,7 @@ __metadata:
   peerDependenciesMeta:
     node-fetch:
       optional: true
-  checksum: 10c0/087b4d25f4852fc6fa6aadf0b6735958e5f1f75321f8dc12054f2704cfe9f2d0878a62e639de6ecb5b18305c178a5985a321b67478aaafd41d17d207344db45e
+  checksum: 10c0/f32f1d7879b654a3fab7c3576901193ddd4c63cb9aeae2ed66ff42062400c0937d4696b1a5171e739d5f62470e6554e190f14816789f5e3b2bf1ad90208222e6
   languageName: node
   linkType: hard
 
