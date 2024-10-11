@@ -22,7 +22,7 @@ function clearLocalStorage() {
 describe('The Welcome note:', () => {
   let loadPage: Cypress.Chainable<Cypress.AUTWindow>,
       // TODO (A.): Add documentation
-      note: { should: (arg0: string) => void; find: (arg0: any) => any; },
+      note: { should: (arg0: string) => void; find: (arg0: string) => { click: () => void; }; },
       noteSelector: string,
       dismissButton: { click: () => void; },
       dismissSelector: string,

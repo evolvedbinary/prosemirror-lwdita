@@ -12,8 +12,6 @@
     "clean": "rimraf dist",
     "fix": "node scripts/fix",
     "postinstall": "yarn fix",
-    "lint": "eslint src --ext .ts",
-    "lint:fix": "eslint src --ext .ts --fix",
     "build": "tsc",
     "prepack": "yarn run build",
     "test": "mocha",

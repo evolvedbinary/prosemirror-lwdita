@@ -21,7 +21,7 @@ import * as githubController from '../controller/github.controller';
 const router = Router();
 
 // GET /api/github/
-router.get('/', (req, res) => {
+router.get('/', (_req, res) => {
   res.send('Github API');
 });
 
