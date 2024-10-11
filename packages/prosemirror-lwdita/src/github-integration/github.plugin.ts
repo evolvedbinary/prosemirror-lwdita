@@ -96,7 +96,10 @@ export const exchangeOAuthCodeForAccessToken = async (code: string): Promise<{to
 
   const json = await response.json();
   //TODO: Handle errors
-  return json.token;
+  return {
+    token: json.token,
+    installation: json.installation
+  };
 };
 
 /**

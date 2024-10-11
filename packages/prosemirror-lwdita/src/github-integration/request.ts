@@ -103,7 +103,7 @@ export function isOAuthCodeParam(key: string): boolean {
   return key === 'code' || key === 'error';
 }
 
-export function isInstalationParam(key: string): boolean {
+export function isInstallationParam(key: string): boolean {
   return key === 'installation_id' || key === 'setup_action';
 }
 /**
@@ -195,10 +195,10 @@ export function processRequest(): undefined | URLParams {
           // Petal was called with github parameters but not with the OAuth code
           // Redirect to GitHub OAuth page
           redirectToGitHubOAuth(returnParams);
-        } else if (parameters.some(param => isInstalationParam(param.key))) {
+        } else if (parameters.some(param => isInstallationParam(param.key))) {
           // The user has authenticated and installed the app
           // return the parameters from the URL
-          return JSON.parse(atob(returnParams.state));;
+          return JSON.parse(atob(returnParams.state));
         } else {
           // in case of an error, the user did not authenticate the app
           const errorParam = parameters.find(param => param.key === 'error');
