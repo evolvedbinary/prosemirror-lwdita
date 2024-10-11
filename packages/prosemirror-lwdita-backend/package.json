@@ -45,7 +45,7 @@
     "@octokit/rest": "^21.0.2",
     "@octokit/types": "^13.5.0",
     "dotenv": "^16.4.5",
-    "express": "^4.19.2",
+    "express": "^4.21.1",
     "octokit": "^4.0.2"
   },
   "devDependencies": {
