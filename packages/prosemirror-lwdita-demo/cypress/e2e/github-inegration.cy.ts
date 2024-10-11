@@ -166,6 +166,44 @@ describe('request the token after OAuth', () => {
     // Verify that the error page is shown
     cy.url().should('match', /^http:\/\/localhost:1234\/error\.html\?/)
   });
+
+  it('should ask the user to install the app when token request returns not installed', () => {
+    const mockCode = 'mock-user-code';
+    // Intercept the GitHub OAuth URL
+    const githubOAuthUrl = /https:\/\/github\.com\/login\/oauth\/authorize\?.*/;
+
+    // Intercept the OAuth request and mock the authentication process
+    cy.intercept('GET', githubOAuthUrl, {
+      statusCode: 302,
+      headers: { location: `http://localhost:1234/?code=${mockCode}&state=eyJnaHJlcG8iOiJldm9sdmVkYmluYXJ5L3Byb3NlbWlycm9yLWx3ZGl0YSIsInNvdXJjZSI6InBhY2thZ2VzL3Byb3NlbWlycm9yLWx3ZGl0YS1kZW1vL2V4YW1wbGUteGRpdGEvMDItc2hvcnQtZmlsZS54bWwiLCJicmFuY2giOiJtYWluIiwicmVmZXJlciI6Imh0d3NyaHRzaHJ0cyJ9` }
+    }).as('githubOAuth');
+
+    // Intercept the token request
+    const tokenRequest = /http:\/\/localhost:3000\/api\/github\/token\?.*/;
+    cy.intercept('GET', tokenRequest, {
+      statusCode: 200,
+      headers: { 'content-type': 'application/json' },
+      body: {
+        token: 'mock-token',
+        installation: false
+      }
+    }).as('requestToken');
+
+    // Visit the app page where the OAuth flow starts
+    cy.visit('http://localhost:1234/?ghrepo=evolvedbinary/prosemirror-lwdita&source=packages/prosemirror-lwdita-demo/example-xdita/02-short-file.xml&branch=main&referer=https://petal.evolvedbinary.com/');
+
+    // Wait for the interception to occur
+    cy.wait('@githubOAuth');
+
+    // Verify that the mocked redirect URL is correct
+    cy.url().should('eq', `http://localhost:1234/?code=${mockCode}&state=eyJnaHJlcG8iOiJldm9sdmVkYmluYXJ5L3Byb3NlbWlycm9yLWx3ZGl0YSIsInNvdXJjZSI6InBhY2thZ2VzL3Byb3NlbWlycm9yLWx3ZGl0YS1kZW1vL2V4YW1wbGUteGRpdGEvMDItc2hvcnQtZmlsZS54bWwiLCJicmFuY2giOiJtYWluIiwicmVmZXJlciI6Imh0d3NyaHRzaHJ0cyJ9`);
+
+    cy.wait('@requestToken');
+    
+    // assert the user was redirected to the installation page
+    // github.com/apps/petal-demo/installations/new
+    cy.url().should('include', 'integration=petal-demo');
+  });
 });
 
 describe('render publish button', () => {
@@ -192,7 +230,8 @@ describe('render publish button', () => {
       statusCode: 200,
       headers: { 'content-type': 'application/json' },
       body: {
-        token: 'mock-token'
+        token: 'mock-token',
+        installation: true
       }
     }).as('requestToken');
 
@@ -221,7 +260,8 @@ describe('PR dialog', () => {
       statusCode: 200,
       headers: { 'content-type': 'application/json' },
       body: {
-        token: 'mock-token'
+        token: 'mock-token',
+        installation: true
       }
     }).as('requestToken');
 
