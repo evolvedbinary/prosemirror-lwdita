@@ -366,7 +366,7 @@ __metadata:
     "@evolvedbinary/prosemirror-lwdita": "workspace:^"
     "@parcel/transformer-sass": "npm:^2.12.0"
     "@typescript-eslint/eslint-plugin": "npm:^7.16.0"
-    "@typescript-eslint/parser": "npm:^7.16.0"
+    "@typescript-eslint/parser": "npm:^8.8.1"
     cypress: "npm:^13.13.0"
     eslint: "npm:^8.57.0"
     eslint-plugin-notice: "npm:^1.0.0"
@@ -2530,24 +2530,6 @@ __metadata:
     typescript:
       optional: true
   checksum: 10c0/2afd147ccec6754316d6837d6108a5d822eb6071e1a7355073288c232530bc3e49901d3f08755ce02d497110c531f3b3658eb46d0ff875a69d4f360b5f938cb4
-  languageName: node
-  linkType: hard
-
-"@typescript-eslint/parser@npm:^7.16.0":
-  version: 7.18.0
-  resolution: "@typescript-eslint/parser@npm:7.18.0"
-  dependencies:
-    "@typescript-eslint/scope-manager": "npm:7.18.0"
-    "@typescript-eslint/types": "npm:7.18.0"
-    "@typescript-eslint/typescript-estree": "npm:7.18.0"
-    "@typescript-eslint/visitor-keys": "npm:7.18.0"
-    debug: "npm:^4.3.4"
-  peerDependencies:
-    eslint: ^8.56.0
-  peerDependenciesMeta:
-    typescript:
-      optional: true
-  checksum: 10c0/370e73fca4278091bc1b657f85e7d74cd52b24257ea20c927a8e17546107ce04fbf313fec99aed0cc2a145ddbae1d3b12e9cc2c1320117636dc1281bcfd08059
   languageName: node
   linkType: hard
 
