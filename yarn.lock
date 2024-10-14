@@ -359,6 +359,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@evolvedbinary/prosemirror-lwdita-backend@workspace:packages/prosemirror-lwdita-backend"
   dependencies:
+    "@evolvedbinary/prosemirror-lwdita": "workspace:^"
     "@octokit/auth-oauth-user": "npm:^5.1.1"
     "@octokit/rest": "npm:^21.0.2"
     "@octokit/types": "npm:^13.5.0"
