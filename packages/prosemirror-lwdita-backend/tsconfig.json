@@ -5,7 +5,10 @@
     "rootDir": "src",
     "outDir": "dist",
     "module": "Node16",
-    "moduleResolution": "Node16"
+    "moduleResolution": "Node16",
+    "paths": {
+      "@evolvedbinary/prosemirror-lwdita/*": ["../prosemirror-lwdita/dist/*"]
+    }
   },
   "exclude": [
     "tests/*"

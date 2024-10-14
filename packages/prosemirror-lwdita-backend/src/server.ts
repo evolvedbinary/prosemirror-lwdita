@@ -17,8 +17,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import express from 'express';
 import githubRouter from './api/routes/github.router';
-import { serverConfig, enableCors } from '@evolvedbinary/prosemirror-lwdita';
 import cors from 'cors';
+import { enableCors, serverConfig } from '@evolvedbinary/prosemirror-lwdita/dist/app-config';
 
 const app = express();
 app.use(express.json());
@@ -36,5 +36,5 @@ app.get('/', (req, res) => {
 });
 
 app.listen(3000, () => {
-  console.log('Server is running on' + serverConfig.apiUrl);
+  console.log('Server is running on ' + serverConfig.apiUrl);
 });
