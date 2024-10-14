@@ -22,6 +22,7 @@ import { Fragment, MarkType, Node, NodeType, ResolvedPos } from 'prosemirror-mod
 import { Command, EditorState, TextSelection, Transaction } from 'prosemirror-state';
 import { createPrFromContribution } from './github-integration/github.plugin';
 import { showPublicationResultError, showPublicationResultSuccess, showToast } from './toast';
+import { messageKeys } from './app-config';
 
 /**
  * Create a new Node and fill it with the args as attributes.
@@ -244,16 +245,16 @@ export function renderPrDialog(ghrepo: string, source: string, branch: string, u
 
       // Create a PR from the contribution
       createPrFromContribution(ghrepo, source, branch, updatedXdita, title, description)
-      .then((prURL: string) => {
-        console.log('The document has been published to GitHub.');
-        console.log('pr url:', prURL);
-        // Show a user notification with the successful result and a link to the PR
-        showPublicationResultSuccess(prURL)
-      }).catch((error: Error) => {
-        console.error('Error:', error);
-        // show error dialog
-        showPublicationResultError(error.message)
-      });
+        .then((prURL: string) => {
+          console.log('The document has been published to GitHub.');
+          console.log('pr url:', prURL);
+          // Show a user notification with the successful result and a link to the PR
+          showPublicationResultSuccess(prURL)
+        }).catch((error: Error) => {
+          console.error('Error:', error);
+          // show error dialog
+          showPublicationResultError(error.message)
+        });
 
       document.body.removeChild(overlay);
     }
@@ -369,12 +370,12 @@ export function imageInputOverlay(callback: (args: any) => void, node?: Node): v
   // Append dialog to overlay
   overlay.appendChild(dialog);
 
-  if(document.getElementById('overlay') === null) {
+  if (document.getElementById('overlay') === null) {
     // Append overlay to body
     document.body.appendChild(overlay);
   }
 
-  if(node) {
+  if (node) {
     //extract the image attributes
     const src = node.attrs.href;
     const alt = node.firstChild?.textContent || '';
@@ -411,7 +412,7 @@ export function imageInputOverlay(callback: (args: any) => void, node?: Node): v
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onerror = () => {
-      showToast('Sorry, there was an error with uploading the image. Please check the image and try again.', 'error');
+      showToast(messageKeys.error.toastImageUpload, 'error');
     };
     reader.onload = () => {
       const img = new Image();
@@ -446,7 +447,7 @@ export function imageInputOverlay(callback: (args: any) => void, node?: Node): v
         })
       }
       reader.onerror = () => {
-        showToast('Sorry, there was an error with uploading the image. Please check the image and try again.', 'error');
+        showToast(messageKeys.error.toastImageUpload, 'error');
       };
 
     } else if (urlInput.value.length && !embeddedInput.checked) {
@@ -515,7 +516,7 @@ export function insertImage(type: NodeType): Command {
       return true;
     } catch (e) {
       console.error(e);
-      showToast('Sorry, something went wrong with inserting and saving the image.', 'error');
+      showToast(messageKeys.error.toastImageInsert, 'error');
       return false;
     }
   }
@@ -891,14 +892,14 @@ export function enterPressed(state: EditorState, dispatch?: (tr: Transaction) =>
   // prepare the transaction
   let resultTr: false | Transaction
 
-  if(isEOL(state.tr, depth)) {
-    if($from.parentOffset === 0 ) {
+  if (isEOL(state.tr, depth)) {
+    if ($from.parentOffset === 0) {
       resultTr = enterEmpty(tr, !!dispatch, depth)
     } else {
       resultTr = enterEOL(tr, !!dispatch, depth)
     }
   } else {
-    if($from.parentOffset === 0 ) {
+    if ($from.parentOffset === 0) {
       resultTr = enterSplit(tr, !!dispatch, depth)
     } else {
       resultTr = tr.replaceSelectionWith(state.schema.nodes.hard_break.create()).scrollIntoView();

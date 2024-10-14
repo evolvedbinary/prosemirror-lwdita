@@ -15,21 +15,50 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+export const BACKEND_CONFIG_PATH = '../prosemirror-lwdita-backend/src/app-config.ts';
+
+/**
+ * The URL of the Petal frontend and API
+ */
+export const serverConfig = {
+  frontendUrl: process.env.PARCEL_FRONTEND_URL || 'http://localhost:1234/',
+  apiUrl: process.env.PARCEL_API_URL || 'http://localhost:3000/',
+}
+
 export const clientID: { id: string, value: string } = {
   id: 'client_id',
-  value: 'Iv23li0Pvl3E4crXIBQ0',
+  value: process.env.GITHUB_CLIENT_ID || 'Iv23li0Pvl3E4crXIBQ0',
 };
 
-export const serverURL: { id: string, value: string } = {
-  id: 'server_url',
-  value: 'http://localhost:1234/',
-};
+/**
+ * Whether or not to enable CORS
+ */
+export const enableCors = process.env.ENABLE_CORS === 'true';
+
+/**
+ * The branch name prefix that Petal will generate in the user's repository
+ */
+export const PETAL_BRANCH_PREFIX = 'doc/petal-';
+
+/**
+ * The commit message subline that Petal will generate in the user's commit message
+ */
+export const PETAL_COMMIT_MESSAGE_SUFFIX = ' \n ------------------\n This is an automated PR made by the prosemirror-lwdita demo Editor';
+
+
+export const PETAL_BOT_USER = 'marmoure';
+export const PETAL_COMMITTER_NAME = 'Petal GitHub App';
+export const PETAL_COMMITTER_EMAIL = 'petal@evolvedbinary.com';
+
+export const GITHUB_API_ENPOINT_USER = 'api/github/user';
+export const GITHUB_API_ENPOINT_INTEGRATION = 'api/github/integration';
+export const GITHUB_API_ENPOINT_TOKEN = 'api/github/token';
 
 /**
  * Store all message strings for the application
  */
 export const messageKeys = {
-  welcomeNote : {
+  welcomeNote: {
     title: "Welcome to the Petal Editor.",
     paragraph1: "You can edit the file and publish your changes by clicking the 'Publish File' button.",
     paragraph2: "Your changes will be published to GitHub in your GitHub repository. After successful publication you will notified with a link to the PR. Happy editing!",
@@ -56,5 +85,12 @@ export const messageKeys = {
     body8: "Failed to load your file.",
     body9: "You could check your file and try again, or you can click on the link below to go back to the start page.",
     link1: "TODO: Content for 'messageKeys.error.link1'",
+    toastImageUpload: "Sorry, there was an error with uploading the image. Please check the image and try again.",
+    toastImageInsert: 'Sorry, something went wrong with inserting and saving the image.',
+    toastFileUploadInvalid: 'Sorry, there was an error with reading the file. Please check if the file you tried to upload contains valid xml and try again',
+    toastFileUpload: 'Sorry, something went wrong with opening the file',
+    toastFileUploadNoInput: 'Sorry, the editor has problems with opening the file',
+    toastFileDownload: 'Apologies, something went wrong in the editor to provide you the download.',
+    toastGitHubPublishNoEditorState: 'Sorry, it seems there is nothing in the editor to save and publish. Please try again.'
   },
 }

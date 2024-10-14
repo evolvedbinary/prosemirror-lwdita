@@ -19,6 +19,7 @@ import { expect } from 'chai';
 import { fetchRawDocumentFromGitHub, transformGitHubDocumentToProsemirrorJson, createPrFromContribution, getUserInfo } from '../src/github-integration/github.plugin';
 import fetchMock from 'fetch-mock';
 import { shortXdita, shortXditaProsemirroJson } from './test-utils';
+import { GITHUB_API_ENPOINT_INTEGRATION, GITHUB_API_ENPOINT_USER, PETAL_BOT_USER, PETAL_BRANCH_PREFIX, PETAL_COMMIT_MESSAGE_SUFFIX, serverConfig } from '../src/app-config';
 
 describe('fetchRawDocumentFromGitHub', () => {
   afterEach(() => {
@@ -77,7 +78,7 @@ describe('getUserInfo', () => {
     const mockResponse = { login: 'marmoure', id: '12345' };
 
     // Mock the API response
-    fetchMock.getOnce('http://localhost:3000/api/github/user', {
+    fetchMock.getOnce(serverConfig.apiUrl + GITHUB_API_ENPOINT_USER, {
       body: mockResponse,
       headers: { 'Content-Type': 'application/json' },
     });
@@ -85,12 +86,12 @@ describe('getUserInfo', () => {
     const result = await getUserInfo(token);
 
     expect(result).to.deep.equal(mockResponse);
-    const lastCall = fetchMock.lastCall('http://localhost:3000/api/github/user') as fetchMock.MockCall;
+    const lastCall = fetchMock.lastCall(serverConfig.apiUrl + GITHUB_API_ENPOINT_USER) as fetchMock.MockCall;
     if (!lastCall) {
       throw new Error('No fetch call found for /api/github/user');
     }
     const [url, options] = lastCall;
-    expect(url).to.equal('http://localhost:3000/api/github/user');
+    expect(url).to.equal(serverConfig.apiUrl + GITHUB_API_ENPOINT_USER);
     // @ts-expect-error TS7053 happens because the headers are not typed
     expect(options?.headers?.authorization).to.equal(`Bearer ${token}`);
   });
@@ -99,7 +100,7 @@ describe('getUserInfo', () => {
     const token = 'mock-token';
 
     // Mock a failed API response
-    fetchMock.getOnce('http://localhost:3000/api/github/user', 401);
+    fetchMock.getOnce(serverConfig.apiUrl + GITHUB_API_ENPOINT_USER, 401);
 
     try {
       await getUserInfo(token);
@@ -114,7 +115,7 @@ describe('createPrFromContribution', () => {
   beforeEach(() => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const window = global as any;
-    Object.defineProperty(window, 'localStorage', { 
+    Object.defineProperty(window, 'localStorage', {
       value: {
         getItem: () => 'mock-token',
       },
@@ -132,45 +133,45 @@ describe('createPrFromContribution', () => {
     const changedDocument = '<xml>Changed Content</xml>';
     const token = 'mock-token';
     // Mock fetch request
-    fetchMock.postOnce('http://localhost:3000/api/github/integration', {
+    fetchMock.postOnce(serverConfig.apiUrl + GITHUB_API_ENPOINT_INTEGRATION, {
       status: 200,
       body: {
         url: "mockUrl"
       }
     });
 
-    fetchMock.getOnce('http://localhost:3000/api/github/user', {
+    fetchMock.getOnce(serverConfig.apiUrl + GITHUB_API_ENPOINT_USER, {
       status: 200,
       body: {
-        login: 'marmoure',
+        login: PETAL_BOT_USER,
       },
-    }); 
+    });
     await createPrFromContribution(ghrepo, source, branch, changedDocument, title, description);
-    const lastCall = fetchMock.lastCall('http://localhost:3000/api/github/integration') as fetchMock.MockCall;
+    const lastCall = fetchMock.lastCall(serverConfig.apiUrl + GITHUB_API_ENPOINT_INTEGRATION) as fetchMock.MockCall;
     if (!lastCall) {
       throw new Error('No fetch call found for /api/github/integration');
     }
     const [url, options] = lastCall;
-    if(options) {
-      if(!options.headers) return;
-      if(!options.body) return;
-      expect(url).to.equal('http://localhost:3000/api/github/integration');
+    if (options) {
+      if (!options.headers) return;
+      if (!options.body) return;
+      expect(url).to.equal(serverConfig.apiUrl + GITHUB_API_ENPOINT_INTEGRATION);
       expect(options.method).to.equal('POST');
       // @ts-expect-error TS7053 happens because the headers are not typed
-      expect(options.headers['Content-Type']).to.equal('application/json'); 
+      expect(options.headers['Content-Type']).to.equal('application/json');
       // @ts-expect-error TS7053 happens because the headers are not typed
-      expect(options.headers['Authorization']).to.equal(`Bearer ${token}`); 
+      expect(options.headers['Authorization']).to.equal(`Bearer ${token}`);
       const body = JSON.parse(options.body as string);
       expect(body.owner).to.equal('evolvedbinary');
       expect(body.repo).to.equal('prosemirror-lwdita');
-      expect(body.newOwner).to.equal('marmoure');
+      expect(body.newOwner).to.equal(PETAL_BOT_USER);
       const date = new Date();
-      expect(body.newBranch).to.equal(`doc/petal-${date.getFullYear()}${date.getMonth()}${date.getDate()}${date.getHours()}${date.getMinutes()}${date.getSeconds()}`);
+      expect(body.newBranch).to.equal(PETAL_BRANCH_PREFIX + `${date.getFullYear()}${date.getMonth()}${date.getDate()}${date.getHours()}${date.getMinutes()}${date.getSeconds()}`);
       expect(body.commitMessage).to.equal('Update the document');
       expect(body.change.path).to.equal(source);
       expect(body.change.content).to.equal(changedDocument);
       expect(body.title).to.equal('Update the document');
-      expect(body.body).to.equal('Update the document \n ------------------\n This is an automated PR made by the prosemirror-lwdita demo');
+      expect(body.body).to.equal('Update the document' + PETAL_COMMIT_MESSAGE_SUFFIX);
     }
   });
 });

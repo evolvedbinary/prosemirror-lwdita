@@ -18,7 +18,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import { xditaToJdita } from "@evolvedbinary/lwdita-xdita";
 import { document as jditaToProsemirrorJson } from "../document";
 import { showErrorPage } from "./request";
-import { showToast } from "../toast";
+import { GITHUB_API_ENPOINT_INTEGRATION, GITHUB_API_ENPOINT_TOKEN, GITHUB_API_ENPOINT_USER, PETAL_BRANCH_PREFIX, PETAL_COMMIT_MESSAGE_SUFFIX, serverConfig } from "../app-config";
 
 /**
  * Fetches the raw content of a document from a GitHub repository.
@@ -51,13 +51,13 @@ export const fetchRawDocumentFromGitHub = async (ghrepo: string, source: string,
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const transformGitHubDocumentToProsemirrorJson = async (rawDocument: string): Promise<Record<string, any>> => {
-    // convert the raw xdita document to jdita
-    const jdita = await xditaToJdita(rawDocument);
+  // convert the raw xdita document to jdita
+  const jdita = await xditaToJdita(rawDocument);
 
-    // convert the jdita document to prosemirror state save
-    const prosemirrorJson = await jditaToProsemirrorJson(jdita);
+  // convert the jdita document to prosemirror state save
+  const prosemirrorJson = await jditaToProsemirrorJson(jdita);
 
-    return prosemirrorJson;
+  return prosemirrorJson;
 };
 
 /**
@@ -83,18 +83,19 @@ export const fetchAndTransform = async (ghrepo: string, source: string, branch: 
  */
 export const exchangeOAuthCodeForAccessToken = async (code: string): Promise<string> => {
   // build the URL to exchange the code for an access token
-  const url = `http://localhost:3000/api/github/token?code=${code}`;
+  const url = serverConfig.apiUrl + GITHUB_API_ENPOINT_TOKEN + `?code=${code}`;
   // fetch the access token
   const response = await fetch(url);
 
-  // TODO (AvC): Depending on further error handling, this eror might be redirected to the error page
+  // TODO (AvC): This error type might be changed to be more specific depending on
+  // further error handling
   if (!response.ok) {
-    showToast('Sorry, an error occured while publishing the document. Please try again. The error: ' + response.statusText, 'error');
+    showErrorPage('unknownError', '', response.statusText);
   }
 
   const json = await response.json();
   //TODO: Handle errors
-  return json.token;
+  return json;
 };
 
 /**
@@ -104,16 +105,17 @@ export const exchangeOAuthCodeForAccessToken = async (code: string): Promise<str
  * @returns A promise that resolves to a record containing user information.
  */
 export const getUserInfo = async (token: string): Promise<Record<string, string>> => {
-  const url = `http://localhost:3000/api/github/user`;
+  const url = serverConfig.apiUrl + GITHUB_API_ENPOINT_USER;
   const response = await fetch(url, {
     headers: {
       'authorization': `Bearer ${token}`
     }
   });
 
-  // TODO (AvC): Depending on further error handling, this eror might be redirected to the error page
+  // TODO (AvC): This error type might be changed to be more specific depending on
+  // further error handling
   if (!response.ok) {
-    showToast('Sorry, an error occured while publishing the document. Please try again. The error: ' + response.statusText, 'error');
+    showErrorPage('unknownError', '', response.statusText);
   }
   const json = await response.json();
   return json;
@@ -138,7 +140,7 @@ export const createPrFromContribution = async (ghrepo: string, source: string, b
   const repo = ghrepo.split('/')[1];
   const newOwner = authenticatedUserInfo.login;
   const date = new Date();
-  const newBranch = `doc/petal-${date.getFullYear()}${date.getMonth()}${date.getDate()}${date.getHours()}${date.getMinutes()}${date.getSeconds()}`;
+  const newBranch = PETAL_BRANCH_PREFIX + `${date.getFullYear()}${date.getMonth()}${date.getDate()}${date.getHours()}${date.getMinutes()}${date.getSeconds()}`;
   const commitMessage = title;
   const path = source;
   const content = changedDocument;
@@ -146,11 +148,11 @@ export const createPrFromContribution = async (ghrepo: string, source: string, b
     path,
     content
   };
-  const body = `${desc} \n ------------------\n This is an automated PR made by the prosemirror-lwdita demo`;
+  const body = `${desc}` + PETAL_COMMIT_MESSAGE_SUFFIX;
   // get the token from the local storage
   const token = localStorage.getItem('token');
   // make a post request to  /api/github/integration
-  const response = await fetch('http://localhost:3000/api/github/integration', {
+  const response = await fetch(serverConfig.apiUrl + GITHUB_API_ENPOINT_INTEGRATION, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -169,11 +171,12 @@ export const createPrFromContribution = async (ghrepo: string, source: string, b
     })
   });
 
-  // TODO (AvC): Depending on further error handling, this eror might be redirected to the error page
+  // TODO (AvC): This error type might be changed to be more specific depending on
+  // further error handling
   if (!response.ok) {
-    showToast('Sorry, an error occured while publishing the document. Please try again. The error: ' + response.statusText , 'error');
+    showErrorPage('unknownError', '', response.statusText);
   }
 
   const json = await response.json();
-  return json.url;
+  return json;
 };

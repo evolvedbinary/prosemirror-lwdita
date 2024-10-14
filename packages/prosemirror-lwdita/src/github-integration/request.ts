@@ -16,7 +16,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 import { showToast } from '../toast';
-import { clientID, serverURL } from '../app-config';
+import { clientID, serverConfig } from '../app-config';
 import { exchangeOAuthCodeForAccessToken } from './github.plugin';
 
 /**
@@ -43,7 +43,7 @@ export const validKeys = ['ghrepo', 'source', 'branch', 'referer'];
  * @param url - URL string
  * @returns An array with key-value objects of the URL parameter values or a status string for handling the notifications
  */
-export function getAndValidateParameterValues(url: string): 'invalidParams' | 'refererMissing' | 'noParams' | { key: string, value: string }[] {
+export function getAndValidateParameterValues(url: string): 'invalidParams' | 'missingReferer' | 'noParams' | { key: string, value: string }[] {
   const parameters: { key: string, value: string }[] = [];
 
   const urlParts = url.split('?');
@@ -69,7 +69,7 @@ export function getAndValidateParameterValues(url: string): 'invalidParams' | 'r
   // TODO (AvC): Define all expected and allowed parameters in endpoints
   // and handle everything else as a redirect to the error page with e.g. error-type `unknownError`.
   // Currently all parameters that are not explicitly handled
-  // are treated as a `refererMissing` error, because we are simply
+  // are treated as a `missingReferer` error, because we are simply
   // checking if the referer is missing as a catch-all case.
 
   // Check if referer parameter is missing
@@ -79,7 +79,7 @@ export function getAndValidateParameterValues(url: string): 'invalidParams' | 'r
 
   // Return the status string for the notifications
   if (hasMissingReferer) {
-    return 'refererMissing';
+    return 'missingReferer';
   }
 
   if (hasMissingValues || hasInvalidParams) {
@@ -108,12 +108,12 @@ export function isOAuthCodeParam(key: string): boolean {
  *
  * @param parameters - The URL parameters
  */
-export function showNotification(parameters: 'authenticated' | 'invalidParams' | 'noParams' | 'refererMissing' |{ key: string, value: string }[]): void {
+export function showNotification(parameters: 'authenticated' | 'invalidParams' | 'noParams' | 'missingReferer' |{ key: string, value: string }[]): void {
   if (typeof parameters === 'object') {
     showToast('Success! You will be redirected to GitHub OAuth', 'success');
   } else if (parameters === 'invalidParams') {
     showToast('Your request is invalid.', 'error');
-  } else if (parameters === 'refererMissing') {
+  } else if (parameters === 'missingReferer') {
     showToast('Missing referer parameter.', 'error');
   } else if(parameters === 'authenticated') {
     showToast('You are authenticated.', 'success');
@@ -127,7 +127,7 @@ export function redirectToGitHubOAuth(parameters: URLParams): void {
   const { id, value } = clientID;
   // Store the parameters in state to pass them to the redirect URL
   const state = btoa(`${JSON.stringify({ ...parameters })}`);
-  const redirectURL = serverURL.value;
+  const redirectURL = serverConfig.frontendUrl;
   window.location.href = `https://github.com/login/oauth/authorize?${id}=${value}&state=${state}&redirect_uri=${redirectURL}`;
 }
 
@@ -141,7 +141,7 @@ export function redirectToGitHubOAuth(parameters: URLParams): void {
  * @param errorMsg - Error message
  */
 export function showErrorPage(errorType: string, referer?: string, errorMsg?: string): void {
-  const errorPageUrl = `${serverURL.value}error.html?error-type=${encodeURIComponent(errorType)}&referer=${encodeURIComponent(referer || '')}&error-msg=${encodeURIComponent(errorMsg || '')}`;
+  const errorPageUrl = `${serverConfig.frontendUrl}error.html?error-type=${encodeURIComponent(errorType)}&referer=${encodeURIComponent(referer || '')}&error-msg=${encodeURIComponent(errorMsg || '')}`;
   window.location.href = errorPageUrl;
 }
 
@@ -174,8 +174,8 @@ export function processRequest(): undefined | URLParams {
           const referer = new URLSearchParams(window.location.search).get('referer');
           handleInvalidRequest(referer);
         }
-        if (parameters === 'refererMissing') {
-          showErrorPage('refererMissing');
+        if (parameters === 'missingReferer') {
+          showErrorPage('missingReferer');
         }
         // Requests with object parameters from e.g. Git
       } else if (typeof parameters === 'object') {
