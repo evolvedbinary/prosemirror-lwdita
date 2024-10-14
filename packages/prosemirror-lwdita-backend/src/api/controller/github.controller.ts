@@ -33,9 +33,9 @@ export const authenticateUserWithOctokit = async (req: Request, res: Response) =
   // dynamically import the module to avoid EMS and CJS incompatibility
   const { authenticateWithOAuth } = await import('../modules/octokit.module.mjs');
 
-  const token = await authenticateWithOAuth(code as string);
+  const authentication = await authenticateWithOAuth(code as string);
 
-  res.json({ token });
+  res.json(authentication);
 };
 
 /**

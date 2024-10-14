@@ -81,7 +81,7 @@ export const fetchAndTransform = async (ghrepo: string, source: string, branch: 
  * @returns A promise that resolves to the access token as a string.
  * @throws Will throw an error if the fetch request fails or if the response is not in the expected format.
  */
-export const exchangeOAuthCodeForAccessToken = async (code: string): Promise<string> => {
+export const exchangeOAuthCodeForAccessToken = async (code: string): Promise<{token: string, installation: boolean}> => {
   // build the URL to exchange the code for an access token
   const url = `http://localhost:3000/api/github/token?code=${code}`;
   // fetch the access token
@@ -94,7 +94,10 @@ export const exchangeOAuthCodeForAccessToken = async (code: string): Promise<str
 
   const json = await response.json();
   //TODO: Handle errors
-  return json.token;
+  return {
+    token: json.token,
+    installation: json.installation
+  };
 };
 
 /**

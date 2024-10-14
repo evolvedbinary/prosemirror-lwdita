@@ -42,7 +42,7 @@ export type BranchInfo = {
  * @param code - The OAuth code to authenticate with.
  * @returns A promise that resolves to the authentication token, or undefined if authentication fails.
  */
-export const authenticateWithOAuth = async (code: string): Promise<string | undefined> => {
+export const authenticateWithOAuth = async (code: string): Promise<{token: string, installation: boolean} | undefined> => {
   try {
 
     //TODO(YB): Check if env variables are set and valid
@@ -53,7 +53,7 @@ export const authenticateWithOAuth = async (code: string): Promise<string | unde
     // create an Octokit instance with the retry plugin
     const OctokitWithRetry = Octokit.plugin(retry);
 
-    const octokit = new OctokitWithRetry({
+    let octokit = new OctokitWithRetry({
       authStrategy: createOAuthAppAuth,
       auth: {
         clientId: process.env.GITHUB_CLIENT_ID as string,
@@ -69,10 +69,22 @@ export const authenticateWithOAuth = async (code: string): Promise<string | unde
       type: 'token',
       code: code,
     });
-
-    //TODO(YB): make sure the token is valid and has the right permissions
     const token = (authResponse as { token: string }).token;    
-    return token;
+
+    octokit = new OctokitWithRetry({
+      auth: token,
+      request: {
+        retries: 3,
+        retryAfter: 1,   
+      }
+    });
+
+    const installations = await octokit.apps.listInstallationsForAuthenticatedUser();
+
+    return {
+      token,
+      installation: installations.data.installations.length > 0 && installations.data.installations[0].repository_selection === "all"
+    };
   } catch (error) {
     console.error("Error during OAuth authentication", error);
   }
