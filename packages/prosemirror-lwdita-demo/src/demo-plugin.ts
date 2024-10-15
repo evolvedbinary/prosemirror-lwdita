@@ -17,7 +17,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import { Command } from "prosemirror-commands";
 import { MenuElement, MenuItem, MenuItemSpec } from "prosemirror-menu";
-import { InputContainer, messageKeys, renderPrDialog } from "@evolvedbinary/prosemirror-lwdita";
+import * as config from "@evolvedbinary/prosemirror-lwdita/app-config.json";
+import { InputContainer, renderPrDialog } from "@evolvedbinary/prosemirror-lwdita";
 import { unTravel, URLParams } from "@evolvedbinary/prosemirror-lwdita";
 import { JditaSerializer } from "@evolvedbinary/lwdita-xdita";
 import { InMemoryTextSimpleOutputStreamCollector } from "@evolvedbinary/lwdita-xdita/dist/stream";
@@ -39,7 +40,7 @@ function openFile(input: InputContainer): Command {
         const reader = new FileReader();
         reader.readAsBinaryString(file);
         reader.onerror = () => {
-          showToast(messageKeys.error.toastFileUploadInvalid, 'error');
+          showToast(config.messageKeys.error.toastFileUploadInvalid, 'error');
           console.log('Error reading file');
         };
         reader.onload = () => {
@@ -51,7 +52,7 @@ function openFile(input: InputContainer): Command {
           }
         };
       } else {
-        showToast(messageKeys.error.toastFileUpload, 'error');
+        showToast(config.messageKeys.error.toastFileUpload, 'error');
       }
     }
     try {
@@ -60,7 +61,7 @@ function openFile(input: InputContainer): Command {
       }
       if (dispatch) {
         if (!input.el) {
-          showToast(messageKeys.error.toastFileUploadNoInput, 'error');
+          showToast(config.messageKeys.error.toastFileUploadNoInput, 'error');
           console.log('no input found');
           return false;
         }
@@ -70,7 +71,7 @@ function openFile(input: InputContainer): Command {
       }
       return true;
     } catch (e) {
-      showToast(messageKeys.error.toastFileUpload, 'error');
+      showToast(config.messageKeys.error.toastFileUpload, 'error');
       console.error(e);
       return false;
     }
@@ -148,7 +149,7 @@ function publishGithubDocument(urlParams: URLParams): Command {
       // show the publishing dialog
       renderPrDialog(urlParams.ghrepo, urlParams.source, urlParams.branch, updatedXdita);
     } else {
-      showToast(messageKeys.error.toastGitHubPublishNoEditorState, 'error');
+      showToast(config.messageKeys.error.toastGitHubPublishNoEditorState, 'error');
       console.log('Nothing to publish, no EditorState has been dispatched.');
     }
   }
@@ -201,14 +202,14 @@ function saveFile(_input: InputContainer): Command {
       if (link) {
         link.setAttribute('href', url);
       } else {
-        showToast(messageKeys.error.toastFileDownload, 'error');
+        showToast(config.messageKeys.error.toastFileDownload, 'error');
         console.log('The URL could not be assigned to the element, the link is not available.')
       }
       // TODO: Implement a callback function to check if the download has been completed
       // After the load has completed revoke the data URL with `URL.revokeObjectURL(url);`
       // See https://w3c.github.io/FileAPI/#examplesOfCreationRevocation
     } else {
-      showToast(messageKeys.error.toastFileDownload, 'error');
+      showToast(config.messageKeys.error.toastFileDownload, 'error');
       console.log('Nothing to download, no EditorState has been dispatched.');
     }
   }

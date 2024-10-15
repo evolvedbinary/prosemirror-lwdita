@@ -18,7 +18,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import { xditaToJdita } from "@evolvedbinary/lwdita-xdita";
 import { document as jditaToProsemirrorJson } from "../document";
 import { showErrorPage } from "./request";
-import { GITHUB_API_ENPOINT_INTEGRATION, GITHUB_API_ENPOINT_TOKEN, GITHUB_API_ENPOINT_USER, PETAL_BRANCH_PREFIX, PETAL_COMMIT_MESSAGE_SUFFIX, serverConfig } from "../app-config";
+import * as config from '../../app-config.json';
+import { showToast } from "../toast";
 
 /**
  * Fetches the raw content of a document from a GitHub repository.
@@ -83,19 +84,19 @@ export const fetchAndTransform = async (ghrepo: string, source: string, branch: 
  */
 export const exchangeOAuthCodeForAccessToken = async (code: string): Promise<string> => {
   // build the URL to exchange the code for an access token
-  const url = serverConfig.apiUrl + GITHUB_API_ENPOINT_TOKEN + `?code=${code}`;
+  const url = config.serverConfig.apiUrl + config.GITHUB_API_ENPOINT_TOKEN + `?code=${code}`;
   // fetch the access token
   const response = await fetch(url);
 
   // TODO (AvC): This error type might be changed to be more specific depending on
   // further error handling
   if (!response.ok) {
-    showErrorPage('unknownError', '', response.statusText);
+    showToast(config.messageKeys.error.toastGitHubToken + response.statusText, 'error');
   }
 
   const json = await response.json();
   //TODO: Handle errors
-  return json;
+  return json.token;
 };
 
 /**
@@ -105,7 +106,7 @@ export const exchangeOAuthCodeForAccessToken = async (code: string): Promise<str
  * @returns A promise that resolves to a record containing user information.
  */
 export const getUserInfo = async (token: string): Promise<Record<string, string>> => {
-  const url = serverConfig.apiUrl + GITHUB_API_ENPOINT_USER;
+  const url = config.serverConfig.apiUrl + config.GITHUB_API_ENPOINT_USER;
   const response = await fetch(url, {
     headers: {
       'authorization': `Bearer ${token}`
@@ -115,7 +116,7 @@ export const getUserInfo = async (token: string): Promise<Record<string, string>
   // TODO (AvC): This error type might be changed to be more specific depending on
   // further error handling
   if (!response.ok) {
-    showErrorPage('unknownError', '', response.statusText);
+    showToast(config.messageKeys.error.toastGitHubUserEndpoint + response.statusText, 'error');
   }
   const json = await response.json();
   return json;
@@ -140,7 +141,7 @@ export const createPrFromContribution = async (ghrepo: string, source: string, b
   const repo = ghrepo.split('/')[1];
   const newOwner = authenticatedUserInfo.login;
   const date = new Date();
-  const newBranch = PETAL_BRANCH_PREFIX + `${date.getFullYear()}${date.getMonth()}${date.getDate()}${date.getHours()}${date.getMinutes()}${date.getSeconds()}`;
+  const newBranch = config.PETAL_BRANCH_PREFIX + `${date.getFullYear()}${date.getMonth()}${date.getDate()}${date.getHours()}${date.getMinutes()}${date.getSeconds()}`;
   const commitMessage = title;
   const path = source;
   const content = changedDocument;
@@ -148,11 +149,11 @@ export const createPrFromContribution = async (ghrepo: string, source: string, b
     path,
     content
   };
-  const body = `${desc}` + PETAL_COMMIT_MESSAGE_SUFFIX;
+  const body = `${desc}` + config.PETAL_COMMIT_MESSAGE_SUFFIX;
   // get the token from the local storage
   const token = localStorage.getItem('token');
   // make a post request to  /api/github/integration
-  const response = await fetch(serverConfig.apiUrl + GITHUB_API_ENPOINT_INTEGRATION, {
+  const response = await fetch(config.serverConfig.apiUrl + config.GITHUB_API_ENPOINT_INTEGRATION, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -174,9 +175,9 @@ export const createPrFromContribution = async (ghrepo: string, source: string, b
   // TODO (AvC): This error type might be changed to be more specific depending on
   // further error handling
   if (!response.ok) {
-    showErrorPage('unknownError', '', response.statusText);
+    showToast(config.messageKeys.error.toastGitHubPR + response.statusText, 'error');
   }
 
   const json = await response.json();
-  return json;
+  return json.url;
 };

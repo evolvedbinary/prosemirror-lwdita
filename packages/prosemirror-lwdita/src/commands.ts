@@ -22,7 +22,7 @@ import { Fragment, MarkType, Node, NodeType, ResolvedPos } from 'prosemirror-mod
 import { Command, EditorState, TextSelection, Transaction } from 'prosemirror-state';
 import { createPrFromContribution } from './github-integration/github.plugin';
 import { showPublicationResultError, showPublicationResultSuccess, showToast } from './toast';
-import { messageKeys } from './app-config';
+import * as config from '../app-config.json';
 
 /**
  * Create a new Node and fill it with the args as attributes.
@@ -412,7 +412,7 @@ export function imageInputOverlay(callback: (args: any) => void, node?: Node): v
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onerror = () => {
-      showToast(messageKeys.error.toastImageUpload, 'error');
+      showToast(config.messageKeys.error.toastImageUpload, 'error');
     };
     reader.onload = () => {
       const img = new Image();
@@ -447,7 +447,7 @@ export function imageInputOverlay(callback: (args: any) => void, node?: Node): v
         })
       }
       reader.onerror = () => {
-        showToast(messageKeys.error.toastImageUpload, 'error');
+        showToast(config.messageKeys.error.toastImageUpload, 'error');
       };
 
     } else if (urlInput.value.length && !embeddedInput.checked) {
@@ -516,7 +516,7 @@ export function insertImage(type: NodeType): Command {
       return true;
     } catch (e) {
       console.error(e);
-      showToast(messageKeys.error.toastImageInsert, 'error');
+      showToast(config.messageKeys.error.toastImageInsert, 'error');
       return false;
     }
   }

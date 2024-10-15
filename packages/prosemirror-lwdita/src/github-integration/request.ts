@@ -15,9 +15,9 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import { showToast } from '../toast';
-import { clientID, serverConfig } from '../app-config';
+import * as config from '../../app-config.json';
 import { exchangeOAuthCodeForAccessToken } from './github.plugin';
+import { showToast } from '../toast';
 
 /**
  * Interface for the URL parameters
@@ -124,10 +124,10 @@ export function showNotification(parameters: 'authenticated' | 'invalidParams' |
  * Redirects the user to GitHub OAuth
  */
 export function redirectToGitHubOAuth(parameters: URLParams): void {
-  const { id, value } = clientID;
+  const { id, value } = config.clientID;
   // Store the parameters in state to pass them to the redirect URL
   const state = btoa(`${JSON.stringify({ ...parameters })}`);
-  const redirectURL = serverConfig.frontendUrl;
+  const redirectURL = config.serverConfig.frontendUrl;
   window.location.href = `https://github.com/login/oauth/authorize?${id}=${value}&state=${state}&redirect_uri=${redirectURL}`;
 }
 
@@ -141,7 +141,7 @@ export function redirectToGitHubOAuth(parameters: URLParams): void {
  * @param errorMsg - Error message
  */
 export function showErrorPage(errorType: string, referer?: string, errorMsg?: string): void {
-  const errorPageUrl = `${serverConfig.frontendUrl}error.html?error-type=${encodeURIComponent(errorType)}&referer=${encodeURIComponent(referer || '')}&error-msg=${encodeURIComponent(errorMsg || '')}`;
+  const errorPageUrl = `${config.serverConfig.frontendUrl}error.html?error-type=${encodeURIComponent(errorType)}&referer=${encodeURIComponent(referer || '')}&error-msg=${encodeURIComponent(errorMsg || '')}`;
   window.location.href = errorPageUrl;
 }
 

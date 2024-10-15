@@ -18,7 +18,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 import Toastify, { Options } from 'toastify-js';
-import { messageKeys } from './app-config';
+import * as config from '../app-config.json';
 
 /**
  * Displays a simple and basic toast message with 'Toastify' library.
@@ -52,10 +52,10 @@ export function showToast(message: string, type: 'success' | 'error' | 'warning'
 export const showWelcomeNote = () => {
   const customNote = document.createElement('section');
   customNote.innerHTML = `
-  <h2>${messageKeys.welcomeNote.title}</h2>
-  <p>${messageKeys.welcomeNote.paragraph1}</p>
-  <p>${messageKeys.welcomeNote.paragraph2}</p>
-  <button type="button" class="toast--dismiss">${messageKeys.welcomeNote.buttonLabel}</button>
+  <h2>${config.messageKeys.welcomeNote.title}</h2>
+  <p>${config.messageKeys.welcomeNote.paragraph1}</p>
+  <p>${config.messageKeys.welcomeNote.paragraph2}</p>
+  <button type="button" class="toast--dismiss">${config.messageKeys.welcomeNote.buttonLabel}</button>
   `;
 
   const parentNode = document.body;
@@ -95,8 +95,8 @@ export function hasConfirmedNotification(): boolean {
 export function showPublicationResultSuccess(destination: string) {
   const customNote = document.createElement('section');
   customNote.innerHTML = `
-  <h2>${messageKeys.resultNote.titleSuccess}</h2>
-  <p>${messageKeys.resultNote.paragraphSuccess}</p>
+  <h2>${config.messageKeys.resultNote.titleSuccess}</h2>
+  <p>${config.messageKeys.resultNote.paragraphSuccess}</p>
   <a target="_blank" href="${destination}"></span>${destination}</a>
   `;
 
@@ -123,8 +123,8 @@ export function showPublicationResultSuccess(destination: string) {
 export function showPublicationResultError(message: string) {
   const customNote = document.createElement('section');
   customNote.innerHTML = `
-  <h2>${messageKeys.resultNote.titleError}</h2>
-  <p>${messageKeys.resultNote.paragraphError}</p>
+  <h2>${config.messageKeys.resultNote.titleError}</h2>
+  <p>${config.messageKeys.resultNote.paragraphError}</p>
   <p>${message}</p>`;
 
   const parentNode = document.body;
