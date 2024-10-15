@@ -6,15 +6,8 @@ This is a standalone module with its own HTTP server.
 The API offers integration with source control without requiring user interaction, making contributions from ProseMirror-lwDITA possible.
 It allows the functionality to take changes from ProseMirror-lwDITA and create contributions (currently, only GitHub is supported).
 
-## Installation and Usage
+## Usage
 
-### Setup
-
-Install dependencies
-
-```shell
-$ yarn install
-```
 
 ### Configuration
 
@@ -29,6 +22,12 @@ It sets following values:
 
 ### Usage
 
+Install dependencies
+
+```shell
+$ yarn install
+```
+
 Build the code
 
 ```shell
@@ -40,6 +39,64 @@ Start the server:
 ```shell
 $ yarn run start
 ```
+
+
+# Deploy to production
+The API should be deployed on the host for the Prosemirror Lwdita demo provided by the Evolved Binary team,
+We will assume you have nginx up and running with the config for the demo, and also have pm2 installed on your system (https://pm2.keymetrics.io/docs/usage/quick-start/), the deployment steps are as follows:
+### 1. Build the app
+```shell
+$ yarn run build
+```
+### 2. Place the .ENV file
+Place your .env file in the root of the backend. You can refer to .env.example for guidance.
+
+### 3. Start the backend using pm2
+Make sure you are running the following commands from the root of the backend (packages/prosemirror-lwdita-backend) so that the .env file is properly picked up:
+```shell
+$ pm2 start dist/server.js # start the backend
+$ pm2 save # make the pm2 config persistent
+```
+### 4. Add the API entry in the demo Nginx config
+This should be added to the /etc/nginx/sites-available/petal.evolvedbinary.com config file:
+
+```ini
+    location /api {
+    proxy_pass            http://petal-api;
+    proxy_read_timeout    90s;
+    proxy_connect_timeout 90s;
+    proxy_send_timeout    90s;
+    proxy_http_version    1.1;
+    proxy_set_header      Host $host;
+    proxy_set_header      Upgrade $http_upgrade;
+    #proxy_set_header      Connection $connection_upgrade; # Uncomment if using WebSockets
+    proxy_set_header      X-Real-IP $remote_addr;
+    proxy_set_header      X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header      nginx-request-uri $request_uri;
+  }
+```
+### 5. Create the petal-api upstream block
+Create a new file named petal-api in /etc/nginx/sites-available/ with the following content:
+
+```ini
+upstream petal-api {
+  server localhost:3000;
+}
+```
+
+### 6. Link the new file `petal-api` to `/etc/nginx/sites-enabled/`
+```shell
+$ ln -s /etc/nginx/sites-available/petal-api /etc/nginx/sites-enabled/
+```
+
+### 7. Reload Nginx 
+```shell
+$ sudo systemctl reload nginx
+```
+
+### 8. Test the API
+Make a request to your server `/api/github` and you should get `Github API` as a response.
+
 
 ## GitHub Integration API Documentation
 
