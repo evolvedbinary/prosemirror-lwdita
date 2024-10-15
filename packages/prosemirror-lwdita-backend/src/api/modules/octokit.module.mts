@@ -18,12 +18,20 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import { Octokit } from "@octokit/rest";
 import { createOAuthAppAuth } from "@octokit/auth-oauth-app";
 import { Endpoints } from "@octokit/types";
-import dotenv from 'dotenv'; 
+import dotenv from 'dotenv';
 import { retry } from "@octokit/plugin-retry";
-dotenv.config();  // Load environment variables from .env file 
+import * as fs from 'fs';
+
+dotenv.config();  // Load environment variables from .env file
+
+/**
+ * Load the configuration
+ */
+const config = JSON.parse(fs.readFileSync('./server-config.json', 'utf8'));
 
 // user data type
 export type UserData = Endpoints["GET /user"]["response"]["data"];
+
 
 // Commit info type
 export type CommitInfo = {
@@ -49,7 +57,7 @@ export const authenticateWithOAuth = async (code: string): Promise<string | unde
     const appId = process.env.GITHUB_APP_ID as string;
     // the private key is base64 encoded, so we need to decode it
     const privateKey = Buffer.from(process.env.PRIVATE_KEY_64Encoded as string, 'base64').toString('ascii');
-    
+
     // create an Octokit instance with the retry plugin
     const OctokitWithRetry = Octokit.plugin(retry);
 
@@ -71,7 +79,7 @@ export const authenticateWithOAuth = async (code: string): Promise<string | unde
     });
 
     //TODO(YB): make sure the token is valid and has the right permissions
-    const token = (authResponse as { token: string }).token;    
+    const token = (authResponse as { token: string }).token;
     return token;
   } catch (error) {
     console.error("Error during OAuth authentication", error);
@@ -90,7 +98,7 @@ export const getUserInfo = async (token: string): Promise<UserData | undefined> 
       auth: token,
       request: {
         retries: 3,
-        retryAfter: 1,   
+        retryAfter: 1,
       }
     });
 
@@ -103,7 +111,7 @@ export const getUserInfo = async (token: string): Promise<UserData | undefined> 
 
 /**
  * Creates a fork of a repository using the provided Octokit instance.
- * 
+ *
  * @param octokit - The Octokit instance used to make API requests.
  * @param owner - The owner of the repository to fork.
  * @param repo - The name of the repository to fork.
@@ -127,7 +135,7 @@ const createFork = async (octokit: Octokit, owner: string, repo: string): Promis
 
 /**
  * Creates a new branch in a GitHub repository.
- * 
+ *
  * @param octokit - The Octokit instance used for making API requests.
  * @param owner - The authenticated user name.
  * @param repo - The name of the repository.
@@ -224,8 +232,8 @@ const commitChanges = async (octokit: Octokit, owner: string, repo: string, bran
       tree: treeData.sha,
       parents: [lastCommit.sha],
       committer: {
-        name: "Petal GitHub App",
-        email: "petal@evolvedbianry.com"
+        name: config.PETAL_COMMITTER_NAME,
+        email: config.PETAL_COMMITTER_EMAIL
       }
     });
 
@@ -248,7 +256,7 @@ const commitChanges = async (octokit: Octokit, owner: string, repo: string, bran
 
 /**
  * Creates a pull request using the provided Octokit instance.
- * 
+ *
  * @param octokit - The Octokit instance used to make API requests.
  * @param owner - The authenticated user name.
  * @param repo - The name of the repository.
@@ -277,7 +285,7 @@ const createPullRequest = async (octokit: Octokit, owner: string, repo: string, 
 
 /**
  * Pushes changes to a repository and creates a pull request.
- * 
+ *
  * @param octokit - The Octokit instance.
  * @param owner - The owner of the repository.
  * @param repo - The name of the repository.

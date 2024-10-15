@@ -1,0 +1,12 @@
+{
+  "serverConfig": {
+    "apiUrl": "http://localhost:3000/"
+  },
+  "clientID": {
+    "id": "client_id",
+    "value": "Iv23li0Pvl3E4crXIBQ0"
+  },
+  "enableCors": false,
+  "PETAL_COMMITTER_NAME": "Petal GitHub App",
+  "PETAL_COMMITTER_EMAIL": "petal@evolvedbinary.com"
+}
