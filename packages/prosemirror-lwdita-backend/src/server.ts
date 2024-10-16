@@ -28,7 +28,7 @@ app.use(express.json());
  */
 const config = JSON.parse(fs.readFileSync('./server-config.json', 'utf8'));
 
-if (config.serverConfig.enableCors) {
+if (config.enableCors) {
   app.use(cors());
 }
 
