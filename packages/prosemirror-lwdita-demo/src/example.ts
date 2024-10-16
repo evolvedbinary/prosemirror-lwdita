@@ -19,13 +19,13 @@ import { EditorState } from "prosemirror-state";
 import { EditorView } from "prosemirror-view";
 import { Node } from "prosemirror-model";
 import { history } from "prosemirror-history";
+import * as config from "@evolvedbinary/prosemirror-lwdita/app-config.json";
 import jsonDocLoader from "./doc";
 import { githubMenuItem, openFileMenuItem, publishFileMenuItem, saveFileMenuItem} from "./demo-plugin";
 import {
   hasConfirmedNotification,
   schema,
   showWelcomeNote,
-  serverURL,
   menu,
   shortcuts,
   showErrorPage,
@@ -96,6 +96,6 @@ loadJsonDoc.then(jsonDoc => {
     });
   }
 }).catch(error => {
-  showErrorPage('fileUploadError', serverURL.value, error);
+  showErrorPage('fileUploadError', config.serverConfig.frontendUrl, error);
   console.error(error);
 });

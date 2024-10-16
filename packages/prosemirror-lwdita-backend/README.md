@@ -1,86 +1,104 @@
 # prosemirror-lwdita-backend
+
 API Module for ProseMirror-lwDITA
 
 This is a standalone module with its own HTTP server.
 The API offers integration with source control without requiring user interaction, making contributions from ProseMirror-lwDITA possible.
 It allows the functionality to take changes from ProseMirror-lwDITA and create contributions (currently, only GitHub is supported).
 
-# Setup
-install dependencies
+## Installation and Usage
+
+### Setup
+
+Install dependencies
+
 ```shell
 $ yarn install
 ```
 
+### Configuration
 
-# Usage
+All configurable values are hosted in a json config file `./server-configuration.json`.
+
+It sets following values:
+
+* CORS enabled true | false
+* Server url
+* Committer name (required for the GitHub Integration, see section below)
+* Committer email (required for the GitHub Integration, see section below)
+
+### Usage
+
 Build the code
+
 ```shell
 $ yarn run build
 ```
 
 Start the server:
+
 ```shell
 $ yarn run start
 ```
 
-# GitHub Integration API Documentation
+## GitHub Integration API Documentation
 
-## Endpoint
+### Endpoint
 
-### `GET /api/github/token`
+#### `GET /api/github/token`
 
 This endpoint exchanges a GitHub OAuth code for an access token.
 
-## Request
+### Request
 
-### Query Parameters
+#### Query Parameters
 
-- **`code`** (string, required):  
+- **`code`** (string, required):
   The OAuth code received from GitHub during the authorization process.
 
-### Example Request
+#### Example Request
 
 ```bash
 curl --location 'localhost:3000/api/github/token?code=*****************'
 ```
 
-## Response
+### Response
 
-- **200 OK**  
+- **200 OK**
   The response will contain user token.
 
-- **403 Unauthorized**  
+- **403 Unauthorized**
   Returned if the provided authorization code is invalid or missing.
 
-## Endpoint
+### Endpoint
 
-### `GET /api/github/user`
+#### `GET /api/github/user`
 
 This endpoint retrieves details about the authenticated GitHub user based on the provided authorization token.
 
-## Request
+### Request
 
-### Headers
+#### Headers
 
-- **`Authorization: Bearer {token}`**  
+- **`Authorization: Bearer {token}`**
   Requires a valid GitHub API token for authentication. Replace `{token}` with your actual GitHub token.
 
-## Example Request
+### Example Request
 
 ```bash
 curl --location 'localhost:3000/api/github/user' \
 --header 'Authorization: Bearer **************'
 ```
 
-## Response
+### Response
 
-- **200 OK**  
+- **200 OK**
   The response will contain user details such as the username, email, and other public or authenticated information.
 
-- **403 Unauthorized**  
+- **403 Unauthorized**
   Returned if the provided authorization token is invalid or missing.
 
-### Example Response (200 OK)
+#### Example Response (200 OK)
 
 ```json
 {
@@ -99,55 +117,55 @@ curl --location 'localhost:3000/api/github/user' \
 }
 ```
 
-## Endpoint
+### Endpoint
 
-### `POST /api/github/integration`
+#### `POST /api/github/integration`
 
 This endpoint allows you to automate GitHub repository changes by creating a new branch, committing a file change, and opening a pull request.
 
-## Request
+### Request
 
-### Headers
+#### Headers
 
-- `Content-Type: application/json`  
+- `Content-Type: application/json`
   Specifies that the request body is in JSON format.
 
-- `Authorization: Bearer {token}`  
+- `Authorization: Bearer {token}`
   Requires a valid GitHub API token for authentication. Replace `{token}` with your actual GitHub token.
 
-### Body Parameters
+#### Body Parameters
 
-- **`owner`** (string, required):  
+- **`owner`** (string, required):
   The GitHub username or organization that owns the repository (e.g., `evolvedbinary`).
 
-- **`repo`** (string, required):  
+- **`repo`** (string, required):
   The name of the repository where the changes will be made (e.g., `prosemirror-lwdita`).
 
-- **`newOwner`** (string, required):  
+- **`newOwner`** (string, required):
   The GitHub username or organization to which the new branch will belong.
 
-- **`newBranch`** (string, required):  
+- **`newBranch`** (string, required):
   The name of the new branch where the changes will be committed (e.g., `feature/from-github-integration`).
 
-- **`commitMessage`** (string, required):  
+- **`commitMessage`** (string, required):
   The commit message associated with the changes (e.g., `fix typo`).
 
-- **`change`** (object, required):  
+- **`change`** (object, required):
   An object describing the file changes to be committed.
 
-  - **`path`** (string, required):  
+  - **`path`** (string, required):
     The file path within the repository where the changes will occur (e.g., `packages/prosemirror-lwdita-demo/example-xdita/02-short-file.xml`).
 
-  - **`content`** (string, required):  
+  - **`content`** (string, required):
     The new content to be placed in the specified file.
 
-- **`title`** (string, required):  
+- **`title`** (string, required):
   The title of the pull request (e.g., `Fix typo`).
 
-- **`body`** (string, optional):  
+- **`body`** (string, optional):
   A description or body of the pull request (e.g., `This PR fixes a typo in the file`).
 
-## Example Request
+### Example Request
 
 ```bash
 curl --location 'localhost:3000/api/github/integration' \
@@ -168,18 +186,18 @@ curl --location 'localhost:3000/api/github/integration' \
 }'
 ```
 
-## Response
+### Response
 
-- **200 OK**  
+- **200 OK**
   Indicates successful branch creation, commit, and pull request submission.
-  
-- **400 Bad Request**  
+
+- **400 Bad Request**
   Returned if any required fields are missing or invalid.
 
-- **403 Unauthorized**  
+- **403 Unauthorized**
   Returned if the provided authorization token is invalid.
 
-## Notes
+### Notes
 
 - Ensure that the authorization token has the necessary permissions to commit changes and open a pull request on the specified repository.
 - The file change specified in the `change` object will overwrite the file at the given path with the provided content.

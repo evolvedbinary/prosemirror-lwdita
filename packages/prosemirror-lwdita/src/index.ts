@@ -24,4 +24,3 @@ export * from './attributes';
 export * from './github-integration/request';
 export * from './toast';
 export * from './github-integration/github.plugin';
-export * from './app-config';

@@ -12,5 +12,6 @@
     "moduleResolution": "node10",             /* NOTE(AR) just making it explicit that this is the tsc compilation strategy for module resolution that we are currently using */
     "rootDir": "src",
     "outDir": "dist",                         /* Redirect output structure to the `dist/` directory. */
+    "resolveJsonModule": true
   },
 }
