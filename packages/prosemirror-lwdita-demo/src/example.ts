@@ -21,6 +21,7 @@ import { Node } from "prosemirror-model";
 import { history } from "prosemirror-history";
 import * as config from "@evolvedbinary/prosemirror-lwdita/app-config.json";
 import jsonDocLoader from "./doc";
+import { getConfig } from '@evolvedbinary/prosemirror-lwdita-config';
 import { githubMenuItem, openFileMenuItem, publishFileMenuItem, saveFileMenuItem} from "./demo-plugin";
 import {
   hasConfirmedNotification,
@@ -34,6 +35,7 @@ import {
   fetchAndTransform,
   URLParams
 } from "@evolvedbinary/prosemirror-lwdita";
+
 
 const schemaObject = schema();
 

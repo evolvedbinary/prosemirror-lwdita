@@ -18,7 +18,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 import Toastify, { Options } from 'toastify-js';
-import * as config from '../app-config.json';
+import { getConfig } from '@evolvedbinary/prosemirror-lwdita-config';
 
 /**
  * Displays a simple and basic toast message with 'Toastify' library.
@@ -49,7 +49,8 @@ export function showToast(message: string, type: 'success' | 'error' | 'warning'
  * that users can confirm to never show again
  * by storing it in the localStorage
  */
-export const showWelcomeNote = () => {
+export const showWelcomeNote = async (): Promise<void> => {
+  const config = await getConfig();
   const customNote = document.createElement('section');
   customNote.innerHTML = `
   <h2>${config.messageKeys.welcomeNote.title}</h2>
@@ -92,7 +93,8 @@ export function hasConfirmedNotification(): boolean {
  * static message and a dynamic link
  * @param destination - URL to which the browser should be navigated on click of the toast
  */
-export function showPublicationResultSuccess(destination: string) {
+export async function showPublicationResultSuccess(destination: string): Promise<void> {
+  const config = await getConfig();
   const customNote = document.createElement('section');
   customNote.innerHTML = `
   <h2>${config.messageKeys.resultNote.titleSuccess}</h2>
@@ -120,7 +122,8 @@ export function showPublicationResultSuccess(destination: string) {
  * Shows a user notification containing a dynamic message
  * @param message - Error message
  */
-export function showPublicationResultError(message: string) {
+export async function showPublicationResultError(message: string): Promise<void> {
+  const config = await getConfig();
   const customNote = document.createElement('section');
   customNote.innerHTML = `
   <h2>${config.messageKeys.resultNote.titleError}</h2>
