@@ -44,6 +44,7 @@
   "dependencies": {
     "@evolvedbinary/lwdita-xdita": "^3.0.0",
     "@evolvedbinary/prosemirror-lwdita": "workspace:^",
+    "@evolvedbinary/prosemirror-lwdita-config": "workspace:^",
     "prosemirror-history": "^1.4.1",
     "prosemirror-menu": "^1.2.4",
     "prosemirror-model": "^1.19.4",

@@ -19,12 +19,13 @@ import express from 'express';
 import githubRouter from './api/routes/github.router';
 import cors from 'cors';
 import * as fs from 'fs';
+import { getConfig } from './api/routes/config-route';
 
 const app = express();
 app.use(express.json());
 
 /**
- * Load the configuration
+ * Load the server configuration
  */
 const config = JSON.parse(fs.readFileSync('./server-config.json', 'utf8'));
 
@@ -35,6 +36,11 @@ if (config.enableCors) {
 // add the github module to the http server
 // this will forward all requests starting with /api/github to the githubRouter
 app.use('/api/github', githubRouter);
+
+/**
+ * Get the custom application configuration
+ */
+app.get('/api/config', getConfig);
 
 app.get('/', (_req, res) => {
   res.send('the server is running');

@@ -43,3 +43,6 @@ Dockerfile
 
 # environment variables
 .env
+
+# Custom app configuration
+packages/prosemirror-lwdita-backend/custom-configuration.json

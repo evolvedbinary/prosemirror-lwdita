@@ -1,0 +1,50 @@
+{
+  "name": "@evolvedbinary/prosemirror-lwdita-config",
+  "version": "1.0.0",
+  "description": "Config for ProseMirror LwDITA",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "engines": {
+    "node": ">=20.1.0 <21",
+    "yarn": ">=4.2.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/evolvedbinary/prosemirror-lwdita.git"
+  },
+  "keywords": [
+    "ProseMirror",
+    "LwDITA",
+    "DITA",
+    "XDITA",
+    "XML",
+    "JSON",
+    "JDITA"
+  ],
+  "author": "Evolved Binary",
+  "license": "AGPL-3.0",
+  "bugs": {
+    "url": "https://github.com/evolvedbinary/prosemirror-lwdita/issues"
+  },
+  "homepage": "https://github.com/evolvedbinary/prosemirror-lwdita#readme",
+  "scripts": {
+    "start": "yarn run clean && yarn build",
+    "clean": "rimraf dist",
+    "build": "tsc"
+  },
+  "devDependencies": {
+    "@types/node": "^22.7.5",
+    "@typescript-eslint/eslint-plugin": "^8.8.1",
+    "@typescript-eslint/parser": "^8.8.1",
+    "eslint": "^8.57.0",
+    "eslint-plugin-notice": "^1.0.0",
+    "eslint-plugin-tsdoc": "^0.3.0",
+    "parcel": "^2.12.0",
+    "rimraf": "^6.0.1",
+    "ts-node": "^10.9.2",
+    "typedoc": "^0.26.5",
+    "typedoc-plugin-missing-exports": "^3.0.0",
+    "typescript": "5.5.4"
+  },
+  "packageManager": "yarn@4.2.2"
+}
