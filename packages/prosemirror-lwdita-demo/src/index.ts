@@ -15,6 +15,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+import { showToast } from '@evolvedbinary/prosemirror-lwdita';
 import { loadConfig, fetchConfig } from '@evolvedbinary/prosemirror-lwdita-config';
 
 /**
@@ -23,11 +24,13 @@ import { loadConfig, fetchConfig } from '@evolvedbinary/prosemirror-lwdita-confi
 async function initializeApp() {
   try {
     const customConfig = await fetchConfig('/api/config');
-    const config = loadConfig(customConfig);
-    console.log(config);
-    //await import('./example');
+    loadConfig(customConfig);
+
+    // Call the example module for starting the Prosemirror Editor
+    await import('./example');
   } catch (error) {
     console.error('Failed to load custom config:', error);
+    showToast('Failed to load custom config', 'error');
   }
 }
 
