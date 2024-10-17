@@ -19,7 +19,7 @@ import express from 'express';
 import githubRouter from './api/routes/github.router';
 import cors from 'cors';
 import * as fs from 'fs';
-import { getConfig } from './api/routes/config-route';
+import { getCustomConfig } from './api/routes/config-route';
 
 const app = express();
 app.use(express.json());
@@ -40,7 +40,7 @@ app.use('/api/github', githubRouter);
 /**
  * Get the custom application configuration
  */
-app.get('/api/config', getConfig);
+app.get('/api/config', getCustomConfig);
 
 app.get('/', (_req, res) => {
   res.send('the server is running');

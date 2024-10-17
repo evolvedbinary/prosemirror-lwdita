@@ -16,7 +16,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 import { Request, Response } from 'express';
-import path from 'path';
 import fs from 'fs';
 
 /**
@@ -25,8 +24,9 @@ import fs from 'fs';
  * @param _req - Request
  * @param res - Response
  */
-export const getConfig = (_req: Request, res: Response): void => {
-  const customConfigPath = path.resolve(__dirname, './custom-config.json');
+export const getCustomConfig = (_req: Request, res: Response): void => {
+  const customConfigPath = './custom-config.json';
+
   if (fs.existsSync(customConfigPath)) {
     const customConfig = JSON.parse(fs.readFileSync(customConfigPath, 'utf8'));
     res.json(customConfig);
