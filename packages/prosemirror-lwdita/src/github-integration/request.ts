@@ -15,7 +15,8 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import * as config from '../../app-config.json';
+//import * as config from '../../app-config.json';
+import { getConfig } from '@evolvedbinary/prosemirror-lwdita-config';
 import { exchangeOAuthCodeForAccessToken } from './github.plugin';
 import { showToast } from '../toast';
 
@@ -121,9 +122,13 @@ export function showNotification(parameters: 'authenticated' | 'invalidParams' |
 }
 
 /**
- * Redirects the user to GitHub OAuth
+ * Redirects the user to GitHub OAuth page
+ * and retrieves the client ID from the configuration
+ *
+ * @param parameters - The URL parameters
  */
-export function redirectToGitHubOAuth(parameters: URLParams): void {
+export async function redirectToGitHubOAuth(parameters: URLParams): Promise<void> {
+  const config = await getConfig();
   const { id, value } = config.clientID;
   // Store the parameters in state to pass them to the redirect URL
   const state = btoa(`${JSON.stringify({ ...parameters })}`);
@@ -134,13 +139,15 @@ export function redirectToGitHubOAuth(parameters: URLParams): void {
 /**
  * Redirects the user to the error page
  * If a referer, error type, or error message parameter are provided,
- * they will be passed to the error page
+ * they will be passed to the error page.
+ * Retrieves the frontend URL from the configuration.
  *
  * @param errorType - Error type
  * @param referer - Referer of the request
  * @param errorMsg - Error message
  */
-export function showErrorPage(errorType: string, referer?: string, errorMsg?: string): void {
+export async function showErrorPage(errorType: string, referer?: string, errorMsg?: string): Promise<void> {
+  const config = await getConfig();
   const errorPageUrl = `${config.serverConfig.frontendUrl}error.html?error-type=${encodeURIComponent(errorType)}&referer=${encodeURIComponent(referer || '')}&error-msg=${encodeURIComponent(errorMsg || '')}`;
   window.location.href = errorPageUrl;
 }
