@@ -87,7 +87,10 @@ export interface AppConfig {
  * @returns The application configuration
  */
 export function loadConfig(customConfig?: Partial<AppConfig>): AppConfig {
-  return {
+  //console.log('defaultConfig:', defaultConfig);
+  //console.log('customConfig:', customConfig);
+
+  const config = {
     ...defaultConfig,
     ...customConfig,
     serverConfig: {
@@ -115,6 +118,9 @@ export function loadConfig(customConfig?: Partial<AppConfig>): AppConfig {
       },
     },
   };
+
+  //console.log('mergedConfig:', config);
+  return config;
 }
 
 /**
@@ -123,13 +129,13 @@ export function loadConfig(customConfig?: Partial<AppConfig>): AppConfig {
  * @param url - The URL to fetch the configuration from
  * @returns The application configuration
  */
-export async function fetchConfig(url: string): Promise<Partial<AppConfig>> {
+export async function fetchConfig(path: string): Promise<Partial<AppConfig>> {
+  const url = `http://localhost:3000${path}`;
   const response = await fetch(url);
   if (!response.ok) {
-    throw new Error(`Failed to fetch config from ${url}`);
+    throw new Error(`Failed to fetch config: ${response.statusText}`);
   }
   return response.json();
 }
 
-export const config = loadConfig();
 export * from './configService';
