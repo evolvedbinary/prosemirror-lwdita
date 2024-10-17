@@ -26,7 +26,14 @@ import fs from 'fs';
  * @param res - Response
  */
 export const getConfig = (_req: Request, res: Response): void => {
-  const customConfigPath = path.resolve(__dirname, './custom-config.json');
+  const customConfigPath ='./custom-config.json'
+  console.log('Custom config path:', customConfigPath);
+  
+  if(fs.existsSync(customConfigPath)){
+    console.log('Custom config file exists');
+  }else {
+    console.log('Custom config file does not exist');
+  }
   if (fs.existsSync(customConfigPath)) {
     const customConfig = JSON.parse(fs.readFileSync(customConfigPath, 'utf8'));
     res.json(customConfig);

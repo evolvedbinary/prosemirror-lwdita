@@ -123,7 +123,10 @@ export function loadConfig(customConfig?: Partial<AppConfig>): AppConfig {
  * @param url - The URL to fetch the configuration from
  * @returns The application configuration
  */
-export async function fetchConfig(url: string): Promise<Partial<AppConfig>> {
+export async function fetchConfig(path: string): Promise<Partial<AppConfig>> {
+  const url =  `http://localhost:3000${path}`;
+  console.log(`Fetching config from ${url}`);
+  
   const response = await fetch(url);
   if (!response.ok) {
     throw new Error(`Failed to fetch config from ${url}`);
