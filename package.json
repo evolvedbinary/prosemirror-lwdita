@@ -23,11 +23,11 @@
   "homepage": "https://github.com/evolvedbinary/prosemirror-lwdita#readme",
   "private": true,
   "scripts": {
-    "clean": "rimraf .parcel-cache && yarn workspace @evolvedbinary/prosemirror-lwdita run clean && yarn workspace @evolvedbinary/prosemirror-lwdita-demo run clean",
+    "clean": "rimraf .parcel-cache && yarn workspace @evolvedbinary/prosemirror-lwdita run clean && yarn workspace @evolvedbinary/prosemirror-lwdita-demo run clean  && yarn workspace @evolvedbinary/prosemirror-lwdita-config run clean",
     "docker": "yarn workspace @evolvedbinary/prosemirror-lwdita-demo docker",
     "start:demo": "yarn workspace @evolvedbinary/prosemirror-lwdita-demo start",
     "build:demo": "yarn workspace @evolvedbinary/prosemirror-lwdita-demo build",
-    "build": "yarn workspace @evolvedbinary/prosemirror-lwdita build",
+    "build": "yarn workspace @evolvedbinary/prosemirror-lwdita-config build && yarn workspace @evolvedbinary/prosemirror-lwdita build",
     "prepack": "yarn run build",
     "test": "yarn workspace @evolvedbinary/prosemirror-lwdita test",
     "test:demo": "yarn workspace @evolvedbinary/prosemirror-lwdita-demo test",
@@ -47,7 +47,8 @@
   "workspaces": [
     "packages/prosemirror-lwdita",
     "packages/prosemirror-lwdita-demo",
-    "packages/prosemirror-lwdita-backend"
+    "packages/prosemirror-lwdita-backend",
+    "packages/prosemirror-lwdita-config"
   ],
   "devDependencies": {
     "@eslint/js": "^9.12.0",
