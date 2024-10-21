@@ -336,6 +336,7 @@ __metadata:
     "@types/dotenv": "npm:^8.2.0"
     "@types/express": "npm:^4.17.21"
     "@types/mocha": "npm:^10.0.9"
+    "@types/node": "npm:^20.14.10"
     "@types/sinon": "npm:^17.0.3"
     "@types/sinon-chai": "npm:^4.0.0"
     "@types/supertest": "npm:^6.0.2"
@@ -376,9 +377,9 @@ __metadata:
     parcel: "npm:^2.12.0"
     prosemirror-history: "npm:^1.4.1"
     prosemirror-menu: "npm:^1.2.4"
-    prosemirror-model: "npm:^1.19.4"
+    prosemirror-model: "npm:^1.23.0"
     prosemirror-state: "npm:^1.4.3"
-    prosemirror-view: "npm:^1.32.7"
+    prosemirror-view: "npm:^1.34.3"
     rimraf: "npm:^6.0.1"
     sass: "npm:^1.77.8"
     start-server-and-test: "npm:^2.0.8"
@@ -429,11 +430,11 @@ __metadata:
     prosemirror-history: "npm:^1.4.1"
     prosemirror-keymap: "npm:^1.2.2"
     prosemirror-menu: "npm:^1.2.4"
-    prosemirror-model: "npm:^1.19.4"
-    prosemirror-schema-list: "npm:^1.4.0"
+    prosemirror-model: "npm:^1.23.0"
+    prosemirror-schema-list: "npm:^1.4.1"
     prosemirror-state: "npm:^1.4.3"
-    prosemirror-transform: "npm:^1.8.0"
-    prosemirror-view: "npm:^1.32.7"
+    prosemirror-transform: "npm:^1.10.1"
+    prosemirror-view: "npm:^1.34.3"
     rimraf: "npm:^6.0.1"
     toastify-js: "npm:^1.12.0"
     ts-node: "npm:^10.9.2"
@@ -2357,6 +2358,15 @@ __metadata:
   dependencies:
     undici-types: "npm:~6.19.2"
   checksum: 10c0/cf11f74f1a26053ec58066616e3a8685b6bcd7259bc569738b8f752009f9f0f7f85a1b2d24908e5b0f752482d1e8b6babdf1fbb25758711ec7bb9500bfcd6e60
+  languageName: node
+  linkType: hard
+
+"@types/node@npm:^20.14.10":
+  version: 20.16.11
+  resolution: "@types/node@npm:20.16.11"
+  dependencies:
+    undici-types: "npm:~6.19.2"
+  checksum: 10c0/bba43f447c3c80548513954dae174e18132e9149d572c09df4a282772960d33e229d05680fb5364997c03489c22fe377d1dbcd018a3d4ff1cfbcfcdaa594a9c3
   languageName: node
   linkType: hard
 
@@ -7280,7 +7290,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prosemirror-model@npm:^1.0.0, prosemirror-model@npm:^1.19.4, prosemirror-model@npm:^1.20.0, prosemirror-model@npm:^1.21.0":
+"prosemirror-model@npm:^1.0.0, prosemirror-model@npm:^1.20.0, prosemirror-model@npm:^1.21.0, prosemirror-model@npm:^1.23.0":
   version: 1.23.0
   resolution: "prosemirror-model@npm:1.23.0"
   dependencies:
@@ -7289,7 +7299,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prosemirror-schema-list@npm:^1.4.0":
+"prosemirror-schema-list@npm:^1.4.1":
   version: 1.4.1
   resolution: "prosemirror-schema-list@npm:1.4.1"
   dependencies:
@@ -7311,7 +7321,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prosemirror-transform@npm:^1.0.0, prosemirror-transform@npm:^1.1.0, prosemirror-transform@npm:^1.10.2, prosemirror-transform@npm:^1.7.3, prosemirror-transform@npm:^1.8.0":
+"prosemirror-transform@npm:^1.0.0, prosemirror-transform@npm:^1.1.0, prosemirror-transform@npm:^1.10.1, prosemirror-transform@npm:^1.10.2, prosemirror-transform@npm:^1.7.3":
   version: 1.10.2
   resolution: "prosemirror-transform@npm:1.10.2"
   dependencies:
@@ -7320,7 +7330,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prosemirror-view@npm:^1.27.0, prosemirror-view@npm:^1.31.0, prosemirror-view@npm:^1.32.7":
+"prosemirror-view@npm:^1.27.0, prosemirror-view@npm:^1.31.0, prosemirror-view@npm:^1.34.3":
   version: 1.34.3
   resolution: "prosemirror-view@npm:1.34.3"
   dependencies:
