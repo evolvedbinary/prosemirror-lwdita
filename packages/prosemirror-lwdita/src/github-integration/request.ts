@@ -135,7 +135,7 @@ export function redirectToGitHubOAuth(parameters: URLParams): void {
 }
 
 export function redirectToGitHubAppInstall(parameters: URLParams): void {
-  const redirectURL = serverURL.value;
+  const redirectURL = config.serverConfig.frontendUrl;
   window.location.href = `https://github.com/apps/petal-demo/installations/new?state=${parameters.state}&redirect_uri=${redirectURL}`;
 }
 
