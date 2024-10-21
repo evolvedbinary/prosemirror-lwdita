@@ -116,21 +116,46 @@ module.exports = {
             packageFiles.push(`${projectWorkspace.cwd}/package.json`);
           }
 
+          // process exit code for the last command
+          let exitCode = 0;
+
           // Step 4 - git commit the version update.
           this.context.stdout.write(`4. git Committing the version update...\n`);
-          await execute('git', ['commit', `--message=[release] Release version: ${this.version}`].concat(packageFiles), executeOptions);
-        
+          exitCode = await execute('git', ['commit', `--message=[release] Release version: ${this.version}`].concat(packageFiles), executeOptions);
+          if (exitCode !== 0) {
+            this.context.stdout.write(`Error: git commit failed with code: ${exitCode}\n`);
+            return;
+          } else {
+            this.context.stdout.write(`git commit OK!\n`);
+          } 
+
           // Step 5 - git tag and sign the release tag.
           this.context.stdout.write(`5. git Committing the version update...\n`);
-          await execute('git', ['tag', `--message=[release] Release version: ${this.version}`, '--sign', `v${this.version}`], executeOptions);
-        
+          exitCode = await execute('git', ['tag', `--message=[release] Release version: ${this.version}`, '--sign', `v${this.version}`], executeOptions);
+          if (exitCode !== 0) {
+            this.context.stdout.write(`Error: git tag failed with code: ${exitCode}\n`);
+            return;
+          } else {
+            this.context.stdout.write(`git tag OK!\n`);
+          } 
           // Step 6 - git push the updates.
           this.context.stdout.write(`6. git push the version update...\n`);
           this.context.stdout.write(`6.1. git pushing the branch...\n`);
-          await execute('git', ['push'], executeOptions);
+          exitCode = await execute('git', ['push'], executeOptions);
+          if (exitCode !== 0) {
+            this.context.stdout.write(`Error: git push failed with code: ${exitCode}\n`)
+            return;
+          } else {
+            this.context.stdout.write(`git push OK!\n`);
+          } 
           this.context.stdout.write(`6.2. git pushing the tag...\n`);
-          await execute('git', ['push', '--tags'], executeOptions);
-
+          exitCode = await execute('git', ['push', '--tags'], executeOptions);
+          if (exitCode !== 0) {
+            this.context.stdout.write(`Error: git push tags failed with code: ${exitCode}\n`);
+            return;
+          } else {
+            this.context.stdout.write(`git push tags OK!\n`);
+          } 
           // Step 7 - Publish the packages to npm.js.
           this.context.stdout.write(`7. Running \`yarn npn publish\` to publish packages to npm.js...\n`);
           await this.cli.run(['npm', 'login']);
@@ -153,6 +178,10 @@ module.exports = {
           }
 
           this.context.stdout.write(`Released version: ${this.version} OK!\n`);
+        }
+
+        async catch(error) {
+          throw error;
         }
       }
   
