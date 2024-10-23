@@ -25,6 +25,8 @@ router.get('/', (_req, res) => {
   res.send('Github API');
 });
 
+router.get('/auth', githubController.authenticate)
+
 // GET /api/github/token exchange user code for token
 router.get('/token', (req, res) => githubController.authenticateUserWithOctokit(req, res));
 

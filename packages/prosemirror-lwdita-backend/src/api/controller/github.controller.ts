@@ -131,3 +131,23 @@ export const commitChangesAndCreatePR = async (req: Request, res: Response) => {
     url: response,
   });
 };
+
+
+export const authenticate = async (req: Request, res: Response) => {
+  const code = req.query.code;
+  const state = req.query.state;
+  if (!code) {
+    return res.status(400).json({ message: "Missing code" });
+  }
+  // dynamically import the module to avoid EMS and CJS incompatibility
+  const { authenticateWithOAuth } = await import('../modules/octokit.module.mjs');
+
+  const token = await authenticateWithOAuth(code as string);
+
+  res.cookie('token', token, { 
+    httpOnly: true,
+    sameSite: 'strict',
+   });
+
+  res.redirect(`http://pineapple.evolvedbinary.com/?oauth=success&state=${state}`);
+};

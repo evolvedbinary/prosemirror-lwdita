@@ -61,7 +61,7 @@ export function getAndValidateParameterValues(url: string): 'invalidParams' | 'r
 
   // check if the URL parameters are from oauth redirect
   for (const param of parameters) {
-    if (isOAuthCodeParam(param.key)) {
+    if (isOAuthParam(param.key)) {
       return parameters;
     }
   }
@@ -99,8 +99,8 @@ export function isValidParam(key: string): boolean {
   return validKeys.includes(key);
 }
 
-export function isOAuthCodeParam(key: string): boolean {
-  return key === 'code' || key === 'error';
+export function isOAuthParam(key: string): boolean {
+  return key === 'oauth' || key === 'error';
 }
 
 /**
@@ -127,7 +127,7 @@ export function redirectToGitHubOAuth(parameters: URLParams): void {
   const { id, value } = clientID;
   // Store the parameters in state to pass them to the redirect URL
   const state = btoa(`${JSON.stringify({ ...parameters })}`);
-  const redirectURL = serverURL.value;
+  const redirectURL = serverURL.value + '/api/github/auth';
   window.location.href = `https://github.com/login/oauth/authorize?${id}=${value}&state=${state}&redirect_uri=${redirectURL}`;
 }
 
@@ -183,11 +183,11 @@ export function processRequest(): undefined | URLParams {
         for (const param of parameters) {
           returnParams[param.key] = param.value;
         }
-        if (!parameters.some(param => isOAuthCodeParam(param.key))) {
+        if (!parameters.some(param => isOAuthParam(param.key))) {
 
           // Redirect to GitHub OAuth page
           redirectToGitHubOAuth(returnParams);
-        } else if (parameters.some(param => isOAuthCodeParam(param.key))) {
+        } else if (parameters.some(param => isOAuthParam(param.key))) {
           // in case of an error, the user did not authenticate the app
           const errorParam = parameters.find(param => param.key === 'error');
           if (errorParam) {
@@ -200,6 +200,9 @@ export function processRequest(): undefined | URLParams {
             console.log('processRequest(): error', errorParam.value);
           }
 
+
+          /**
+           * Exchange the OAuth code for an access token is obsolete when the token is stored in a cookie
           exchangeOAuthCodeForAccessToken(returnParams.code).then(token => {
             localStorage.setItem('token', token);
           }).catch(error => {
@@ -209,6 +212,7 @@ export function processRequest(): undefined | URLParams {
             // TODO (AvC): Parse the referer from the state object if available and pass it to the error page
             showErrorPage('missingAuthentication', '', error);
           });
+          */
           // return the parameters from the URL
           const state = JSON.parse(atob(returnParams.state));
           return state;
