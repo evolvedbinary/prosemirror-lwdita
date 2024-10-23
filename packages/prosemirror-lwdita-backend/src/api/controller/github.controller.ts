@@ -35,6 +35,11 @@ export const authenticateUserWithOctokit = async (req: Request, res: Response) =
 
   const token = await authenticateWithOAuth(code as string);
 
+  res.cookie('token', token, { 
+    httpOnly: true,
+    sameSite: 'strict',
+   });
+
   res.json({ token });
 };
 
