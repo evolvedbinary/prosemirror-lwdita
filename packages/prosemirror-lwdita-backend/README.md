@@ -1,13 +1,11 @@
-# prosemirror-lwdita-backend
-
-API Module for ProseMirror-lwDITA
+# LwDITA ProseMirror Backend
+This module provided an API for working with ProseMirror LwDITA.
 
 This is a standalone module with its own HTTP server.
-The API offers integration with source control without requiring user interaction, making contributions from ProseMirror-lwDITA possible.
-It allows the functionality to take changes from ProseMirror-lwDITA and create contributions (currently, only GitHub is supported).
 
-## Usage
+The API offers integration with VCS (Version Control Systems) without requiring direct user interaction, making it possible to use ProseMirror LwDITA to create and update documents in a VCS. Currently, only GitHub is supported.
 
+## Getting Started
 
 ### Configuration
 
@@ -21,88 +19,187 @@ It sets following values:
 * Committer email (required for the GitHub Integration, see section below)
 
 ### Usage
+1. Install the required dependencies:
+  ```shell
+  $ yarn install
+  ```
 
-Install dependencies
+2. Build the code:
+  ```shell
+  $ yarn run build
+  ```
+
+3. Start the server:
+  ```shell
+  $ yarn run start
+  ```
+
+## Installing
+Here are some simple instructions if you wish to install and host an [LwDITA ProseMirror Backend](https://petal.evolvedbinary.com/api).
+
+If you wish, the backend can be deployed on the same server that runs the [ProseMirror LwDITA Demo](../prosemirror-lwdita-demo/README.md).
+
+Our instructions are for the following suggested Environment:
+* [Ubuntu](https://www.ubuntu.com) Linux
+* [nginx](https://nginx.org/en/) Web Server
+* [Let's Encrypt](https://letsencrypt.org/) and [Certbot](https://certbot.eff.org/) for TLS/SSL Encryption
+* [Node.js 20](https://nodejs.org)
+
+We assume that you have a server running Ubuntu Linux with a public IPv4 or IPv6 address, with nginx, Let's Encrypt, and Certbot already installed. If not, briefly, you need to do something like the following:
+
+**NOTE**: You should replace `petal.evolvedbinary.com` with the FQDN DNS name of your web server. You can use any DNS provider you like, for our Petal Demo Website we use [Cloudflare](https://www.cloudflare.com).
 
 ```shell
-$ yarn install
+$ sudo apt install nginx certbot python3-certbot-nginx curl
+$ sudo service nginx start
+
+$ sudo sh -c "$(curl -fsSL https://deb.nodesource.com/setup_20.x)"
+$ sudo apt-get install -y nodejs
 ```
 
-Build the code
+If you also want to enable a simple firewall on Ubuntu:
+```shell
+$ sudo ufw allow "Nginx Full"
+$ sudo ufw allow "OpenSSH"
+$ sudo ufw enable
+```
 
+### 1. Build the backend
 ```shell
 $ yarn run build
 ```
 
-Start the server:
+### 2. Deploy the Backend distribution files to the Server
+Copy the all of the files from the `dist` folder of the Petal Backend to the folder on your server where you will run the API applucation from. We are using `/opt/petal-backend`. You will need to make sure that folder exists on the server before running this command.
 
 ```shell
-$ yarn run start
+$ scp dist/* ubuntu@petal.evolvedbinary.com:/opt/petal-backend/
 ```
 
+### 3. Configure systemd to manage the Backend as a service
+We use Systemd to start and stop the backend application when the server itself starts and stops.
 
-# Deploy to production
-The API should be deployed on the host for the Prosemirror Lwdita demo provided by the Evolved Binary team,
-We will assume you have nginx up and running with the config for the demo, and also have pm2 installed on your system (https://pm2.keymetrics.io/docs/usage/quick-start/), the deployment steps are as follows:
-### 1. Build the app
-```shell
-$ yarn run build
+We will the Petal Backend under a dedicated service account named `petal-backend`. To create this run:
 ```
-### 2. Place the .ENV file
-Place your .env file in the root of the backend. You can refer to .env.example for guidance.
-
-### 3. Start the backend using pm2
-Make sure you are running the following commands from the root of the backend (packages/prosemirror-lwdita-backend) so that the .env file is properly picked up:
-```shell
-$ pm2 start dist/server.js # start the backend
-$ pm2 save # make the pm2 config persistent
+$ sudo useradd --system --no-create-home --user-group --shell /usr/sbin/nologin --comment 'Petal Backend Service' petal-backend
 ```
-### 4. Add the API entry in the demo Nginx config
-This should be added to the /etc/nginx/sites-available/petal.evolvedbinary.com config file:
 
-```ini
+Create the file `/etc/systemd/system/petal-backend.service`:
+```
+[Unit]
+Description=Petal Backend
+Documentation=https://petal.evolvedbinary.com
+After=syslog.target
+
+[Service]
+Type=simple
+User=petal-backend
+Group=petal-backend
+ExecStart=/usr/bin/node /opt/petal-backend/server.js
+
+[Install]
+WantedBy=multi-user.target
+```
+
+**NOTE**: The above is configured to execute the Petal Backend under a dedicated service account named `petal-backend` you will need to make sure you have the ownership and mode of `/opt/petal-backend` setup appropriately.
+
+### 4. Configure the Petal Backend
+You need to create a file named `.env` in `/opt/petal-backend` to setup the confguration for Petal Backend.
+You can refer to the provided [.env.example](.env.example) for guidance.
+
+### 5. Start the Petal Backend Node.js Application
+You can now start the Backend service by executing: `sudo service petal-backend start`.
+You can check if the service is running by executing: `sudo service petal-backend status`. 
+
+### 6. Configure nginx for the Backend
+The Backend is a Node.js application, as it is not recommened to directly expose Node.js to the Web, we will place the nginx Web Server in front of it.
+
+We will create a website which initially is service by nginx using just HTTP to revesere-proxy requests to our Node.js application. Later we will use certbot to generate a TLS/SSL certificate from Let's Encrypt, and reconfigure nginx to serve it using HTTPS.
+
+Create a new file in `/etc/nginx/sites-available/` named `petal.evolvedbinary.com.conf` with the following content:
+```
+server {
+
+    listen 80;
+    listen [::]:80;
+
+    server_name petal.evolvedbinary.com;
+
+    charset utf-8;
+    access_log /var/log/nginx/petal.evolvedbinary.com_ssl_access.log;
+
+    root /www-data/petal.evolvedbinary.com;
+    index index.html;
+
     location /api {
-    proxy_pass            http://petal-api;
-    proxy_read_timeout    90s;
-    proxy_connect_timeout 90s;
-    proxy_send_timeout    90s;
-    proxy_http_version    1.1;
-    proxy_set_header      Host $host;
-    proxy_set_header      Upgrade $http_upgrade;
-    #proxy_set_header      Connection $connection_upgrade; # Uncomment if using WebSockets
-    proxy_set_header      X-Real-IP $remote_addr;
-    proxy_set_header      X-Forwarded-For $proxy_add_x_forwarded_for;
-    proxy_set_header      nginx-request-uri $request_uri;
-  }
+      proxy_pass            http://petal-api;
+      proxy_read_timeout    90s;
+      proxy_connect_timeout 90s;
+      proxy_send_timeout    90s;
+      proxy_http_version    1.1;
+      proxy_set_header      Host $host;
+      proxy_set_header      Upgrade $http_upgrade;
+      proxy_set_header      X-Real-IP $remote_addr;
+      proxy_set_header      X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_set_header      nginx-request-uri $request_uri;
+    }
+}
 ```
-### 5. Create the petal-api upstream block
-Create a new file named petal-api in /etc/nginx/sites-available/ with the following content:
 
-```ini
+Create a new file named `petal-api.conf` in `/etc/nginx/conf.d/` with the following content:
+```
 upstream petal-api {
   server localhost:3000;
 }
 ```
 
-### 6. Link the new file `petal-api` to `/etc/nginx/sites-enabled/`
+### 7. Enable the nginx for your Petal Demo website
 ```shell
-$ ln -s /etc/nginx/sites-available/petal-api /etc/nginx/sites-enabled/
+$ sudo ln -s /etc/nginx/sites-available/petal.evolvedbinary.com.conf /etc/nginx/sites-enabled/
 ```
 
-### 7. Reload Nginx 
+### 8. Have nginx load your new config
 ```shell
 $ sudo systemctl reload nginx
 ```
 
-### 8. Test the API
-Make a request to your server `/api/github` and you should get `Github API` as a response.
+### 9. Check the HTTP API is available
+Visit [http://petal.evolvedbinary.com/api/github](https://petal.evolvedbinary.com/api/github) from a different computer and make sure you see the response `Github API`.
+
+### 10. Switch your Petal Demo website to HTTPS
+ We will use certbot to generate a TLS/SSL certificate from Let's Encrypt, and reconfigure nginx to serve it using HTTPS.
+
+ ```shell
+ $ sudo certbot --nginx
+
+ Which names would you like to activate HTTPS for?
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+1: petal.evolvedbinary.com
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Select the appropriate numbers separated by commas and/or spaces, or leave input
+blank to select all options shown (Enter 'c' to cancel): 1
+
+
+Please choose whether or not to redirect HTTP traffic to HTTPS, removing HTTP access.
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+1: No redirect - Make no further changes to the webserver configuration.
+2: Redirect - Make all requests redirect to secure HTTPS access. Choose this for
+new sites, or if you're confident your site works on HTTPS. You can undo this
+change by editing your web server's configuration.
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Select the appropriate number [1-2] then [enter] (press 'c' to cancel): 2
+ ```
+
+### 11. Check the HTTPS API is available
+Visit [https://petal.evolvedbinary.com/api/github](https://petal.evolvedbinary.com/api/github) (note the `https`) from a different computer and make sure you see the response `Github API`.
+You can also visit [http://petal.evolvedbinary.com/api/github](http://petal.evolvedbinary.com/api/github) (note the `http`) and you should see that you are redirected to the https version of the website.
 
 
 ## GitHub Integration API Documentation
 
 ### Endpoint
 
-#### `GET /api/github/token`
+### `GET /api/github/token`
 
 This endpoint exchanges a GitHub OAuth code for an access token.
 
