@@ -52,12 +52,7 @@ export type BranchInfo = {
  */
 export const authenticateWithOAuth = async (code: string): Promise<{token: string, installation: boolean} | undefined> => {
   try {
-
     //TODO(YB): Check if env variables are set and valid
-    const appId = process.env.GITHUB_APP_ID as string;
-    // the private key is base64 encoded, so we need to decode it
-    const privateKey = Buffer.from(process.env.PRIVATE_KEY_64Encoded as string, 'base64').toString('ascii');
-
     // create an Octokit instance with the retry plugin
     const OctokitWithRetry = Octokit.plugin(retry);
 
@@ -66,8 +61,6 @@ export const authenticateWithOAuth = async (code: string): Promise<{token: strin
       auth: {
         clientId: process.env.GITHUB_CLIENT_ID as string,
         clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
-        privateKey: privateKey,
-        appId: parseInt(appId),
         clientType: 'github-app',
         code: code,
       }
