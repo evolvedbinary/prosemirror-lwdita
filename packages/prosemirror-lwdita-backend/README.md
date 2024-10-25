@@ -73,7 +73,7 @@ $ yarn run build
 Copy all of the files from the `dist` folder of the Petal Backend to the folder on your server where you will run the API applucation from. We are using `/opt/petal-backend`. You will need to make sure that folder exists on the server before running this command.
 
 ```shell
-$ scp dist/* ubuntu@petal.evolvedbinary.com:/opt/petal-backend/
+$ scp -r dist/* ubuntu@petal.evolvedbinary.com:/opt/petal-backend/
 ```
 
 ### 3. Configure SystemD to manage the Backend as a service
@@ -100,6 +100,8 @@ ExecStart=/usr/bin/node /opt/petal-backend/server.js
 [Install]
 WantedBy=multi-user.target
 ```
+
+Then run: `sudo systemctl daemon-reload` to have SystemD be aware of your new service file.
 
 **NOTE**: The above is configured to execute the Petal Backend under a dedicated service account named `petal-backend` you will need to make sure you have the ownership and mode of `/opt/petal-backend` setup appropriately.
 
