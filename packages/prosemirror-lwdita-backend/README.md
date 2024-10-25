@@ -64,16 +64,16 @@ $ sudo ufw allow "OpenSSH"
 $ sudo ufw enable
 ```
 
-### 1. Build the backend
+### 1. Build the backend distribution
 ```shell
-$ yarn run build
+$ yarn dist
 ```
 
 ### 2. Deploy the Backend distribution files to the Server
-Copy all of the files from the `dist` folder of the Petal Backend to the folder on your server where you will run the API applucation from. We are using `/opt/petal-backend`. You will need to make sure that folder exists on the server before running this command.
+Copy the server bundle files from the `dist/bundle` folder of the Petal Backend to the folder on your server where you will run the API applucation from. We are using `/opt/petal-backend`. You will need to make sure that folder exists on the server before running this command.
 
 ```shell
-$ scp -r dist/* ubuntu@petal.evolvedbinary.com:/opt/petal-backend/
+$ scp -r dist/bundle/server.bundle.js* ubuntu@petal.evolvedbinary.com:/opt/petal-backend/
 ```
 
 ### 3. Configure SystemD to manage the Backend as a service
@@ -95,7 +95,7 @@ After=syslog.target
 Type=simple
 User=petal-backend
 Group=petal-backend
-ExecStart=/usr/bin/node /opt/petal-backend/server.js
+ExecStart=/usr/bin/node /opt/petal-backend/server.bundle.js
 
 [Install]
 WantedBy=multi-user.target
