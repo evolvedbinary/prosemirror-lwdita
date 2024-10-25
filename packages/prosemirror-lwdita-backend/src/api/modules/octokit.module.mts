@@ -20,14 +20,14 @@ import { createOAuthAppAuth } from "@octokit/auth-oauth-app";
 import { Endpoints } from "@octokit/types";
 import dotenv from 'dotenv';
 import { retry } from "@octokit/plugin-retry";
-import * as fs from 'fs';
+import { Config } from "../../config.js";
 
 dotenv.config();  // Load environment variables from .env file
 
 /**
  * Load the configuration
  */
-const config = JSON.parse(fs.readFileSync('./config.json', 'utf8'));
+const config: Config = Config.fromJsonFile("./config.json");
 
 // user data type
 export type UserData = Endpoints["GET /user"]["response"]["data"];
