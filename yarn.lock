@@ -333,7 +333,7 @@ __metadata:
     "@types/chai": "npm:^4.3.11"
     "@types/chai-as-promised": "npm:^7.1.3"
     "@types/cors": "npm:^2"
-    "@types/dotenv": "npm:^8.2.0"
+    "@types/dotenv": "npm:^8.2.3"
     "@types/express": "npm:^4.17.21"
     "@types/mocha": "npm:^10.0.9"
     "@types/node": "npm:^22.7.9"
@@ -2266,12 +2266,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/dotenv@npm:^8.2.0":
-  version: 8.2.0
-  resolution: "@types/dotenv@npm:8.2.0"
+"@types/dotenv@npm:^8.2.3":
+  version: 8.2.3
+  resolution: "@types/dotenv@npm:8.2.3"
   dependencies:
     dotenv: "npm:*"
-  checksum: 10c0/cd010440ea750acf2359fb9ed0a1681b00ce29d9c40b602fe33e51642bd44ce30ced54b23fadc05385daa415fe9f671273911bcf95381a5aaf09690b3db96938
+  checksum: 10c0/af9178da617959cddc8259aaa3f16c474523ead469f4a03490de2f2d1cafc8615c5d0d1ed3fad837096218126421c38cd46b4065548bb5aee3cc002c518b69f7
   languageName: node
   linkType: hard
 
