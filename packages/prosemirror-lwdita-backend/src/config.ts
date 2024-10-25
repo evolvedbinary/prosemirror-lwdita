@@ -15,75 +15,97 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+import Ajv, {JTDSchemaType} from "ajv/dist/jtd"
 import * as fs from 'fs';
+
+const configJsonSchema: JTDSchemaType<Config> = {
+    properties: {
+        server: {
+            properties: {
+                enableCors: {
+                    type: "boolean"
+                },
+                apiUrl: {
+                    type: "string"
+                }
+            }
+        },
+        git: {
+            properties: {
+                committerName: {
+                    type: "string"
+                },
+                committerEmail: {
+                    type: "string"
+                }
+            }
+        },
+        gitHub: {
+            properties: {
+                clientId: {
+                    type: "string"
+                },
+                clientSecret: {
+                    type: "string"
+                }
+            }
+        }
+    },
+    additionalProperties: false
+};
 
 /**
  * Config class for prosemirror-lwdita-backend.
  */
-export class Config {
+export interface Config {
     server: ConfigServer
     git: ConfigGit
     gitHub: ConfigGitHub
-
-    constructor(server: ConfigServer, git: ConfigGit, gitHub: ConfigGitHub) {
-        this.server = server;
-        this.git = git;
-        this.gitHub = gitHub;
-    }
-
-    /**
-     * Load the configuration from a JSON file.
-     * 
-     * @param file - the path to a JSON file containing the config.
-     * 
-     * @returns a Config object.
-     */
-    public static fromJsonFile(file: string) : Config {
-        const jsonConfig = JSON.parse(fs.readFileSync(file, 'utf8'));
-
-        return new Config(
-            new ConfigServer(jsonConfig.server.enableCors, jsonConfig.server.apiUrl),
-            new ConfigGit(jsonConfig.git.committerName, jsonConfig.git.committerEmail),
-            new ConfigGitHub(jsonConfig.gitHub.clientId, jsonConfig.gitHub.clientSecret)
-        );
-    }
 }
 
 /**
  * Server config class for prosemirror-lwdita-backend.
  */
-export class ConfigServer {
+export interface ConfigServer {
     enableCors: boolean
     apiUrl: string
-
-    constructor(enableCors: boolean, apiUrl: string) {
-        this.enableCors = enableCors;
-        this.apiUrl = apiUrl;
-    }
 }
 
 /**
  * Git config class for prosemirror-lwdita-backend.
  */
-export class ConfigGit {
+export interface ConfigGit {
     committerName: string
     committerEmail: string
-
-    constructor(committerName: string, committerEmail: string) {
-        this.committerName = committerName
-        this.committerEmail = committerEmail
-    }
 }
 
 /**
  * GitHub config class for prosemirror-lwdita-backend.
  */
-export class ConfigGitHub {
+export interface ConfigGitHub {
     clientId: string
     clientSecret: string
+}
 
-    constructor(clientId: string, clientSecret: string) {
-        this.clientId = clientId
-        this.clientSecret = clientSecret
+/**
+ * Load the configuration from a JSON file.
+ *
+ * @param file - the path to a JSON file containing the config.
+ *
+ * @returns a Config object.
+ */
+export function loadConfig(file: string) : Config {
+    const jsonConfig = fs.readFileSync(file, 'utf8');
+
+    // create a validating parser
+    const ajv = new Ajv();
+    const parse = ajv.compileParser(configJsonSchema);
+
+    // parse the json
+    const data = parse(jsonConfig);
+    if (data === undefined) {
+        throw new Error("Unable to parse JSON config.json: [" + parse.position + "] " + parse.message);
+    } else {
+        return data;
     }
 }

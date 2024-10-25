@@ -18,7 +18,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import express from 'express';
 import githubRouter from './api/routes/github.router';
 import cors from 'cors';
-import { Config } from './config';
+import { Config, loadConfig } from './config';
 
 const app = express();
 app.use(express.json());
@@ -26,7 +26,7 @@ app.use(express.json());
 /**
  * Load the configuration
  */
-const config: Config = Config.fromJsonFile("./config.json");
+const config: Config = loadConfig("./config.json");
 
 if (config.server.enableCors) {
   app.use(cors());

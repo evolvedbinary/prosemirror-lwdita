@@ -19,12 +19,12 @@ import { Octokit } from "@octokit/rest";
 import { createOAuthAppAuth } from "@octokit/auth-oauth-app";
 import { Endpoints } from "@octokit/types";
 import { retry } from "@octokit/plugin-retry";
-import { Config } from "../../config.js";
+import { Config, loadConfig } from "../../config.js";
 
 /**
  * Load the configuration
  */
-const config: Config = Config.fromJsonFile("./config.json");
+const config: Config = loadConfig("./config.json");
 
 // user data type
 export type UserData = Endpoints["GET /user"]["response"]["data"];
