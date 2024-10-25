@@ -26,9 +26,9 @@ app.use(express.json());
 /**
  * Load the configuration
  */
-const config = JSON.parse(fs.readFileSync('./server-config.json', 'utf8'));
+const config = JSON.parse(fs.readFileSync('./config.json', 'utf8'));
 
-if (config.enableCors) {
+if (config.server.enableCors) {
   app.use(cors());
 }
 
@@ -41,5 +41,5 @@ app.get('/', (_req, res) => {
 });
 
 app.listen(3000, () => {
-  console.log('Server is running on ' + config.serverConfig.apiUrl);
+  console.log('Server is running on ' + config.server.apiUrl);
 });

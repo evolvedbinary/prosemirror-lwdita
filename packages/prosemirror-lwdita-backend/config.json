@@ -1,0 +1,10 @@
+{
+  "server": {
+    "enableCors": false,
+    "apiUrl": "http://localhost:3000/"
+  },
+  "git": {
+    "committerName": "Petal GitHub App",
+    "committerEmail": "petal-bot@evolvedbinary.com"
+  }
+}

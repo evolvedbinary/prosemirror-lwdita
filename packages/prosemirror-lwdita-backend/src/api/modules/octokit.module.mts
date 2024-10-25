@@ -27,7 +27,7 @@ dotenv.config();  // Load environment variables from .env file
 /**
  * Load the configuration
  */
-const config = JSON.parse(fs.readFileSync('./server-config.json', 'utf8'));
+const config = JSON.parse(fs.readFileSync('./config.json', 'utf8'));
 
 // user data type
 export type UserData = Endpoints["GET /user"]["response"]["data"];
@@ -237,8 +237,8 @@ const commitChanges = async (octokit: Octokit, owner: string, repo: string, bran
       tree: treeData.sha,
       parents: [lastCommit.sha],
       committer: {
-        name: config.PETAL_COMMITTER_NAME,
-        email: config.PETAL_COMMITTER_EMAIL
+        name: config.git.committerName,
+        email: config.git.committerEmail
       }
     });
 
