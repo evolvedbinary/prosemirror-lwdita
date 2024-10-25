@@ -23,10 +23,12 @@ import * as fs from 'fs';
 export class Config {
     server: ConfigServer
     git: ConfigGit
+    gitHub: ConfigGitHub
 
-    constructor(server: ConfigServer, git: ConfigGit) {
+    constructor(server: ConfigServer, git: ConfigGit, gitHub: ConfigGitHub) {
         this.server = server;
         this.git = git;
+        this.gitHub = gitHub;
     }
 
     /**
@@ -41,7 +43,8 @@ export class Config {
 
         return new Config(
             new ConfigServer(jsonConfig.server.enableCors, jsonConfig.server.apiUrl),
-            new ConfigGit(jsonConfig.git.committerName, jsonConfig.git.committerEmail)
+            new ConfigGit(jsonConfig.git.committerName, jsonConfig.git.committerEmail),
+            new ConfigGitHub(jsonConfig.gitHub.clientId, jsonConfig.gitHub.clientSecret)
         );
     }
 }
@@ -69,5 +72,18 @@ export class ConfigGit {
     constructor(committerName: string, committerEmail: string) {
         this.committerName = committerName
         this.committerEmail = committerEmail
+    }
+}
+
+/**
+ * GitHub config class for prosemirror-lwdita-backend.
+ */
+export class ConfigGitHub {
+    clientId: string
+    clientSecret: string
+
+    constructor(clientId: string, clientSecret: string) {
+        this.clientId = clientId
+        this.clientSecret = clientSecret
     }
 }

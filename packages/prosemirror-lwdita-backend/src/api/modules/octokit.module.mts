@@ -18,11 +18,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import { Octokit } from "@octokit/rest";
 import { createOAuthAppAuth } from "@octokit/auth-oauth-app";
 import { Endpoints } from "@octokit/types";
-import dotenv from 'dotenv';
 import { retry } from "@octokit/plugin-retry";
 import { Config } from "../../config.js";
-
-dotenv.config();  // Load environment variables from .env file
 
 /**
  * Load the configuration
@@ -52,15 +49,14 @@ export type BranchInfo = {
  */
 export const authenticateWithOAuth = async (code: string): Promise<{token: string, installation: boolean} | undefined> => {
   try {
-    //TODO(YB): Check if env variables are set and valid
     // create an Octokit instance with the retry plugin
     const OctokitWithRetry = Octokit.plugin(retry);
 
     let octokit = new OctokitWithRetry({
       authStrategy: createOAuthAppAuth,
       auth: {
-        clientId: process.env.GITHUB_CLIENT_ID as string,
-        clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
+        clientId: config.gitHub.clientId,
+        clientSecret: config.gitHub.clientSecret,
         clientType: 'github-app',
         code: code,
       }

@@ -6,5 +6,9 @@
   "git": {
     "committerName": "Petal GitHub App",
     "committerEmail": "petal-bot@evolvedbinary.com"
+  },
+  "gitHub": {
+    "clientId": "my-client-id",
+    "clientSecret": "my-secret"
   }
 }
