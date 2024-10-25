@@ -16,36 +16,21 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 import { expect } from 'chai';
-import sinon from 'sinon';
 import request from 'supertest';
 import express from 'express';
-import githubRoutes from '../src/api/routes/github.router';
-import * as githubController from '../src/api/controller/github.controller';
+import { MockGitHubController } from './mock.github.controller';
+import { GitHubRouter } from '../src/api/routes/github.router';
 
+const mockGitHubController = new MockGitHubController();
 const app = express();
 app.use(express.json());
-app.use('/api/github', githubRoutes);
+app.use('/api/github', GitHubRouter.create(mockGitHubController));
 
 describe('GitHub API Routes', () => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let authenticateUserStub: any, getUserInfoStub: any, commitChangesStub: any;
-
-  beforeEach(() => {
-    // Stub the controller methods
-    authenticateUserStub = sinon.stub(githubController, 'authenticateUserWithOctokit').callsFake(async (_req, res) => {
-      return res.status(200).json({ token: 'token'});
-    });
-    getUserInfoStub = sinon.stub(githubController, 'getUserInformation').callsFake(async (_req, res) => {
-      return res.status(200).json({ user: 'user'});
-    });
-    commitChangesStub = sinon.stub(githubController, 'commitChangesAndCreatePR').callsFake(async (_req, res) => {
-      return res.status(200).json({ link: 'link'});
-    });
-  });
 
   afterEach(() => {
     // Restore original methods after each test
-    sinon.restore();
+    mockGitHubController.reset();
   });
 
   // Test for GET /api/github/
@@ -59,14 +44,14 @@ describe('GitHub API Routes', () => {
   it('should call authenticateUserWithOctokit on GET /api/github/token', async () => {
     const response = await request(app).get('/api/github/token').query({ code: '1234' });
     expect(response.status).to.equal(200);
-    expect(authenticateUserStub.calledOnce).to.be.true;
+    expect(mockGitHubController.countAuthenticateUserWithOctokit).to.equal(1);
   });
 
   // Test for GET /api/github/user
   it('should call getUserInformation on GET /api/github/user', async () => {
     const response = await request(app).get('/api/github/user').set('Authorization', 'Bearer token');
     expect(response.status).to.equal(200);
-    expect(getUserInfoStub.calledOnce).to.be.true;
+    expect(mockGitHubController.countGetUserInformation).to.equal(1);
   });
 
   // Test for POST /api/github/integration
@@ -83,6 +68,6 @@ describe('GitHub API Routes', () => {
       .send(payload);
 
     expect(response.status).to.equal(200);
-    expect(commitChangesStub.calledOnce).to.be.true;
+    expect(mockGitHubController.countCommitChangesAndCreatePR).to.equal(1);
   });
 });

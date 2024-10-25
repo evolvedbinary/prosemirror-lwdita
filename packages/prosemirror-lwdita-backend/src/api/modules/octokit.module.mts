@@ -19,12 +19,6 @@ import { Octokit } from "@octokit/rest";
 import { createOAuthAppAuth } from "@octokit/auth-oauth-app";
 import { Endpoints } from "@octokit/types";
 import { retry } from "@octokit/plugin-retry";
-import { Config, loadConfig } from "../../config.js";
-
-/**
- * Load the configuration
- */
-const config: Config = loadConfig("./config.json");
 
 // user data type
 export type UserData = Endpoints["GET /user"]["response"]["data"];
@@ -44,10 +38,12 @@ export type BranchInfo = {
 
 /**
  * Authenticates with OAuth using the provided code.
+ * @param clientId - The client ID.
+ * @param clientSecret - The client secret.
  * @param code - The OAuth code to authenticate with.
  * @returns A promise that resolves to the authentication token, or undefined if authentication fails.
  */
-export const authenticateWithOAuth = async (code: string): Promise<{token: string, installation: boolean} | undefined> => {
+export const authenticateWithOAuth = async (clientId: string, clientSecret: string, code: string): Promise<{token: string, installation: boolean} | undefined> => {
   try {
     // create an Octokit instance with the retry plugin
     const OctokitWithRetry = Octokit.plugin(retry);
@@ -55,8 +51,8 @@ export const authenticateWithOAuth = async (code: string): Promise<{token: strin
     let octokit = new OctokitWithRetry({
       authStrategy: createOAuthAppAuth,
       auth: {
-        clientId: config.gitHub.clientId,
-        clientSecret: config.gitHub.clientSecret,
+        clientId: clientId,
+        clientSecret: clientSecret,
         clientType: 'github-app',
         code: code,
       }
@@ -192,11 +188,13 @@ const createBranch = async (octokit: Octokit, owner: string, repo: string, branc
  * @param repo - The name of the repository.
  * @param branch - The branch to commit the changes to.
  * @param lastCommit - The information about the last commit.
+ * @param committerName - The name of the committer.
+ * @param committerEmail - The email address of the committer.
  * @param commitMessage - The message for the new commit.
  * @param change - The change to be committed, including the path and content.
  * @returns A Promise that resolves to the commit information if successful, or undefined if an error occurs.
  */
-const commitChanges = async (octokit: Octokit, owner: string, repo: string, branch: string, lastCommit: CommitInfo, commitMessage: string, change: { path: string, content: string }): Promise<CommitInfo | undefined> => {
+const commitChanges = async (octokit: Octokit, owner: string, repo: string, branch: string, lastCommit: CommitInfo, committerName: string, committerEmail: string, commitMessage: string, change: { path: string, content: string }): Promise<CommitInfo | undefined> => {
   try {
     // get the tree sha of the last commit
     const treeSha = lastCommit.treeSha;
@@ -233,8 +231,8 @@ const commitChanges = async (octokit: Octokit, owner: string, repo: string, bran
       tree: treeData.sha,
       parents: [lastCommit.sha],
       committer: {
-        name: config.git.committerName,
-        email: config.git.committerEmail
+        name: committerName,
+        email: committerEmail
       }
     });
 
@@ -293,13 +291,15 @@ const createPullRequest = async (octokit: Octokit, owner: string, repo: string, 
  * @param newOwner - The owner of the new branch.
  * @param newBranch - The name of the new branch.
  * @param branch - The name of the base branch for the PR.
+ * @param committerName - The name of the committer.
+ * @param committerEmail - The email address of the committer.
  * @param commitMessage - The commit message.
  * @param change - The change object containing the path and content of the changes.
  * @param title - The title of the pull request.
  * @param body - The body of the pull request.
  * @returns The URL of the created pull request, or undefined if an error occurred.
  */
-export const pushChangesAndCreatePullRequest = async (octokit: Octokit, owner: string, repo: string, newOwner:string, branch: string, newBranch: string, commitMessage: string, change: { path: string, content: string }, title: string, body: string): Promise<string | undefined> => {
+export const pushChangesAndCreatePullRequest = async (octokit: Octokit, owner: string, repo: string, newOwner:string, branch: string, newBranch: string, committerName: string, committerEmail: string, commitMessage: string, change: { path: string, content: string }, title: string, body: string): Promise<string | undefined> => {
   try {
     // create a fork
     const forkUrl = await createFork(octokit, owner, repo);
@@ -312,7 +312,7 @@ export const pushChangesAndCreatePullRequest = async (octokit: Octokit, owner: s
       throw new Error("Error during branch creation");
     }
     // commit the changes
-    const commit = await commitChanges(octokit, newOwner, repo, newBranch, createdBranch.commit, commitMessage, change);
+    const commit = await commitChanges(octokit, newOwner, repo, newBranch, createdBranch.commit, committerName, committerEmail, commitMessage, change);
     if(!commit) {
       throw new Error("Error during commit");
     }

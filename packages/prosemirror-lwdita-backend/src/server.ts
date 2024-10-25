@@ -15,8 +15,9 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+import { GitHubControllerImpl } from './api/controller/github.controller';
+import { GitHubRouter } from './api/routes/github.router';
 import express from 'express';
-import githubRouter from './api/routes/github.router';
 import cors from 'cors';
 import { Config, loadConfig } from './config';
 
@@ -34,7 +35,10 @@ if (config.server.enableCors) {
 
 // add the github module to the http server
 // this will forward all requests starting with /api/github to the githubRouter
-app.use('/api/github', githubRouter);
+const gitHubController = new GitHubControllerImpl(config);
+const router = GitHubRouter.create(gitHubController);
+
+app.use('/api/github', router);
 
 app.get('/', (_req, res) => {
   res.send('the server is running');

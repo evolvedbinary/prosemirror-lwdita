@@ -18,7 +18,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import { expect } from 'chai';
 import sinon from 'sinon';
 import { Request, Response } from 'express';
-import { authenticateUserWithOctokit, commitChangesAndCreatePR, getUserInformation } from '../src/api/controller/github.controller';
+import { GitHubControllerImpl } from '../src/api/controller/github.controller';
+import { MockConfig } from './mock.config';
 
 describe('authenticateUserWithOctokit', () => {
   let req: Partial<Request>;
@@ -50,7 +51,7 @@ describe('authenticateUserWithOctokit', () => {
     // Arrange: Leave req.query.code undefined
 
     // Act: Call the controller
-    await authenticateUserWithOctokit(req as Request, res as Response);
+    await new GitHubControllerImpl(new MockConfig()).authenticateUserWithOctokit(req as Request, res as Response);
 
     // Assert: Check response status and message
     expect(statusStub.calledWith(400)).to.be.true;
@@ -68,7 +69,7 @@ describe('authenticateUserWithOctokit', () => {
     //FIXME(YB): Unable to mock authenticateWithOAuth function
 
     // Act: Call the controller
-    await authenticateUserWithOctokit(req as Request, res as Response);
+    await new GitHubControllerImpl(new MockConfig()).authenticateUserWithOctokit(req as Request, res as Response);
 
     // Assert: Ensure the OAuth function was called and the correct response was returned
     // expect(authenticateWithOAuthStub.calledWith('test_code')).to.be.true;
@@ -104,7 +105,7 @@ describe('getUserInformation', () => {
     // Arrange: Leave req.headers.authorization undefined
 
     // Act: Call the controller
-    await getUserInformation(req as Request, res as Response);
+    await new GitHubControllerImpl(new MockConfig()).getUserInformation(req as Request, res as Response);
 
     // Assert: Check response status and message
     expect(statusStub.calledWith(403)).to.be.true;
@@ -119,7 +120,7 @@ describe('getUserInformation', () => {
     req.headers.authorization = 'Bearer test_token';
 
     // Act: Call the controller
-    await getUserInformation(req as Request, res as Response);
+    await new GitHubControllerImpl(new MockConfig()).getUserInformation(req as Request, res as Response);
     //FIXME(YB): Unable to mock getUserInfo function
 
     // Assert: Check response status and message
@@ -159,7 +160,7 @@ describe('commitChangesAndCreatePR', () => {
     // Arrange: Leave req.headers.authorization undefined
 
     // Act: Call the controller
-    await commitChangesAndCreatePR(req as Request, res as Response);
+    await new GitHubControllerImpl(new MockConfig()).commitChangesAndCreatePR(req as Request, res as Response);
 
     // Assert: Check response status and message
     expect(statusStub.calledWith(403)).to.be.true;
@@ -180,7 +181,7 @@ describe('commitChangesAndCreatePR', () => {
     }
 
     // Act: Call the controller
-    await commitChangesAndCreatePR(req as Request, res as Response);
+    await new GitHubControllerImpl(new MockConfig()).commitChangesAndCreatePR(req as Request, res as Response);
 
     // Assert: Check response status and message
     expect(statusStub.calledWith(400)).to.be.true;
