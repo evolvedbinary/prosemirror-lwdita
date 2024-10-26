@@ -1,6 +1,6 @@
 {
   "$schema": "https://typedoc.org/schema.json",
-  "entryPoints": ["./src/index.ts"],
+  "entryPoints": ["./src/server.ts"],
   "exclude": ["generated-docs/**/*.ts", "dist/**/*.ts", "node_modules/**/*.ts"],
   "out": "generated-docs",
   "treatWarningsAsErrors": true,
