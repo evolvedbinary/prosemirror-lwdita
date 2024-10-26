@@ -1,7 +1,7 @@
 {
   "serverConfig": {
-    "frontendUrl": "http://localhost:1234/",
-    "apiUrl": "http://localhost:3000/"
+    "frontendUrl": "http://pineapple.evolvedbinary.com/",
+    "apiUrl": "http://pineapple.evolvedbinary.com/api/github/auth"
   },
   "clientID": {
     "id": "client_id",
