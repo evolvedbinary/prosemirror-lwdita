@@ -15,23 +15,28 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import { Router } from 'express';
-import * as githubController from '../controller/github.controller';
+import {GitHubController} from '../controller/github.controller';
+import {Router} from 'express';
 
-const router = Router();
+export class GitHubRouter {
 
-// GET /api/github/
-router.get('/', (_req, res) => {
-  res.send('Github API');
-});
+  static create(gitHubController: GitHubController) : Router {
+    const router = Router();
 
-// GET /api/github/token exchange user code for token
-router.get('/token', (req, res) => githubController.authenticateUserWithOctokit(req, res));
+    // GET /api/github/
+    router.get('/', (_req, res) => {
+      res.send('Github API');
+    });
 
-// GET /api/github/user get user information
-router.get('/user', (req, res) => githubController.getUserInformation(req, res));
+    // GET /api/github/token exchange user code for token
+    router.get('/token', (req, res) => gitHubController.authenticateUserWithOctokit(req, res));
 
-// POST /api/github/integration commit changes and create PR
-router.post('/integration', (req, res) => githubController.commitChangesAndCreatePR(req, res))
+    // GET /api/github/user get user information
+    router.get('/user', (req, res) => gitHubController.getUserInformation(req, res));
 
-export default router;
+    // POST /api/github/integration commit changes and create PR
+    router.post('/integration', (req, res) => gitHubController.commitChangesAndCreatePR(req, res))
+  
+    return router;
+  }
+}

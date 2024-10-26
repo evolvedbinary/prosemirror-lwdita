@@ -104,8 +104,7 @@ WantedBy=multi-user.target
 **NOTE**: The above is configured to execute the Petal Backend under a dedicated service account named `petal-backend` you will need to make sure you have the ownership and mode of `/opt/petal-backend` setup appropriately.
 
 ### 4. Configure the Petal Backend
-You need to create a file named `.env` in `/opt/petal-backend` to setup the confguration for Petal Backend.
-You can refer to the provided [.env.example](.env.example) for guidance.
+You need to create a file named `config.json` in `/opt/petal-backend` to setup the confguration for Petal Backend. You can refer to the provided [config.json](config.json) file for guidance.
 
 ### 5. Start the Petal Backend Node.js Application
 You can now start the Backend service by executing: `sudo service petal-backend start`.

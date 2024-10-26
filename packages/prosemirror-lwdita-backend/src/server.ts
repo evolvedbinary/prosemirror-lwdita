@@ -15,10 +15,11 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+import { GitHubControllerImpl } from './api/controller/github.controller';
+import { GitHubRouter } from './api/routes/github.router';
 import express from 'express';
-import githubRouter from './api/routes/github.router';
 import cors from 'cors';
-import * as fs from 'fs';
+import { Config, loadConfig } from './config';
 
 const app = express();
 app.use(express.json());
@@ -26,20 +27,23 @@ app.use(express.json());
 /**
  * Load the configuration
  */
-const config = JSON.parse(fs.readFileSync('./server-config.json', 'utf8'));
+const config: Config = loadConfig("./config.json");
 
-if (config.enableCors) {
+if (config.server.enableCors) {
   app.use(cors());
 }
 
 // add the github module to the http server
 // this will forward all requests starting with /api/github to the githubRouter
-app.use('/api/github', githubRouter);
+const gitHubController = new GitHubControllerImpl(config);
+const router = GitHubRouter.create(gitHubController);
+
+app.use('/api/github', router);
 
 app.get('/', (_req, res) => {
   res.send('the server is running');
 });
 
 app.listen(3000, () => {
-  console.log('Server is running on ' + config.serverConfig.apiUrl);
+  console.log('Server is running on ' + config.server.apiUrl);
 });
