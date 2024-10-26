@@ -415,7 +415,7 @@ export function schema(): Schema {
     done.push(nodeName);
 
     // do not process the alt or text nodes
-    if (['text'].indexOf(node as string) > -1) {
+    if (['text', 'cdata'].indexOf(node as string) > -1) {
       return;
     }
 
