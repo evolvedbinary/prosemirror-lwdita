@@ -20,7 +20,7 @@ import { MenuElement, MenuItem, MenuItemSpec } from "prosemirror-menu";
 import * as config from "@evolvedbinary/prosemirror-lwdita/app-config.json";
 import { InputContainer, renderPrDialog } from "@evolvedbinary/prosemirror-lwdita";
 import { unTravel, URLParams } from "@evolvedbinary/prosemirror-lwdita";
-import { JditaSerializer } from "@evolvedbinary/lwdita-xdita";
+import { jditaToAst, XditaSerializer } from "@evolvedbinary/lwdita-xdita";
 import { InMemoryTextSimpleOutputStreamCollector } from "@evolvedbinary/lwdita-xdita/dist/stream";
 import { showToast } from '@evolvedbinary/prosemirror-lwdita';
 import { EditorState, Transaction } from "prosemirror-state";
@@ -192,11 +192,8 @@ function saveFile(_input: InputContainer): Command {
   return (state: EditorState, dispatch: (arg0: Transaction) => void) => {
     if (dispatch) {
       dispatch(state.tr);
-      const xditaPrefix = `<?xml version="1.0" encoding="UTF-8"?>\n<!DOCTYPE topic PUBLIC "-//OASIS//DTD LIGHTWEIGHT DITA Topic//EN" "lw-topic.dtd">\n`;
       const documentNode = transformToJditaDocumentNode(state);
-      console.log('Document Node:', documentNode);
-      const file = xditaPrefix + documentNode;
-      const data = new Blob([file], { type: 'text/plain' });
+      const data = new Blob([documentNode], { type: 'text/plain' });
       const url = window.URL.createObjectURL(data);
       const link = document.getElementById('saveFile');
       if (link) {
@@ -227,10 +224,10 @@ function transformToJditaDocumentNode(state: EditorState): string {
   // Change the type value from 'type: doc' to expected 'type: document' for JDITA processing
   prosemirrorJson.doc.type = 'document';
   const documentNode = unTravel(prosemirrorJson.doc);
+  const xdita = jditaToAst(documentNode);
   const outStream = new InMemoryTextSimpleOutputStreamCollector();
-  const serializer = new JditaSerializer(outStream, true);
-
-  serializer.serializeFromJdita(documentNode);
+  const serializer = new XditaSerializer(outStream, true);
+  serializer.serialize(xdita);
 
   return outStream.getText();
 
