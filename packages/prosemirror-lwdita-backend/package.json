@@ -10,7 +10,8 @@
     "serve": "node ./dist/server.js",
     "clean": "rimraf dist",
     "build": "tsc",
-    "test": "mocha"
+    "test": "mocha",
+    "dist": "webpack"
   },
   "engines": {
     "node": ">=20.1.0 <21",
@@ -70,8 +71,11 @@
     "sinon": "^19.0.2",
     "sinon-chai": "^4.0.0",
     "supertest": "^7.0.0",
+    "ts-loader": "^9.5.1",
     "ts-node": "^10.9.2",
-    "typescript": "^5.6.3"
+    "typescript": "^5.6.3",
+    "webpack": "^5.95.0",
+    "webpack-cli": "^5.1.4"
   },
   "packageManager": "yarn@4.2.2"
 }
