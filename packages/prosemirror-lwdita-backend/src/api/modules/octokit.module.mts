@@ -143,7 +143,7 @@ const createFork = async (octokit: Octokit, owner: string, repo: string): Promis
 const createBranch = async (octokit: Octokit, owner: string, repo: string, branch: string, newBranch: string): Promise<BranchInfo | undefined> => {
   try {
     // get the repo data
-    const { data: repoData } = await octokit.repos.get({
+    const { _data: repoData } = await octokit.repos.get({
       owner, // this should be the authenticated user name
       repo,
     });
@@ -160,7 +160,7 @@ const createBranch = async (octokit: Octokit, owner: string, repo: string, branc
 
     //TODO(YB): Check if the branch already exists
     // create the new branch
-    const { data: refData } = await octokit.git.createRef({
+    const { _data: refData } = await octokit.git.createRef({
       owner,
       repo,
       ref: `refs/heads/${newBranch}`,

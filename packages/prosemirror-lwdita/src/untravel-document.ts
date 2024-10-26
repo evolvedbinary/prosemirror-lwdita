@@ -108,7 +108,6 @@ function getJditaNodeName(type: string): string {
  * @param prosemirrorDocument - prosemirror document
  * @returns JDita node
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function createMediaJDITAObject(nodeName: string, attributes: Record<string, string>, children: JDita[]): JDita {
   if (nodeName === 'video') {
     // we must populate the video node with the necessary attributes and children
