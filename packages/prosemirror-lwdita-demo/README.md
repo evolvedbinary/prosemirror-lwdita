@@ -18,7 +18,7 @@ If this port is already in use, `parcel` will assign a random port that you can 
 ## Installing
 Here are some simple instructions if you wish to install and host a [Petal Demo website](https://petal.evolvedbinary.com).
 
-Our instructions are for the following suggested Environment:
+Our instructions are for the following suggested environment:
 * [Ubuntu](https://www.ubuntu.com) Linux
 * [nginx](https://nginx.org/en/) Web Server
 * [Let's Encrypt](https://letsencrypt.org/) and [Certbot](https://certbot.eff.org/) for TLS/SSL Encryption
@@ -45,7 +45,7 @@ $ yarn build:demo
 ```
 
 ### 2. Deploy the Petal Demo distribution files to the Web Server
-Copy the all of the files from the `dist` folder of the Petal Demo to the folder on your nginx server for your website, we are using `/www-data/petal.evolvedbinary.com`. You will need to make sure that folder exists on the server before running this command.
+Copy all of the files from the `dist` folder of the Petal Demo to the folder on your nginx server for your website, we are using `/www-data/petal.evolvedbinary.com`. You will need to make sure that folder exists on the server before running this command.
 
 ```shell
 $ scp dist/* ubuntu@petal.evolvedbinary.com:/www-data/petal.evolvedbinary.com/

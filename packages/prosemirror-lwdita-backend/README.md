@@ -1,5 +1,5 @@
 # LwDITA ProseMirror Backend
-This module provided an API for working with ProseMirror LwDITA.
+This module provides an API for working with ProseMirror LwDITA.
 
 This is a standalone module with its own HTTP server.
 
@@ -39,7 +39,7 @@ Here are some simple instructions if you wish to install and host an [LwDITA Pro
 
 If you wish, the backend can be deployed on the same server that runs the [ProseMirror LwDITA Demo](../prosemirror-lwdita-demo/README.md).
 
-Our instructions are for the following suggested Environment:
+Our instructions are for the following suggested environment:
 * [Ubuntu](https://www.ubuntu.com) Linux
 * [nginx](https://nginx.org/en/) Web Server
 * [Let's Encrypt](https://letsencrypt.org/) and [Certbot](https://certbot.eff.org/) for TLS/SSL Encryption
@@ -70,14 +70,14 @@ $ yarn run build
 ```
 
 ### 2. Deploy the Backend distribution files to the Server
-Copy the all of the files from the `dist` folder of the Petal Backend to the folder on your server where you will run the API applucation from. We are using `/opt/petal-backend`. You will need to make sure that folder exists on the server before running this command.
+Copy all of the files from the `dist` folder of the Petal Backend to the folder on your server where you will run the API applucation from. We are using `/opt/petal-backend`. You will need to make sure that folder exists on the server before running this command.
 
 ```shell
 $ scp dist/* ubuntu@petal.evolvedbinary.com:/opt/petal-backend/
 ```
 
-### 3. Configure systemd to manage the Backend as a service
-We use Systemd to start and stop the backend application when the server itself starts and stops.
+### 3. Configure SystemD to manage the Backend as a service
+We use SystemD to start and stop the backend application when the server itself starts and stops.
 
 We will the Petal Backend under a dedicated service account named `petal-backend`. To create this run:
 ```
