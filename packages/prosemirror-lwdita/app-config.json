@@ -1,7 +1,7 @@
 {
   "serverConfig": {
     "frontendUrl": "http://pineapple.evolvedbinary.com/",
-    "apiUrl": "/api/github/auth"
+    "apiUrl": ""
   },
   "clientID": {
     "id": "client_id",
