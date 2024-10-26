@@ -72,11 +72,11 @@ export const authenticateWithOAuth = async (clientId: string, clientSecret: stri
       }
     });
 
-    const installations = await octokit.apps.listInstallationsForAuthenticatedUser();
+    // const installations = await octokit.apps.listInstallationsForAuthenticatedUser();
 
     return {
       token,
-      installation: installations.data.installations.length > 0 && installations.data.installations[0].repository_selection === "all"
+      installation: true
     };
   } catch (error) {
     console.error("Error during OAuth authentication", error);
