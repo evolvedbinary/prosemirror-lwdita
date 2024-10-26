@@ -34,7 +34,10 @@ import { showToast } from "../toast";
  * should use the GitHub API to dynamically determine the default branch of the repository.
  */
 export const fetchRawDocumentFromGitHub = async (ghrepo: string, source: string, branch: string): Promise<string> => {
-  const url = `https://raw.githubusercontent.com/${ghrepo}/${branch}/${source}`;
+  // GitHub changes the raw api URL from `main` to `refs/heads/main` 
+  // https://raw.githubusercontent.com/evolvedbinary/prosemirror-lwdita/main/packages/prosemirror-lwdita-demo/example-xdita/02-short-file.xml
+  // https://raw.githubusercontent.com/evolvedbinary/prosemirror-lwdita/refs/heads/main/packages/prosemirror-lwdita-demo/example-xdita/02-short-file.xml
+  const url = `https://raw.githubusercontent.com/${ghrepo}/refs/heads/${branch}/${source}`;
   const response = await fetch(url);
 
   if (!response.ok) {
