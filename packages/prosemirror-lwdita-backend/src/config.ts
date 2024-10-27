@@ -24,9 +24,6 @@ const configJsonSchema: JTDSchemaType<Config> = {
             properties: {
                 enableCors: {
                     type: "boolean"
-                },
-                apiUrl: {
-                    type: "string"
                 }
             }
         },
@@ -68,7 +65,6 @@ export interface Config {
  */
 export interface ConfigServer {
     enableCors: boolean
-    apiUrl: string
 }
 
 /**
