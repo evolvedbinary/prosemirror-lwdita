@@ -51,7 +51,10 @@ Copy all of the files from the `dist` folder of the Petal Demo to the folder on 
 $ scp dist/* ubuntu@petal.evolvedbinary.com:/www-data/petal.evolvedbinary.com/
 ```
 
-### 3. Configure nginx for your Petal Demo website
+### 3. Configure the Petal Demo
+You need to create a file named `config.json` in `/www-data/petal.evolvedbinary.com/` to setup the confguration for Petal Demo. You can refer to the provided [../prosemirror-lwdita/config.json](../prosemirror-lwdita/config.json) file for guidance.
+
+### 4. Configure nginx for your Petal Demo website
 We will create a website which initially is service by nginx using just HTTP. Later we will use certbot to generate a TLS/SSL certificate from Let's Encrypt, and reconfigure nginx to serve it using HTTPS.
 
 Create a new file in `/etc/nginx/sites-available/` named `petal.evolvedbinary.com.conf` with the following content:
@@ -71,20 +74,20 @@ server {
 }
 ```
 
-### 4. Enable the nginx for your Petal Demo website
+### 5. Enable the nginx for your Petal Demo website
 ```shell
 $ sudo ln -s /etc/nginx/sites-available/petal.evolvedbinary.com.conf /etc/nginx/sites-enabled/
 ```
 
-### 5. Have nginx load your new config
+### 6. Have nginx load your new config
 ```shell
 $ sudo systemctl reload nginx
 ```
 
-### 6. Check the HTTP website is available
+### 7. Check the HTTP website is available
 Visit [http://petal.evolvedbinary.com](https://petal.evolvedbinary.com) from a different computer and make sure you see the Petal Demo website.
 
-### 7. Switch your Petal Demo website to HTTPS
+### 8. Switch your Petal Demo website to HTTPS
  We will use certbot to generate a TLS/SSL certificate from Let's Encrypt, and reconfigure nginx to serve it using HTTPS.
 
  ```shell
@@ -108,6 +111,6 @@ change by editing your web server's configuration.
 Select the appropriate number [1-2] then [enter] (press 'c' to cancel): 2
  ```
 
-### 8. Check the HTTPS website is available
+### 9. Check the HTTPS website is available
 Visit [https://petal.evolvedbinary.com](https://petal.evolvedbinary.com) (note the `https`) from a different computer and make sure you see the Petal Demo website.
 You can also visit [http://petal.evolvedbinary.com](http://petal.evolvedbinary.com) (note the `http`) and you should see that you are redirected to the https version of the website.

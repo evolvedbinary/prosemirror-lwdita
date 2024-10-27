@@ -15,13 +15,15 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import * as config from "@evolvedbinary/prosemirror-lwdita/app-config.json";
+import { Localization } from "@evolvedbinary/prosemirror-lwdita-localization";
 
 /**
  * Handle errors resulting from erronous URL parameters,
  * or error redirects from GitHub OAuth
+ *
+ * @param localization - localization
  */
-export function handleError() {
+export function handleError(localization: Localization) {
   const urlParams = new URLSearchParams(window.location.search);
   const errorType = urlParams.get('error-type');
   const referer = urlParams.get('referer');
@@ -35,14 +37,14 @@ export function handleError() {
 
   if (errorHeadline && errorBody1 && errorBody2 && errorBody3 && errorLink) {
     if (errorType === 'missingReferer') {
-      errorHeadline.innerText = config.messageKeys.error.headline1;
-      errorBody1.innerText = config.messageKeys.error.body1;
-      errorBody2.innerText = config.messageKeys.error.body2;
+      errorHeadline.innerText = localization.t("error.headline1");
+      errorBody1.innerText = localization.t("error.body1");
+      errorBody2.innerText = localization.t("error.body2");
     } else if (errorType === 'invalidParams') {
-      errorHeadline.innerText = config.messageKeys.error.headline1;
-      errorBody1.innerText = config.messageKeys.error.body3;
+      errorHeadline.innerText = localization.t("error.headline1");
+      errorBody1.innerText = localization.t("error.body3");
       if (referer) {
-        errorBody2.innerText = config.messageKeys.error.body4;
+        errorBody2.innerText = localization.t("error.body4");
         if (errorLink) {
           errorLink.href = referer;
           errorLink.target = '_self';
@@ -50,63 +52,63 @@ export function handleError() {
         }
       }
     } else if (errorType === 'missingAuthentication') {
-      errorHeadline.innerText = config.messageKeys.error.headline2;
+      errorHeadline.innerText = localization.t("error.headline2");
       if (errorMsg) {
         const errorMsgPre = document.createElement('pre');
         errorMsgPre.innerText = errorMsg;
         errorBody1.parentNode?.insertBefore(errorMsgPre, errorBody1.nextSibling);
-        errorBody1.innerText = config.messageKeys.error.body6;
+        errorBody1.innerText = localization.t("error.body6");
       }
-      errorBody2.innerText = config.messageKeys.error.body5;
+      errorBody2.innerText = localization.t("error.body5");
       if (referer) {
-        errorBody3.innerText = config.messageKeys.error.body4;
+        errorBody3.innerText = localization.t("error.body4");
         if (errorLink) {
           errorLink.href = referer;
           errorLink.innerText = referer;
         }
       }
     } else if (errorType === 'unknownError') {
-      errorHeadline.innerText = config.messageKeys.error.headlineDefault;
+      errorHeadline.innerText = localization.t("error.headlineDefault");
       if (errorMsg) {
         const errorMsgPre = document.createElement('pre');
         errorMsgPre.innerText = errorMsg;
         errorBody1.parentNode?.insertBefore(errorMsgPre, errorBody1.nextSibling);
-        errorBody1.innerText = config.messageKeys.error.body6;
+        errorBody1.innerText = localization.t("error.body6");
       }
-      errorBody2.innerText = config.messageKeys.error.bodyDefault;
+      errorBody2.innerText = localization.t("error.bodyDefault");
       if (referer) {
-        errorBody3.innerText = config.messageKeys.error.body4;
+        errorBody3.innerText = localization.t("error.body4");
         if (errorLink) {
           errorLink.href = referer;
           errorLink.innerText = referer;
         }
       }
     } else if (errorType === 'fileNotFound') {
-      errorHeadline.innerText = config.messageKeys.error.headlineDefault;
+      errorHeadline.innerText = localization.t("error.headlineDefault");
       if (errorMsg) {
         const errorMsgPre = document.createElement('pre');
         errorMsgPre.innerText = errorMsg;
         errorBody1.parentNode?.insertBefore(errorMsgPre, errorBody1.nextSibling);
-        errorBody1.innerText = config.messageKeys.error.body6;
+        errorBody1.innerText = localization.t("error.body6");
       }
-      errorBody2.innerText = config.messageKeys.error.bodyDefault;
+      errorBody2.innerText = localization.t("error.bodyDefault");
       if (referer) {
-        errorBody3.innerText = config.messageKeys.error.body4;
+        errorBody3.innerText = localization.t("error.body4");
         if (errorLink) {
           errorLink.href = referer;
           errorLink.innerText = referer;
         }
       }
     } else if (errorType === 'fileUploadError') {
-      errorHeadline.innerText = config.messageKeys.error.headlineDefault;
-      errorBody1.innerText = config.messageKeys.error.body8;
+      errorHeadline.innerText = localization.t("error.headlineDefault");
+      errorBody1.innerText = localization.t("error.body8");
       if (errorMsg) {
         const errorMsgPre = document.createElement('pre');
         errorMsgPre.innerText = errorMsg;
         errorBody2.parentNode?.insertBefore(errorMsgPre, errorBody2.nextSibling);
-        errorBody2.innerText = config.messageKeys.error.body6;
+        errorBody2.innerText = localization.t("error.body6");
       }
-      errorBody3.innerText = config.messageKeys.error.body9;
+      errorBody3.innerText = localization.t("error.body9");
       if (referer) {
         if (errorLink) {
           errorLink.href = referer;
@@ -121,10 +123,10 @@ export function handleError() {
         }
       }
     } else {
-      errorHeadline.innerText = config.messageKeys.error.headlineDefault;
-      errorBody1.innerText = config.messageKeys.error.bodyDefault;
+      errorHeadline.innerText = localization.t("error.headlineDefault");
+      errorBody1.innerText = localization.t("error.bodyDefault");
       if (referer) {
-        errorBody2.innerText = config.messageKeys.error.body4;
+        errorBody2.innerText = localization.t("error.body4");
         if (errorLink) {
           errorLink.href = referer;
           errorLink.innerText = referer;

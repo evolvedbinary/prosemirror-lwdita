@@ -15,13 +15,17 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-export * from './schema';
-export * from './document';
-export * from './plugin';
-export * from './commands';
-export * from './untravel-document';
-export * from './attributes';
-export * from './github-integration/request';
-export * from './toast';
-export * from './github-integration/github.plugin';
-export * from './config'
+/**
+ * Simple Localization.
+ */
+export interface Localization {
+
+    /**
+     * Lookup a localized message.
+     * 
+     * @param key - key for the message.
+     * 
+     * @returns the message.
+     */
+    t(key: string) : string;
+}

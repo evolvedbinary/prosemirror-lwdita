@@ -19,7 +19,11 @@ import { expect } from 'chai';
 import { fetchRawDocumentFromGitHub, transformGitHubDocumentToProsemirrorJson, createPrFromContribution, getUserInfo } from '../src/github-integration/github.plugin';
 import fetchMock from 'fetch-mock';
 import { shortXdita, shortXditaProsemirroJson } from './test-utils';
-import * as config from '../app-config.json';
+import { MockConfig } from './mock.config';
+import { createLocalization } from '@evolvedbinary/prosemirror-lwdita-localization';
+
+const config = new MockConfig();
+const localization = createLocalization();
 
 describe('fetchRawDocumentFromGitHub', () => {
   afterEach(() => {
@@ -37,7 +41,7 @@ describe('fetchRawDocumentFromGitHub', () => {
       headers: { 'Content-Type': 'text/plain' },
     });
 
-    const result = await fetchRawDocumentFromGitHub(ghrepo, source, branch);
+    const result = await fetchRawDocumentFromGitHub(config, ghrepo, source, branch);
     expect(result).to.equal(mockResponse);
   });
 
@@ -49,7 +53,7 @@ describe('fetchRawDocumentFromGitHub', () => {
     fetchMock.getOnce(`https://raw.githubusercontent.com/${ghrepo}/refs/heads/main/${source}`, 404);
 
     try {
-      await fetchRawDocumentFromGitHub(ghrepo, source, branch);
+      await fetchRawDocumentFromGitHub(config, ghrepo, source, branch);
       throw new Error('Expected fetchRawDocumentFromGitHub to throw an error');
     } catch (error) {
       expect(error).to.be.instanceOf(Error);
@@ -78,20 +82,20 @@ describe('getUserInfo', () => {
     const mockResponse = { login: 'marmoure', id: '12345' };
 
     // Mock the API response
-    fetchMock.getOnce(config.serverConfig.apiUrl + config.GITHUB_API_ENPOINT_USER, {
+    fetchMock.getOnce(config.server.api.baseUrl + config.server.api.endpoint.user, {
       body: mockResponse,
       headers: { 'Content-Type': 'application/json' },
     });
 
-    const result = await getUserInfo(token);
+    const result = await getUserInfo(config, localization, token);
 
     expect(result).to.deep.equal(mockResponse);
-    const lastCall = fetchMock.lastCall(config.serverConfig.apiUrl + config.GITHUB_API_ENPOINT_USER) as fetchMock.MockCall;
+    const lastCall = fetchMock.lastCall(config.server.api.baseUrl + config.server.api.endpoint.user) as fetchMock.MockCall;
     if (!lastCall) {
       throw new Error('No fetch call found for /api/github/user');
     }
     const [url, options] = lastCall;
-    expect(url).to.equal(config.serverConfig.apiUrl + config.GITHUB_API_ENPOINT_USER);
+    expect(url).to.equal(config.server.api.baseUrl + config.server.api.endpoint.user);
     // @ts-expect-error TS7053 happens because the headers are not typed
     expect(options?.headers?.authorization).to.equal(`Bearer ${token}`);
   });
@@ -100,10 +104,10 @@ describe('getUserInfo', () => {
     const token = 'mock-token';
 
     // Mock a failed API response
-    fetchMock.getOnce(config.serverConfig.apiUrl + config.GITHUB_API_ENPOINT_USER, 401);
+    fetchMock.getOnce(config.server.api.baseUrl + config.server.api.endpoint.user, 401);
 
     try {
-      await getUserInfo(token);
+      await getUserInfo(config, localization, token);
       throw new Error('Expected getUserInfo to throw an error');
     } catch (error) {
       expect(error).to.be.instanceOf(Error);
@@ -132,22 +136,23 @@ describe('createPrFromContribution', () => {
     const description = 'Update the document';
     const changedDocument = '<xml>Changed Content</xml>';
     const token = 'mock-token';
+    const petalBotUser = 'petal-bot';
     // Mock fetch request
-    fetchMock.postOnce(config.serverConfig.apiUrl + config.GITHUB_API_ENPOINT_INTEGRATION, {
+    fetchMock.postOnce(config.server.api.baseUrl + config.server.api.endpoint.integration, {
       status: 200,
       body: {
         url: "mockUrl"
       }
     });
 
-    fetchMock.getOnce(config.serverConfig.apiUrl + config.GITHUB_API_ENPOINT_USER, {
+    fetchMock.getOnce(config.server.api.baseUrl + config.server.api.endpoint.user, {
       status: 200,
       body: {
-        login: config.PETAL_BOT_USER,
+        login: petalBotUser,
       },
     });
-    await createPrFromContribution(ghrepo, source, branch, changedDocument, title, description);
-    const lastCall = fetchMock.lastCall(config.serverConfig.apiUrl + config.GITHUB_API_ENPOINT_INTEGRATION) as fetchMock.MockCall;
+    await createPrFromContribution(config, localization, ghrepo, source, branch, changedDocument, title, description);
+    const lastCall = fetchMock.lastCall(config.server.api.baseUrl + config.server.api.endpoint.integration) as fetchMock.MockCall;
     if (!lastCall) {
       throw new Error('No fetch call found for /api/github/integration');
     }
@@ -155,7 +160,7 @@ describe('createPrFromContribution', () => {
     if (options) {
       if (!options.headers) return;
       if (!options.body) return;
-      expect(url).to.equal(config.serverConfig.apiUrl + config.GITHUB_API_ENPOINT_INTEGRATION);
+      expect(url).to.equal(config.server.api.baseUrl + config.server.api.endpoint.integration);
       expect(options.method).to.equal('POST');
       // @ts-expect-error TS7053 happens because the headers are not typed
       expect(options.headers['Content-Type']).to.equal('application/json');
@@ -164,14 +169,14 @@ describe('createPrFromContribution', () => {
       const body = JSON.parse(options.body as string);
       expect(body.owner).to.equal('evolvedbinary');
       expect(body.repo).to.equal('prosemirror-lwdita');
-      expect(body.newOwner).to.equal(config.PETAL_BOT_USER);
+      expect(body.newOwner).to.equal(petalBotUser);
       const date = new Date();
-      expect(body.newBranch).to.equal(config.PETAL_BRANCH_PREFIX + `${date.getFullYear()}${date.getMonth()}${date.getDate()}${date.getHours()}${date.getMinutes()}${date.getSeconds()}`);
+      expect(body.newBranch).to.equal(config.git.branchPrefix + `${date.getFullYear()}${date.getMonth()}${date.getDate()}${date.getHours()}${date.getMinutes()}${date.getSeconds()}`);
       expect(body.commitMessage).to.equal('Update the document');
       expect(body.change.path).to.equal(source);
       expect(body.change.content).to.equal(changedDocument);
       expect(body.title).to.equal('Update the document');
-      expect(body.body).to.equal('Update the document' + config.PETAL_COMMIT_MESSAGE_SUFFIX);
+      expect(body.body).to.equal('Update the document' + config.git.commitMessageSuffix);
     }
   });
 });

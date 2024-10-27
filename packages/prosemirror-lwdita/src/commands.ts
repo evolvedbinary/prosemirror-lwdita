@@ -22,7 +22,8 @@ import { Fragment, MarkType, Node, NodeType, ResolvedPos } from 'prosemirror-mod
 import { Command, EditorState, TextSelection, Transaction } from 'prosemirror-state';
 import { createPrFromContribution } from './github-integration/github.plugin';
 import { showPublicationResultError, showPublicationResultSuccess, showToast } from './toast';
-import * as config from '../app-config.json';
+import { Config } from './config';
+import { Localization } from "@evolvedbinary/prosemirror-lwdita-localization";
 
 /**
  * Create a new Node and fill it with the args as attributes.
@@ -183,12 +184,14 @@ export class InputContainer {
 /**
  * Render a dialog form for inserting the PR metadata
  *
+ * @param config - configuration
+ * @param localization - localization
  * @param ghrepo - The GitHub repository in the format "owner/repo".
  * @param source - The source file path in the repository.
  * @param branch - The Base branch name for the PR.
  * @param updatedXdita - The updated XDITA content.
  */
-export function renderPrDialog(ghrepo: string, source: string, branch: string, updatedXdita: string): void {
+export function renderPrDialog(config: Config, localization: Localization, ghrepo: string, source: string, branch: string, updatedXdita: string): void {
   const overlay = document.createElement('section');
   overlay.id = 'prOverlay';
   document.body.appendChild(overlay);
@@ -244,16 +247,16 @@ export function renderPrDialog(ghrepo: string, source: string, branch: string, u
       const description = descField.value;
 
       // Create a PR from the contribution
-      createPrFromContribution(ghrepo, source, branch, updatedXdita, title, description)
+      createPrFromContribution(config, localization, ghrepo, source, branch, updatedXdita, title, description)
         .then((prURL: string) => {
           console.log('The document has been published to GitHub.');
           console.log('pr url:', prURL);
           // Show a user notification with the successful result and a link to the PR
-          showPublicationResultSuccess(prURL)
+          showPublicationResultSuccess(localization, prURL)
         }).catch((error: Error) => {
           console.error('Error:', error);
           // show error dialog
-          showPublicationResultError(error.message)
+          showPublicationResultError(localization, error.message)
         });
 
       document.body.removeChild(overlay);
@@ -265,11 +268,12 @@ export function renderPrDialog(ghrepo: string, source: string, branch: string, u
  * Render an image upload dialog with an overlay
  * upload an image from the local file system or a URL
  * set the image attributes like height, width, alt text
+ * @param localization - localization
  * @param callback - callback function to handle the image attributes
  * @param node - Node selected node to edit
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function imageInputOverlay(callback: (args: any) => void, node?: Node): void {
+export function imageInputOverlay(localization: Localization, callback: (args: any) => void, node?: Node): void {
   // show the image upload dialog
   // Create overlay
   const overlay = document.createElement('div');
@@ -412,7 +416,7 @@ export function imageInputOverlay(callback: (args: any) => void, node?: Node): v
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onerror = () => {
-      showToast(config.messageKeys.error.toastImageUpload, 'error');
+      showToast(localization.t("error.toastImageUpload"), 'error');
     };
     reader.onload = () => {
       const img = new Image();
@@ -447,7 +451,7 @@ export function imageInputOverlay(callback: (args: any) => void, node?: Node): v
         })
       }
       reader.onerror = () => {
-        showToast(config.messageKeys.error.toastImageUpload, 'error');
+        showToast(localization.t("error.toastImageUpload"), 'error');
       };
 
     } else if (urlInput.value.length && !embeddedInput.checked) {
@@ -494,10 +498,11 @@ export function imageInputOverlay(callback: (args: any) => void, node?: Node): v
  * @privateRemarks
  * Error handling should be improved in `reader.onerror = () => {};`
  *
+ * @param localization - localization
  * @param type - NodeType
  * @returns Command
  */
-export function insertImage(type: NodeType): Command {
+export function insertImage(localization: Localization, type: NodeType): Command {
   return function (state, dispatch) {
     // on click, the cursor selection should be empty
     try {
@@ -506,7 +511,7 @@ export function insertImage(type: NodeType): Command {
       }
       if (dispatch) {
         // show the image upload dialog
-        imageInputOverlay((imageInfo) => {
+        imageInputOverlay(localization, (imageInfo) => {
           if (!imageInfo) return false;
           const node = createNode(type.schema.nodes['fig'], { src: imageInfo.src, scope: imageInfo.scope, alt: imageInfo.alt, height: imageInfo.height, width: imageInfo.width });
           const tr = state.tr.insert(state.selection.$to.pos, node);
@@ -516,7 +521,7 @@ export function insertImage(type: NodeType): Command {
       return true;
     } catch (e) {
       console.error(e);
-      showToast(config.messageKeys.error.toastImageInsert, 'error');
+      showToast(localization.t("error.toastImageInsert"), 'error');
       return false;
     }
   }

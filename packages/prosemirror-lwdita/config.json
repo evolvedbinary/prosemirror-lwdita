@@ -1,0 +1,22 @@
+{
+  "server": {
+    "frontend": {
+      "url": "http://localhost:1234"
+    },
+    "api": {
+      "baseUrl": "http://localhost:3000",
+      "endpoint": {
+        "token": "/api/github/token",
+        "user": "/api/github/user",
+        "integration": "/api/github/integration"
+      }
+    }
+  },
+  "git": {
+    "branchPrefix": "doc/petal-",
+    "commitMessageSuffix": " \n ------------------\n This is an automated PR made by the prosemirror-lwdita demo Editor"
+  },
+  "gitHub": {
+    "clientId": "my-client-id"
+  }
+}
