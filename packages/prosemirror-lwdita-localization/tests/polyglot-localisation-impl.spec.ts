@@ -15,13 +15,12 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-export * from './schema';
-export * from './document';
-export * from './plugin';
-export * from './commands';
-export * from './untravel-document';
-export * from './attributes';
-export * from './github-integration/request';
-export * from './toast';
-export * from './github-integration/github.plugin';
-export * from './config'
+import { expect } from 'chai';
+import { PolyglotLocalizationImpl } from '../src/polyglot-localization-impl';
+
+describe('t()', () => {
+  it('welcomeNote.title', async () => {
+    const localization = new PolyglotLocalizationImpl();
+    expect(localization.t("welcomeNote.title")).to.equal("Welcome to the Petal Editor.");
+  });
+});

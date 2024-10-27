@@ -17,20 +17,20 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import { Command } from "prosemirror-commands";
 import { MenuElement, MenuItem, MenuItemSpec } from "prosemirror-menu";
-import * as config from "@evolvedbinary/prosemirror-lwdita/app-config.json";
-import { InputContainer, renderPrDialog } from "@evolvedbinary/prosemirror-lwdita";
-import { unTravel, URLParams } from "@evolvedbinary/prosemirror-lwdita";
+import { Config, InputContainer, renderPrDialog, showToast, unTravel, URLParams } from "@evolvedbinary/prosemirror-lwdita";
 import { jditaToAst, XditaSerializer } from "@evolvedbinary/lwdita-xdita";
 import { InMemoryTextSimpleOutputStreamCollector } from "@evolvedbinary/lwdita-xdita/dist/stream";
-import { showToast } from '@evolvedbinary/prosemirror-lwdita';
 import { EditorState, Transaction } from "prosemirror-state";
+import { Localization } from "@evolvedbinary/prosemirror-lwdita-localization";
 
 /**
  * Open file selection dialog and select and file to insert into the local storage.
+ *
+ * @param localization - localization
  * @param input - The input element
  * @returns The command for opening a file
  */
-function openFile(input: InputContainer): Command {
+function openFile(localization: Localization, input: InputContainer): Command {
   return (state: EditorState, dispatch: (arg0: Transaction) => void) => {
     function fileSelected(this: HTMLInputElement, _event: Event) {
       if (input.el?.files?.length === 1) {
@@ -40,7 +40,7 @@ function openFile(input: InputContainer): Command {
         const reader = new FileReader();
         reader.readAsBinaryString(file);
         reader.onerror = () => {
-          showToast(config.messageKeys.error.toastFileUploadInvalid, 'error');
+          showToast(localization.t("error.toastFileUploadInvalid"), 'error');
           console.log('Error reading file');
         };
         reader.onload = () => {
@@ -52,7 +52,7 @@ function openFile(input: InputContainer): Command {
           }
         };
       } else {
-        showToast(config.messageKeys.error.toastFileUpload, 'error');
+        showToast(localization.t("error.toastFileUpload"), 'error');
       }
     }
     try {
@@ -61,7 +61,7 @@ function openFile(input: InputContainer): Command {
       }
       if (dispatch) {
         if (!input.el) {
-          showToast(config.messageKeys.error.toastFileUploadNoInput, 'error');
+          showToast(localization.t("error.toastFileUploadNoInput"), 'error');
           console.log('no input found');
           return false;
         }
@@ -71,7 +71,7 @@ function openFile(input: InputContainer): Command {
       }
       return true;
     } catch (e) {
-      showToast(config.messageKeys.error.toastFileUpload, 'error');
+      showToast(localization.t("error.toastFileUpload"), 'error');
       console.error(e);
       return false;
     }
@@ -80,9 +80,12 @@ function openFile(input: InputContainer): Command {
 
 /**
  * Create a menu item to open a file selection dialog to upload a file into the local storage.
+ *
+ * @param localization - localization
+ *
  * @returns The menu element for opening the file menu
  */
-export function openFileMenuItem(): MenuElement {
+export function openFileMenuItem(localization: Localization): MenuElement {
   const input = new InputContainer();
   return new MenuItem({
     enable: () => true,
@@ -103,7 +106,7 @@ export function openFileMenuItem(): MenuElement {
       return el;
     },
     class: 'ic-open',
-    run: openFile(input),
+    run: openFile(localization, input),
   });
 }
 
@@ -111,9 +114,12 @@ export function openFileMenuItem(): MenuElement {
  * Creates a menu item for publishing to Github.
  * This function generates a menu item that allows users to publish a file
  *
+ * @param config - configuration
+ * @param localization - localization
+ *
  * @returns The menu element for publishing the file.
  */
-export function publishFileMenuItem(urlParams: URLParams): MenuElement {
+export function publishFileMenuItem(config: Config, localization: Localization, urlParams: URLParams): MenuElement {
   const storedFileName = localStorage.getItem('fileName') ? localStorage.getItem('fileName') : 'Petal';
 
   return new MenuItem({
@@ -129,16 +135,19 @@ export function publishFileMenuItem(urlParams: URLParams): MenuElement {
       return el;
     },
     class: 'ic-github',
-    run: publishGithubDocument(urlParams)
+    run: publishGithubDocument(config, localization, urlParams)
   });
 }
 
 /**
  * Creates a command that publishes the current document to GitHub.
  *
+ * @param config - configuration
+ * @param localization - localization
+ *
  * @returns The command to publish a GitHub document
  */
-function publishGithubDocument(urlParams: URLParams): Command {
+function publishGithubDocument(config: Config, localization: Localization, urlParams: URLParams): Command {
   return (state: EditorState, dispatch: (arg0: Transaction) => void) => {
     if (dispatch) {
       dispatch(state.tr);
@@ -147,9 +156,9 @@ function publishGithubDocument(urlParams: URLParams): Command {
       const updatedXdita = xditaPrefix + documentNode;
 
       // show the publishing dialog
-      renderPrDialog(urlParams.ghrepo, urlParams.source, urlParams.branch, updatedXdita);
+      renderPrDialog(config, localization, urlParams.ghrepo, urlParams.source, urlParams.branch, updatedXdita);
     } else {
-      showToast(config.messageKeys.error.toastGitHubPublishNoEditorState, 'error');
+      showToast(localization.t("error.toastGitHubPublishNoEditorState"), 'error');
       console.log('Nothing to publish, no EditorState has been dispatched.');
     }
   }
@@ -157,9 +166,12 @@ function publishGithubDocument(urlParams: URLParams): Command {
 
 /**
  * Create a menu item to save a file to the filesystem
+ *
+ * @param localization - localization
+ *
  * @returns The save file menu element
  */
-export function saveFileMenuItem(_props: Partial<MenuItemSpec & { url: string }> = {}): MenuElement {
+export function saveFileMenuItem(localization: Localization, _props: Partial<MenuItemSpec & { url: string }> = {}): MenuElement {
   const link = new InputContainer();
   const storedFileName = localStorage.getItem('fileName') ? localStorage.getItem('fileName') : 'Petal';
 
@@ -176,7 +188,7 @@ export function saveFileMenuItem(_props: Partial<MenuItemSpec & { url: string }>
       return el;
     },
     class: 'ic-download',
-    run: saveFile(link)
+    run: saveFile(localization, link)
   });
 }
 
@@ -185,10 +197,11 @@ export function saveFileMenuItem(_props: Partial<MenuItemSpec & { url: string }>
  * Create a data url for the JDITA object and
  * offer a JSON file download when the element is clicked
  *
+ * @param localization - localization
  * @param input - The menu item containing the download link
  * @returns The HTML data url
  */
-function saveFile(_input: InputContainer): Command {
+function saveFile(localization: Localization, _input: InputContainer): Command {
   return (state: EditorState, dispatch: (arg0: Transaction) => void) => {
     if (dispatch) {
       dispatch(state.tr);
@@ -199,14 +212,14 @@ function saveFile(_input: InputContainer): Command {
       if (link) {
         link.setAttribute('href', url);
       } else {
-        showToast(config.messageKeys.error.toastFileDownload, 'error');
+        showToast(localization.t("error.toastFileDownload"), 'error');
         console.log('The URL could not be assigned to the element, the link is not available.')
       }
       // TODO: Implement a callback function to check if the download has been completed
       // After the load has completed revoke the data URL with `URL.revokeObjectURL(url);`
       // See https://w3c.github.io/FileAPI/#examplesOfCreationRevocation
     } else {
-      showToast(config.messageKeys.error.toastFileDownload, 'error');
+      showToast(localization.t("error.toastFileDownload"), 'error');
       console.log('Nothing to download, no EditorState has been dispatched.');
     }
   }
