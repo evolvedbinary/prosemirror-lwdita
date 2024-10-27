@@ -32,7 +32,7 @@ describe('fetchRawDocumentFromGitHub', () => {
     const branch = 'main';
     const mockResponse = '<xml>Mock Content</xml>';
     // this will mock the next fetch request
-    fetchMock.getOnce(`https://raw.githubusercontent.com/${ghrepo}/main/${source}`, {
+    fetchMock.getOnce(`https://raw.githubusercontent.com/${ghrepo}/refs/heads/main/${source}`, {
       body: mockResponse,
       headers: { 'Content-Type': 'text/plain' },
     });
@@ -46,7 +46,7 @@ describe('fetchRawDocumentFromGitHub', () => {
     const source = 'packages/prosemirror-lwdita-demo/example-xdita/02-short-file.xml';
     const branch = 'main';
     // this will mock the next fetch request
-    fetchMock.getOnce(`https://raw.githubusercontent.com/${ghrepo}/main/${source}`, 404);
+    fetchMock.getOnce(`https://raw.githubusercontent.com/${ghrepo}/refs/heads/main/${source}`, 404);
 
     try {
       await fetchRawDocumentFromGitHub(ghrepo, source, branch);
