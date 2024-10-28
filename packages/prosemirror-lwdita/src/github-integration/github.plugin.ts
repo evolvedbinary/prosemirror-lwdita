@@ -44,7 +44,10 @@ export const fetchRawDocumentFromGitHub = async (ghrepo: string, source: string,
     showErrorPage('fileNotFound', '', response.statusText);
   }
   //TODO: Handle errors
-  return response.text();
+  const xdita = await response.text();
+  // modify the raw xdita image links to point to the correct location
+  const modifiedXdita = xdita.replace(/href="images\//g, 'href="https://raw.githubusercontent.com/' + ghrepo + '/refs/heads/' + branch + '/images/');
+  return modifiedXdita;
 };
 
 /**
