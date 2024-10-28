@@ -36,6 +36,9 @@ jobs:
       - install-yarn
       - install-dependencies
       - run:
+          name: build
+          command: yarn build
+      - run:
           name: Run Code Coverage
           command: yarn coverage
       - run:
