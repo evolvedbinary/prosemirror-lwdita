@@ -20,7 +20,7 @@ import { EditorView } from "prosemirror-view";
 import { Node } from "prosemirror-model";
 import { history } from "prosemirror-history";
 import jsonDocLoader from "./doc";
-import { githubMenuItem, openFileMenuItem, publishFileMenuItem, saveFileMenuItem} from "./demo-plugin";
+import { githubMenuItem, openFileMenuItem, publishFileMenuItem, saveFileMenuItem } from "./demo-plugin";
 import {
   Config,
   parseConfig,
@@ -29,43 +29,60 @@ import {
   showWelcomeNote,
   menu,
   shortcuts,
-  showErrorPage,
   doubleClickImagePlugin,
   processRequest,
   fetchAndTransform,
-  URLParams
+  URLParams,
+  Json
 } from "@evolvedbinary/prosemirror-lwdita";
 import { createLocalization } from "@evolvedbinary/prosemirror-lwdita-localization";
 
+//load the localization 
 const localization = createLocalization();
-const config: Config = await loadConfig("config.json");
-
+//load the schema
 const schemaObject = schema();
 
-// Check if the "welcome" note has not yet been dismissed
-// and show it on page load
-if (!hasConfirmedNotification()) {
-  showWelcomeNote(localization);
+
+async function loadConfig(url: string): Promise<Config> {
+  const response = await fetch(url);
+  if (!response.ok) {
+    const errorMessage = "Unable to download JSON config " + url + ": " + response.statusText
+    console.error(errorMessage);
+    throw new Error(errorMessage);
+  } else {
+    const configJson = await response.json();
+    return parseConfig(configJson);
+  }
 }
 
-/**
- * Process the URL parameters and handle the notifications
- */
-const urlParams = processRequest(config, localization) as URLParams | undefined;
+// Entry point for the script
+async function entryPoint() {
 
-// if the user passes a file in the URL, load that file
-// otherwise load the default file
-let loadJsonDoc = jsonDocLoader;
-if(urlParams) {
-  // create a new promise to fetch the raw document from GitHub then transform it to ProseMirror JSON
-  loadJsonDoc = fetchAndTransform(config, urlParams.ghrepo, urlParams.source, urlParams.branch);
+
+  // show the welcome note
+  if (!hasConfirmedNotification()) {
+    showWelcomeNote(localization);
+  }
+  // load the config file
+  const config = await loadConfig("config.json");
+
+  /**
+  * Process the URL parameters
+  */
+  const urlParams = processRequest(config, localization) as URLParams | undefined;
+
+  let loadJsonDoc = jsonDocLoader;
+  // if the URL parameters are present, fetch the document from GitHub
+  if(urlParams) {
+    loadJsonDoc = fetchAndTransform(config, urlParams.ghrepo, urlParams.source, urlParams.branch);
+  }
+
+  // render the prosemirror document
+  const jsonDoc = await loadJsonDoc;
+  renderProsemirrorDocument(jsonDoc, urlParams, config);
 }
 
-/**
- * Load the json document and create a new EditorView.
- * The json document is transformed from JDITA to ProseMirror Schema
- */
-loadJsonDoc.then(jsonDoc => {
+function renderProsemirrorDocument(jsonDoc: Record<string, Json>, urlParams: URLParams | undefined, config: Config) {
   // get the editor element from the DOM
   const domEl = document.querySelector("#editor") as HTMLElement;
   // clear the element innerHTML
@@ -100,19 +117,13 @@ loadJsonDoc.then(jsonDoc => {
       state,
     });
   }
-}).catch(error => {
-  showErrorPage(config, 'fileUploadError', config.server.frontend.url, error);
-  console.error(error);
-});
 
-async function loadConfig(url: string) : Promise<Config> {
-  const response = await fetch(url);
-  if (!response.ok) {
-    const errorMessage = "Unable to download JSON config " + url + ": " + response.statusText
-    console.error(errorMessage);
-    throw new Error(errorMessage);
-  } else {
-    const configJson = await response.text();
-    return parseConfig(configJson);
-  }
+  // TODO handled the case where we can not render the editor
 }
+
+// call the entryPoint function
+entryPoint().then(() => {
+  console.log("Editor loaded");
+}).catch((error) => {
+  console.error("Error loading editor", error);
+});
