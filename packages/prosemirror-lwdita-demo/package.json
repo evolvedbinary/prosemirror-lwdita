@@ -32,10 +32,11 @@
   },
   "homepage": "https://github.com/evolvedbinary/prosemirror-lwdita#readme",
   "scripts": {
+    "copy": "cp ../prosemirror-lwdita/config.json ./dist/config.json",
     "clean": "rimraf dist",
     "build": "parcel build ./index.html ./error.html",
     "prepack": "yarn run build",
-    "start": "parcel ./index.html ./error.html",
+    "start": "yarn build && yarn copy && parcel ./index.html ./error.html",
     "docker": "yarn build && node docker",
     "cypress": "cypress open",
     "test": "start-server-and-test start http://localhost:1234 cy:run",

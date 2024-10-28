@@ -50,7 +50,7 @@ async function loadConfig(url: string): Promise<Config> {
     console.error(errorMessage);
     throw new Error(errorMessage);
   } else {
-    const configJson = await response.json();
+    const configJson = await response.text();
     return parseConfig(configJson);
   }
 }
