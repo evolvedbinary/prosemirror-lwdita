@@ -100,7 +100,7 @@ describe('The Github Oauth response', () => {
     cy.wait('@githubOAuth');
 
     // Verify that the error page is shown
-    const errorParam = new RegExp(`^${frontendUrl}/error\\.html\\?error=not-authenticated$`);
+    const errorParam = new RegExp(`^${frontendUrl}error\\.html\\?error=not-authenticated$`);
     cy.url().should('match', errorParam);
   });
 });
