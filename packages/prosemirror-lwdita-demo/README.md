@@ -52,7 +52,7 @@ $ scp dist/* ubuntu@petal.evolvedbinary.com:/www-data/petal.evolvedbinary.com/
 ```
 
 ### 3. Configure the Petal Demo
-You need to create a file named `config.json` in `/www-data/petal.evolvedbinary.com/` to setup the confguration for Petal Demo. You can refer to the provided [../prosemirror-lwdita/config.json](../prosemirror-lwdita/config.json) file for guidance.
+You need to edit the file named `config.json` in `/www-data/petal.evolvedbinary.com/` to setup the confguration for Petal Demo. You can refer to the provided [../prosemirror-lwdita/config.json](../prosemirror-lwdita/config.json) file for guidance.
 
 ### 4. Configure nginx for your Petal Demo website
 We will create a website which initially is service by nginx using just HTTP. Later we will use certbot to generate a TLS/SSL certificate from Let's Encrypt, and reconfigure nginx to serve it using HTTPS.
