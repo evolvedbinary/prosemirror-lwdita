@@ -15,13 +15,11 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-export * from './schema';
-export * from './document';
-export * from './plugin';
-export * from './commands';
-export * from './untravel-document';
-export * from './attributes';
-export * from './github-integration/request';
-export * from './toast';
-export * from './github-integration/github.plugin';
-export * from './config'
+import { Localization } from './localization';
+import { PolyglotLocalizationImpl } from './polyglot-localization-impl';
+
+export * from './localization';
+
+export function createLocalization(): Localization {
+    return new PolyglotLocalizationImpl();
+}

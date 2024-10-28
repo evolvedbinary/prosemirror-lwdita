@@ -1,7 +1,6 @@
 {
   "server": {
-    "enableCors": false,
-    "apiUrl": "http://localhost:3000/"
+    "enableCors": false
   },
   "git": {
     "committerName": "Petal GitHub App",

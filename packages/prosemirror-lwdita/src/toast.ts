@@ -18,7 +18,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 import Toastify, { Options } from 'toastify-js';
-import * as config from '../app-config.json';
+import { Localization } from "@evolvedbinary/prosemirror-lwdita-localization";
 
 /**
  * Displays a simple and basic toast message with 'Toastify' library.
@@ -48,14 +48,16 @@ export function showToast(message: string, type: 'success' | 'error' | 'warning'
  * with customized markup
  * that users can confirm to never show again
  * by storing it in the localStorage
+ * 
+ * @param localization - localization
  */
-export const showWelcomeNote = () => {
+export const showWelcomeNote = (localization: Localization) => {
   const customNote = document.createElement('section');
   customNote.innerHTML = `
-  <h2>${config.messageKeys.welcomeNote.title}</h2>
-  <p>${config.messageKeys.welcomeNote.paragraph1}</p>
-  <p>${config.messageKeys.welcomeNote.paragraph2}</p>
-  <button type="button" class="toast--dismiss">${config.messageKeys.welcomeNote.buttonLabel}</button>
+  <h2>${localization.t("welcomeNote.title")}</h2>
+  <p>${localization.t("welcomeNote.paragraph1")}</p>
+  <p>${localization.t("welcomeNote.paragraph2")}</p>
+  <button type="button" class="toast--dismiss">${localization.t("welcomeNote.buttonLabel")}</button>
   `;
 
   const parentNode = document.body;
@@ -90,13 +92,15 @@ export function hasConfirmedNotification(): boolean {
 /**
  * Shows a user notification containing a custom,
  * static message and a dynamic link
+ * 
+ * @param localization - localization
  * @param destination - URL to which the browser should be navigated on click of the toast
  */
-export function showPublicationResultSuccess(destination: string) {
+export function showPublicationResultSuccess(localization: Localization, destination: string) {
   const customNote = document.createElement('section');
   customNote.innerHTML = `
-  <h2>${config.messageKeys.resultNote.titleSuccess}</h2>
-  <p>${config.messageKeys.resultNote.paragraphSuccess}</p>
+  <h2>${localization.t("resultNote.titleSuccess")}</h2>
+  <p>${localization.t("resultNote.paragraphSuccess")}</p>
   <a target="_blank" href="${destination}"></span>${destination}</a>
   `;
 
@@ -118,13 +122,15 @@ export function showPublicationResultSuccess(destination: string) {
 
 /**
  * Shows a user notification containing a dynamic message
+ *
+ * @param localization - localization
  * @param message - Error message
  */
-export function showPublicationResultError(message: string) {
+export function showPublicationResultError(localization: Localization, message: string) {
   const customNote = document.createElement('section');
   customNote.innerHTML = `
-  <h2>${config.messageKeys.resultNote.titleError}</h2>
-  <p>${config.messageKeys.resultNote.paragraphError}</p>
+  <h2>${localization.t("resultNote.titleError")}</h2>
+  <p>${localization.t("resultNote.paragraphError")}</p>
   <p>${message}</p>`;
 
   const parentNode = document.body;

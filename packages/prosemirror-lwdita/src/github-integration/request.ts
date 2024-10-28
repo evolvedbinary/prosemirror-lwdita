@@ -15,9 +15,10 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import * as config from '../../app-config.json';
 import { exchangeOAuthCodeForAccessToken } from './github.plugin';
 import { showToast } from '../toast';
+import { Config } from '../config';
+import { Localization } from '@evolvedbinary/prosemirror-lwdita-localization';
 
 /**
  * Interface for the URL parameters
@@ -126,16 +127,15 @@ export function showNotification(parameters: 'authenticated' | 'invalidParams' |
 /**
  * Redirects the user to GitHub OAuth
  */
-export function redirectToGitHubOAuth(parameters: URLParams): void {
-  const { id, value } = config.clientID;
+export function redirectToGitHubOAuth(config: Config, parameters: URLParams): void {
   // Store the parameters in state to pass them to the redirect URL
   const state = btoa(`${JSON.stringify({ ...parameters })}`);
-  const redirectURL = config.serverConfig.frontendUrl;
-  window.location.href = `https://github.com/login/oauth/authorize?${id}=${value}&state=${state}&redirect_uri=${redirectURL}`;
+  const redirectURL = config.server.frontend.url;
+  window.location.href = `https://github.com/login/oauth/authorize?client_id=${config.gitHub.clientId}&state=${state}&redirect_uri=${redirectURL}`;
 }
 
-export function redirectToGitHubAppInstall(parameters: URLParams): void {
-  const redirectURL = config.serverConfig.frontendUrl;
+export function redirectToGitHubAppInstall(config: Config, parameters: URLParams): void {
+  const redirectURL = config.server.frontend.url;
   window.location.href = `https://github.com/apps/petal-demo/installations/new?state=${parameters.state}&redirect_uri=${redirectURL}`;
 }
 
@@ -144,12 +144,13 @@ export function redirectToGitHubAppInstall(parameters: URLParams): void {
  * If a referer, error type, or error message parameter are provided,
  * they will be passed to the error page
  *
+ * @param config - configuration
  * @param errorType - Error type
  * @param referer - Referer of the request
  * @param errorMsg - Error message
  */
-export function showErrorPage(errorType: string, referer?: string, errorMsg?: string): void {
-  const errorPageUrl = `${config.serverConfig.frontendUrl}error.html?error-type=${encodeURIComponent(errorType)}&referer=${encodeURIComponent(referer || '')}&error-msg=${encodeURIComponent(errorMsg || '')}`;
+export function showErrorPage(config: Config, errorType: string, referer?: string, errorMsg?: string): void {
+  const errorPageUrl = `${config.server.frontend.url}/error.html?error-type=${encodeURIComponent(errorType)}&referer=${encodeURIComponent(referer || '')}&error-msg=${encodeURIComponent(errorMsg || '')}`;
   window.location.href = errorPageUrl;
 }
 
@@ -157,19 +158,22 @@ export function showErrorPage(errorType: string, referer?: string, errorMsg?: st
  * Redirects the user to the referer parameter from URL params
  * If a referer parameter is not provided, it will be passed to the error page
  */
-export function handleInvalidRequest(referer: string | null): void {
+export function handleInvalidRequest(config: Config, referer: string | null): void {
   if (referer) {
-    showErrorPage('invalidParams', referer, '');
+    showErrorPage(config, 'invalidParams', referer, '');
   } else {
-    showErrorPage('missingReferer');
+    showErrorPage(config, 'missingReferer');
   }
 }
 
 /**
  * Process the URL parameters and handle the notifications
  * and redirects to the GitHub OAuth page or the error page
+ * 
+ * @param config - config
+ * @param localization - localization
  */
-export function processRequest(): undefined | URLParams {
+export function processRequest(config: Config, localization: Localization): undefined | URLParams {
   // Check if the window object is defined (i.e. it is not in Mocha tests!)
   if (typeof window !== 'undefined') {
     const currentUrl = window.location.href;
@@ -180,10 +184,10 @@ export function processRequest(): undefined | URLParams {
       if (typeof parameters === 'string') {
         if (parameters === 'invalidParams') {
           const referer = new URLSearchParams(window.location.search).get('referer');
-          handleInvalidRequest(referer);
+          handleInvalidRequest(config, referer);
         }
         if (parameters === 'missingReferer') {
-          showErrorPage('missingReferer');
+          showErrorPage(config, 'missingReferer');
         }
         // Requests with object parameters from e.g. Git
       } else if (typeof parameters === 'object') {
@@ -194,7 +198,7 @@ export function processRequest(): undefined | URLParams {
         if (!parameters.some(param => isOAuthCodeParam(param.key))) {
           // Petal was called with github parameters but not with the OAuth code
           // Redirect to GitHub OAuth page
-          redirectToGitHubOAuth(returnParams);
+          redirectToGitHubOAuth(config, returnParams);
         } else if (parameters.some(param => isInstallationParam(param.key))) {
           // The user has authenticated and installed the app
           // return the parameters from the URL
@@ -212,18 +216,18 @@ export function processRequest(): undefined | URLParams {
             console.log('processRequest(): error', errorParam.value);
           }
 
-          exchangeOAuthCodeForAccessToken(returnParams.code).then(({token, installation}) => {
+          exchangeOAuthCodeForAccessToken(config, localization, returnParams.code).then(({token, installation}) => {
             localStorage.setItem('token', token); 
             if(!installation) {
               // redirect to the OAuth error page and show the error message with instructions to install the app
-              redirectToGitHubAppInstall(returnParams);
+              redirectToGitHubAppInstall(config, returnParams);
             }
           }).catch(e => {
             console.error(e);
             //TODO(YB): make sure the error page can redirect back to the referer
             //TODO(YB): the error page should prompt the user to authenticate again
             // TODO (AvC): Parse the referer from the state object if available and pass it to the error page
-            showErrorPage('missingAuthentication', '', e);
+            showErrorPage(config, 'missingAuthentication', '', e);
           });
 
           return JSON.parse(atob(returnParams.state));

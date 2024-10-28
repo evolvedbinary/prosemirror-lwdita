@@ -45,5 +45,7 @@ app.get('/', (_req, res) => {
 });
 
 app.listen(3000, () => {
-  console.log('Server is running on ' + config.server.apiUrl);
+  const serverPort = app.settings.port;
+  const serverUrl = app.settings.hostname + ":" + (serverPort == 80 || serverPort == 443) ? "" : ":" + serverPort;
+  console.log('Server is running on ' + serverUrl);
 });

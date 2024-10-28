@@ -21,6 +21,7 @@ import { toggleMark, newLine, hasMark, insertNode, insertImage, imageInputOverla
 import { redo, undo } from "prosemirror-history";
 import { MarkType, NodeType, Schema } from "prosemirror-model";
 import { Command, Plugin } from "prosemirror-state";
+import { Localization } from "@evolvedbinary/prosemirror-lwdita-localization";
 
 /**
  * This is the entire DOM node of the Prosemirror editor that will be observed for DOM mutations
@@ -79,10 +80,11 @@ if (targetNode) {
  * The `newLine` is a custom command and is representing the `enterPressed` command
  * `toggleMark`, `undo`, and `redo` are Prosemirror functions
  *
+ * @param localization - localization
  * @param schema - generated schema from JDITA
  * @returns - keymap object of shortcuts
  */
-export function shortcuts(schema: Schema) {
+export function shortcuts(localization: Localization, schema: Schema) {
   return keymap({
     'Enter': newLine,
     'Ctrl-b': toggleMark(schema.marks.b),
@@ -93,7 +95,7 @@ export function shortcuts(schema: Schema) {
     'Ctrl-z': undo,
     'Ctrl-y': redo,
     'Ctrl-Shift-z': redo,
-    'Alt-p': insertImage(schema.nodes.image),
+    'Alt-p': insertImage(localization, schema.nodes.image),
   });
 }
 
@@ -218,12 +220,13 @@ function insertItem(type: NodeType, props: Partial<MenuItemSpec> = {}): MenuElem
 /**
  * Create a menu button for uploading an image
  *
+ * @param localization - localization
  * @param type - The NodeType object
  * @param props - The icon object containing the title and the class of the icon
  * @returns A MenuElement containing the HTML node of the entire button element bound to its command
  */
-function insertImageItem(type: NodeType, props: Partial<MenuItemSpec> = {}): MenuElement {
-  const command = insertImage(type);
+function insertImageItem(localization: Localization, type: NodeType, props: Partial<MenuItemSpec> = {}): MenuElement {
+  const command = insertImage(localization, type);
   return commandItem(command, {
     ...props
   });
@@ -242,11 +245,12 @@ export interface Additions {
 /**
  * Create a menu bar for the editor
  *
+ * @param localization - localization
  * @param schema - Node schema
  * @param param1 - Object that contains the placement of the menu items
  * @returns menuBar
  */
-export function menu(schema: Schema, { start, before, after, end}: Additions = {}) {
+export function menu(localization: Localization, schema: Schema, { start, before, after, end}: Additions = {}) {
   const debug = [
     separator(),
     simpleCommand({
@@ -266,7 +270,7 @@ export function menu(schema: Schema, { start, before, after, end}: Additions = {
   ], [
     insertItem(schema.nodes.ol, { icon: {text: ""}, title: 'Ordered list', class: 'ic-olist' }),
     insertItem(schema.nodes.ul, { icon: {text: ""}, title: 'Unordered list', class: 'ic-ulist' }),
-    insertImageItem(schema.nodes.image, { icon: {text: ""}, title: 'Insert image', class: 'ic-image' }),
+    insertImageItem(localization, schema.nodes.image, { icon: {text: ""}, title: 'Insert image', class: 'ic-image' }),
   ]];
   if (!start) {
     start = [];
@@ -300,30 +304,32 @@ export function menu(schema: Schema, { start, before, after, end}: Additions = {
 }
 
 
-export const doubleClickImagePlugin = new Plugin({
-  props: {
-    handleDOMEvents: {
-      dblclick: (view, event) => {
-        const { schema, doc } = view.state;
-        const pos = view.posAtCoords({ left: event.clientX, top: event.clientY });
+export function doubleClickImagePlugin(localization: Localization) {
+  return new Plugin({
+    props: {
+      handleDOMEvents: {
+        dblclick: (view, event) => {
+          const { schema, doc } = view.state;
+          const pos = view.posAtCoords({ left: event.clientX, top: event.clientY });
 
-        if (pos) {
-          const node = doc.nodeAt(pos.pos);
-          const parent = doc.nodeAt(pos.pos - 1);
-          const nodeSize = parent?.nodeSize || 0;
-          const { state, dispatch } = view;
-          if (node && node.type === schema.nodes.image) {
-            imageInputOverlay((imageInfo) => {
-              if (!imageInfo) return false;
-              const newNode = createNode(schema.nodes['fig'], { src: imageInfo.src, scope: imageInfo.scope, alt: imageInfo.alt, height: imageInfo.height, width: imageInfo.width });
-              dispatch(state.tr.replaceWith(pos.pos - 1, pos.pos + nodeSize, newNode));
+          if (pos) {
+            const node = doc.nodeAt(pos.pos);
+            const parent = doc.nodeAt(pos.pos - 1);
+            const nodeSize = parent?.nodeSize || 0;
+            const { state, dispatch } = view;
+            if (node && node.type === schema.nodes.image) {
+              imageInputOverlay(localization, (imageInfo) => {
+                if (!imageInfo) return false;
+                const newNode = createNode(schema.nodes['fig'], { src: imageInfo.src, scope: imageInfo.scope, alt: imageInfo.alt, height: imageInfo.height, width: imageInfo.width });
+                dispatch(state.tr.replaceWith(pos.pos - 1, pos.pos + nodeSize, newNode));
+                return true;
+              }, node);
               return true;
-            }, node);
-            return true;
+            }
           }
+          return false;
         }
-        return false;
       }
     }
-  }
-});
+  });
+}

@@ -36,6 +36,9 @@ jobs:
       - install-yarn
       - install-dependencies
       - run:
+          name: build
+          command: yarn build
+      - run:
           name: Run Code Coverage
           command: yarn coverage
       - run:
@@ -62,6 +65,9 @@ jobs:
       - checkout
       - install-yarn
       - install-dependencies
+      - run:
+          name: build
+          command: yarn build
       - run:
           name: Generate Docs
           command: yarn generate-docs

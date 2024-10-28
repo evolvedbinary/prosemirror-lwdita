@@ -15,13 +15,23 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-export * from './schema';
-export * from './document';
-export * from './plugin';
-export * from './commands';
-export * from './untravel-document';
-export * from './attributes';
-export * from './github-integration/request';
-export * from './toast';
-export * from './github-integration/github.plugin';
-export * from './config'
+import Polyglot from "node-polyglot";
+import { Localization } from "./localization";
+import * as messages from './messages.en.json';
+
+/**
+ * Implementation of Localization using node-polyglot.
+ *
+ * @see https://airbnb.io/polyglot.js/.
+ */
+export class PolyglotLocalizationImpl implements Localization {
+    private polyglot: Polyglot;
+
+    constructor() {
+        this.polyglot = new Polyglot({locale: "en", phrases: messages});
+    }
+
+    t(key: string): string {
+        return this.polyglot.t(key);
+    }
+}
