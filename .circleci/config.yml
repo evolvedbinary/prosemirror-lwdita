@@ -52,6 +52,9 @@ jobs:
       - install-yarn
       - install-dependencies
       - run:
+          name: build
+          command: yarn build
+      - run:
           name: Lint
           command: yarn lint
   generate-docs:
@@ -62,6 +65,9 @@ jobs:
       - checkout
       - install-yarn
       - install-dependencies
+      - run:
+          name: build
+          command: yarn build
       - run:
           name: Generate Docs
           command: yarn generate-docs
