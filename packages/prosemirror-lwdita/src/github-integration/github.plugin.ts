@@ -46,7 +46,7 @@ export const fetchRawDocumentFromGitHub = async (ghrepo: string, source: string,
   //TODO: Handle errors
   const xdita = await response.text();
   // modify the raw xdita image links to point to the correct location
-  const modifiedXdita = xdita.replace(/href="images\//g, 'href="https://raw.githubusercontent.com/' + ghrepo + '/refs/heads/' + branch + '/cityehr-quick-start-guide/src/main/lwdita/quickstart-guide-modular/');
+  const modifiedXdita = xdita.replace(/href="images\//g, 'href="https://raw.githubusercontent.com/' + ghrepo + '/refs/heads/' + branch + '/cityehr-quick-start-guide/src/main/lwdita/quickstart-guide-modular/images/');
   return modifiedXdita;
 };
 
