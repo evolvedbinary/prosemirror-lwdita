@@ -150,7 +150,7 @@ export function redirectToGitHubAppInstall(config: Config, parameters: URLParams
  * @param errorMsg - Error message
  */
 export function showErrorPage(config: Config, errorType: string, referer?: string, errorMsg?: string): void {
-  const errorPageUrl = `${config.server.frontend.url}error.html?error-type=${encodeURIComponent(errorType)}&referer=${encodeURIComponent(referer || '')}&error-msg=${encodeURIComponent(errorMsg || '')}`;
+  const errorPageUrl = `${config.server.frontend.url}/error.html?error-type=${encodeURIComponent(errorType)}&referer=${encodeURIComponent(referer || '')}&error-msg=${encodeURIComponent(errorMsg || '')}`;
   window.location.href = errorPageUrl;
 }
 
