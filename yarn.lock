@@ -363,6 +363,7 @@ __metadata:
     eslint-plugin-notice: "npm:^1.0.0"
     eslint-plugin-tsdoc: "npm:^0.3.0"
     parcel: "npm:^2.12.0"
+    parcel-reporter-static-files-copy: "npm:^1.5.3"
     prosemirror-history: "npm:^1.4.1"
     prosemirror-menu: "npm:^1.2.4"
     prosemirror-model: "npm:^1.23.0"
@@ -1432,7 +1433,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@parcel/plugin@npm:2.12.0":
+"@parcel/plugin@npm:2.12.0, @parcel/plugin@npm:^2.0.0-beta.1":
   version: 2.12.0
   resolution: "@parcel/plugin@npm:2.12.0"
   dependencies:
@@ -7408,6 +7409,15 @@ __metadata:
   version: 1.0.1
   resolution: "package-json-from-dist@npm:1.0.1"
   checksum: 10c0/62ba2785eb655fec084a257af34dbe24292ab74516d6aecef97ef72d4897310bc6898f6c85b5cd22770eaa1ce60d55a0230e150fb6a966e3ecd6c511e23d164b
+  languageName: node
+  linkType: hard
+
+"parcel-reporter-static-files-copy@npm:^1.5.3":
+  version: 1.5.3
+  resolution: "parcel-reporter-static-files-copy@npm:1.5.3"
+  dependencies:
+    "@parcel/plugin": "npm:^2.0.0-beta.1"
+  checksum: 10c0/02a0067c61d131558bfd3f74e2edbd016f26e95e0c3619642db8b75b47429824ee08cc0176f8740cf93a5794c2e408da845bf6165b15b11d91d34a5c9223605a
   languageName: node
   linkType: hard
 
