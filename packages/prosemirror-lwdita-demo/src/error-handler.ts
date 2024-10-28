@@ -15,15 +15,16 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import { Localization } from "@evolvedbinary/prosemirror-lwdita-localization";
+import { createLocalization } from "@evolvedbinary/prosemirror-lwdita-localization";
 
+const localization = createLocalization();
 /**
  * Handle errors resulting from erronous URL parameters,
  * or error redirects from GitHub OAuth
  *
  * @param localization - localization
  */
-export function handleError(localization: Localization) {
+export function handleError() {
   const urlParams = new URLSearchParams(window.location.search);
   const errorType = urlParams.get('error-type');
   const referer = urlParams.get('referer');
