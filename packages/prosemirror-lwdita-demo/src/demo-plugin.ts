@@ -151,12 +151,10 @@ function publishGithubDocument(config: Config, localization: Localization, urlPa
   return (state: EditorState, dispatch: (arg0: Transaction) => void) => {
     if (dispatch) {
       dispatch(state.tr);
-      const xditaPrefix = `<?xml version="1.0" encoding="UTF-8"?>\n<!DOCTYPE topic PUBLIC "-//OASIS//DTD LIGHTWEIGHT DITA Topic//EN" "lw-topic.dtd">\n`;
       const documentNode = transformToJditaDocumentNode(state);
-      const updatedXdita = xditaPrefix + documentNode;
 
       // show the publishing dialog
-      renderPrDialog(config, localization, urlParams.ghrepo, urlParams.source, urlParams.branch, updatedXdita);
+      renderPrDialog(config, localization, urlParams.ghrepo, urlParams.source, urlParams.branch, documentNode);
     } else {
       showToast(localization.t("error.toastGitHubPublishNoEditorState"), 'error');
       console.log('Nothing to publish, no EditorState has been dispatched.');
