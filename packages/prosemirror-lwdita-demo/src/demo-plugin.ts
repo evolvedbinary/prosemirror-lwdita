@@ -152,9 +152,13 @@ function publishGithubDocument(config: Config, localization: Localization, urlPa
     if (dispatch) {
       dispatch(state.tr);
       const documentNode = transformToJditaDocumentNode(state);
+      // remove the base url from the documentNode
+      const baseUrl = urlParams.referer.split('/').slice(0, -1).join('/');
+      // doing the opposite of rawDoc.replace(/href="([^"]+)"/g, `href="${baseUrl}/$1"`);
+      const document = documentNode.replace(new RegExp(baseUrl, 'g'), '');
 
       // show the publishing dialog
-      renderPrDialog(config, localization, urlParams.ghrepo, urlParams.source, urlParams.branch, documentNode);
+      renderPrDialog(config, localization, urlParams.ghrepo, urlParams.source, urlParams.branch, document);
     } else {
       showToast(localization.t("error.toastGitHubPublishNoEditorState"), 'error');
       console.log('Nothing to publish, no EditorState has been dispatched.');

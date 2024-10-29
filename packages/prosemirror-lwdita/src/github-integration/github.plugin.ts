@@ -75,9 +75,12 @@ export const transformGitHubDocumentToProsemirrorJson = async (rawDocument: stri
  * @param branch - The branch from which to fetch the document.
  * @returns A promise that resolves to the transformed ProseMirror JSON document.
  */
-export const fetchAndTransform = async (config: Config, ghrepo: string, source: string, branch: string) => {
+export const fetchAndTransform = async (config: Config, ghrepo: string, source: string, branch: string, referer: string) => {
   const rawDoc = await fetchRawDocumentFromGitHub(config, ghrepo, source, branch);
-  const jsonDoc = await transformGitHubDocumentToProsemirrorJson(rawDoc);
+  // apply changes to the raw xml document and update all links to point to the base URL of the referer
+  const baseUrl = referer.split('/').slice(0, -1).join('/');
+  const updatedDoc = rawDoc.replace(/href="([^"]+)"/g, `href="${baseUrl}/$1"`);
+  const jsonDoc = await transformGitHubDocumentToProsemirrorJson(updatedDoc);
   return jsonDoc;
 };
 
