@@ -22,6 +22,7 @@ import { jditaToAst, XditaSerializer } from "@evolvedbinary/lwdita-xdita";
 import { InMemoryTextSimpleOutputStreamCollector } from "@evolvedbinary/lwdita-xdita/dist/stream";
 import { EditorState, Transaction } from "prosemirror-state";
 import { Localization } from "@evolvedbinary/prosemirror-lwdita-localization";
+import urijs from "urijs";
 
 /**
  * Open file selection dialog and select and file to insert into the local storage.
@@ -152,11 +153,13 @@ function publishGithubDocument(config: Config, localization: Localization, urlPa
     if (dispatch) {
       dispatch(state.tr);
       const documentNode = transformToJditaDocumentNode(state);
-      // remove the base url from the documentNode
+      // get the base url from the referer
       const baseUrl = urlParams.referer.split('/').slice(0, -1).join('/');
-      // doing the opposite of rawDoc.replace(/href="([^"]+)"/g, `href="${baseUrl}/$1"`);
-      const document = documentNode.replace(new RegExp(baseUrl, 'g'), '');
-
+      // should match href="${baseUrl}" and remove it
+      const document = documentNode.replace(new RegExp(`href="${baseUrl}`, 'g'), (match) => {
+        const url = match.replace('href="', '');
+        return `href="${urijs(url).relativeTo(baseUrl).href()}`;
+      });
       // show the publishing dialog
       renderPrDialog(config, localization, urlParams.ghrepo, urlParams.source, urlParams.branch, document);
     } else {
