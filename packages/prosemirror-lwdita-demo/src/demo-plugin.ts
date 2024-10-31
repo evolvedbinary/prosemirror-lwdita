@@ -153,12 +153,11 @@ function publishGithubDocument(config: Config, localization: Localization, urlPa
     if (dispatch) {
       dispatch(state.tr);
       const documentNode = transformToJditaDocumentNode(state);
-      // get the base url from the referer
-      const baseUrl = urlParams.referer.split('/').slice(0, -1).join('/');
+      // get the base url from the referer & escape it for regex
+      const baseUrl = urijs(urlParams.referer).origin().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
       // should match href="${baseUrl}" and remove it
-      const document = documentNode.replace(new RegExp(`href="${baseUrl}`, 'g'), (match) => {
-        const url = match.replace('href="', '');
-        return `href="${urijs(url).relativeTo(baseUrl).href()}`;
+      const document = documentNode.replace(new RegExp(`href="(${baseUrl}[^"]*)"`, 'g'), (_match,url) => {
+        return `href="${urijs(url).relativeTo(urlParams.referer).href()}"`;
       });
       // show the publishing dialog
       renderPrDialog(config, localization, urlParams.ghrepo, urlParams.source, urlParams.branch, document);
