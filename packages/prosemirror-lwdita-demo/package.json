@@ -52,10 +52,12 @@
     "prosemirror-menu": "^1.2.4",
     "prosemirror-model": "^1.23.0",
     "prosemirror-state": "^1.4.3",
-    "prosemirror-view": "^1.34.3"
+    "prosemirror-view": "^1.34.3",
+    "urijs": "^1.19.11"
   },
   "devDependencies": {
     "@parcel/transformer-sass": "^2.12.0",
+    "@types/urijs": "^1.19.25",
     "@typescript-eslint/eslint-plugin": "^8.11.0",
     "@typescript-eslint/parser": "^8.11.0",
     "cypress": "^13.15.1",

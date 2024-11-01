@@ -21,6 +21,7 @@ import { showErrorPage } from "./request";
 import { showToast } from "../toast";
 import { Config } from "../config";
 import { Localization } from "@evolvedbinary/prosemirror-lwdita-localization";
+import urijs from "urijs";
 
 /**
  * Fetches the raw content of a document from a GitHub repository.
@@ -75,9 +76,16 @@ export const transformGitHubDocumentToProsemirrorJson = async (rawDocument: stri
  * @param branch - The branch from which to fetch the document.
  * @returns A promise that resolves to the transformed ProseMirror JSON document.
  */
-export const fetchAndTransform = async (config: Config, ghrepo: string, source: string, branch: string) => {
+export const fetchAndTransform = async (config: Config, ghrepo: string, source: string, branch: string, referer: string) => {
   const rawDoc = await fetchRawDocumentFromGitHub(config, ghrepo, source, branch);
-  const jsonDoc = await transformGitHubDocumentToProsemirrorJson(rawDoc);
+  // update the document with the relative path
+
+  const updatedDoc = rawDoc.replace(/href="([^"]+)"/g, (_match, url) => {
+    // https://www.npmjs.com/package/urijs
+    return `href="${urijs(url).absoluteTo(referer).href()}"`;
+  });
+
+  const jsonDoc = await transformGitHubDocumentToProsemirrorJson(updatedDoc);
   return jsonDoc;
 };
 

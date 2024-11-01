@@ -22,6 +22,7 @@ import { jditaToAst, XditaSerializer } from "@evolvedbinary/lwdita-xdita";
 import { InMemoryTextSimpleOutputStreamCollector } from "@evolvedbinary/lwdita-xdita/dist/stream";
 import { EditorState, Transaction } from "prosemirror-state";
 import { Localization } from "@evolvedbinary/prosemirror-lwdita-localization";
+import urijs from "urijs";
 
 /**
  * Open file selection dialog and select and file to insert into the local storage.
@@ -152,9 +153,14 @@ function publishGithubDocument(config: Config, localization: Localization, urlPa
     if (dispatch) {
       dispatch(state.tr);
       const documentNode = transformToJditaDocumentNode(state);
-
+      // get the base url from the referer & escape it for regex
+      const baseUrl = urijs(urlParams.referer).origin().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      // should match href="${baseUrl}" and remove it
+      const document = documentNode.replace(new RegExp(`href="(${baseUrl}[^"]*)"`, 'g'), (_match,url) => {
+        return `href="${urijs(url).relativeTo(urlParams.referer).href()}"`;
+      });
       // show the publishing dialog
-      renderPrDialog(config, localization, urlParams.ghrepo, urlParams.source, urlParams.branch, documentNode);
+      renderPrDialog(config, localization, urlParams.ghrepo, urlParams.source, urlParams.branch, document);
     } else {
       showToast(localization.t("error.toastGitHubPublishNoEditorState"), 'error');
       console.log('Nothing to publish, no EditorState has been dispatched.');
