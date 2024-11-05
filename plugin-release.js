@@ -18,12 +18,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 module.exports = {
     name: `plugin-addition`,
     factory: require => {
-      const {BaseCommand, WorkspaceRequiredError} = require(`@yarnpkg/cli`);
-      const {Configuration, Project} = require('@yarnpkg/core');
-      const {execute} = require('@yarnpkg/shell');
-      const {Command, Option} = require(`clipanion`);
-      const {copyFile, rm} = require('fs/promises');
-      const t = require(`typanion`);
+      const {BaseCommand, WorkspaceRequiredError} = require("@yarnpkg/cli");
+      const {Configuration, Project} = require("@yarnpkg/core");
+      const {execute} = require("@yarnpkg/shell");
+      const {Command, Option} = require("clipanion");
+      const {access, copyFile, rm} = require("fs/promises");
+      const t = require("typanion");
 
       const semver2Regex = "(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(?:\\-([1-9A-Za-z-][0-9A-Za-z-]*(?:\\.[1-9A-Za-z-][0-9A-Za-z-]*)*))?(?:\\+([1-9A-Za-z-][0-9A-Za-z-]*(?:\\.[1-9A-Za-z-][0-9A-Za-z-]*)*))?";
       const yarnAutoVersionsRegex = "(major|minor|patch)";
@@ -88,32 +88,32 @@ module.exports = {
 
           // Step 2 - Pre-release testing - Executes the `lint` and `test` scripts
           this.context.stdout.write("2. Performing pre-release testing...\n");
-          exitCode = await this.cli.run(['clean']);
+          exitCode = await this.cli.run(["clean"]);
           if (exitCode !== 0) {
             this.context.stderr.write(`Error: 'yarn clean' failed with code: ${exitCode}\n`);
             return;
           }
           this.context.stdout.write("2.1. Performing build...\n");
-          exitCode = await this.cli.run(['build']);
+          exitCode = await this.cli.run(["build"]);
           if (exitCode !== 0) {
             this.context.stderr.write(`Error: 'yarn build' failed with code: ${exitCode}\n`);
             return;
           }
           this.context.stdout.write("2.2. Performing lint...\n");
-          exitCode = await this.cli.run(['lint']);
+          exitCode = await this.cli.run(["lint"]);
           if (exitCode !== 0) {
             this.context.stderr.write(`Error: 'yarn lint' failed with code: ${exitCode}\n`);
             return;
           }
           // this.context.stdout.write("2.3. Running tests...\n");
-          exitCode = await this.cli.run(['test']);
+          exitCode = await this.cli.run(["test"]);
           if (exitCode !== 0) {
             this.context.stderr.write(`Error: 'yarn test' failed with code: ${exitCode}\n`);
             return;
           }
 
           // Cleanup after Step 2 - Pre-release testing
-          exitCode = await this.cli.run(['clean']);
+          exitCode = await this.cli.run(["clean"]);
           if (exitCode !== 0) {
             this.context.stderr.write(`Error: 'yarn clean' failed with code: ${exitCode}\n`);
             return;
@@ -126,14 +126,14 @@ module.exports = {
             const projectWorkspace = project.workspaces[i];
 
             if (projectWorkspace.cwd == project.cwd) {
-              exitCode = await this.cli.run(['version', this.version]);
+              exitCode = await this.cli.run(["version", this.version]);
               if (exitCode !== 0) {
                 this.context.stderr.write(`Error: Incrementing project version failed with code: ${exitCode}\n`);
                 return;
               }
             } else {
               const projectWorkspaceName = `@${projectWorkspace.manifest.name.scope}/${projectWorkspace.manifest.name.name}`;
-              exitCode = await this.cli.run(['workspace', projectWorkspaceName, 'version', this.version]);
+              exitCode = await this.cli.run(["workspace", projectWorkspaceName, "version", this.version]);
               if (exitCode !== 0) {
                 this.context.stderr.write(`Error: Incrementing workspace '` + projectWorkspaceName + `' version failed with code: ${exitCode}\n`);
                 return;
@@ -143,50 +143,50 @@ module.exports = {
           }
 
           // Step 4 - git commit the version update.
-          this.context.stdout.write(`4. git Committing the version update...\n`);
-          exitCode = await execute('git', ['commit', `--message=[release] Release version: ${this.version}`].concat(packageFiles), executeOptions);
+          this.context.stdout.write("4. git Committing the version update...\n");
+          exitCode = await execute("git", ["commit", `--message=[release] Release version: ${this.version}`].concat(packageFiles), executeOptions);
           if (exitCode !== 0) {
             this.context.stderr.write(`Error: git commit failed with code: ${exitCode}\n`);
             return;
           } else {
-            this.context.stdout.write(`git commit OK!\n`);
+            this.context.stdout.write("git commit OK!\n");
           } 
 
           // Step 5 - git tag and sign the release tag.
-          this.context.stdout.write(`5. git Committing the version update...\n`);
-          exitCode = await execute('git', ['tag', `--message=[release] Release version: ${this.version}`, '--sign', `v${this.version}`], executeOptions);
+          this.context.stdout.write("5. git Committing the version update...\n");
+          exitCode = await execute("git", ["tag", `--message=[release] Release version: ${this.version}`, "--sign", `v${this.version}`], executeOptions);
           if (exitCode !== 0) {
             this.context.stderr.write(`Error: git commit failed with code: ${exitCode}\n`);
             return;
           } else {
-            this.context.stdout.write(`git tag OK!\n`);
+            this.context.stdout.write("git tag OK!\n");
           } 
           // Step 6 - git push the updates.
-          this.context.stdout.write(`6. git push the version update...\n`);
-          this.context.stdout.write(`6.1. git pushing the branch...\n`);
-          exitCode = await execute('git', ['push'], executeOptions);
+          this.context.stdout.write("6. git push the version update...\n");
+          this.context.stdout.write("6.1. git pushing the branch...\n");
+          exitCode = await execute("git", ["push"], executeOptions);
           if (exitCode !== 0) {
             this.context.stderr.write(`Error: git push failed with code: ${exitCode}\n`)
             return;
           } else {
-            this.context.stdout.write(`git push OK!\n`);
+            this.context.stdout.write("git push OK!\n");
           } 
-          this.context.stdout.write(`6.2. git pushing the tag...\n`);
-          exitCode = await execute('git', ['push', '--tags'], executeOptions);
+          this.context.stdout.write("6.2. git pushing the tag...\n");
+          exitCode = await execute("git", ["push", "--tags"], executeOptions);
           if (exitCode !== 0) {
-            this.context.stderr.write(`Error: git push tags failed with code: ${exitCode}\n`);
+            this.context.stderr.write("Error: git push tags failed with code: ${exitCode}\n");
             return;
           } else {
-            this.context.stdout.write(`git push tags OK!\n`);
+            this.context.stdout.write("git push tags OK!\n");
           } 
           // Step 7 - Publish the packages to npm.js.
-          this.context.stdout.write(`7. Running \`yarn npn publish\` to publish packages to npm.js...\n`);
-          exitCode = await this.cli.run(['npm', 'login']);
+          this.context.stdout.write("7. Running \`yarn npn publish\` to publish packages to npm.js...\n");
+          exitCode = await this.cli.run(["npm", "login"]);
           if (exitCode !== 0) {
-            this.context.stderr.write(`Error: npm login failed with code: ${exitCode}\n`);
+            this.context.stderr.write("Error: npm login failed with code: ${exitCode}\n");
             return;
           } else {
-            this.context.stdout.write(`npm login OK!\n`);
+            this.context.stdout.write("npm login OK!\n");
           }
           for (let i = 0; i < project.workspaces.length; i++) {
             const projectWorkspace = project.workspaces[i];
@@ -209,7 +209,7 @@ module.exports = {
                 }
               }
               // Publish the workspace package
-              exitCode = await this.cli.run(['workspace', projectWorkspaceName, 'npm', 'publish', '--access', 'public']);
+              exitCode = await this.cli.run(["workspace", projectWorkspaceName, "npm", "publish", "--access", "public"]);
               if (exitCode !== 0) {
                 this.context.stderr.write(`Error: npm publish '` + projectWorkspaceName + `' failed with code: ${exitCode}\n`);
                 return;
