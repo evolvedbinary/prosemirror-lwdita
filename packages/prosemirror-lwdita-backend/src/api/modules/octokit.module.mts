@@ -320,7 +320,7 @@ export const pushChangesAndCreatePullRequest = async (octokit: Octokit, owner: s
     // the PR will be opened from the new branch to the default branch
     const head = `${newOwner}:${newBranch}`;
     // create a pull request
-    const pullRequestUrl = await createPullRequest(octokit, newOwner, repo, branch, head, title, body);
+    const pullRequestUrl = await createPullRequest(octokit, owner, repo, branch, head, title, body);
     if(!pullRequestUrl) {
       throw new Error("Error during pull request creation");
     }
