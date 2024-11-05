@@ -121,7 +121,7 @@ export function openFileMenuItem(localization: Localization): MenuElement {
  * @returns The menu element for publishing the file.
  */
 export function publishFileMenuItem(config: Config, localization: Localization, urlParams: URLParams): MenuElement {
-  const storedFileName = localStorage.getItem('fileName') ? localStorage.getItem('fileName') : 'Petal';
+  const storedFileName = urlParams? urlParams.source.split('/').slice(-1) : 'Petal.xml';
 
   return new MenuItem({
     enable: () => true,
@@ -129,8 +129,8 @@ export function publishFileMenuItem(config: Config, localization: Localization, 
       const el = document.createElement('div');
       el.classList.add('ProseMirror-menuitem-file', 'publish');
       const link = document.createElement('a');
-      link.download = storedFileName + '.xml';
-      link.textContent = 'Publish "' + storedFileName + '.xml"';
+      link.download = storedFileName;
+      link.textContent = 'Publish "' + storedFileName;
       link.id = 'publishFile';
       el.appendChild(link);
       return el;
@@ -175,9 +175,9 @@ function publishGithubDocument(config: Config, localization: Localization, urlPa
  *
  * @returns The save file menu element
  */
-export function saveFileMenuItem(localization: Localization, _props: Partial<MenuItemSpec & { url: string }> = {}): MenuElement {
+export function saveFileMenuItem(urlParams: URLParams, localization: Localization, _props: Partial<MenuItemSpec & { url: string }> = {}): MenuElement {
   const link = new InputContainer();
-  const storedFileName = localStorage.getItem('fileName') ? localStorage.getItem('fileName') : 'Petal';
+  const storedFileName = urlParams? urlParams.source.split('/').slice(-1) : 'Petal.xml';
 
   return new MenuItem({
     enable: () => true,
@@ -185,8 +185,8 @@ export function saveFileMenuItem(localization: Localization, _props: Partial<Men
       const el = document.createElement('div');
       el.classList.add('ProseMirror-menuitem-file');
       const link = document.createElement('a');
-      link.download = storedFileName + '.xml';
-      link.textContent = 'Download "' + storedFileName + '.xml"';
+      link.download = storedFileName;
+      link.textContent = 'Download "' + storedFileName;
       link.id = 'saveFile';
       el.appendChild(link);
       return el;
