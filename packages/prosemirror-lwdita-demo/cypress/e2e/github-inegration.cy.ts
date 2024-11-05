@@ -202,7 +202,7 @@ describe('request the token after OAuth', () => {
     
     // assert the user was redirected to the installation page
     // github.com/apps/petal-demo/installations/new
-    cy.url().should('include', 'integration=petal-demo');
+    cy.url().should('include', 'integration=petal-bot');
   });
 });
 
