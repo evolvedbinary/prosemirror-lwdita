@@ -14,7 +14,7 @@
   },
   "git": {
     "branchPrefix": "doc/petal-",
-    "commitMessageSuffix": " \n ------------------\n This is an automated PR made by the prosemirror-lwdita demo Editor"
+    "commitMessageSuffix": " \n ------------------\n This is an automated PR made by the [Petal editor](https://petal.evolvedbinary.com/)"
   },
   "gitHub": {
     "clientId": "my-client-id"
