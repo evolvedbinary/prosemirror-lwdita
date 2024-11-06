@@ -37,8 +37,6 @@ function openFile(localization: Localization, input: InputContainer): Command {
       if (input.el?.files?.length === 1) {
         const file = input.el.files[0];
         const fileName = file.name;
-        console.log(fileName[0]);
-        console.log('file.name', file.name);
         const reader = new FileReader();
         reader.readAsBinaryString(file);
         reader.onerror = () => {
