@@ -36,8 +36,9 @@ function openFile(localization: Localization, input: InputContainer): Command {
     function fileSelected(this: HTMLInputElement, _event: Event) {
       if (input.el?.files?.length === 1) {
         const file = input.el.files[0];
-        const fileName = file.name.split('.xml');
+        const fileName = file.name;
         console.log(fileName[0]);
+        console.log('file.name', file.name);
         const reader = new FileReader();
         reader.readAsBinaryString(file);
         reader.onerror = () => {
@@ -47,7 +48,7 @@ function openFile(localization: Localization, input: InputContainer): Command {
         reader.onload = () => {
           if (dispatch && typeof reader.result === 'string') {
             localStorage.setItem('file', reader.result);
-            localStorage.setItem('fileName', fileName[0]);
+            localStorage.setItem('fileName', fileName);
             dispatch(state.tr);
             location.reload();
           }
@@ -111,6 +112,27 @@ export function openFileMenuItem(localization: Localization): MenuElement {
   });
 }
 
+
+/**
+ * Get stored file name from local storage
+ * 
+ * @returns a string with the stored file name or the default value 'Petal.xml'
+ */
+function getStoredFileName(): string {
+  return localStorage.getItem('fileName') || 'Petal.xml';
+}
+
+/**
+ * Get the file name from URL parameters or local storage
+ * 
+ * @param urlParams - URL parameters
+ * @returns a string with the file name
+ */
+function getFileName(urlParams: URLParams | null): string {
+  const storedFileName = getStoredFileName();
+  return urlParams ? urlParams.source.split('/').slice(-1)[0] : storedFileName;
+}
+
 /**
  * Creates a menu item for publishing to Github.
  * This function generates a menu item that allows users to publish a file
@@ -121,16 +143,15 @@ export function openFileMenuItem(localization: Localization): MenuElement {
  * @returns The menu element for publishing the file.
  */
 export function publishFileMenuItem(config: Config, localization: Localization, urlParams: URLParams): MenuElement {
-  const storedFileName = urlParams? urlParams.source.split('/').slice(-1) : 'Petal.xml';
-
+  const fileNameLabel = getFileName(urlParams);
   return new MenuItem({
     enable: () => true,
     render(_editorView) {
       const el = document.createElement('div');
       el.classList.add('ProseMirror-menuitem-file', 'publish');
       const link = document.createElement('a');
-      link.download = storedFileName;
-      link.textContent = 'Publish "' + storedFileName;
+      link.download = fileNameLabel;
+      link.textContent = 'Publish "' + fileNameLabel;
       link.id = 'publishFile';
       el.appendChild(link);
       return el;
@@ -177,7 +198,7 @@ function publishGithubDocument(config: Config, localization: Localization, urlPa
  */
 export function saveFileMenuItem(urlParams: URLParams, localization: Localization, _props: Partial<MenuItemSpec & { url: string }> = {}): MenuElement {
   const link = new InputContainer();
-  const storedFileName = urlParams? urlParams.source.split('/').slice(-1) : 'Petal.xml';
+  const fileName = getFileName(urlParams);
 
   return new MenuItem({
     enable: () => true,
@@ -185,8 +206,8 @@ export function saveFileMenuItem(urlParams: URLParams, localization: Localizatio
       const el = document.createElement('div');
       el.classList.add('ProseMirror-menuitem-file');
       const link = document.createElement('a');
-      link.download = storedFileName;
-      link.textContent = 'Download "' + storedFileName;
+      link.download = fileName;
+      link.textContent = 'Download "' + fileName;
       link.id = 'saveFile';
       el.appendChild(link);
       return el;
