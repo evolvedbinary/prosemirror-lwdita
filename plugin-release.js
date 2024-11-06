@@ -180,7 +180,7 @@ module.exports = {
             this.context.stdout.write("git push tags OK!\n");
           } 
           // Step 7 - Publish the packages to npm.js.
-          this.context.stdout.write("7. Running \`yarn npn publish\` to publish packages to npm.js...\n");
+          this.context.stdout.write("7. Running `yarn npn publish` to publish packages to npm.js...\n");
           exitCode = await this.cli.run(["npm", "login"]);
           if (exitCode !== 0) {
             this.context.stderr.write("Error: npm login failed with code: ${exitCode}\n");
@@ -196,7 +196,7 @@ module.exports = {
             } else {
               const projectWorkspaceName = `@${projectWorkspace.manifest.name.scope}/${projectWorkspace.manifest.name.name}`;
 
-              const licenseFileExists = await access(`${projectWorkspace.cwd}/LICENSE`).then(x => true).catch(e => false);
+              const licenseFileExists = await access(`${projectWorkspace.cwd}/LICENSE`).then(_x => true).catch(_e => false);
               let copiedLicenseFile = false;
               if (!licenseFileExists) {
                 // Make a copy of the LICENSE file to the workspace so that it is published as part of the package
