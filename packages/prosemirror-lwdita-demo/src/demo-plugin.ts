@@ -149,7 +149,7 @@ export function publishFileMenuItem(config: Config, localization: Localization, 
       el.classList.add('ProseMirror-menuitem-file', 'publish');
       const link = document.createElement('a');
       link.download = fileNameLabel;
-      link.textContent = 'Publish "' + fileNameLabel;
+      link.textContent = 'Publish ' + fileNameLabel;
       link.id = 'publishFile';
       el.appendChild(link);
       return el;
@@ -205,7 +205,7 @@ export function saveFileMenuItem(urlParams: URLParams, localization: Localizatio
       el.classList.add('ProseMirror-menuitem-file');
       const link = document.createElement('a');
       link.download = fileName;
-      link.textContent = 'Download "' + fileName;
+      link.textContent = 'Download ' + fileName;
       link.id = 'saveFile';
       el.appendChild(link);
       return el;
