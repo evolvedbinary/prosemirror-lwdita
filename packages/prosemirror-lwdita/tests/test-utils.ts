@@ -189,9 +189,7 @@ export const complexXdita = `<?xml version="1.0" encoding="UTF-8"?>
         <strong>strong</strong>
         and <sub>subscript</sub> and <sup>superscipt</sup> and <tt>tele type</tt> and
         <u>underline</u>
-        <image href="images/image.png">
-            <alt>alt text</alt>
-        </image>
+        <image href="images/image.png"><alt>alt text</alt></image>
     </title>
     <shortdesc>Short description of the full topic.</shortdesc>
     <prolog>
@@ -229,19 +227,13 @@ export const complexXdita = `<?xml version="1.0" encoding="UTF-8"?>
         <pre>Preformatted content</pre>
         <audio autoplay="false" controls="true" loop="false" muted="false">
             <desc>Theme song for the LwDITA podcast</desc>
-            <fallback>
-                <p>The theme song is not available.</p>
-            </fallback>
+            <fallback><p>The theme song is not available.</p></fallback>
             <media-source value="theme-song.mp3"/>
             <media-track srclang="en" value="theme-song.vtt"/>
         </audio>
         <video height="300px" width="400px" autoplay="false" controls="true" loop="false" muted="false">
             <desc>Video about the Sensei Sushi promise.</desc>
-            <fallback>
-                <image href="video-not-available.png">
-                    <alt>This video cannot be displayed.</alt>
-                </image>
-            </fallback>
+            <fallback><image href="video-not-available.png"><alt>This video cannot be displayed.</alt></image></fallback>
             <video-poster href="sensei-video.jpg"/>
             <media-source href="sensei-video.mp4"/>
             <media-track srclang="en" href="sensei-video.vtt"/>
@@ -279,9 +271,7 @@ export const complexXdita = `<?xml version="1.0" encoding="UTF-8"?>
         <fig>
             <title>Figure title</title>
             <desc>Figure description</desc>
-            <image href="images/image.png">
-                <alt>alt text</alt>
-            </image>
+            <image href="images/image.png"><alt>alt text</alt></image>
         </fig>
         <note>
             <p>Note content</p>
@@ -310,9 +300,7 @@ export const videoXdita = `<?xml version="1.0" encoding="UTF-8"?>
       <fig>
         <video xml:lang="en" outputclass="videoElement" width="640" height="360"  tabindex="1" controls="true" autoplay="false" loop="false" muted="false">
           <desc>Xiaomi Yeelight YLDP06YL Smart Light Bulb White</desc>
-          <fallback>
-            <p>Sorry, the video is not available.</p>
-          </fallback>
+          <fallback><p>Sorry, the video is not available.</p></fallback>
           <video-poster href="https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/1954_Kool-Aid_Commercial._Debut_of_Pitcher_Man.webm/120px--1954_Kool-Aid_Commercial._Debut_of_Pitcher_Man.webm.jpg" />
           <media-source href="https://commons.wikimedia.org/wiki/File:1954_Kool-Aid_Commercial._Debut_of_Pitcher_Man.webm" />
         </video>
@@ -359,9 +347,7 @@ export const imageXdita = `<?xml version="1.0" encoding="UTF-8"?>
     <section>
       <title>An Image</title>
       <fig>
-        <image xml:lang="en" format="test" dir="ltr" outputclass="imageElement" height="300px" width="300px" href="https://placekitten.com/300/300">
-          <alt>A kitten</alt>
-        </image>
+        <image xml:lang="en" format="test" dir="ltr" outputclass="imageElement" height="300px" width="300px" href="https://placekitten.com/300/300"><alt>A kitten</alt></image>
       </fig>
     </section>
   </body>
