@@ -9,7 +9,7 @@
     "yarn": ">=4.2.2"
   },
   "scripts": {
-    "clean": "rimraf dist",
+    "clean": "rimraf dist generated-docs",
     "fix": "node scripts/fix",
     "postinstall": "yarn fix",
     "build": "tsc",
