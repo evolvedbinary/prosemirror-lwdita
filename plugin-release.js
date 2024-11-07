@@ -124,6 +124,9 @@ module.exports = {
           this.context.stdout.write(`3. Running \`yarn version\` to bump versions of all workspaces to ${this.version}...\n`);
           for (let i = 0; i < project.workspaces.length; i++) {
             const projectWorkspace = project.workspaces[i];
+            const projectWorkspaceName = `@${projectWorkspace.manifest.name.scope}/${projectWorkspace.manifest.name.name}`;
+
+            this.context.stdout.write(`3.1 Running \`yarn version ${this.version}\` for workspace ${projectWorkspaceName}...\n`);
 
             if (projectWorkspace.cwd == project.cwd) {
               exitCode = await this.cli.run(["version", this.version]);
@@ -132,7 +135,6 @@ module.exports = {
                 return;
               }
             } else {
-              const projectWorkspaceName = `@${projectWorkspace.manifest.name.scope}/${projectWorkspace.manifest.name.name}`;
               exitCode = await this.cli.run(["workspace", projectWorkspaceName, "version", this.version]);
               if (exitCode !== 0) {
                 this.context.stderr.write(`Error: Incrementing workspace '` + projectWorkspaceName + `' version failed with code: ${exitCode}\n`);
@@ -160,7 +162,7 @@ module.exports = {
             return;
           } else {
             this.context.stdout.write("git tag OK!\n");
-          } 
+          }
           // Step 6 - git push the updates.
           this.context.stdout.write("6. git push the version update...\n");
           this.context.stdout.write("6.1. git pushing the branch...\n");
@@ -180,7 +182,7 @@ module.exports = {
             this.context.stdout.write("git push tags OK!\n");
           } 
           // Step 7 - Publish the packages to npm.js.
-          this.context.stdout.write("7. Running `yarn npn publish` to publish packages to npm.js...\n");
+          this.context.stdout.write("7. Running `yarn npm login` to publish packages to npm.js...\n");
           exitCode = await this.cli.run(["npm", "login"]);
           if (exitCode !== 0) {
             this.context.stderr.write("Error: npm login failed with code: ${exitCode}\n");
@@ -188,44 +190,47 @@ module.exports = {
           } else {
             this.context.stdout.write("npm login OK!\n");
           }
+
+          // Copy any temporarily files we need in the dists
+          let tempCopiedFiles = [];
           for (let i = 0; i < project.workspaces.length; i++) {
             const projectWorkspace = project.workspaces[i];
-
             if (projectWorkspace.cwd == project.cwd) {
               this.context.stdout.write("NOTE: Skipping publish of project root workspace!\n")
             } else {
               const projectWorkspaceName = `@${projectWorkspace.manifest.name.scope}/${projectWorkspace.manifest.name.name}`;
 
               const licenseFileExists = await access(`${projectWorkspace.cwd}/LICENSE`).then(_x => true).catch(_e => false);
-              let copiedLicenseFile = false;
               if (!licenseFileExists) {
                 // Make a copy of the LICENSE file to the workspace so that it is published as part of the package
                 try {
                   await copyFile(`${project.cwd}/LICENSE`, `${projectWorkspace.cwd}/LICENSE`);
-                  copiedLicenseFile = true;
+                  tempCopiedFiles.push(`${projectWorkspace.cwd}/LICENSE`);
                 } catch(error) {
                   this.context.stderr.write(`Error: Copying LICENSE to workspace '` + projectWorkspaceName+ `' failed: ${error}\n`);
                   return;
                 }
               }
-              // Publish the workspace package
-              exitCode = await this.cli.run(["workspace", projectWorkspaceName, "npm", "publish", "--access", "public"]);
-              if (exitCode !== 0) {
-                this.context.stderr.write(`Error: npm publish '` + projectWorkspaceName + `' failed with code: ${exitCode}\n`);
-                return;
-              } else {
-                this.context.stdout.write(`npm publish '` + projectWorkspaceName + `' OK!\n`);
-              }
+            }
+          }
 
-              if (copiedLicenseFile) {
-                // Remove the copy of the LICENSE file from the workspace
-                try {
-                  await rm(`${projectWorkspace.cwd}/LICENSE`);
-                } catch(error) {
-                  this.context.stderr.write(`Error: Removing LICENSE from workspace '` + projectWorkspaceName+ `' failed: ${error}\n`);
-                  return;
-                }
-              }
+          // Publish the workspace package
+          this.context.stdout.write("8. Running `yarn publish` to publish packages to npm.js...\n");
+          exitCode = await this.cli.run(["publish"]);
+          if (exitCode !== 0) {
+            this.context.stderr.write(`Error: npm publish failed with code: ${exitCode}\n`);
+            return;
+          } else {
+            this.context.stdout.write(`npm publish OK!\n`);
+          }
+
+          // Remove any temporarily copied files
+          for (let i = 0; i < tempCopiedFiles.length; i++) {
+            try {
+              await rm(tempCopiedFiles[i]);
+            } catch(error) {
+              this.context.stderr.write(`Error: Removing ${tempCopiedFiles[i]} from workspace failed: ${error}\n`);
+              return;
             }
           }
 
