@@ -45,7 +45,7 @@
     "staticPath": "../prosemirror-lwdita/config.json"
   },
   "dependencies": {
-    "@evolvedbinary/lwdita-xdita": "^3.2.0",
+    "@evolvedbinary/lwdita-xdita": "^3.2.1",
     "@evolvedbinary/prosemirror-lwdita": "workspace:^",
     "@evolvedbinary/prosemirror-lwdita-localization": "workspace:^",
     "prosemirror-history": "^1.4.1",
