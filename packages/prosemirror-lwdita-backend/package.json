@@ -1,7 +1,7 @@
 {
   "name": "@evolvedbinary/prosemirror-lwdita-backend",
   "private": true,
-  "version": "2.5.0",
+  "version": "2.5.1",
   "description": "Use LwDITA in ProseMirror",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
