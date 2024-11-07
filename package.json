@@ -1,6 +1,6 @@
 {
   "name": "@evolvedbinary/prosemirror-lwdita-package",
-  "version": "2.4.0",
+  "version": "2.5.0",
   "description": "ProseMirror plugin to edit LwDITA documents",
   "repository": {
     "type": "git",
@@ -36,7 +36,8 @@
     "generate-docs": "yarn workspace @evolvedbinary/prosemirror-lwdita-localization generate-docs && yarn workspace @evolvedbinary/prosemirror-lwdita generate-docs",
     "lint": "eslint packages/* --ext .ts",
     "lint:fix": "eslint packages/* --ext .ts --fix",
-    "start:backend": "yarn workspace @evolvedbinary/prosemirror-lwdita-backend start"
+    "start:backend": "yarn workspace @evolvedbinary/prosemirror-lwdita-backend start",
+    "publish": "yarn workspace @evolvedbinary/prosemirror-lwdita-localization npm publish --access public && yarn workspace @evolvedbinary/prosemirror-lwdita npm publish --access public && yarn workspace @evolvedbinary/prosemirror-lwdita-demo npm publish --access public"
   },
   "engines": {
     "node": ">=20.10.0 <21",
