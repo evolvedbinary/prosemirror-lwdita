@@ -106,7 +106,7 @@ function renderProsemirrorDocument(jsonDoc: Record<string, Json>, urlParams: URL
           ]],
           start: [[
             urlParams? publishFileMenuItem(config, localization, urlParams) : openFileMenuItem(localization),
-            saveFileMenuItem(localization)
+            saveFileMenuItem(urlParams, localization)
           ]],
         }),
         doubleClickImagePlugin(localization)
