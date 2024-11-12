@@ -104,6 +104,9 @@ jobs:
       - run: "corepack enable"
       - cypress/install:
           package-manager: "yarn-berry"
+      - run:
+          name: build
+          command: yarn build
       - cypress/run-tests:
           cypress-command: yarn run test:demo
 
