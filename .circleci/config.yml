@@ -91,6 +91,9 @@ jobs:
       - install-yarn
       - install-dependencies
       - run:
+          name: build
+          command: yarn build
+      - run:
           name: build-demo
           command: yarn build:demo
   run-cypress:
