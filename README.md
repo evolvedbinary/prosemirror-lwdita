@@ -81,6 +81,8 @@ We provide a [small demo](prosemirror-lwdita-demo/src/) to showcase features and
 git clone https://github.com/evolvedbinary/prosemirror-lwdita.git
 cd prosemirror-lwdita
 yarn install
+# build the project libraries
+yarn build
 
 # start the demo
 yarn start:demo
