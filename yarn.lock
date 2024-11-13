@@ -373,7 +373,7 @@ __metadata:
     prosemirror-state: "npm:^1.4.3"
     prosemirror-view: "npm:^1.34.3"
     rimraf: "npm:^6.0.1"
-    sass: "npm:^1.80.4"
+    sass: "npm:^1.80.7"
     start-server-and-test: "npm:^2.0.8"
     urijs: "npm:^1.19.11"
   languageName: unknown
@@ -5622,6 +5622,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"immutable@npm:^5.0.2":
+  version: 5.0.2
+  resolution: "immutable@npm:5.0.2"
+  checksum: 10c0/0d97ad95384e49563b6ed68f90e5ea83c149fd96ff417fae8274e1c524e3ef800eb1a2e8009e29d9b8ffdf63affd7692f87c8af72714181aad8dca88747fb5ac
+  languageName: node
+  linkType: hard
+
 "import-fresh@npm:^3.2.1, import-fresh@npm:^3.3.0":
   version: 3.3.0
   resolution: "import-fresh@npm:3.3.0"
@@ -8210,7 +8217,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"sass@npm:^1.38.0, sass@npm:^1.80.4":
+"sass@npm:^1.38.0":
   version: 1.80.4
   resolution: "sass@npm:1.80.4"
   dependencies:
@@ -8221,6 +8228,23 @@ __metadata:
   bin:
     sass: sass.js
   checksum: 10c0/58ca0f2d10720cde6621ee62f4bdbb537ea2ac572c565d5f02309f8271a5e1e880ad8c163b933e52b22b3dc0550973fb5a6033a500248e6a0d89dd050c1743cf
+  languageName: node
+  linkType: hard
+
+"sass@npm:^1.80.7":
+  version: 1.80.7
+  resolution: "sass@npm:1.80.7"
+  dependencies:
+    "@parcel/watcher": "npm:^2.4.1"
+    chokidar: "npm:^4.0.0"
+    immutable: "npm:^5.0.2"
+    source-map-js: "npm:>=0.6.2 <2.0.0"
+  dependenciesMeta:
+    "@parcel/watcher":
+      optional: true
+  bin:
+    sass: sass.js
+  checksum: 10c0/e0e0df8dc9dd7694826f915196a96cda45fe0fc849be9fc08b43c12aa1250eb512130979ed239e1106476973ace1f52abbcc1d5900a075d3813c282a626dcbf7
   languageName: node
   linkType: hard
 
