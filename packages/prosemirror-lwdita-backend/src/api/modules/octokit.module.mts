@@ -329,7 +329,10 @@ export const pushChangesAndCreatePullRequest = async (octokit: Octokit, owner: s
     // create a pull request
 
     // get the access token for the installation
-    const installationId = 55447850;
+    
+    const installationId = await getInstallationId(octokit, owner);
+    console.log("Installation ID:", installationId);
+    
     const accessToken = await getInstallationAccessToken(installationId) as string;
 
     const pullRequestUrl = await createPullRequest(accessToken, 'marmoure', repo, branch, head, title, body);
@@ -343,11 +346,26 @@ export const pushChangesAndCreatePullRequest = async (octokit: Octokit, owner: s
 };
 
 
+// http://localhost:1234/?ghrepo=marmoure/xdita-sample&source=small-example.xml&branch=main&referer=http://random-doc-page.com
+async function getInstallationId(octokit: Octokit, owner: string): Promise<number> {
+  const { data: installations } = await octokit.apps.listInstallationsForAuthenticatedUser();
+  console.log("Installations:", installations);
+  for(const installation of installations.installations) {
+    // The account object is mistyped in the current version of the Octokit library
+    const account = installation.account as { login: string }; 
+    if(account.login === owner && installation.repository_selection === "all") {
+      return installation.id;
+    }
+  }
+  
+  return 0;
+}
+
 
 // Get the installation access token
 async function getInstallationAccessToken(installationId: number) {
   // Authenticate as the GitHub App using the JWT
-  const jwttoken = ``
+  const jwttoken = `eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3MzE0OTM0ODEsImV4cCI6MTczMTQ5NDA4MSwiaXNzIjo5Nzc1MzR9.RQaR8oBO13mEYVh6mEAT8crfMfgYHHSjrgy4JDy9aiKr3YPe0KCCAK7x3pEbWBdzcbzIy7yAXVTeFkR08D7Yh5cGfATTu0sb_fGzCK_y5sXj_gEapiGnkT-Rut8yQn7mkvEJYEFZ_oWvfkwdPj0I1wymzsm1rTo8GXB94LB1ZOu1Mg8tkMQJLaO_p93uhID5RkrwNQCbzGMcWQ4-gEdKeoO8MCY2PhbsBJzwYK8rw4WtUwtoBCIVA6KzWnDhCJSEqFOM_qnqiFHzuPlXC1INPC1eket6F_mk1xRIRPuGw0UiG9xHLzfYOFI6zMnsYmWEoYx8KUiNj7Wl3Xc2LvEfRg`
 
   const octokitApp = new Octokit({
     auth: jwttoken,
