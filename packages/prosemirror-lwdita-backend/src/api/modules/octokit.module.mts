@@ -19,6 +19,7 @@ import { Octokit } from "@octokit/rest";
 import { App } from 'octokit';
 import { Endpoints } from "@octokit/types";
 import dotenv from 'dotenv'; 
+import { getJWT } from "../../token.js";
 dotenv.config();  // Load environment variables from .env file 
 
 // user data type
@@ -330,12 +331,12 @@ export const pushChangesAndCreatePullRequest = async (octokit: Octokit, owner: s
 
     // get the access token for the installation
     
-    const installationId = await getInstallationId(octokit, owner);
+    const installationId = await getInstallationId(octokit, newOwner);
     console.log("Installation ID:", installationId);
     
     const accessToken = await getInstallationAccessToken(installationId) as string;
 
-    const pullRequestUrl = await createPullRequest(accessToken, 'marmoure', repo, branch, head, title, body);
+    const pullRequestUrl = await createPullRequest(accessToken, owner, repo, branch, head, title, body);
     if(!pullRequestUrl) {
       throw new Error("Error during pull request creation");
     }
@@ -352,7 +353,9 @@ async function getInstallationId(octokit: Octokit, owner: string): Promise<numbe
   console.log("Installations:", installations);
   for(const installation of installations.installations) {
     // The account object is mistyped in the current version of the Octokit library
-    const account = installation.account as { login: string }; 
+    const account = installation.account as { login: string };
+    console.log("Account:", account);
+     
     if(account.login === owner && installation.repository_selection === "all") {
       return installation.id;
     }
@@ -365,7 +368,7 @@ async function getInstallationId(octokit: Octokit, owner: string): Promise<numbe
 // Get the installation access token
 async function getInstallationAccessToken(installationId: number) {
   // Authenticate as the GitHub App using the JWT
-  const jwttoken = `eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3MzE0OTM0ODEsImV4cCI6MTczMTQ5NDA4MSwiaXNzIjo5Nzc1MzR9.RQaR8oBO13mEYVh6mEAT8crfMfgYHHSjrgy4JDy9aiKr3YPe0KCCAK7x3pEbWBdzcbzIy7yAXVTeFkR08D7Yh5cGfATTu0sb_fGzCK_y5sXj_gEapiGnkT-Rut8yQn7mkvEJYEFZ_oWvfkwdPj0I1wymzsm1rTo8GXB94LB1ZOu1Mg8tkMQJLaO_p93uhID5RkrwNQCbzGMcWQ4-gEdKeoO8MCY2PhbsBJzwYK8rw4WtUwtoBCIVA6KzWnDhCJSEqFOM_qnqiFHzuPlXC1INPC1eket6F_mk1xRIRPuGw0UiG9xHLzfYOFI6zMnsYmWEoYx8KUiNj7Wl3Xc2LvEfRg`
+  const jwttoken = getJWT();
 
   const octokitApp = new Octokit({
     auth: jwttoken,

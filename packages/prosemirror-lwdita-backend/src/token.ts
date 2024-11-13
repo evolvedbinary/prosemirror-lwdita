@@ -15,22 +15,23 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import express from 'express';
-import githubRouter from './api/routes/github.router';
-import cors from 'cors';
+const fs = require('fs');
+const jwt = require('jsonwebtoken');
 
-const app = express();
-app.use(express.json());
-app.use(cors());
 
-// add the github module to the http server
-// this will forward all requests starting with /api/github to the githubRouter
-app.use('/api/github', githubRouter);
+const GITHUB_APP_ID = 977534;  // Your GitHub App ID
+const PRIVATE_KEY = fs.readFileSync('src/petal-demo.2024-11-13.private-key.pem', 'utf8');
+// Create the JWT
+const payload = {
+  iat: Math.floor(Date.now() / 1000), // Issued at time
+  exp: Math.floor(Date.now() / 1000) + (10 * 60), // JWT expiration time (max 10 minutes)
+  iss: GITHUB_APP_ID, // GitHub App ID
+};
 
-app.get('/', (req, res) => {
-  res.send('the server is running');
-});
+export const getJWT = ():string => {
+  const jwtToken = jwt.sign(payload, PRIVATE_KEY, { algorithm: 'RS256' });
+  return jwtToken;
+};
 
-app.listen(3000, () => {
-  console.log('Server is running on http://localhost:3000');
-});
+// console.log("Generated JWT:", jwtToken);
+

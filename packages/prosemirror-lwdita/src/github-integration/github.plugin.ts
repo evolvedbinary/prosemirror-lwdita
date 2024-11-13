@@ -31,7 +31,7 @@ import { document as jditaToProsemirrorJson } from "../document";
  * should use the GitHub API to dynamically determine the default branch of the repository.
  */
 export const fetchRawDocumentFromGitHub = async (ghrepo: string, source: string, branch: string): Promise<string> => {
-  const url = `https://raw.githubusercontent.com/${ghrepo}/${branch}/${source}`;
+  const url = `https://raw.githubusercontent.com/${ghrepo}/refs/heads/${branch}/${source}`;
   const response = await fetch(url);
 
   //TODO: Handle errors

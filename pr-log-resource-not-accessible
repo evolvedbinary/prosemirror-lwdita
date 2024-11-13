@@ -1,0 +1,57 @@
+ {
+  status: 403,
+  request: {
+    method: 'POST',
+    url: 'https://api.github.com/repos/marmoure/xdita-sample/pulls',
+    headers: {
+      accept: 'application/vnd.github.v3+json',
+      'user-agent': 'octokit-rest.js/21.0.2 octokit-core.js/6.1.2 Node.js/20.10.0 (win32; x64)',
+      authorization: 'token [REDACTED]',
+      'content-type': 'application/json; charset=utf-8'
+    },
+    body: [Object: null prototype] {
+      title: 'updating base install user info',
+      body: 'This pull request was created by **Petal-demo bot** on behalf of **[marmoure]**.\n' +
+        '\n' +
+        'Additional details about the update...',
+      head: 'BUCAmilo01:doc/petal-202410131264',
+      base: 'main'
+    },
+    request: { hook: [Function: bound bound register] }
+  },
+  response: {
+    url: 'https://api.github.com/repos/marmoure/xdita-sample/pulls',
+    status: 403,
+    headers: {
+      'access-control-allow-origin': '*',
+      'access-control-expose-headers': 'ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, 
+X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset',
+      'content-encoding': 'gzip',
+      'content-security-policy': "default-src 'none'",
+      'content-type': 'application/json; charset=utf-8',
+      date: 'Wed, 13 Nov 2024 11:06:08 GMT',
+      'referrer-policy': 'origin-when-cross-origin, strict-origin-when-cross-origin',
+      server: 'github.com',
+      'strict-transport-security': 'max-age=31536000; includeSubdomains; preload',
+      'transfer-encoding': 'chunked',
+      vary: 'Accept-Encoding, Accept, X-Requested-With',
+      'x-accepted-github-permissions': 'pull_requests=write',
+      'x-content-type-options': 'nosniff',
+      'x-frame-options': 'deny',
+      'x-github-api-version-selected': '2022-11-28',
+      'x-github-media-type': 'github.v3; format=json',
+      'x-github-request-id': 'CBC3:0EC3:1F99523:20196C5:6734881F',
+      'x-ratelimit-limit': '5000',
+      'x-ratelimit-remaining': '4999',
+      'x-ratelimit-reset': '1731499568',
+      'x-ratelimit-resource': 'core',
+      'x-ratelimit-used': '1',
+      'x-xss-protection': '0'
+    },
+    data: {
+      message: 'Resource not accessible by integration',
+      documentation_url: 'https://docs.github.com/rest/pulls/pulls#create-a-pull-request',
+      status: '403'
+    }
+  }
+}
