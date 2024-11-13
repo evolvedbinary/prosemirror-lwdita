@@ -91,6 +91,9 @@ jobs:
       - install-yarn
       - install-dependencies
       - run:
+          name: build
+          command: yarn build
+      - run:
           name: build-demo
           command: yarn build:demo
   run-cypress:
@@ -101,6 +104,9 @@ jobs:
       - run: "corepack enable"
       - cypress/install:
           package-manager: "yarn-berry"
+      - run:
+          name: build
+          command: yarn build
       - cypress/run-tests:
           cypress-command: yarn run test:demo
 
