@@ -153,13 +153,8 @@ const createFork = async (octokit: Octokit, owner: string, repo: string): Promis
  * @param newBranch - The name of the new branch to be created.
  * @returns A Promise that resolves to a BranchInfo object representing the newly created branch, or undefined if an error occurs.
  */
-const createBranch = async (octokit: Octokit, owner: string, repo: string, branch: string, newBranch: string): Promise<BranchInfo | undefined> => {
+const createBranch = async (octokit: Octokit, owner: string, newOwner: string, repo: string, branch: string, newBranch: string): Promise<BranchInfo | undefined> => {
   try {
-    // get the repo data
-    const { data: repoData } = await octokit.repos.get({
-      owner, // this should be the authenticated user name
-      repo,
-    });
 
     // get the default branch ref
     const { data: branchData } = await octokit.repos.getBranch({
@@ -171,10 +166,9 @@ const createBranch = async (octokit: Octokit, owner: string, repo: string, branc
     // get the last commit sha
     const lastCommitSha = branchData.commit.sha;
 
-    //TODO(YB): Check if the branch already exists
-    // create the new branch
+    // create the new branch based on upstream
     const { data: refData } = await octokit.git.createRef({
-      owner,
+      owner: newOwner,
       repo,
       ref: `refs/heads/${newBranch}`,
       sha: lastCommitSha,
@@ -320,7 +314,7 @@ export const pushChangesAndCreatePullRequest = async (octokit: Octokit, owner: s
       throw new Error("Error during fork creation");
     }
     // create a new branch
-    const createdBranch = await createBranch(octokit, newOwner, repo, branch, newBranch);
+    const createdBranch = await createBranch(octokit, owner, newOwner, repo, branch, newBranch);
     if(!createdBranch) {
       throw new Error("Error during branch creation");
     }
