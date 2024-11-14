@@ -49,7 +49,7 @@ describe('document()', () => {
     await expect(
       xditaToJdita(topic(attrs))
         .then(jdita => document(jdita))
-        .catch(e => console.log('error:', e))
+        .catch(e => console.error('error:', e))
     ).to.eventually.become(pmjson);
   });
 });

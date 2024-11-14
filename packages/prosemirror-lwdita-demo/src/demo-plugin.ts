@@ -41,7 +41,7 @@ function openFile(localization: Localization, input: InputContainer): Command {
         reader.readAsBinaryString(file);
         reader.onerror = () => {
           showToast(localization.t("error.toastFileUploadInvalid"), 'error');
-          console.log('Error reading file');
+          console.error('Error reading file');
         };
         reader.onload = () => {
           if (dispatch && typeof reader.result === 'string') {
@@ -62,7 +62,7 @@ function openFile(localization: Localization, input: InputContainer): Command {
       if (dispatch) {
         if (!input.el) {
           showToast(localization.t("error.toastFileUploadNoInput"), 'error');
-          console.log('no input found');
+          console.error('no input found');
           return false;
         }
         input.el.value = '';
@@ -182,7 +182,7 @@ function publishGithubDocument(config: Config, localization: Localization, urlPa
       renderPrDialog(config, localization, urlParams.ghrepo, urlParams.source, urlParams.branch, document);
     } else {
       showToast(localization.t("error.toastGitHubPublishNoEditorState"), 'error');
-      console.log('Nothing to publish, no EditorState has been dispatched.');
+      console.error('Nothing to publish, no EditorState has been dispatched.');
     }
   }
 }
@@ -236,14 +236,14 @@ function saveFile(localization: Localization, _input: InputContainer): Command {
         link.setAttribute('href', url);
       } else {
         showToast(localization.t("error.toastFileDownload"), 'error');
-        console.log('The URL could not be assigned to the element, the link is not available.')
+        console.error('The URL could not be assigned to the element, the link is not available.')
       }
       // TODO: Implement a callback function to check if the download has been completed
       // After the load has completed revoke the data URL with `URL.revokeObjectURL(url);`
       // See https://w3c.github.io/FileAPI/#examplesOfCreationRevocation
     } else {
       showToast(localization.t("error.toastFileDownload"), 'error');
-      console.log('Nothing to download, no EditorState has been dispatched.');
+      console.error('Nothing to download, no EditorState has been dispatched.');
     }
   }
 }
