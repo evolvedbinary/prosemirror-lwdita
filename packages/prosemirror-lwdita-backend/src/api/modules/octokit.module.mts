@@ -81,9 +81,7 @@ export const authenticateWithOAuth = async (clientId: string, clientSecret: stri
       // The account object is mistyped in the current version of the Octokit library
       const account = installation.account as { login: string };
 
-      if(account.login === user.data.login && installation.repository_selection === "all") {
-        console.log("Installation found: ", installation);
-        
+      if(account.login === user.data.login && installation.repository_selection === "all") {        
         installId = installation.id;
         break;
       }

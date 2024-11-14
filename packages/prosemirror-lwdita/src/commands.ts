@@ -249,8 +249,6 @@ export function renderPrDialog(config: Config, localization: Localization, ghrep
       // Create a PR from the contribution
       createPrFromContribution(config, localization, ghrepo, source, branch, updatedXdita, title, description)
         .then((prURL: string) => {
-          console.log('The document has been published to GitHub.');
-          console.log('pr url:', prURL);
           // Show a user notification with the successful result and a link to the PR
           showPublicationResultSuccess(localization, prURL)
         }).catch((error: Error) => {

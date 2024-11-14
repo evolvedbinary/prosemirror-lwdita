@@ -213,7 +213,7 @@ export function processRequest(config: Config, localization: Localization): unde
             // this is currently not implemeted, thus a simple toast notification for now
             // showErrorPage('missingAuthentication', '', errorParam.value);
             showToast('Please authenticate with GitHub', 'error');
-            console.log('processRequest(): error', errorParam.value);
+            console.error('processRequest(): error', errorParam.value);
           }
 
           exchangeOAuthCodeForAccessToken(config, localization, returnParams.code).then(({token, installation}) => {
