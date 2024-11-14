@@ -71,12 +71,27 @@ export const authenticateWithOAuth = async (clientId: string, clientSecret: stri
         retryAfter: 1,   
       }
     });
+    
+    const user = await octokit.users.getAuthenticated();
 
-    const installations = await octokit.apps.listInstallationsForAuthenticatedUser();
+    const { data: installations} = await octokit.apps.listInstallationsForAuthenticatedUser();
+    let installId = 0;
+ 
+    for (const installation of installations.installations ) {
+      // The account object is mistyped in the current version of the Octokit library
+      const account = installation.account as { login: string };
+
+      if(account.login === user.data.login && installation.repository_selection === "all") {
+        console.log("Installation found: ", installation);
+        
+        installId = installation.id;
+        break;
+      }
+    }
 
     return {
       token,
-      installation: installations.data.installations.length > 0 && installations.data.installations[0].repository_selection === "all"
+      installation: installId !== 0
     };
   } catch (error) {
     console.error("Error during OAuth authentication", error);
