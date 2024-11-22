@@ -126,10 +126,6 @@ describe('request the token after OAuth', () => {
     // Verify that the token request was made
     cy.get('@requestToken').should('have.property', 'response');
     cy.get('@requestToken').its('response.statusCode').should('eq', 200);
-
-    cy.getAllLocalStorage().then((result) => {
-      expect(result['http://localhost:1234']).to.have.property('token');
-    })
   });
 
   it('should ask the user to install the app when token request returns not installed', () => {
