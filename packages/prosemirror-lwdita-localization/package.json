@@ -1,5 +1,5 @@
 {
-  "name": "@evolvedbinary/prosemirror-lwdita-localization",
+  "name": "@marmoure/prosemirror-lwdita-localization",
   "version": "2.5.1",
   "description": "Localization for LwDITA in ProseMirror",
   "main": "./dist/index.js",
@@ -20,7 +20,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/evolvedbinary/prosemirror-lwdita.git"
+    "url": "git+https://github.com/marmoure/prosemirror-lwdita.git"
   },
   "keywords": [
     "ProseMirror",
@@ -32,7 +32,7 @@
     "JSON",
     "i18n"
   ],
-  "author": "Evolved Binary",
+  "author": "marmoure",
   "license": "AGPL-3.0",
   "bugs": {
     "url": "https://github.com/evolvedbinary/prosemirror-lwdita/issues"

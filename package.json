@@ -1,10 +1,10 @@
 {
-  "name": "@evolvedbinary/prosemirror-lwdita-package",
+  "name": "@marmoure/prosemirror-lwdita-package",
   "version": "2.5.1",
   "description": "ProseMirror plugin to edit LwDITA documents",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/evolvedbinary/prosemirror-lwdita.git"
+    "url": "git+https://github.com/marmoure/prosemirror-lwdita.git"
   },
   "keywords": [
     "ProseMirror",
@@ -15,7 +15,7 @@
     "JDITA",
     "JSON"
   ],
-  "author": "Evolved Binary",
+  "author": "marmoure",
   "license": "AGPL-3.0",
   "bugs": {
     "url": "https://github.com/evolvedbinary/prosemirror-lwdita/issues"

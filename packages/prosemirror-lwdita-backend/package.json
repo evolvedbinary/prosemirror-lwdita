@@ -1,5 +1,5 @@
 {
-  "name": "@evolvedbinary/prosemirror-lwdita-backend",
+  "name": "@marmoure/prosemirror-lwdita-backend",
   "private": true,
   "version": "2.5.1",
   "description": "Use LwDITA in ProseMirror",
@@ -21,7 +21,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/evolvedbinary/prosemirror-lwdita.git"
+    "url": "git+https://github.com/marmoure/prosemirror-lwdita.git"
   },
   "keywords": [
     "ProseMirror",
@@ -32,7 +32,7 @@
     "JDITA",
     "JSON"
   ],
-  "author": "Evolved Binary",
+  "author": "marmoure",
   "license": "AGPL-3.0",
   "bugs": {
     "url": "https://github.com/evolvedbinary/prosemirror-lwdita/issues"
