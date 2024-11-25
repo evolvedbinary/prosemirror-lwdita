@@ -47,8 +47,8 @@
   },
   "dependencies": {
     "@evolvedbinary/lwdita-xdita": "^3.2.1",
-    "@evolvedbinary/prosemirror-lwdita": "workspace:^",
-    "@evolvedbinary/prosemirror-lwdita-localization": "workspace:^",
+    "@marmoure/prosemirror-lwdita": "workspace:^",
+    "@marmoure/prosemirror-lwdita-localization": "workspace:^",
     "prosemirror-history": "^1.4.1",
     "prosemirror-menu": "^1.2.4",
     "prosemirror-model": "^1.23.0",

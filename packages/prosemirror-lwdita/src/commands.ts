@@ -23,7 +23,7 @@ import { Command, EditorState, TextSelection, Transaction } from 'prosemirror-st
 import { createPrFromContribution } from './github-integration/github.plugin';
 import { showPublicationResultError, showPublicationResultSuccess, showToast } from './toast';
 import { Config } from './config';
-import { Localization } from "@evolvedbinary/prosemirror-lwdita-localization";
+import { Localization } from "@marmoure/prosemirror-lwdita-localization";
 
 /**
  * Create a new Node and fill it with the args as attributes.

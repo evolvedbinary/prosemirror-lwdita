@@ -18,7 +18,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 import Toastify, { Options } from 'toastify-js';
-import { Localization } from "@evolvedbinary/prosemirror-lwdita-localization";
+import { Localization } from "@marmoure/prosemirror-lwdita-localization";
 
 /**
  * Displays a simple and basic toast message with 'Toastify' library.

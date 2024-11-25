@@ -18,7 +18,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import { exchangeOAuthCodeForAccessToken } from './github.plugin';
 import { showToast } from '../toast';
 import { Config } from '../config';
-import { Localization } from '@evolvedbinary/prosemirror-lwdita-localization';
+import { Localization } from '@marmoure/prosemirror-lwdita-localization';
 
 /**
  * Interface for the URL parameters

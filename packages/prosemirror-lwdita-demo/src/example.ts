@@ -34,8 +34,8 @@ import {
   fetchAndTransform,
   URLParams,
   Json
-} from "@evolvedbinary/prosemirror-lwdita";
-import { createLocalization } from "@evolvedbinary/prosemirror-lwdita-localization";
+} from "@marmoure/prosemirror-lwdita";
+import { createLocalization } from "@marmoure/prosemirror-lwdita-localization";
 
 //load the localization 
 const localization = createLocalization();

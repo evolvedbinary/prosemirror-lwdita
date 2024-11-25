@@ -21,7 +21,7 @@ import { toggleMark, newLine, hasMark, insertNode, insertImage, imageInputOverla
 import { redo, undo } from "prosemirror-history";
 import { MarkType, NodeType, Schema } from "prosemirror-model";
 import { Command, Plugin } from "prosemirror-state";
-import { Localization } from "@evolvedbinary/prosemirror-lwdita-localization";
+import { Localization } from "@marmoure/prosemirror-lwdita-localization";
 
 /**
  * This is the entire DOM node of the Prosemirror editor that will be observed for DOM mutations

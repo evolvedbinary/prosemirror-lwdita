@@ -20,7 +20,7 @@ import { document as jditaToProsemirrorJson } from "../document";
 import { showErrorPage } from "./request";
 import { showToast } from "../toast";
 import { Config } from "../config";
-import { Localization } from "@evolvedbinary/prosemirror-lwdita-localization";
+import { Localization } from "@marmoure/prosemirror-lwdita-localization";
 import urijs from "urijs";
 
 /**

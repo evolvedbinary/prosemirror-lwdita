@@ -1,7 +1,7 @@
 # ProseMirror LwDITA
 
-[![Node.js Version](https://img.shields.io/node/v-lts/@evolvedbinary/prosemirror-lwdita)](https://nodejs.org)
-[![Npm Package Version](https://img.shields.io/npm/v/@evolvedbinary/prosemirror-lwdita)](https://www.npmjs.com/package/@evolvedbinary/prosemirror-lwdita)
+[![Node.js Version](https://img.shields.io/node/v-lts/@marmoure/prosemirror-lwdita)](https://nodejs.org)
+[![Npm Package Version](https://img.shields.io/npm/v/@marmoure/prosemirror-lwdita)](https://www.npmjs.com/package/@marmoure/prosemirror-lwdita)
 [![Build Status](https://circleci.com/gh/evolvedbinary/prosemirror-lwdita.svg?style=svg)](https://circleci.com/gh/evolvedbinary/prosemirror-lwdita)
 [![Coverage Status](https://coveralls.io/repos/github/evolvedbinary/prosemirror-lwdita/badge.svg?branch=main)](https://coveralls.io/github/evolvedbinary/prosemirror-lwdita?branch=main)
 
@@ -16,21 +16,21 @@ The implemented schema complies with the LwDITA specs v0.3.0.2, see: [https://gi
 Add the library to your project using Yarn or Npm:
 
 ```shell
-yarn add @evolvedbinary/prosemirror-lwdita
+yarn add @marmoure/prosemirror-lwdita
 ```
 
 ```shell
-npm install @evolvedbinary/prosemirror-lwdita
+npm install @marmoure/prosemirror-lwdita
 ```
 
 Include the Library:
 
 ```javascript
 // SCHEMA builder
-import { schema } from "@evolvedbinary/prosemirror-lwdita";
+import { schema } from "@marmoure/prosemirror-lwdita";
 //PLUGINS
-import { menu, shortcuts } from "@evolvedbinary/prosemirror-lwdita";
-import { document } from "@evolvedbinary/prosemirror-lwdita";
+import { menu, shortcuts } from "@marmoure/prosemirror-lwdita";
+import { document } from "@marmoure/prosemirror-lwdita";
 //Transform library
 import { xditaToJson } from "lwdita";
 ```

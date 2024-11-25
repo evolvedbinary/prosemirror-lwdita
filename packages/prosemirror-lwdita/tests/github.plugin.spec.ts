@@ -20,7 +20,7 @@ import { fetchRawDocumentFromGitHub, transformGitHubDocumentToProsemirrorJson, c
 import fetchMock from 'fetch-mock';
 import { shortXdita, shortXditaProsemirroJson } from './test-utils';
 import { MockConfig } from './mock.config';
-import { createLocalization } from '@evolvedbinary/prosemirror-lwdita-localization';
+import { createLocalization } from '@marmoure/prosemirror-lwdita-localization';
 
 const config = new MockConfig();
 const localization = createLocalization();

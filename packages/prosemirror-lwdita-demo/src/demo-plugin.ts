@@ -17,11 +17,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import { Command } from "prosemirror-commands";
 import { MenuElement, MenuItem, MenuItemSpec } from "prosemirror-menu";
-import { Config, InputContainer, renderPrDialog, showToast, unTravel, URLParams } from "@evolvedbinary/prosemirror-lwdita";
+import { Config, InputContainer, renderPrDialog, showToast, unTravel, URLParams } from "@marmoure/prosemirror-lwdita";
 import { jditaToAst, XditaSerializer } from "@evolvedbinary/lwdita-xdita";
 import { InMemoryTextSimpleOutputStreamCollector } from "@evolvedbinary/lwdita-xdita/dist/stream";
 import { EditorState, Transaction } from "prosemirror-state";
-import { Localization } from "@evolvedbinary/prosemirror-lwdita-localization";
+import { Localization } from "@marmoure/prosemirror-lwdita-localization";
 import urijs from "urijs";
 
 /**
