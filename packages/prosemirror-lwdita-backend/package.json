@@ -1,7 +1,7 @@
 {
   "name": "@marmoure/prosemirror-lwdita-backend",
   "private": true,
-  "version": "2.5.1",
+  "version": "0.5.3",
   "description": "Use LwDITA in ProseMirror",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

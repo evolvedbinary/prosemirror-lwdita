@@ -1,6 +1,6 @@
 {
   "name": "@marmoure/prosemirror-lwdita-package",
-  "version": "2.5.1",
+  "version": "0.5.3",
   "description": "ProseMirror plugin to edit LwDITA documents",
   "repository": {
     "type": "git",
@@ -37,7 +37,7 @@
     "lint": "eslint packages/* --ext .ts",
     "lint:fix": "eslint packages/* --ext .ts --fix",
     "start:backend": "yarn workspace @marmoure/prosemirror-lwdita-backend start",
-    "publish": "yarn workspace @marmoure/prosemirror-lwdita-localization npm publish --access public && yarn workspace @marmoure/prosemirror-lwdita npm publish --access public && yarn workspace @marmoure/prosemirror-lwdita-demo npm publish --access public"
+    "publish": "yarn workspace @marmoure/prosemirror-lwdita-localization npm publish --access public && yarn workspace @marmoure/prosemirror-lwdita npm publish --access public"
   },
   "engines": {
     "node": ">=20.10.0 <21",
