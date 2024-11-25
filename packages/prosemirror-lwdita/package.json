@@ -44,11 +44,6 @@
     "test": "./test",
     "scripts": "./scripts"
   },
-  "files": [
-    "lib",
-    "scripts",
-    "index.js"
-  ],
   "dependencies": {
     "@evolvedbinary/lwdita-ast": "^3.2.1",
     "@evolvedbinary/lwdita-xdita": "^3.2.1",
