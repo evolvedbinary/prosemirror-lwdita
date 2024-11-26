@@ -42,11 +42,6 @@
     "src": "./src",
     "test": "./test"
   },
-  "files": [
-    "lib",
-    "scripts",
-    "index.js"
-  ],
   "dependencies": {
     "@types/node-polyglot": "^2.5.0"
   },
