@@ -24,6 +24,8 @@ import { createPrFromContribution } from './github-integration/github.plugin';
 import { showPublicationResultError, showPublicationResultSuccess, showToast } from './toast';
 import { Config } from './config';
 import { Localization } from "@evolvedbinary/prosemirror-lwdita-localization";
+import { EditorView } from 'prosemirror-view';
+import { nodeLongName } from './schema';
 
 /**
  * Create a new Node and fill it with the args as attributes.
@@ -610,34 +612,125 @@ function defaultBlockAt(pos: ResolvedPos, depth = 0, preferred?: NodeType) {
 /**
  * Handle the enter key event when the cursor is at the end of the line.
  *
- *
  * @param tr - The transaction object
  * @param dispatch - dispatch function
  * @param depth - distance from the current cursor position to the closest parent Node with children
  * @returns Boolean - true if the transaction is triggered
  */
-export function enterEOL(tr: Transaction, dispatch = false, depth = 0): Transaction | false {
-  const { $from, $to } = tr.selection
-  const parent = $to.node(-depth || undefined);
-  // get the allowed node types that can be created at the current cursor position
-  const type = defaultBlockAt($to, depth, parent.type);
+export function enterEOL(tr: Transaction, dispatch = false, depth = 0, view?: EditorView): Transaction | false {
+  // if no dispatch function is passed, return false
+  if (!dispatch) return false;
+  const { $from } = tr.selection;
 
-  // if the transaction is triggered from the last function call
-  if (dispatch) {
-    //if we have a possible node type to create
-    if (type) {
-      // get the new cursor position
-      const side = (!$from.parentOffset && $to.index() < parent.childCount ? $from : $to).pos + depth + 1;
-      // create and insert the new node
-      tr = tr.insert(side, createNodesTree(getTree($from, depth)));
-      // select the new node
-      tr = tr.setSelection(TextSelection.create(tr.doc, side + depth + 1));
-      // complete the transaction
-      return tr.scrollIntoView();
+  // get the next sibling for the parent as well
+  const nextSiblings = getPossibleNextSiblingTypes($from.node($from.depth - 1).type);
+
+  //TODO filter valid next siblings
+
+  console.log('all possible next siblings: ',nextSiblings);
+  // debugger
+  
+  const pos = view?.coordsAtPos($from.pos);
+  return showPopup(nextSiblings, {left: pos?.left || 0, top: pos?.top || 0 }, view);
+}
+
+// Create a popup element and append it to the body
+const createPopup = (NodeTypes: NodeType[], pos: {top: number, left: number}, view?: EditorView,) => {
+  const popup = document.createElement("div");
+  popup.id = "siblings-popup";
+  popup.style.position = "absolute";
+  popup.style.top = `${pos.top + window.scrollY}px`;
+  popup.style.left = `${pos.left + window.scrollX}px`;
+  popup.style.zIndex = "1000";
+  popup.style.backgroundColor = "white";
+  popup.style.border = "1px solid black";
+
+  const list = document.createElement("ul");
+  list.style.listStyle = "none";
+  list.style.margin = "0";
+  list.style.padding = "0.5rem";
+  popup.appendChild(list);
+
+  NodeTypes.forEach((type, index) => {
+    const sibling = document.createElement("li");
+    sibling.style.cursor = "pointer";
+    sibling.tabIndex = 0;
+    if (index === 0) {
+      sibling.style.fontWeight = "bold";
     }
-    return false;
+    sibling.innerText = `${type.name}: ${nodeLongName[type.name]}`;
+
+    sibling.addEventListener("click", () => {
+      console.log(`User selected: ${type.name}`);
+      document.body.removeChild(popup); // Remove popup after selection
+      if(!view) return;
+      // Set focus back to the editor
+      view.focus();
+      // Create a new node and insert it after the current node 
+      insertNodeAfterCurrentNode(view, type);
+    });
+
+    list.appendChild(sibling);
+  });
+
+  popup.addEventListener("keydown", (e) => {
+    const siblings = document.querySelectorAll("#siblings-popup li");
+    const focusedElement = document.activeElement as HTMLLIElement;
+    const focusedIndex = Array.from(siblings).indexOf(focusedElement) || 0;
+
+    if (e.key === "Enter") {
+      // Select the focused item
+      focusedElement.click();
+    } else if (e.key === "ArrowDown") {
+    // Move focus to the next item
+    const index = (focusedIndex + 1) % siblings.length;
+    const nextElement = siblings[index] as HTMLLIElement;
+    nextElement.focus();
+  } else if (e.key === "ArrowUp") {
+    console.log('pressed up ');
+    // Move focus to the previous item
+    const index = (focusedIndex - 1 + siblings.length) % siblings.length;
+    const nextElement = siblings[index] as HTMLLIElement;
+    nextElement.focus();
+  } else if (e.key === "Escape") {
+    // Remove the popup
+    document.body.removeChild(popup);
+    view?.focus();
   }
-  return false;
+  });
+
+  return popup;
+};
+
+
+export function showPopup(nextSiblings: NodeType[], pos: {top: number, left: number}, view?: EditorView): Transaction | false {
+  view?.dom.blur();
+  const popup = createPopup(nextSiblings, pos, view); // Pass the editor view
+  document.body.appendChild(popup);
+  //get first ul li from the popup and set focus on it
+  const li = popup.querySelector('li') as HTMLLIElement;
+  li.focus();
+  return (true as unknown as  Transaction); // Indicate that the key event is handled
+}
+
+
+function insertNodeAfterCurrentNode(view: EditorView, newNodeType: NodeType, attrs = {}, content = null) {
+  const { state, dispatch } = view;
+  const { selection } = state;
+
+  const { $from, $to } = selection;
+  const parent = $to.node();
+
+  // get the new cursor position
+  const side = (!$from.parentOffset && $to.index() < parent.childCount ? $from : $to).pos + 1;
+
+  const transaction = state.tr.insert(side, newNodeType.create(attrs, content));
+
+  // select the new node
+  transaction.setSelection(TextSelection.create(transaction.doc, side));
+
+  // Apply the transaction
+  return dispatch(transaction);
 }
 
 /**
@@ -877,7 +970,7 @@ export function getTree(pos: ResolvedPos, depth = 0) {
  * @param dispatch - A function to be used to dispatch a transaction
  * @returns Boolean
  */
-export function enterPressed(state: EditorState, dispatch?: (tr: Transaction) => void) {
+export function enterPressed(state: EditorState, dispatch?: (tr: Transaction) => void, view?: EditorView) {
   let { $from } = state.selection;
   const { empty } = state.selection;
   // check if the node is empty.
@@ -896,10 +989,69 @@ export function enterPressed(state: EditorState, dispatch?: (tr: Transaction) =>
   let resultTr: false | Transaction
 
   if (isEOL(state.tr, depth)) {
+    // Enter pressed at the end of the line
     if ($from.parentOffset === 0) {
+      // The line is empty
       resultTr = enterEmpty(tr, !!dispatch, depth)
     } else {
-      resultTr = enterEOL(tr, !!dispatch, depth)
+      // //Entre pressed at the end of the line of a non-empty node
+      // const grandParent = $from.node(($from.depth - 1));
+      // const content = $from.parent.type.spec.content
+      // const _children = stringToChildTypes(content as string);
+      // const preType = state.schema.nodes.pre;
+      // const img = preType.create();
+      // const canAdd = grandParent.type.validContent(Fragment.from(img));
+
+      // const $pos = state.selection.$from;
+      // const index = $pos.index();
+
+      // const canAddpos = grandParent.contentMatchAt(index).matchType(preType);
+
+      // console.log('grandParent', grandParent);
+      // console.log('content', content);
+      // console.log('_children', _children);
+      // console.log('preType', preType);
+      // console.log('img', img);
+      // console.log('canAdd', canAdd);
+      // console.log('$pos', $pos);
+      // console.log('index', index);
+      // console.log('canAddpos', canAddpos);
+      // console.log('node groups from AST ', nodeGroups);
+
+      // const grandParent = $from.node(($from.depth - 1));
+      // console.log('grandParent', grandParent.type.name);
+
+      // // get a list of all possible next sibling types
+      // // 1. get the edge count of the content match
+      // const edgeCount = grandParent.type.contentMatch.edgeCount;
+      // console.log('edgeCount', edgeCount);
+      // // 2. get the next sibling types
+      // for(let i = 0; i < edgeCount; i++) {
+      //   const edge = grandParent.type.contentMatch.edge(i);
+      //   console.log('edge', edge.type.name);
+      // }
+      // // it expends the groups on it's own
+
+      
+      // We need to figure out the position of the parent node within the grandparent node
+      // const parent = $from.parent;
+      // const grandParent = $from.node(($from.depth - 1));
+      // console.log('parent', parent);
+      // console.log('grandParent', grandParent);
+      
+      // console.log('is parent last child', isParentLastChild(state.doc, $from.pos));
+      // const doc = state.doc;
+      // const { from } = state.selection;
+      // const resolvedPos = doc.resolve(from); // Resolve the position
+      // const nodeFromResolvedPos = resolvedPos.node(resolvedPos.depth); // Get the node from the resolved position
+      // console.log('nodeFromResolvedPos', nodeFromResolvedPos);
+
+      // debugger
+      console.log('enter was pressed at the end of the line of a non-empty node');
+      // alert('enter was pressed at the end of the line of a non-empty node');
+
+      
+      resultTr = enterEOL(tr, !!dispatch, depth, view)
     }
   } else {
     if ($from.parentOffset === 0) {
@@ -917,6 +1069,86 @@ export function enterPressed(state: EditorState, dispatch?: (tr: Transaction) =>
   // return false if the transaction is not triggered
   return false;
 }
+
+// export function getPossibleNextSiblingTypes(content: string| undefined) {
+//   if(!content) return [];
+
+//   // splitting the content string into an array of strings in order to match the AST format
+//   const childTypes = stringToChildTypes(content.split(' '));
+//   const children = childTypes.map((child: ChildTypes) => {
+//     if(Array.isArray(child)) {
+//       return ...stringToChildTypes(child);
+//     } else {
+//       // correct the name of the group to match the AST format
+//       const name = child.name.replace('_', '-');
+//       if(nodeGroups[name]) return nodeGroups[name];
+//       return child.name;
+//     }
+//   });
+//   return children.flat();
+// }
+
+// export function getPossibleNextSiblingTypes(nodeType: NodeType) {
+//   // the contentMatch type is broken in the current version of Prosemirror
+//   const contentMatch = nodeType.contentMatch as unknown;
+//   const contentMatchNext = (contentMatch as { next: { type: { name: string} }[] }).next;
+//   const children = contentMatchNext.map((child) => child.type.name);
+//   const nextSiblings: string[] = [];
+//   for(const child of children) {
+//     if(nodeGroups[child.replace('_', '-')]) nextSiblings.push(...nodeGroups[child.replace('_', '-')]);
+//     else {
+//       if('hard_break' === child) continue;
+//       nextSiblings.push(child);
+//     }
+//   }
+
+
+//   return nextSiblings;
+// }
+
+/**
+ * Get the possible next sibling types for a nodeType.
+ * 
+ * @remarks
+ * This function fails to get the correct next sibling types for the ph group nodes, 
+ * and it's expected that those element will be inserted from the UI.
+ *
+ * @param nodeType - NodeType object
+ * @returns NodeType array
+ */
+export function getPossibleNextSiblingTypes(nodeType: NodeType) {
+  if(nodeType.name === 'doc') return [];
+  // Hack for the edge function does not return non-required nodes
+  if(nodeType.name === 'topic') 
+    return [nodeType.schema.nodes.title, nodeType.schema.nodes.shortdesc, nodeType.schema.nodes.prolog, nodeType.schema.nodes.body];
+  if(nodeType.name === 'dlentry')
+    return [nodeType.schema.nodes.dt, nodeType.schema.nodes.dd];
+  
+  const edgeCount = nodeType.contentMatch.edgeCount;
+  const nextSiblings: NodeType[] = [];
+  for(let i = 0; i < edgeCount; i++) {
+    const edge = nodeType.contentMatch.edge(i);
+    if(edge.type.name === 'hard_break') continue; // skip hard_break as it's not a real node
+    nextSiblings.push(edge.type);
+  }
+
+  return nextSiblings;
+}
+
+// /**
+//  * Check if the node is the last child of the parent node.
+//  *
+//  * @param $from - Current node resolved position
+//  * @returns Boolean
+//  */
+// export function isLastChild($from: ResolvedPos) {
+//   // get the parent node
+//   const parent = $from.node($from.depth -1);
+//   // get the node index within the parent
+//   const index = $from.index($from.depth -1);
+
+//   return index === parent.childCount - 1;
+// }
 
 /**
  * A chain of commands that are triggered on each "press Enter" key event in the editor.
@@ -946,4 +1178,5 @@ export const _test_private_commands = {
   canCreateIndex,
   canCreate,
   defaultBlocks,
+  getPossibleNextSiblingTypes
 }

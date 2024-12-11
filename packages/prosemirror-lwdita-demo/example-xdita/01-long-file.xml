@@ -6,15 +6,14 @@
     with your remote control.</shortdesc>
   <body>
     <section id="context">
-      <p>Your <ph keyref="product-name"/>
+      <p>Your
         remote control can manage up to 250 network light bulbs on the same lighting
-        network. When you add a light bulb to the network, you can program it to one or more
+        network.</p>
+      <p>When you add a light bulb to the network, you can program it to one or more
         lighting groups. You must assign a light bulb to at least one lighting group to
         operate that light bulb  A network light bulb that is not programmed to a
         lighting group will still operate when controlling all network light bulbs from
-        the remote control. For non-residential installations, please consult the electrical standards from the Occupational
-      <xref href="#program-bulbs-to-groups/osha-electric"> Safety and Health Administration</xref>.
-    </p>
+        the remote control. For non-residential installations, please consult the electrical standards from the Occupational.</p>
   </section>
   <section id="steps">
     <ol>

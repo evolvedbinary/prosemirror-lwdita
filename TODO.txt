@@ -1,0 +1,19 @@
+Original requirements:
+1. When pressing enter at the end of a line, a pop up should appear
+2. The pop up contains a list of possible nodes to be inserted at that stage
+3. The pop up list have a default highlighted node that you can select by pressing enter again
+4. You can navigate the list with the arrow keys
+5. When you select a node, it is inserted at the new line after the cursor
+
+
+Current state:
+1. When pressing enter at the end of a line, a pop up appears
+2. The list of possible nodes is not correct
+  2.1 The list showing next possible nodes is not okay
+3. The pop up have a default selected node that you can select by pressing enter again
+4. You can navigate the list with the arrow keys
+5. When you select a node, it is inserted at the new line after the cursor but it's still broken
+
+
+TODO:
+2. Fix the insertion of the selected node

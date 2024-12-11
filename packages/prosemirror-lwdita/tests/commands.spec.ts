@@ -20,7 +20,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 import { expect } from "chai";
-import { schema } from "../src/schema";
+import { schema, SCHEMA_CONTENT } from "../src/schema";
 import { _test_private_commands, createNode, createNodesTree } from '../src/commands';
 
 const schemaObject = schema();
@@ -116,5 +116,151 @@ describe('Function canCreate()', () => {
   it('returns "false" for denied node types', () => {
     const result = _test_private_commands.canCreate(schemaObject.nodes.xref);
     expect(result).to.be.false;
+  });
+});
+
+// describe.skip('getPossibleNextSiblingTypes function', () => {
+//   it('returns the possible children for p', () => {
+//     const content = SCHEMA_CONTENT['p'][0];
+//     const result = _test_private_commands.getPossibleNextSiblingTypes(content);
+//     expect(result).to.deep.equal([`cdata`, `text`, `b`, `em`, `i`, `ph`, `strong`, `sub`, `sup`, `tt`, `u`, `image`, `xref`]);
+//   });
+
+//   it('returns the possible children for ul', () => {
+//     const content = SCHEMA_CONTENT['ul'][0];
+//     const result = _test_private_commands.getPossibleNextSiblingTypes(content);
+//     expect(result).to.deep.equal([`li`]);
+//   });
+
+//   it('returns the possible children for li', () => {
+//     const content = SCHEMA_CONTENT['li'][0];
+//     const result = _test_private_commands.getPossibleNextSiblingTypes(content);
+//     expect(result).to.deep.equal(['p','ul', 'ol', 'dl', 'pre', 'audio', 'video', 'example', 'simpletable', 'fig', 'note']);
+//   });
+
+//   it('returns the possible children for topic', () => {
+//     const content = SCHEMA_CONTENT['topic'][0];
+//     const result = _test_private_commands.getPossibleNextSiblingTypes(content);
+//     expect(result).to.deep.equal(['title', 'shortdesc', 'prolog', 'body']);
+//   });
+
+//   it('returns the possible children for body', () => {
+//     const content = SCHEMA_CONTENT['body'][0];
+//     const result = _test_private_commands.getPossibleNextSiblingTypes(content);
+//     expect(result).to.deep.equal(['p','ul', 'ol', 'dl', 'pre', 'audio', 'video', 'example', 'simpletable', 'fig', 'note', 'section', 'div']);
+//   });
+
+//   //alt
+//   it('returns the possible children for alt', () => {
+//     const content = SCHEMA_CONTENT['alt'][0];
+//     const result = _test_private_commands.getPossibleNextSiblingTypes(content);
+//     expect(result).to.deep.equal(['cdata', 'text', 'b', 'em', 'i', 'ph', 'strong', 'sub', 'sup', 'tt', 'u']);
+//   });
+// });
+
+// describe.only('getPossibleNextSiblingTypes function', () => {
+//   it('returns the possible children for p', () => {
+//     const nodeType = schemaObject.nodes.p;
+//     const result = _test_private_commands.getPossibleNextSiblingTypes(nodeType);
+//     expect(result).to.deep.equal([ "text", "image", "xref", "b", "em", "i", "ph", "strong", "sub", "sup", "tt", "u" ]);
+//   });
+
+//   it('returns the possible children for ul', () => {
+//     const nodeType = schemaObject.nodes.ul;
+//     const result = _test_private_commands.getPossibleNextSiblingTypes(nodeType);
+//     expect(result).to.deep.equal([`li`]);
+//   });
+
+//   it('returns the possible children for li', () => {
+//     const nodeType = schemaObject.nodes.li;
+//     const result = _test_private_commands.getPossibleNextSiblingTypes(nodeType);
+//     expect(result).to.deep.equal([ "p", "ol", "pre", "video", "simpletable", "fig", "example", "note", "audio", "dl", "ul" ]);
+//   });
+
+//   it('returns the possible children for topic', () => {
+//     const nodeType = schemaObject.nodes.topic;
+//     const result = _test_private_commands.getPossibleNextSiblingTypes(nodeType);
+//     expect(result).to.deep.equal(['title', 'shortdesc', 'prolog', 'body']);
+//   });
+
+//   it('returns the possible children for body', () => {
+//     const nodeType = schemaObject.nodes.body;
+//     const result = _test_private_commands.getPossibleNextSiblingTypes(nodeType);
+//     expect(result).to.deep.equal(['p','ul', 'ol', 'dl', 'pre', 'audio', 'video', 'example', 'simpletable', 'fig', 'note', 'section', 'div']);
+//   });
+
+//   //alt
+//   it('returns the possible children for alt', () => {
+//     const nodeType = schemaObject.nodes.alt;
+//     const result = _test_private_commands.getPossibleNextSiblingTypes(nodeType);
+//     expect(result).to.deep.equal(['text', 'b', 'em', 'i', 'ph', 'strong', 'sub', 'sup', 'tt', 'u']);
+//   });
+
+//   //section
+//   it('returns the possible children for section', () => {
+//     const nodeType = schemaObject.nodes.section;
+//     const result = _test_private_commands.getPossibleNextSiblingTypes(nodeType);
+//     expect(result).to.deep.equal(['p','ul', 'ol', 'dl', 'pre', 'audio', 'video', 'example', 'simpletable', 'fig', 'note', 'title']);
+//   });
+// });
+
+
+// this is for the third version
+describe.only('getPossibleNextSiblingTypes function', () => {
+  it('returns the possible children for p', () => {
+    const pType = schemaObject.nodes.p;
+
+    const nodeTypes = _test_private_commands.getPossibleNextSiblingTypes(pType);
+    const result = nodeTypes.map((nodeType) => nodeType.name);
+  
+    expect(result).to.deep.equal([`text`, `image`, `xref`, `ph`]);
+  });
+
+  it('returns the possible children for ul', () => {
+    const ulType = schemaObject.nodes.ul;
+    const nodeTypes = _test_private_commands.getPossibleNextSiblingTypes(ulType);
+    const result = nodeTypes.map((nodeType) => nodeType.name);
+    expect(result).to.deep.equal([`li`]);
+  });
+
+  it('returns the possible children for li', () => {
+    const liType = schemaObject.nodes.li;
+    const nodeTypes = _test_private_commands.getPossibleNextSiblingTypes(liType);
+    const result = nodeTypes.map((nodeType) => nodeType.name);
+    expect(result).to.deep.equal([ "p", "ol", "pre", "video", "simpletable", "fig", "example", "note", "audio", "dl", "ul" ]);
+  });
+
+  it('returns the possible children for topic', () => {
+    // this is broken, as it only returns 'title' and that's all
+    const topicType = schemaObject.nodes.topic;
+    const nodeTypes = _test_private_commands.getPossibleNextSiblingTypes(topicType);
+    const result = nodeTypes.map((nodeType) => nodeType.name);
+    expect(result).to.deep.equal(['title', 'shortdesc', 'prolog', 'body']);
+  });
+
+  it('returns the possible children for body', () => {
+    const bodyType = schemaObject.nodes.body;
+    const nodeTypes = _test_private_commands.getPossibleNextSiblingTypes(bodyType);
+    const result = nodeTypes.map((nodeType) => nodeType.name);
+    // ((%list-blocks;)*, section*, div?) 
+    expect(result).to.deep.equal([ "div", "section", "p", "ol", "pre", "video", "simpletable", "fig", "example", "note", "audio", "dl", "ul" ]);
+  });
+
+  //alt
+  it('returns the possible children for alt', () => {
+    const altType = schemaObject.nodes.alt;
+    const nodeTypes = _test_private_commands.getPossibleNextSiblingTypes(altType);
+    const result = nodeTypes.map((nodeType) => nodeType.name);
+  
+    expect(result).to.deep.equal(['text', 'ph']);
+  });
+
+  //section
+  it('returns the possible children for section', () => {
+    const sectionType = schemaObject.nodes.section;
+    const nodeTypes = _test_private_commands.getPossibleNextSiblingTypes(sectionType);
+    const result = nodeTypes.map((nodeType) => nodeType.name);
+    // this is equivalent to title? %all-blocks*
+    expect(result).to.deep.equal([ "p", "ol", "pre", "video", "simpletable", "fig", "example", "note", "audio", "dl", "ul", "title"]);
   });
 });
