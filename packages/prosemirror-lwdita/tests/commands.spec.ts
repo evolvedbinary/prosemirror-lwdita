@@ -118,3 +118,55 @@ describe('Function canCreate()', () => {
     expect(result).to.be.false;
   });
 });
+
+describe('getPossibleNextSiblingTypes function', () => {
+  it('returns the possible children for p', () => {
+    const pType = schemaObject.nodes.p;
+    const nodeTypes = _test_private_commands.getPossibleNextSiblingTypes(pType);
+    const result = nodeTypes.map((nodeType) => nodeType.name);
+  
+    expect(result).to.deep.equal([`text`, `image`, `xref`, `ph`]);
+  });
+  it('returns the possible children for ul', () => {
+    const ulType = schemaObject.nodes.ul;
+    const nodeTypes = _test_private_commands.getPossibleNextSiblingTypes(ulType);
+    const result = nodeTypes.map((nodeType) => nodeType.name);
+    expect(result).to.deep.equal([`li`]);
+  });
+  it('returns the possible children for li', () => {
+    const liType = schemaObject.nodes.li;
+    const nodeTypes = _test_private_commands.getPossibleNextSiblingTypes(liType);
+    const result = nodeTypes.map((nodeType) => nodeType.name);
+    expect(result).to.deep.equal([ "p", "ol", "pre", "video", "simpletable", "fig", "example", "note", "audio", "dl", "ul" ]);
+  });
+  it('returns the possible children for topic', () => {
+    // this is broken, as it only returns 'title' and that's all
+    const topicType = schemaObject.nodes.topic;
+    const nodeTypes = _test_private_commands.getPossibleNextSiblingTypes(topicType);
+    const result = nodeTypes.map((nodeType) => nodeType.name);
+    expect(result).to.deep.equal(['title', 'shortdesc', 'prolog', 'body']);
+  });
+  it('returns the possible children for body', () => {
+    const bodyType = schemaObject.nodes.body;
+    const nodeTypes = _test_private_commands.getPossibleNextSiblingTypes(bodyType);
+    const result = nodeTypes.map((nodeType) => nodeType.name);
+    // ((%list-blocks;)*, section*, div?) 
+    expect(result).to.deep.equal([ "div", "section", "p", "ol", "pre", "video", "simpletable", "fig", "example", "note", "audio", "dl", "ul" ]);
+  });
+  //alt
+  it('returns the possible children for alt', () => {
+    const altType = schemaObject.nodes.alt;
+    const nodeTypes = _test_private_commands.getPossibleNextSiblingTypes(altType);
+    const result = nodeTypes.map((nodeType) => nodeType.name);
+  
+    expect(result).to.deep.equal(['text', 'ph']);
+  });
+  //section
+  it('returns the possible children for section', () => {
+    const sectionType = schemaObject.nodes.section;
+    const nodeTypes = _test_private_commands.getPossibleNextSiblingTypes(sectionType);
+    const result = nodeTypes.map((nodeType) => nodeType.name);
+    // this is equivalent to title? %all-blocks*
+    expect(result).to.deep.equal([ "p", "ol", "pre", "video", "simpletable", "fig", "example", "note", "audio", "dl", "ul", "title"]);
+  });
+});

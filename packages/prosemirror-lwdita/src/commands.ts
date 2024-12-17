@@ -1084,4 +1084,5 @@ export const _test_private_commands = {
   canCreateIndex,
   canCreate,
   defaultBlocks,
+  getPossibleNextSiblingTypes
 }
