@@ -208,6 +208,59 @@ export const SCHEMA_CHILDREN: Record<string, (type: ChildTypes) => string[]> = {
 export const IS_MARK = ['b', 'i', 'u', 'sub', 'sup'];
 
 /**
+ * A map of node long names
+ */
+export const nodeLongName: Record<string, string> = {
+  alt: "Alternative content",
+  audio: "Audio",
+  body: "Body",
+  dd: "Description",
+  desc: "Description",
+  div: "Division",
+  dl: "Description list",
+  dlentry: "Description entry",
+  dt: "Description term",
+  document: "Document",
+  fallback: "Fallback",
+  em: "Emphasized text",
+  example: "Example",
+  fig: "Figure",
+  fn: "Footnote",
+  image: "Image",
+  keydef: "Key Definition",
+  keytext: "Key text",
+  li: "List item",
+  map: "Map",
+  'media-source': "Media source",
+  'media-track': "Track for captions",
+  metadata: "Metadata",
+  navtitle: "Navigation title",
+  note: "Note",
+  ol: "Ordered list",
+  othermeta: "Other Metadata",
+  p: "Paragraph",
+  ph: "Phrase content",
+  pre: "Preformatted content",
+  prolog: "Prolog",
+  section: "Section",
+  simpletable: "Table",
+  shortdesc: "Short description",
+  stentry: "Table cell",
+  sthead: "Table header row",
+  strong: "Strong text",
+  strow: "Table row",
+  title: "Title",
+  topic: "Topic",
+  topicmeta: "Metadata",
+  topicref: "Topic or Map Reference",
+  tt: "Teletype content",
+  ul: "Unordered list",
+  video: "Video",
+  'video-poster': "Video poster",
+  xref: "Reference",
+}
+
+/**
  * A representation of a node in the schema
  */
 export interface SchemaNode {
