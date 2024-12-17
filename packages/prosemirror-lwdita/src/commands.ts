@@ -24,6 +24,8 @@ import { createPrFromContribution } from './github-integration/github.plugin';
 import { showPublicationResultError, showPublicationResultSuccess, showToast } from './toast';
 import { Config } from './config';
 import { Localization } from "@evolvedbinary/prosemirror-lwdita-localization";
+import { nodeLongName } from './schema';
+import { EditorView } from 'prosemirror-view';
 
 /**
  * Create a new Node and fill it with the args as attributes.
@@ -640,6 +642,111 @@ export function enterEOL(tr: Transaction, dispatch = false, depth = 0): Transact
   return false;
 }
 
+const createPopup = (NodeTypes: NodeType[], pos: {top: number, left: number}, view?: EditorView,) => {
+  const popup = document.createElement("div");
+  popup.id = "siblings-popup";
+  popup.style.position = "absolute";
+  popup.style.top = `${pos.top + window.scrollY}px`;
+  popup.style.left = `${pos.left + window.scrollX}px`;
+  popup.style.zIndex = "1000";
+  popup.style.backgroundColor = "white";
+  popup.style.border = "1px solid black";
+  const list = document.createElement("ul");
+  list.style.listStyle = "none";
+  list.style.margin = "0";
+  list.style.padding = "0.5rem";
+  popup.appendChild(list);
+  NodeTypes.forEach((type, index) => {
+    const sibling = document.createElement("li");
+    sibling.style.cursor = "pointer";
+    sibling.tabIndex = 0;
+    if (index === 0) {
+      sibling.style.fontWeight = "bold";
+    }
+    sibling.innerText = `${type.name}: ${nodeLongName[type.name]}`;
+    sibling.addEventListener("click", () => {
+      console.log(`User selected: ${type.name}`);
+      document.body.removeChild(popup); // Remove popup after selection
+      if(!view) return;
+      // Set focus back to the editor
+      view.focus();
+      // Create a new node and insert it after the current node 
+      insertNodeAfterCurrentNode(view, type);
+    });
+    list.appendChild(sibling);
+  });
+  popup.addEventListener("keydown", (e) => {
+    const siblings = document.querySelectorAll("#siblings-popup li");
+    const focusedElement = document.activeElement as HTMLLIElement;
+    const focusedIndex = Array.from(siblings).indexOf(focusedElement) || 0;
+    if (e.key === "Enter") {
+      // Select the focused item
+      focusedElement.click();
+    } else if (e.key === "ArrowDown") {
+    // Move focus to the next item
+    const index = (focusedIndex + 1) % siblings.length;
+    const nextElement = siblings[index] as HTMLLIElement;
+    nextElement.focus();
+  } else if (e.key === "ArrowUp") {
+    console.log('pressed up ');
+    // Move focus to the previous item
+    const index = (focusedIndex - 1 + siblings.length) % siblings.length;
+    const nextElement = siblings[index] as HTMLLIElement;
+    nextElement.focus();
+  } else if (e.key === "Escape") {
+    // Remove the popup
+    document.body.removeChild(popup);
+    view?.focus();
+  }
+  });
+  return popup;
+};
+
+/**
+ * Inset a new node after the current node
+ * 
+ * @param view - The EditorView object
+ * @param newNodeType - The NodeType of the new node
+ * @param attrs - The attributes of the new node
+ * @param content - The content of the new node
+ * @returns Transaction
+ */
+function insertNodeAfterCurrentNode(view: EditorView, newNodeType: NodeType, attrs = {}, content = null) {
+  const { state, dispatch } = view;
+  const { selection } = state;
+  const { $from, $to } = selection;
+  const parent = $to.node();
+  // get the new cursor position
+  const side = (!$from.parentOffset && $to.index() < parent.childCount ? $from : $to).pos + 1;
+  const transaction = state.tr.insert(side, newNodeType.create(attrs, content));
+  // select the new node
+  transaction.setSelection(TextSelection.create(transaction.doc, side));
+  // Apply the transaction
+  return dispatch(transaction);
+}
+
+/**
+ * Render a popup with the possible next sibling types
+ *
+ * @param tr - The transaction object
+ * @param view - The EditorView object
+ * @returns Transaction or false
+ */
+export function showPopup(tr: Transaction, view?: EditorView) {
+  const { $from } = tr.selection;
+  const pos = view?.coordsAtPos($from.pos);
+  // get the next sibling for the parent as well
+  const nextSiblings = getPossibleNextSiblingTypes($from.node($from.depth - 1).type);
+
+  // take the focus away from the editor
+  view?.dom.blur();
+  const popup = createPopup(nextSiblings, {left: pos?.left || 0, top: pos?.top || 0 }, view); // Pass the editor view
+  document.body.appendChild(popup);
+  // focus on the first li element in the popup after it's rendered
+  const li = popup.querySelector('li') as HTMLLIElement;
+  li.focus();
+}
+
 /**
  * Deletes the empty line in the current cursor position
  *
@@ -864,6 +971,34 @@ export function getTree(pos: ResolvedPos, depth = 0) {
 }
 
 /**
+ * Get the possible next sibling types for a nodeType.
+ * 
+ * @remarks
+ * This function fails to get the correct next sibling types for the ph group nodes, 
+ * and it's expected that those element will be inserted from the UI.
+ *
+ * @param nodeType - NodeType object
+ * @returns NodeType array
+ */
+export function getPossibleNextSiblingTypes(nodeType: NodeType) {
+  if(nodeType.name === 'doc') return [];
+  // Hack for the edge function does not return non-required nodes
+  if(nodeType.name === 'topic') 
+    return [nodeType.schema.nodes.title, nodeType.schema.nodes.shortdesc, nodeType.schema.nodes.prolog, nodeType.schema.nodes.body];
+  if(nodeType.name === 'dlentry')
+    return [nodeType.schema.nodes.dt, nodeType.schema.nodes.dd];
+  
+  const edgeCount = nodeType.contentMatch.edgeCount;
+  const nextSiblings: NodeType[] = [];
+  for(let i = 0; i < edgeCount; i++) {
+    const edge = nodeType.contentMatch.edge(i);
+    if(edge.type.name === 'hard_break') continue; // skip hard_break as it's not a real node
+    nextSiblings.push(edge.type);
+  }
+  return nextSiblings;
+}
+
+/**
  * Handle pressing the `enter` key in the editor.
  * This contains an editor state, an optional `dispatch`
  * function that it can use to dispatch a transaction and
@@ -877,7 +1012,7 @@ export function getTree(pos: ResolvedPos, depth = 0) {
  * @param dispatch - A function to be used to dispatch a transaction
  * @returns Boolean
  */
-export function enterPressed(state: EditorState, dispatch?: (tr: Transaction) => void) {
+export function enterPressed(state: EditorState, dispatch?: (tr: Transaction) => void, view?: EditorView) {
   let { $from } = state.selection;
   const { empty } = state.selection;
   // check if the node is empty.
@@ -899,7 +1034,10 @@ export function enterPressed(state: EditorState, dispatch?: (tr: Transaction) =>
     if ($from.parentOffset === 0) {
       resultTr = enterEmpty(tr, !!dispatch, depth)
     } else {
-      resultTr = enterEOL(tr, !!dispatch, depth)
+      // show the popup with the possible next sibling types
+      showPopup(tr, view);
+      // no transaction is triggered here, the pop up will be shown
+      return false;
     }
   } else {
     if ($from.parentOffset === 0) {

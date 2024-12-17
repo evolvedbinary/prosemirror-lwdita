@@ -593,6 +593,16 @@ button {
   }
 }
 
+#siblings-popup {
+  li {
+    &:hover {
+      background-color: #f3f3f3;
+    }
+    &:focus {
+      background-color: #f3f3f3;
+    }
+  }
+}
 
 @media only screen and (max-width: 360px) {
 
