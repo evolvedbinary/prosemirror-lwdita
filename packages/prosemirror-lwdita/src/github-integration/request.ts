@@ -16,7 +16,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 import { exchangeOAuthCodeForAccessToken } from './github.plugin';
-import { showToast } from '../toast';
 import { Config } from '../config';
 import { Localization } from '@evolvedbinary/prosemirror-lwdita-localization';
 
@@ -44,7 +43,7 @@ export const validKeys = ['ghrepo', 'source', 'branch', 'referrer'];
  * @param url - URL string
  * @returns An array with key-value objects of the URL parameter values or a status string for handling the notifications
  */
-export function getAndValidateParameterValues(url: string): 'invalidParams' | 'missingReferrer' | 'noParams' | { key: string, value: string }[] {
+export function getAndValidateParameterValues(url: string): 'invalidParams' | 'noParams' | { key: string, value: string }[] {
   const parameters: { key: string, value: string }[] = [];
 
   const urlParts = url.split('?');
@@ -67,21 +66,9 @@ export function getAndValidateParameterValues(url: string): 'invalidParams' | 'm
     }
   }
 
-  // TODO (AvC): Define all expected and allowed parameters in endpoints
-  // and handle everything else as a redirect to the error page with e.g. error-type `unknownError`.
-  // Currently all parameters that are not explicitly handled
-  // are treated as a `missingReferrer` error, because we are simply
-  // checking if the referrer is missing as a catch-all case.
-
-  // Check if referrer parameter is missing
-  const hasMissingReferrer = !params.has('referrer');
+  // Check if referer parameter is missing
   const hasMissingValues = parameters.some(({ value }) => value === null || value === '');
   const hasInvalidParams = validKeys.some(key => !params.has(key));
-
-  // Return the status string for the notifications
-  if (hasMissingReferrer) {
-    return 'missingReferrer';
-  }
 
   if (hasMissingValues || hasInvalidParams) {
     return 'invalidParams';
@@ -106,22 +93,6 @@ export function isOAuthCodeParam(key: string): boolean {
 
 export function isInstallationParam(key: string): boolean {
   return key === 'installation_id' || key === 'setup_action';
-}
-/**
- * Shows a toast notification based on the given parameters
- *
- * @param parameters - The URL parameters
- */
-export function showNotification(parameters: 'authenticated' | 'invalidParams' | 'noParams' | 'missingReferrer' |{ key: string, value: string }[]): void {
-  if (typeof parameters === 'object') {
-    showToast('Success! You will be redirected to GitHub OAuth', 'success');
-  } else if (parameters === 'invalidParams') {
-    showToast('Your request is invalid.', 'error');
-  } else if (parameters === 'missingReferrer') {
-    showToast('Missing referrer parameter.', 'error');
-  } else if(parameters === 'authenticated') {
-    showToast('You are authenticated.', 'success');
-  }
 }
 
 /**
@@ -149,21 +120,10 @@ export function redirectToGitHubAppInstall(config: Config, parameters: URLParams
  * @param referrer - Referrer of the request
  * @param errorMsg - Error message
  */
-export function showErrorPage(config: Config, errorType: string, referrer?: string, errorMsg?: string): void {
-  const errorPageUrl = `${config.server.frontend.url}/error.html?error-type=${encodeURIComponent(errorType)}&referrer=${encodeURIComponent(referrer || '')}&error-msg=${encodeURIComponent(errorMsg || '')}`;
+export function showErrorPage(config: Config, errorType: string, referer: string): void {
+  const errorPageUrl = `${config.server.frontend.url}/error.html?error-type=${encodeURIComponent(errorType)}&referrer=${encodeURIComponent(referer)}`;
   window.location.href = errorPageUrl;
-}
-
-/**
- * Redirects the user to the referrer parameter from URL params
- * If a referrer parameter is not provided, it will be passed to the error page
- */
-export function handleInvalidRequest(config: Config, referrer: string | null): void {
-  if (referrer) {
-    showErrorPage(config, 'invalidParams', referrer, '');
-  } else {
-    showErrorPage(config, 'missingReferrer');
-  }
+  throw new Error('Error page redirect');
 }
 
 /**
@@ -183,11 +143,9 @@ export function processRequest(config: Config, localization: Localization): unde
       // Requests with string parameters from e.g. 'Petal Edit Button'
       if (typeof parameters === 'string') {
         if (parameters === 'invalidParams') {
-          const referrer = new URLSearchParams(window.location.search).get('referrer');
-          handleInvalidRequest(config, referrer);
-        }
-        if (parameters === 'missingReferrer') {
-          showErrorPage(config, 'missingReferrer');
+
+          const ref = new URL(currentUrl).searchParams.get('referrer');
+          showErrorPage(config, 'invalidParameters', ref || '');
         }
         // Requests with object parameters from e.g. Git
       } else if (typeof parameters === 'object') {
@@ -207,13 +165,8 @@ export function processRequest(config: Config, localization: Localization): unde
           // in case of an error, the user did not authenticate the app
           const errorParam = parameters.find(param => param.key === 'error');
           if (errorParam) {
-            // TODO (AvC): Parse the referrer from the state object if available and pass it to the error page
-            // TODO (AvC): Provide the authentication redirect URL and pass it to the error page (or extend redirectToGitHubOAuth()?)
-            // FIXME (AvC): The error page should prompt the user to authenticate again,
-            // this is currently not implemeted, thus a simple toast notification for now
-            // showErrorPage('missingAuthentication', '', errorParam.value);
-            showToast('Please authenticate with GitHub', 'error');
-            console.error('processRequest(): error', errorParam.value);
+            // redirect the user to the error page and show the error message so he can try again
+            showErrorPage(config, 'authenticationError', returnParams.referer);
           }
 
           exchangeOAuthCodeForAccessToken(config, localization, returnParams.code).then(({token, installation}) => {
@@ -224,10 +177,8 @@ export function processRequest(config: Config, localization: Localization): unde
             }
           }).catch(e => {
             console.error(e);
-            //TODO(YB): make sure the error page can redirect back to the referrer
-            //TODO(YB): the error page should prompt the user to authenticate again
-            // TODO (AvC): Parse the referrer from the state object if available and pass it to the error page
-            showErrorPage(config, 'missingAuthentication', '', e);
+            // redirect the user to the error page and show the error message so he can try again
+            showErrorPage(config, 'authenticationError', returnParams.referer);
           });
 
           return JSON.parse(atob(returnParams.state));
@@ -235,15 +186,7 @@ export function processRequest(config: Config, localization: Localization): unde
       }
 
     } catch (error) {
-      if (error instanceof Error) {
-        //showErrorPage('unknownError', '', error.message);
-        showToast('processRequest(): ' + error.message, 'error');
-        console.error(error.message);
-      } else {
-        //showErrorPage('unknownError');
-        showToast('processRequest(): ' + 'Unknown error', 'error');
-        console.error('Unknown error:', '', error);
-      }
+        console.error(error);
     }
   }
   return undefined;
