@@ -27,111 +27,21 @@ export function handleError(localization: Localization) {
   const urlParams = new URLSearchParams(window.location.search);
   const errorType = urlParams.get('error-type');
   const referer = urlParams.get('referer');
-  const errorMsg = urlParams.get('error-msg');
+  if(!errorType) return;
 
-  const errorHeadline = document.getElementById('errorHeadline');
-  const errorBody1 = document.getElementById('errorBody1');
-  const errorBody2 = document.getElementById('errorBody2');
-  const errorBody3 = document.getElementById('errorBody3');
-  const errorLink = document.getElementById('errorLink') as HTMLAnchorElement | null;
+  const errorHeadline = document.getElementById('errorHeadline') as HTMLHeadingElement;
+  const errorBody = document.getElementById('errorBody') as HTMLParagraphElement;
+  const refererLink = document.getElementById('refererLink') as HTMLAnchorElement;
 
-  if (errorHeadline && errorBody1 && errorBody2 && errorBody3 && errorLink) {
-    if (errorType === 'missingReferer') {
-      errorHeadline.innerText = localization.t("error.headline1");
-      errorBody1.innerText = localization.t("error.body1");
-      errorBody2.innerText = localization.t("error.body2");
-    } else if (errorType === 'invalidParams') {
-      errorHeadline.innerText = localization.t("error.headline1");
-      errorBody1.innerText = localization.t("error.body3");
-      if (referer) {
-        errorBody2.innerText = localization.t("error.body4");
-        if (errorLink) {
-          errorLink.href = referer;
-          errorLink.target = '_self';
-          errorLink.innerText = referer;
-        }
-      }
-    } else if (errorType === 'missingAuthentication') {
-      errorHeadline.innerText = localization.t("error.headline2");
-      if (errorMsg) {
-        const errorMsgPre = document.createElement('pre');
-        errorMsgPre.innerText = errorMsg;
-        errorBody1.parentNode?.insertBefore(errorMsgPre, errorBody1.nextSibling);
-        errorBody1.innerText = localization.t("error.body6");
-      }
-      errorBody2.innerText = localization.t("error.body5");
-      if (referer) {
-        errorBody3.innerText = localization.t("error.body4");
-        if (errorLink) {
-          errorLink.href = referer;
-          errorLink.innerText = referer;
-        }
-      }
-    } else if (errorType === 'unknownError') {
-      errorHeadline.innerText = localization.t("error.headlineDefault");
-      if (errorMsg) {
-        const errorMsgPre = document.createElement('pre');
-        errorMsgPre.innerText = errorMsg;
-        errorBody1.parentNode?.insertBefore(errorMsgPre, errorBody1.nextSibling);
-        errorBody1.innerText = localization.t("error.body6");
-      }
-      errorBody2.innerText = localization.t("error.bodyDefault");
-      if (referer) {
-        errorBody3.innerText = localization.t("error.body4");
-        if (errorLink) {
-          errorLink.href = referer;
-          errorLink.innerText = referer;
-        }
-      }
-    } else if (errorType === 'fileNotFound') {
-      errorHeadline.innerText = localization.t("error.headlineDefault");
-      if (errorMsg) {
-        const errorMsgPre = document.createElement('pre');
-        errorMsgPre.innerText = errorMsg;
-        errorBody1.parentNode?.insertBefore(errorMsgPre, errorBody1.nextSibling);
-        errorBody1.innerText = localization.t("error.body6");
-      }
-      errorBody2.innerText = localization.t("error.bodyDefault");
-      if (referer) {
-        errorBody3.innerText = localization.t("error.body4");
-        if (errorLink) {
-          errorLink.href = referer;
-          errorLink.innerText = referer;
-        }
-      }
-    } else if (errorType === 'fileUploadError') {
-      errorHeadline.innerText = localization.t("error.headlineDefault");
-      errorBody1.innerText = localization.t("error.body8");
-      if (errorMsg) {
-        const errorMsgPre = document.createElement('pre');
-        errorMsgPre.innerText = errorMsg;
-        errorBody2.parentNode?.insertBefore(errorMsgPre, errorBody2.nextSibling);
-        errorBody2.innerText = localization.t("error.body6");
-      }
-      errorBody3.innerText = localization.t("error.body9");
-      if (referer) {
-        if (errorLink) {
-          errorLink.href = referer;
-          errorLink.target = '_self';
-          errorLink.innerText = referer;
-          const fileName = localStorage.getItem('fileName');
-          const file = localStorage.getItem('file');
-          if (fileName && file) {
-            localStorage.removeItem('fileName');
-            localStorage.removeItem('file');
-          }
-        }
-      }
-    } else {
-      errorHeadline.innerText = localization.t("error.headlineDefault");
-      errorBody1.innerText = localization.t("error.bodyDefault");
-      if (referer) {
-        errorBody2.innerText = localization.t("error.body4");
-        if (errorLink) {
-          errorLink.href = referer;
-          errorLink.innerText = referer;
-        }
-      }
-    }
+  errorHeadline.innerText = localization.t("error." + errorType + ".headline");
+  errorBody.innerText = localization.t("error." + errorType + ".body");
+
+  if(referer) {
+    refererLink.innerText = "Please click here to head back to the referer page.";
+    refererLink.href = referer;
+    refererLink.target = "_self";
+  } else {
+    refererLink.innerText = "Please contact the documentation team, and relay the above error message.";
   }
+
 }
