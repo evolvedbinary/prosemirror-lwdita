@@ -17,8 +17,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import { xditaToJdita } from "@evolvedbinary/lwdita-xdita";
 import { document as jditaToProsemirrorJson } from "../document";
-import { showErrorPage } from "./request";
-import { showToast } from "../toast";
+import { showErrorPage, URLParams } from "./request";
 import { Config } from "../config";
 import { Localization } from "@evolvedbinary/prosemirror-lwdita-localization";
 import urijs from "urijs";
@@ -36,7 +35,8 @@ import urijs from "urijs";
  * This function currently fetches the document from the 'main' branch of the repository.
  * should use the GitHub API to dynamically determine the default branch of the repository.
  */
-export const fetchRawDocumentFromGitHub = async (config: Config, ghrepo: string, source: string, branch: string): Promise<string> => {
+export const fetchRawDocumentFromGitHub = async (config: Config, urlParams: URLParams): Promise<string> => {
+  const { ghrepo, source, branch } = urlParams;
   // GitHub changes the raw api URL from `main` to `refs/heads/main` 
   // https://raw.githubusercontent.com/evolvedbinary/prosemirror-lwdita/main/packages/prosemirror-lwdita-demo/example-xdita/02-short-file.xml
   // https://raw.githubusercontent.com/evolvedbinary/prosemirror-lwdita/refs/heads/main/packages/prosemirror-lwdita-demo/example-xdita/02-short-file.xml
@@ -44,9 +44,9 @@ export const fetchRawDocumentFromGitHub = async (config: Config, ghrepo: string,
   const response = await fetch(url);
 
   if (!response.ok) {
-    showErrorPage(config, 'fileNotFound', '', response.statusText);
+    showErrorPage(config, 'fileNotFoundError', urlParams.referer);
   }
-  //TODO: Handle errors
+
   return response.text();
 };
 
@@ -76,17 +76,22 @@ export const transformGitHubDocumentToProsemirrorJson = async (rawDocument: stri
  * @param branch - The branch from which to fetch the document.
  * @returns A promise that resolves to the transformed ProseMirror JSON document.
  */
-export const fetchAndTransform = async (config: Config, ghrepo: string, source: string, branch: string, referer: string) => {
-  const rawDoc = await fetchRawDocumentFromGitHub(config, ghrepo, source, branch);
-  // update the document with the relative path
+export const fetchAndTransform = async (config: Config, urlParams: URLParams) => {
 
+  const rawDoc = await fetchRawDocumentFromGitHub(config, urlParams);
+  
+  // update the document with the relative path
   const updatedDoc = rawDoc.replace(/href="([^"]+)"/g, (_match, url) => {
     // https://www.npmjs.com/package/urijs
-    return `href="${urijs(url).absoluteTo(referer).href()}"`;
+    return `href="${urijs(url).absoluteTo(urlParams.referer).href()}"`;
   });
 
-  const jsonDoc = await transformGitHubDocumentToProsemirrorJson(updatedDoc);
-  return jsonDoc;
+  try {
+    const jsonDoc = await transformGitHubDocumentToProsemirrorJson(updatedDoc);
+    return jsonDoc;
+  } catch (_error) {
+    showErrorPage(config, 'incompatibleXditaFile', urlParams.referer);
+  }
 };
 
 /**
@@ -98,20 +103,13 @@ export const fetchAndTransform = async (config: Config, ghrepo: string, source: 
  * @returns A promise that resolves to the access token as a string.
  * @throws Will throw an error if the fetch request fails or if the response is not in the expected format.
  */
-export const exchangeOAuthCodeForAccessToken = async (config: Config, localization: Localization, code: string): Promise<{token: string, installation: boolean}> => {
+export const exchangeOAuthCodeForAccessToken = async (config: Config, _localization: Localization, code: string): Promise<{token: string, installation: boolean}> => {
   // build the URL to exchange the code for an access token
   const url = config.server.api.baseUrl + config.server.api.endpoint.token + `?code=${code}`;
   // fetch the access token
   const response = await fetch(url);
-
-  // TODO (AvC): This error type might be changed to be more specific depending on
-  // further error handling
-  if (!response.ok) {
-    showToast(localization.t("error.toastGitHubToken") + response.statusText, 'error');
-  }
-
   const json = await response.json();
-  //TODO: Handle errors
+
   return {
     token: json.token,
     installation: json.installation
@@ -126,7 +124,7 @@ export const exchangeOAuthCodeForAccessToken = async (config: Config, localizati
  * @param token - The authorization token to access the GitHub API.
  * @returns A promise that resolves to a record containing user information.
  */
-export const getUserInfo = async (config: Config, localization: Localization, token: string): Promise<Record<string, string>> => {
+export const getUserInfo = async (config: Config, _localization: Localization, token: string): Promise<Record<string, string>> => {
   const url = config.server.api.baseUrl + config.server.api.endpoint.user;
   const response = await fetch(url, {
     headers: {
@@ -134,11 +132,6 @@ export const getUserInfo = async (config: Config, localization: Localization, to
     }
   });
 
-  // TODO (AvC): This error type might be changed to be more specific depending on
-  // further error handling
-  if (!response.ok) {
-    showToast(localization.t("error.toastGitHubUserEndpoint") + response.statusText, 'error');
-  }
   const json = await response.json();
   return json;
 };
@@ -194,12 +187,6 @@ export const createPrFromContribution = async (config: Config, localization: Loc
       body
     })
   });
-
-  // TODO (AvC): This error type might be changed to be more specific depending on
-  // further error handling
-  if (!response.ok) {
-    showToast(localization.t("error.toastGitHubPR") + response.statusText, 'error');
-  }
 
   const json = await response.json();
   return json.url;
