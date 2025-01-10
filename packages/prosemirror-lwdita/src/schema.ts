@@ -446,7 +446,7 @@ export function schema(): Schema {
   browse(MapNode);
 
   (spec.nodes as NodeSpec).topic.content = 'title shortdesc? prolog? body?';
-  (spec.nodes as NodeSpec).doc.content = 'topic+';
+  (spec.nodes as NodeSpec).doc.content = 'topic';
 
   return new Schema(spec);
 }
