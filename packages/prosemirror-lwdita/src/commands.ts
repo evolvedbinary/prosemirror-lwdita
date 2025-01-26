@@ -18,7 +18,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 export { toggleMark } from 'prosemirror-commands';
 import { canSplit } from 'prosemirror-transform';
 import { chainCommands } from 'prosemirror-commands';
-import { Fragment, MarkType, Node, NodeType, ResolvedPos } from 'prosemirror-model';
+import { Fragment, MarkType, Node, NodeType, ResolvedPos, Schema } from 'prosemirror-model';
 import { Command, EditorState, TextSelection, Transaction } from 'prosemirror-state';
 import { createPrFromContribution } from './github-integration/github.plugin';
 import { showPublicationResultError, showPublicationResultSuccess, showToast } from './toast';
@@ -26,6 +26,7 @@ import { Config } from './config';
 import { Localization } from "@evolvedbinary/prosemirror-lwdita-localization";
 import { nodeLongName } from './schema';
 import { EditorView } from 'prosemirror-view';
+import { ChildType, getNodeClass, nodeGroups } from '@evolvedbinary/lwdita-ast';
 
 /**
  * Create a new Node and fill it with the args as attributes.
@@ -663,7 +664,7 @@ const createPopup = (NodeTypes: NodeType[], pos: {top: number, left: number}, vi
     if (index === 0) {
       sibling.style.fontWeight = "bold";
     }
-    sibling.innerText = `${type.name}: ${nodeLongName[type.name]}`;
+    sibling.innerText = `${nodeLongName[type.name]}`;
     sibling.addEventListener("click", () => {
       console.log(`User selected: ${type.name}`);
       document.body.removeChild(popup); // Remove popup after selection
@@ -711,14 +712,14 @@ const createPopup = (NodeTypes: NodeType[], pos: {top: number, left: number}, vi
  * @param content - The content of the new node
  * @returns Transaction
  */
-function insertNodeAfterCurrentNode(view: EditorView, newNodeType: NodeType, attrs = {}, content = null) {
+function insertNodeAfterCurrentNode(view: EditorView, newNodeType: NodeType, attrs = {}, _content = null) {
   const { state, dispatch } = view;
   const { selection } = state;
   const { $from, $to } = selection;
   const parent = $to.node();
   // get the new cursor position
   const side = (!$from.parentOffset && $to.index() < parent.childCount ? $from : $to).pos + 1;
-  const transaction = state.tr.insert(side, newNodeType.create(attrs, content));
+  const transaction = state.tr.insert(side, createNode(newNodeType, attrs));
   // select the new node
   transaction.setSelection(TextSelection.create(transaction.doc, side));
   // Apply the transaction
@@ -735,8 +736,10 @@ function insertNodeAfterCurrentNode(view: EditorView, newNodeType: NodeType, att
 export function showPopup(tr: Transaction, view?: EditorView) {
   const { $from } = tr.selection;
   const pos = view?.coordsAtPos($from.pos);
+
   // get the next sibling for the parent as well
-  const nextSiblings = getPossibleNextSiblingTypes($from.node($from.depth - 1).type);
+  const path = getPathToRoot($from);
+  const nextSiblings = getPossibleNextSiblingTypes(path, tr.doc.type.schema);
 
   // take the focus away from the editor
   view?.dom.blur();
@@ -970,32 +973,44 @@ export function getTree(pos: ResolvedPos, depth = 0) {
   return result;
 }
 
+export function getPathToRoot(pos: ResolvedPos) {
+  const path = [];
+  let index = 0;
+  while(pos.node(pos.depth - index).type.name !== 'doc') {
+    path.push(pos.node(pos.depth - index).type.name);
+    index++;
+  }
+  return path;
+}
+
 /**
  * Get the possible next sibling types for a nodeType.
- * 
- * @remarks
- * This function fails to get the correct next sibling types for the ph group nodes, 
- * and it's expected that those element will be inserted from the UI.
  *
- * @param nodeType - NodeType object
+ * @param parent - parent node name
+ * @param current - current node name
+ * @param schema - The Schema object
+ * 
  * @returns NodeType array
  */
-export function getPossibleNextSiblingTypes(nodeType: NodeType) {
-  if(nodeType.name === 'doc') return [];
-  // Hack for the edge function does not return non-required nodes
-  if(nodeType.name === 'topic') 
-    return [nodeType.schema.nodes.title, nodeType.schema.nodes.shortdesc, nodeType.schema.nodes.prolog, nodeType.schema.nodes.body];
-  if(nodeType.name === 'dlentry')
-    return [nodeType.schema.nodes.dt, nodeType.schema.nodes.dd];
-  
-  const edgeCount = nodeType.contentMatch.edgeCount;
-  const nextSiblings: NodeType[] = [];
-  for(let i = 0; i < edgeCount; i++) {
-    const edge = nodeType.contentMatch.edge(i);
-    if(edge.type.name === 'hard_break') continue; // skip hard_break as it's not a real node
-    nextSiblings.push(edge.type);
+export function getPossibleNextSiblingTypes(path: string[], schema: Schema): NodeType[] {
+  const nodeTypes: NodeType[] = [];
+  for(let i = 0; i < path.length - 1; i++) {
+    const parentClass = getNodeClass(path[i+1]);    
+    const parentNode = new parentClass({});
+    const siblings = parentNode.followingSiblings(path[i]);
+    if(!siblings) continue; // if there are no siblings, return an empty array
+    for(const sibling of siblings) {
+      if((sibling as ChildType).isGroup) {
+        for(const node of nodeGroups[(sibling as ChildType).name]) {
+          nodeTypes.push(schema.nodes[node]);
+        }
+      } else {
+        nodeTypes.push(schema.nodes[(sibling as ChildType).name]);
+      }
+    }
   }
-  return nextSiblings;
+  
+  return nodeTypes;
 }
 
 /**
