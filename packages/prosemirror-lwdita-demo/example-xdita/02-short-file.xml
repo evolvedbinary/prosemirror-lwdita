@@ -5,11 +5,12 @@
   <body>
     <section>
       <p>A test paragraph.</p>
+      <P>Second paragraph.</p>
       <ul>
         <li><p>Item 1</p></li>
         <li><p>Item 2</p></li>
         <li><p>Item 3</p></li>
       </ul>
-    </section>
+    </section> 
   </body>
 </topic>

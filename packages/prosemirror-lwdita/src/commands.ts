@@ -643,38 +643,36 @@ export function enterEOL(tr: Transaction, dispatch = false, depth = 0): Transact
   return false;
 }
 
-const createPopup = (NodeTypes: NodeType[], pos: {top: number, left: number}, view?: EditorView,) => {
+const createPopup = (NodeTypes: NodeType[][], pos: {top: number, left: number}, view?: EditorView,) => {
   const popup = document.createElement("div");
-  popup.id = "siblings-popup";
+  
+  // set the position of the popup
   popup.style.position = "absolute";
   popup.style.top = `${pos.top + window.scrollY}px`;
   popup.style.left = `${pos.left + window.scrollX}px`;
-  popup.style.zIndex = "1000";
-  popup.style.backgroundColor = "white";
-  popup.style.border = "1px solid black";
+
   const list = document.createElement("ul");
   list.style.listStyle = "none";
   list.style.margin = "0";
   list.style.padding = "0.5rem";
   popup.appendChild(list);
-  NodeTypes.forEach((type, index) => {
-    const sibling = document.createElement("li");
-    sibling.style.cursor = "pointer";
-    sibling.tabIndex = 0;
-    if (index === 0) {
-      sibling.style.fontWeight = "bold";
-    }
-    sibling.innerText = `${nodeLongName[type.name]}`;
-    sibling.addEventListener("click", () => {
-      console.log(`User selected: ${type.name}`);
-      document.body.removeChild(popup); // Remove popup after selection
-      if(!view) return;
-      // Set focus back to the editor
-      view.focus();
-      // Create a new node and insert it after the current node 
-      insertNodeAfterCurrentNode(view, type);
+  NodeTypes.forEach((subNodeTypes) => {
+    subNodeTypes.forEach((type) => {
+      const sibling = document.createElement("li");
+      sibling.style.cursor = "pointer";
+      sibling.tabIndex = 0;
+      sibling.innerText = `${nodeLongName[type.name]}`;
+      sibling.addEventListener("click", () => {
+        console.log(`User selected: ${type.name}`);
+        document.body.removeChild(popup); // Remove popup after selection
+        if(!view) return;
+        // Set focus back to the editor
+        view.focus();
+        // Create a new node and insert it after the current node 
+        insertNodeAfterCurrentNode(view, type);
+      });
+      list.appendChild(sibling);
     });
-    list.appendChild(sibling);
   });
   popup.addEventListener("keydown", (e) => {
     const siblings = document.querySelectorAll("#siblings-popup li");
@@ -737,13 +735,14 @@ export function showPopup(tr: Transaction, view?: EditorView) {
   const { $from } = tr.selection;
   const pos = view?.coordsAtPos($from.pos);
 
-  // get the next sibling for the parent as well
+  // get all the nodes up the path and only selecting nodes that are at the end of their parents
   const path = getPathToRoot($from);
   const nextSiblings = getPossibleNextSiblingTypes(path, tr.doc.type.schema);
 
   // take the focus away from the editor
   view?.dom.blur();
   const popup = createPopup(nextSiblings, {left: pos?.left || 0, top: pos?.top || 0 }, view); // Pass the editor view
+  
   document.body.appendChild(popup);
   // focus on the first li element in the popup after it's rendered
   const li = popup.querySelector('li') as HTMLLIElement;
@@ -992,9 +991,10 @@ export function getPathToRoot(pos: ResolvedPos) {
  * 
  * @returns NodeType array
  */
-export function getPossibleNextSiblingTypes(path: string[], schema: Schema): NodeType[] {
-  const nodeTypes: NodeType[] = [];
+export function getPossibleNextSiblingTypes(path: string[], schema: Schema): NodeType[][] {
+  const nodeTypes: NodeType[][] = [];
   for(let i = 0; i < path.length - 1; i++) {
+    const tempNodeTypes: NodeType[] = []
     const parentClass = getNodeClass(path[i+1]);    
     const parentNode = new parentClass({});
     const siblings = parentNode.followingSiblings(path[i]);
@@ -1002,12 +1002,13 @@ export function getPossibleNextSiblingTypes(path: string[], schema: Schema): Nod
     for(const sibling of siblings) {
       if((sibling as ChildType).isGroup) {
         for(const node of nodeGroups[(sibling as ChildType).name]) {
-          nodeTypes.push(schema.nodes[node]);
+          tempNodeTypes.push(schema.nodes[node]);
         }
       } else {
-        nodeTypes.push(schema.nodes[(sibling as ChildType).name]);
+        tempNodeTypes.push(schema.nodes[(sibling as ChildType).name]);
       }
     }
+    nodeTypes.push(tempNodeTypes);
   }
   
   return nodeTypes;

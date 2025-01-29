@@ -242,7 +242,7 @@ export const nodeLongName: Record<string, string> = {
   ph: "Phrase content",
   pre: "Preformatted content",
   prolog: "Prolog",
-  section: "Section",
+  section: "New Section",
   simpletable: "Table",
   shortdesc: "Short description",
   stentry: "Table cell",

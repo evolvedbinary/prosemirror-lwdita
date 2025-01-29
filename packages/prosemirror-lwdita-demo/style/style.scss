@@ -594,6 +594,9 @@ button {
 }
 
 #siblings-popup {
+  z-index: 1000;
+  background-color: #c8c8c8;
+  border: 1px solid #808080;
   li {
     &:hover {
       background-color: #f3f3f3;
