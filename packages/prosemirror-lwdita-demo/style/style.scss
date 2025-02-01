@@ -594,6 +594,20 @@ button {
 }
 
 #siblings-popup {
+  z-index: 1000;
+  background-color: white;
+  border: 1px solid black;
+  padding: 0.5em;
+  p {
+    margin: 0;
+    padding: 0;
+    margin-bottom: 4px;
+  }
+  ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+  }
   li {
     &:hover {
       background-color: #f3f3f3;

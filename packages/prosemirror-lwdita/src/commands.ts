@@ -24,9 +24,17 @@ import { createPrFromContribution } from './github-integration/github.plugin';
 import { showPublicationResultError, showPublicationResultSuccess, showToast } from './toast';
 import { Config } from './config';
 import { Localization } from "@evolvedbinary/prosemirror-lwdita-localization";
-import { nodeLongName } from './schema';
 import { EditorView } from 'prosemirror-view';
 import { ChildType, getNodeClass, nodeGroups } from '@evolvedbinary/lwdita-ast';
+
+/**
+ * Custom type for the selection of the next sibling types
+ */
+type SuggestionList = {
+  type: NodeType;
+  label: string | undefined;
+  rank: number;
+}[]
 
 /**
  * Create a new Node and fill it with the args as attributes.
@@ -48,7 +56,7 @@ export function createNode(type: NodeType, args: Record<string, any> = {}): Node
     case 'stentry': return type.createAndFill({}, createNode(type.schema.nodes['p'])) as Node;
     case 'ul':
     case 'ol': return type.createAndFill({}, createNode(type.schema.nodes['li'])) as Node;
-    case 'section': return type.createAndFill({}, createNode(type.schema.nodes['ul'])) as Node;
+    case 'section': return type.createAndFill({}, createNode(type.schema.nodes['p'])) as Node;
     case 'strow': return type.createAndFill({}, createNode(type.schema.nodes['stentry'])) as Node;
     case 'image': return type.createAndFill({ href: args.src, height: args.height, width: args.width, scope: args.scope, alt: args.alt }) as Node;
     case 'fig': return type.createAndFill({}, createNode(type.schema.nodes['image'], args)) as Node;
@@ -643,39 +651,48 @@ export function enterEOL(tr: Transaction, dispatch = false, depth = 0): Transact
   return false;
 }
 
-const createPopup = (NodeTypes: NodeType[], pos: {top: number, left: number}, view?: EditorView,) => {
+const createPopup = (NodeTypes: SuggestionList[], path: string[], pos: {top: number, left: number}, view?: EditorView,) => {
+  // create the pop up
   const popup = document.createElement("div");
   popup.id = "siblings-popup";
   popup.style.position = "absolute";
   popup.style.top = `${pos.top + window.scrollY}px`;
   popup.style.left = `${pos.left + window.scrollX}px`;
-  popup.style.zIndex = "1000";
-  popup.style.backgroundColor = "white";
-  popup.style.border = "1px solid black";
+
+  // create a list of the possible next sibling types
   const list = document.createElement("ul");
-  list.style.listStyle = "none";
-  list.style.margin = "0";
-  list.style.padding = "0.5rem";
+
   popup.appendChild(list);
-  NodeTypes.forEach((type, index) => {
-    const sibling = document.createElement("li");
-    sibling.style.cursor = "pointer";
-    sibling.tabIndex = 0;
-    if (index === 0) {
-      sibling.style.fontWeight = "bold";
+  NodeTypes.forEach((subNodeTypesList, listIndex) => {
+    // add a separator for each sub list
+    if(listIndex < NodeTypes.length - 1) {
+      const p = document.createElement("p");
+      const nodeClass = getNodeClass(path[listIndex]);
+      const node = new nodeClass({});
+      p.innerText = `Inset after: ${node.static.label}`;
+      list.appendChild(p);
     }
-    sibling.innerText = `${nodeLongName[type.name]}`;
-    sibling.addEventListener("click", () => {
-      console.log(`User selected: ${type.name}`);
-      document.body.removeChild(popup); // Remove popup after selection
-      if(!view) return;
-      // Set focus back to the editor
-      view.focus();
-      // Create a new node and insert it after the current node 
-      insertNodeAfterCurrentNode(view, type);
+    subNodeTypesList.forEach(({type, label}, index) => {
+      const sibling = document.createElement("li");
+      sibling.style.cursor = "pointer";
+      sibling.tabIndex = 0;
+      if (index === 0) {
+        sibling.style.fontWeight = "bold";
+      }
+      sibling.innerText =  label || type.name;
+      sibling.addEventListener("click", () => {
+        console.log(`User selected: ${type.name}`);
+        document.body.removeChild(popup); // Remove popup after selection
+        if(!view) return;
+        // Set focus back to the editor
+        view.focus();
+        // Create a new node and insert it after the current node 
+        insertNodeAfter(view, type, listIndex);
+      });
+      list.appendChild(sibling);
     });
-    list.appendChild(sibling);
   });
+
   popup.addEventListener("keydown", (e) => {
     const siblings = document.querySelectorAll("#siblings-popup li");
     const focusedElement = document.activeElement as HTMLLIElement;
@@ -704,7 +721,7 @@ const createPopup = (NodeTypes: NodeType[], pos: {top: number, left: number}, vi
 };
 
 /**
- * Inset a new node after the current node
+ * Inset a new node after the provided node
  * 
  * @param view - The EditorView object
  * @param newNodeType - The NodeType of the new node
@@ -712,11 +729,12 @@ const createPopup = (NodeTypes: NodeType[], pos: {top: number, left: number}, vi
  * @param content - The content of the new node
  * @returns Transaction
  */
-function insertNodeAfterCurrentNode(view: EditorView, newNodeType: NodeType, attrs = {}, _content = null) {
+function insertNodeAfter(view: EditorView, newNodeType: NodeType, depth: number, attrs = {}, _content = null) {
   const { state, dispatch } = view;
   const { selection } = state;
   const { $from, $to } = selection;
-  const parent = $to.node();
+  const parent = $to.node(-depth);
+  
   // get the new cursor position
   const side = (!$from.parentOffset && $to.index() < parent.childCount ? $from : $to).pos + 1;
   const transaction = state.tr.insert(side, createNode(newNodeType, attrs));
@@ -741,9 +759,27 @@ export function showPopup(tr: Transaction, view?: EditorView) {
   const path = getPathToRoot($from);
   const nextSiblings = getPossibleNextSiblingTypes(path, tr.doc.type.schema);
 
+  // inject the rank and label to the node types
+  let nodeTypesWithRankAndLabel = nextSiblings.map((siblingsSubList) => {
+    return siblingsSubList.map((type) => {
+      const nodeClass = getNodeClass(type.name);
+      const node = new nodeClass({});
+      return {
+        type: type,
+        label: node.static.label,
+        rank: node.static.rank
+      }
+    });
+  });
+
+  // sort the node types by rank
+  nodeTypesWithRankAndLabel = nodeTypesWithRankAndLabel.map((subList) => {
+    return subList.sort((a, b) => b.rank - a.rank);
+  });
+
   // take the focus away from the editor
   view?.dom.blur();
-  const popup = createPopup(nextSiblings, {left: pos?.left || 0, top: pos?.top || 0 }, view); // Pass the editor view
+  const popup = createPopup(nodeTypesWithRankAndLabel, path, {left: pos?.left || 0, top: pos?.top || 0 }, view); // Pass the editor view
   document.body.appendChild(popup);
   // focus on the first li element in the popup after it's rendered
   const li = popup.querySelector('li') as HTMLLIElement;
@@ -992,9 +1028,10 @@ export function getPathToRoot(pos: ResolvedPos) {
  * 
  * @returns NodeType array
  */
-export function getPossibleNextSiblingTypes(path: string[], schema: Schema): NodeType[] {
-  const nodeTypes: NodeType[] = [];
+export function getPossibleNextSiblingTypes(path: string[], schema: Schema): NodeType[][] {
+  const nodeTypes: NodeType[][] = [];
   for(let i = 0; i < path.length - 1; i++) {
+    const tempNodeTypes: NodeType[] = [];
     const parentClass = getNodeClass(path[i+1]);    
     const parentNode = new parentClass({});
     const siblings = parentNode.followingSiblings(path[i]);
@@ -1002,12 +1039,13 @@ export function getPossibleNextSiblingTypes(path: string[], schema: Schema): Nod
     for(const sibling of siblings) {
       if((sibling as ChildType).isGroup) {
         for(const node of nodeGroups[(sibling as ChildType).name]) {
-          nodeTypes.push(schema.nodes[node]);
+          tempNodeTypes.push(schema.nodes[node]);
         }
       } else {
-        nodeTypes.push(schema.nodes[(sibling as ChildType).name]);
+        tempNodeTypes.push(schema.nodes[(sibling as ChildType).name]);
       }
     }
+    nodeTypes.push(tempNodeTypes);
   }
   
   return nodeTypes;
