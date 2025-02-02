@@ -605,3 +605,47 @@ button {
     max-width: fit-content;
   }
 }
+
+// suggestions custom styles
+
+#suggestionsOverlay {
+  // cover the whole screen
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.100);
+  overflow-y: auto;
+
+  #suggestionsPopup {
+    background: #ffffff;
+    padding: 0.5rem;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    // overflow-y: scroll;
+
+    p {
+      margin: 0;
+      padding: 0;
+      border-bottom: 1px solid #ccc;
+    }
+
+    ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+
+      li {
+        padding: 8px;
+        cursor: pointer;
+
+        &:hover {
+          background: #f0f0f0;
+        }
+      }
+    }
+  }
+}

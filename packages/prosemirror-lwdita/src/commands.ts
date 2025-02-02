@@ -24,6 +24,10 @@ import { createPrFromContribution } from './github-integration/github.plugin';
 import { showPublicationResultError, showPublicationResultSuccess, showToast } from './toast';
 import { Config } from './config';
 import { Localization } from "@evolvedbinary/prosemirror-lwdita-localization";
+import { ChildType, getNodeClass, nodeGroups } from '@evolvedbinary/lwdita-ast';
+import { create } from 'domain';
+import { createAndRenderSuggestions } from './suggestion-popup';
+import { EditorView } from 'prosemirror-view';
 
 /**
  * Create a new Node and fill it with the args as attributes.
@@ -877,7 +881,7 @@ export function getTree(pos: ResolvedPos, depth = 0) {
  * @param dispatch - A function to be used to dispatch a transaction
  * @returns Boolean
  */
-export function enterPressed(state: EditorState, dispatch?: (tr: Transaction) => void) {
+export function enterPressed(state: EditorState, dispatch?: (tr: Transaction) => void, view?: EditorView) {
   let { $from } = state.selection;
   const { empty } = state.selection;
   // check if the node is empty.
@@ -899,7 +903,10 @@ export function enterPressed(state: EditorState, dispatch?: (tr: Transaction) =>
     if ($from.parentOffset === 0) {
       resultTr = enterEmpty(tr, !!dispatch, depth)
     } else {
-      resultTr = enterEOL(tr, !!dispatch, depth)
+      // the cursor is at the end of the line and the line is not empty
+      // create and show the suggestions popup
+      createAndRenderSuggestions(state, view as EditorView);
+      return false;
     }
   } else {
     if ($from.parentOffset === 0) {
