@@ -118,10 +118,9 @@ export function redirectToGitHubAppInstall(config: Config, parameters: URLParams
  * @param config - configuration
  * @param errorType - Error type
  * @param referrer - Referrer of the request
- * @param errorMsg - Error message
  */
-export function showErrorPage(config: Config, errorType: string, referer: string): void {
-  const errorPageUrl = `${config.server.frontend.url}/error.html?error-type=${encodeURIComponent(errorType)}&referrer=${encodeURIComponent(referer)}`;
+export function showErrorPage(config: Config, errorType: string, referrer: string): void {
+  const errorPageUrl = `${config.server.frontend.url}/error.html?error-type=${encodeURIComponent(errorType)}&referrer=${encodeURIComponent(referrer)}`;
   window.location.href = errorPageUrl;
   throw new Error('Error page redirect');
 }

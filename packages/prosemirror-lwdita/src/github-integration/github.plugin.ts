@@ -26,9 +26,7 @@ import urijs from "urijs";
  * Fetches the raw content of a document from a GitHub repository.
  *
  * @param config - configuration
- * @param ghrepo - The GitHub repository in the format "owner/repo".
- * @param source - The path to the file within the repository.
- * @param branch - The branch from which to fetch the document.
+ * @param urlParams - Object containing ghrepo, source, branch.
  * @returns A promise that resolves to the raw content of the document as a string.
  *
  * @remarks
@@ -71,9 +69,7 @@ export const transformGitHubDocumentToProsemirrorJson = async (rawDocument: stri
  * Fetches a raw document from a GitHub repository and transforms it into a ProseMirror JSON document.
  *
  * @param config - configuration
- * @param ghrepo - The GitHub repository from which to fetch the document.
- * @param source - The source path of the document within the repository.
- * @param branch - The branch from which to fetch the document.
+ * @param urlParams - Object containing ghrepo, source, branch.
  * @returns A promise that resolves to the transformed ProseMirror JSON document.
  */
 export const fetchAndTransform = async (config: Config, urlParams: URLParams) => {
@@ -98,7 +94,7 @@ export const fetchAndTransform = async (config: Config, urlParams: URLParams) =>
  * Exchanges an OAuth code for an access token.
  *
  * @param config - configuration
- * @param localization - localization
+ * @param _localization - localization
  * @param code - The OAuth code to exchange for an access token.
  * @returns A promise that resolves to the access token as a string.
  * @throws Will throw an error if the fetch request fails or if the response is not in the expected format.
@@ -120,7 +116,7 @@ export const exchangeOAuthCodeForAccessToken = async (config: Config, _localizat
  * Fetches user information from the backend API.
  *
  * @param config - configuration
- * @param localization - localization
+ * @param _localization - localization
  * @param token - The authorization token to access the GitHub API.
  * @returns A promise that resolves to a record containing user information.
  */
@@ -189,5 +185,8 @@ export const createPrFromContribution = async (config: Config, localization: Loc
   });
 
   const json = await response.json();
+  if(!json.url) {
+    throw new Error("Unable to open a new PR.")
+  }
   return json.url;
 };
