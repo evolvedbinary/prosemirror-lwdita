@@ -48,17 +48,17 @@ describe('When function getParameterValues() is passed a URL with', () => {
 
   it('one valid parameter, but the rest is missing, it returns string "invalidParams"', () => {
     invalidUrl = url + '?ghrepo=xyz';
-    expect(getAndValidateParameterValues(invalidUrl)).to.equal('missingReferer');
+    expect(getAndValidateParameterValues(invalidUrl)).to.equal('invalidParams');
   });
 
   it('two missing parameters, it returns string "invalidParams"', () => {
     invalidUrl = url + '?ghrepo';
-    expect(getAndValidateParameterValues(invalidUrl)).to.equal('missingReferer');
+    expect(getAndValidateParameterValues(invalidUrl)).to.equal('invalidParams');
   });
 
   it('any parameter that is not matching any of the expected keys, it returns string "invalidParams"', () => {
     invalidUrl = url + '?xyz';
-    expect(getAndValidateParameterValues(invalidUrl)).to.equal('missingReferer');
+    expect(getAndValidateParameterValues(invalidUrl)).to.equal('invalidParams');
   });
 
   it('no parameters at all, it returns string "noParams"', () => {
