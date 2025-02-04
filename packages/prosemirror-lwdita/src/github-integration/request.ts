@@ -16,7 +16,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 import { exchangeOAuthCodeForAccessToken } from './github.plugin';
-import { showToast } from '../toast';
 import { Config } from '../config';
 import { Localization } from '@evolvedbinary/prosemirror-lwdita-localization';
 
@@ -119,7 +118,6 @@ export function redirectToGitHubAppInstall(config: Config, parameters: URLParams
  * @param config - configuration
  * @param errorType - Error type
  * @param referer - Referer of the request
- * @param errorMsg - Error message
  */
 export function showErrorPage(config: Config, errorType: string, referer: string): void {
   const errorPageUrl = `${config.server.frontend.url}/error.html?error-type=${encodeURIComponent(errorType)}&referer=${encodeURIComponent(referer)}`;
