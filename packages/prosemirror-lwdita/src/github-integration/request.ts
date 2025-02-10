@@ -19,6 +19,7 @@ import { exchangeOAuthCodeForAccessToken } from './github.plugin';
 import { showToast } from '../toast';
 import { Config } from '../config';
 import { Localization } from '@evolvedbinary/prosemirror-lwdita-localization';
+import { Global } from '../global'
 
 /**
  * Interface for the URL parameters
@@ -217,7 +218,7 @@ export function processRequest(config: Config, localization: Localization): unde
           }
 
           exchangeOAuthCodeForAccessToken(config, localization, returnParams.code).then(({token, installation}) => {
-            localStorage.setItem('token', token); 
+            (global as Global).token = token;
             if(!installation) {
               // redirect to the OAuth error page and show the error message with instructions to install the app
               redirectToGitHubAppInstall(config, returnParams);
