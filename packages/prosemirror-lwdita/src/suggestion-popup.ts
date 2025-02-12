@@ -40,6 +40,10 @@ export function createAndRenderSuggestions(state: EditorState, view: EditorView)
   // TODO this can be improved by only getting the path up to nodes that are at the end of their parent
   const pathToRoot = getNodePath($from);
   
+  if($from.nodeAfter && $from.node().lastChild === $from.nodeAfter) {
+    pathToRoot.unshift($from.nodeAfter.type.name);
+  }
+  
   // should we move this to another function with the injection of the rank and label? and sorting?
   const suggestions = getFollowingSiblings(pathToRoot, state.schema.nodes);
 

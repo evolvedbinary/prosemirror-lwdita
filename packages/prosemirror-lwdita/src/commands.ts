@@ -758,11 +758,28 @@ export function enterSplit(tr: Transaction, dispatch = false, depth = 0): Transa
  * @returns Boolean - true if the cursor is at the end of the line
  */
 export function isEOL(tr: Transaction, depth = 0) {
-  const { $to } = tr.selection;
+  const { $to, $from } = tr.selection;
   let parent = $to.parent;
+
+  // check if we are at the end of block node 
+  if ($from.node().lastChild === $from.nodeAfter) {
+    return true;
+  }
+  // Check if the cursor is at the end of a text node
+  if ($from.parent.isTextblock && $from.parentOffset === $from.parent.content.size) {
+    return true;
+  }
+
+  // Check if the cursor is at the end of the document
+  if ($from.pos === tr.doc.content.size) {
+    return true;
+  }
+
+  // if the node is not the last in it's parent
   if ($to.parentOffset < parent.content.size) {
     return false;
   }
+
   for (let i = 1; i <= depth; i++) {
     const grandParent = $to.node(-i);
     if (grandParent.childCount !== 1 + $to.index(-i)) {
@@ -898,16 +915,11 @@ export function enterPressed(state: EditorState, dispatch?: (tr: Transaction) =>
 
   // prepare the transaction
   let resultTr: false | Transaction
-
   if (isEOL(state.tr, depth)) {
-    if ($from.parentOffset === 0) {
-      resultTr = enterEmpty(tr, !!dispatch, depth)
-    } else {
       // the cursor is at the end of the line and the line is not empty
       // create and show the suggestions popup
       createAndRenderSuggestions(state, view as EditorView);
       return false;
-    }
   } else {
     if ($from.parentOffset === 0) {
       resultTr = enterSplit(tr, !!dispatch, depth)
