@@ -605,3 +605,25 @@ button {
     max-width: fit-content;
   }
 }
+
+.popup-menu {
+  background: white;
+  border: 1px solid #ccc;
+  padding: 5px;
+  position: absolute;
+  z-index: 1000;
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.popup-menu button {
+  display: block;
+  width: 100%;
+  border: none;
+  background: none;
+  padding: 5px;
+  cursor: pointer;
+}
+
+.popup-menu button:hover {
+  background: lightgray;
+}

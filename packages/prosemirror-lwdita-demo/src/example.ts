@@ -31,6 +31,7 @@ import {
   shortcuts,
   doubleClickImagePlugin,
   processRequest,
+  popupPlugin,
   fetchAndTransform,
   URLParams,
   Json
@@ -99,6 +100,7 @@ function renderProsemirrorDocument(jsonDoc: Record<string, Json>, urlParams: URL
         history(),
         // these were custom plugins check the prosemirror-lwdita/src/plugin.ts file
         shortcuts(localization, schemaObject),
+        popupPlugin(schemaObject),
         menu(localization, schemaObject, {
           end: [[
             githubMenuItem({ label: 'lwdita', url: 'https://github.com/evolvedbinary/lwdita' }),

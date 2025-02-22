@@ -877,43 +877,17 @@ export function getTree(pos: ResolvedPos, depth = 0) {
  * @param dispatch - A function to be used to dispatch a transaction
  * @returns Boolean
  */
-export function enterPressed(state: EditorState, dispatch?: (tr: Transaction) => void) {
-  let { $from } = state.selection;
-  const { empty } = state.selection;
-  // check if the node is empty.
-  // if the node is empty, then the depth is 1
-  const depth = getDepth(state.tr, true);
 
-  // get the current transaction
-  let tr = state.tr;
-  // if the cursor selection is not empty, delete the selection
-  if (dispatch && !empty) {
-    tr = tr.deleteSelection();
-    $from = tr.selection.$from;
-  }
+import { showPopupAt  } from "./popup";
+import { EditorView } from 'prosemirror-view';
 
-  // prepare the transaction
-  let resultTr: false | Transaction
 
-  if (isEOL(state.tr, depth)) {
-    if ($from.parentOffset === 0) {
-      resultTr = enterEmpty(tr, !!dispatch, depth)
-    } else {
-      resultTr = enterEOL(tr, !!dispatch, depth)
-    }
-  } else {
-    if ($from.parentOffset === 0) {
-      resultTr = enterSplit(tr, !!dispatch, depth)
-    } else {
-      resultTr = tr.replaceSelectionWith(state.schema.nodes.hard_break.create()).scrollIntoView();
-    }
-  }
+export function enterPressed(state: EditorState, dispatch?: (tr: Transaction) => void, view?: EditorView): boolean {
+  if (isEOL(state.tr)) {
+    showPopupAt(view as EditorView, state.selection.$from.pos);
+    return true  
+  } 
 
-  // if the transaction is triggered, then dispatch the transaction
-  if (dispatch && resultTr !== false) {
-    dispatch(resultTr);
-    return true;
-  }
   // return false if the transaction is not triggered
   return false;
 }
