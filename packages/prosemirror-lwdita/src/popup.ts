@@ -23,6 +23,7 @@ export const popupPluginKey = new PluginKey("popupPlugin");
 
 export function popupPlugin(schema: Schema) {
   let popupDom: HTMLDivElement | null = null;
+  let selectedIndex = 0;
 
   return new Plugin({
     key: popupPluginKey,
@@ -77,7 +78,7 @@ export function popupPlugin(schema: Schema) {
     },
   });
 
-  function renderPopup(view: EditorView, pos: number) {
+  function renderPopup(view: EditorView, pos: any) {
     if (popupDom) {
       popupDom.remove();
       popupDom = null;
@@ -86,37 +87,75 @@ export function popupPlugin(schema: Schema) {
     popupDom = document.createElement("div");
     popupDom.className = "popup-menu";
     popupDom.style.position = "absolute";
+    popupDom.tabIndex = -1;
 
-    ["p", "section"].forEach((type) => {
+    const types = ["p", "section", "ul", "ol", "li", "table", "tr", "td"];
+    types.forEach((type, index) => {
       const btn = document.createElement("button");
       btn.textContent = type;
+      btn.tabIndex = 0;
+      if (index === selectedIndex) {
+        btn.classList.add("selected");
+        btn.focus();
+      }
       btn.onclick = () => {
-        insertNode(type, schema, view);
+        insertNode('p', schema, view);
         closePopup();
       };
-      popupDom!.appendChild(btn);
+      popupDom?.appendChild(btn);
     });
+
+    popupDom.addEventListener("keydown", (e) => handleKeyDown(e, types, view));
 
     document.body.appendChild(popupDom);
     positionPopup(view, pos);
+    popupDom.focus();
   }
 
-  function positionPopup(view: EditorView, pos: number) {
+  function handleKeyDown(event: KeyboardEvent, types: string[], view: any) {
+    if (!popupDom) return;
+    const buttons = popupDom.querySelectorAll("button");
+    if (event.key === "ArrowDown") {
+      event.preventDefault();
+      selectedIndex = (selectedIndex + 1) % buttons.length;
+      buttons[selectedIndex].focus();
+    } else if (event.key === "ArrowUp") {
+      event.preventDefault();
+      selectedIndex = (selectedIndex - 1 + buttons.length) % buttons.length;
+      buttons[selectedIndex].focus();
+    } else if (event.key === "i" || event.key === "I" || event.key === "Enter") {
+      event.preventDefault();
+      buttons[selectedIndex].click();
+    } else if (event.key === "Escape") {
+      event.preventDefault();
+      closePopup();
+    }
+  }
+
+  function positionPopup(view: { coordsAtPos: (arg0: any) => any; }, pos: any) {
     if (!popupDom) return;
     const coords = view.coordsAtPos(pos);
     popupDom.style.left = `${coords.left}px`;
     popupDom.style.top = `${coords.bottom + 5}px`;
   }
 
-  function insertNode(type: string, schema: Schema, view: EditorView) {
+  function insertNode(type: string, schema: { nodes: { [x: string]: any; }; }, view: { state: any; dispatch: any; }) {
     const { state, dispatch } = view;
-    const nodeType: NodeType = schema.nodes[type];
-    
+    const nodeType = schema.nodes[type];
+
     if (nodeType) {
       const node = nodeType.create();
-      let tr = state.tr.insert(state.selection.$from.pos + 1, node);
-      tr = tr.setSelection(TextSelection.create(tr.doc, state.selection.$from.pos + 2));
-      dispatch(tr.scrollIntoView());
+      const { $from } = state.selection;
+      const insertPos = $from.after(); // Insert after current block
+
+      let tr = state.tr.insert(insertPos, node);
+
+      // Place cursor inside the new node
+      const resolvedPos = tr.doc.resolve(insertPos + 1);
+      const selection = TextSelection.findFrom(resolvedPos, 1, true);
+      tr = tr.setSelection(selection);
+      tr = tr.scrollIntoView();
+      dispatch(tr);
     }
   }
 
@@ -124,11 +163,11 @@ export function popupPlugin(schema: Schema) {
     if (popupDom) {
       popupDom.remove();
       popupDom = null;
+      selectedIndex = 0;
     }
   }
 }
 
-// Expose `showPopupAt`
 export function showPopupAt(view: EditorView, pos: number) {
   view.dispatch(
     view.state.tr.setMeta(popupPluginKey, { showPopup: true, popupPos: pos })
