@@ -101,7 +101,7 @@ class SuggestionPopup {
 
     popup.appendChild(ul_list) 
 
-    popup.addEventListener("keydown", this.keyboardNavHandler);
+    popup.addEventListener("keydown", this.keyboardNavHandler.bind(this));
 
     // exit handler
     this.dom.addEventListener("click", e => {
