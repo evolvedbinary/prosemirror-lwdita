@@ -52,8 +52,9 @@ describe('Function defaultToDom()', () => {
     const attrs = {};
     const toDom = defaultToDom(AbstractBaseNode, attrs);
 
-    const type = schema().nodes.li;
-    const node = createNode(type, {});
+    const schemaObject = schema();
+    const type = schemaObject.nodes.li;
+    const node = createNode(type, { schema: schemaObject });
     const result = toDom(node);
     const expected = [
       'jdita-node-node',

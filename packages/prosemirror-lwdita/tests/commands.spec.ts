@@ -29,13 +29,14 @@ describe('Function createNode()', () => {
   it('creates a node', () => {
     const type = schemaObject.nodes.p;
 
-    const node = createNode(type);
+    debugger
+    const node = createNode(type, { schema: schemaObject });
     expect(node.type.name).to.equal('p');
   });
 
   it('creates a node and fills it with content', () => {
     const type = schemaObject.nodes.ul;
-    const node = createNode(type, {});
+    const node = createNode(type, { schema: schemaObject });
     const li = node.content.firstChild;
     const p = li?.content.firstChild;
 
