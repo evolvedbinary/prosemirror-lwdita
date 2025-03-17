@@ -39,13 +39,16 @@ import { Localization } from "@evolvedbinary/prosemirror-lwdita-localization";
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function createNode(type: NodeType, args: Record<string, any> = {}): Node {
   switch (type.name) {
-    case 'p': return type.createAndFill(null, args.schema.text('\u200B')) as Node;
+    case 'p': return type.createAndFill(null, null) as Node;
     case 'simpletable': return type.createAndFill({}, createNode(type.schema.nodes['strow'])) as Node;
     case 'li': return type.createAndFill({}, createNode(type.schema.nodes['p'], args)) as Node;
     case 'stentry': return type.createAndFill({}, createNode(type.schema.nodes['p'], args)) as Node;
     case 'ul':
     case 'ol': return type.createAndFill({}, createNode(type.schema.nodes['li'], args)) as Node;
-    case 'section': return type.createAndFill({}, null) as Node;
+    case 'section': return type.createAndFill({}, [
+      createNode(type.schema.nodes['title'], args), 
+      createNode(type.schema.nodes['p'], args)
+    ]) as Node;
     case 'title': return type.createAndFill({}, args.schema.text('New section')) as Node;
     case 'strow': return type.createAndFill({}, createNode(type.schema.nodes['stentry'])) as Node;
     case 'image': return type.createAndFill({ href: args.src, height: args.height, width: args.width, scope: args.scope, alt: args.alt }) as Node;

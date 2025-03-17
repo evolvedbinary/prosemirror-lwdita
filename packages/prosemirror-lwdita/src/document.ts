@@ -15,7 +15,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import { JDita } from "@evolvedbinary/lwdita-ast";
+import { getNodeClass, JDita } from "@evolvedbinary/lwdita-ast";
 import { IS_MARK, defaultNodeName } from "./schema";
 
 /**
@@ -103,7 +103,7 @@ export const NODES: Record<string, (value: JDita, parent: JDita) => any> = {
     // Return the audio object with the new attributes and content
     return { type: value.nodeName, attrs, content: content?.map(child => travel(child, value)) };
   },
-  image: (value) => {
+  image: (value: JDita, parent: JDita) => {
     if (value.children
       && value.children[0].nodeName === 'alt'
       && value.children[0]?.children
@@ -113,13 +113,37 @@ export const NODES: Record<string, (value: JDita, parent: JDita) => any> = {
         ...value.attributes,
         alt: value.children[0].children[0].content,
       });
-      const result = { type: 'image', attrs };
+      // check if parent allows mixed content
+      let type = 'image';
+      if(!nodeAllowsMixedContent(parent.nodeName)) {
+        type = 'block_' + type;
+      }
+      const result = { type, attrs };
       return result;
     }
     return defaultTravel(value);
   },
   text: (value: JDita) => ({ type: 'text', text: value.content, attrs: {} }),
+
 };
+
+
+
+
+
+/**
+ * Checks if the parent node allows mixed content
+ * @param value - The JDita node
+ * @returns true if the parent node allows mixed content
+ */
+function nodeAllowsMixedContent(nodeName: string): boolean {
+  const nodeClass = getNodeClass(nodeName);
+  const nodeInstance = new nodeClass({});
+  if (nodeInstance.allowsMixedContent()) {
+    return true;
+  }
+  return false;
+}
 
 /**
  * Transforms the JDita document into a proper ProseMirror document

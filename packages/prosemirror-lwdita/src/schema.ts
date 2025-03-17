@@ -18,6 +18,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import { AbstractBaseNode, ChildTypes, DocumentNode, MapNode, UnknownNodeError, getNodeClassType, nodeGroups } from '@evolvedbinary/lwdita-ast';
 import { getDomNode } from './dom';
 import { NodeSpec, Schema, SchemaSpec, Node, MarkSpec, DOMOutputSpec, Attrs } from 'prosemirror-model';
+import { nodeSpec } from './schema-override';
 
 
 /**
@@ -447,6 +448,10 @@ export function schema(): Schema {
 
   (spec.nodes as NodeSpec).topic.content = 'title shortdesc? prolog? body?';
   (spec.nodes as NodeSpec).doc.content = 'topic';
+
+  console.log(spec.nodes);
+  
+  spec.nodes = nodeSpec;
 
   return new Schema(spec);
 }

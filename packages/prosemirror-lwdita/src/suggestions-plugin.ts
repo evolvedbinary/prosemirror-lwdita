@@ -239,10 +239,10 @@ function getFollowingSiblings(pathToRoot: string[], nodes: Record<string, NodeTy
         tempNodeTypes.push(nodes[(sibling as ChildType).name]);
       }
     }
-    nodeTypes.push(tempNodeTypes);
+    nodeTypes.push(tempNodeTypes.filter(type => type));
   }
   
-  return nodeTypes;
+  return nodeTypes.filter(type => type);
 }
 
 /**

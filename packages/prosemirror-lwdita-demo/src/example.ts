@@ -90,8 +90,10 @@ function renderProsemirrorDocument(jsonDoc: Record<string, Json>, urlParams: URL
   domEl.innerHTML = '';
   // if the element exists, create a new EditorView
   if (domEl) {
+    console.log("rendring json doc", jsonDoc);
+    
     // take in the schema and the json document
-    const doc = Node.fromJSON(schemaObject, jsonDoc);
+    const doc = Node.fromJSON(schemaObject, jsonDoc);    
     // create a new EditorState with the doc and the plugins
     const state = EditorState.create({
       doc,
