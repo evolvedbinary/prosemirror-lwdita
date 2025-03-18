@@ -36,7 +36,11 @@ export function unTravel(prosemirrorDocument: Record<string, any>): JDita {
   const attributes = prosemirrorDocument.attrs || {};
 
   // get the node name
-  const nodeName = getJditaNodeName(prosemirrorDocument.type);
+  let nodeName = getJditaNodeName(prosemirrorDocument.type);
+
+  // remove the block_ prefix
+  nodeName = nodeName.replace('block-', "")
+  debugger
 
   if (nodeName === 'video' || nodeName === 'audio' || nodeName === 'image') {
     return createMediaJDITAObject(nodeName, attributes, children)
