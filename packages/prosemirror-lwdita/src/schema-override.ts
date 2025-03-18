@@ -17,6 +17,18 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import { Node, NodeSpec } from "prosemirror-model"
 
+const localizationAttrs = {
+  dir: {
+    default: null
+  },
+  "xml:lang": {
+    default: null
+  },
+  translate: {
+    default: null
+  }, 
+}
+
 export const nodeSpec: NodeSpec = {
   text: {
     group: 'inline',
@@ -43,24 +55,24 @@ export const nodeSpec: NodeSpec = {
     }
   },
   body: {
-    inline: false,
-    parseDOM: [
-      {
-        tag: "[data-j-type=body]"
-      }
-    ],
     content: "section*",
-    toDOM() {
-      return ['div', {}, 0]
+    attrs: {
+      ...localizationAttrs,
+      outputclass: { default: null },
+      class: { default: "- topic/body " },
+      parent: { default: null },
+    },
+    toDOM(node: Node) {
+      const { class: className, parent: parentName , ...attrs } = node.attrs;
+      return ["div", {
+        "data-j-class": className,
+        "data-j-parent": parentName,
+        ...attrs
+      }, 0];
     }
   },
   section: {
     inline: false,
-    parseDOM: [
-      {
-        tag: "[data-j-type=section]"
-      }
-    ],
     content: "title? all_blocks*",
     toDOM() {
       return ['section', {}, 0]
