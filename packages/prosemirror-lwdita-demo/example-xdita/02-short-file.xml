@@ -2,8 +2,7 @@
 <!DOCTYPE topic PUBLIC "-//OASIS//DTD LIGHTWEIGHT DITA Topic//EN" "lw-topic.dtd">
 <topic id="program">
   <title>Test File 2</title>
-  <body>
-    <fig><title>figure</title><image href="https://picsum.photos/200/300"><alt>alt text</alt></image></fig>
+  <body dir="ltr" outputclass="body"> 
     <p>A test paragraph. <image href="https://picsum.photos/200/300"><alt>alt text</alt></image></p>
   </body>
 </topic>

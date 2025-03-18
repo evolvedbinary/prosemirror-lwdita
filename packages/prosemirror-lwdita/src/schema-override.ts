@@ -54,6 +54,9 @@ export const nodeSpec: NodeSpec = {
       return ['p', {}, 0]
     }
   },
+  p_block:{
+    
+  },
   body: {
     content: "section*",
     attrs: {

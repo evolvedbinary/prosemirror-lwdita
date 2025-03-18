@@ -1,0 +1,1842 @@
+{
+  "nodes": {
+    "text": {
+      "group": "inline inline_noimage inline_noxref",
+      "inline": true
+    },
+    "hard_break": {
+      "inline": true,
+      "group": "inline inline_noxref inline_noimage",
+      "selectable": false,
+      "parseDOM": [
+        {
+          "tag": "br"
+        }
+      ]
+    },
+    "block_alt": {
+      "attrs": {
+        "parent": {
+          "default": ""
+        },
+        "dir": {
+          "default": ""
+        },
+        "xml:lang": {
+          "default": ""
+        },
+        "translate": {
+          "default": ""
+        },
+        "keyref": {
+          "default": ""
+        },
+        "outputclass": {
+          "default": ""
+        },
+        "class": {
+          "default": ""
+        }
+      },
+      "content": "text* em* ph* strong* tt*",
+      "inline": false
+    },
+    "image": {
+      "attrs": {
+        "parent": {
+          "default": ""
+        },
+        "dir": {
+          "default": ""
+        },
+        "xml:lang": {
+          "default": ""
+        },
+        "translate": {
+          "default": ""
+        },
+        "href": {
+          "default": ""
+        },
+        "format": {
+          "default": ""
+        },
+        "scope": {
+          "default": ""
+        },
+        "width": {
+          "default": ""
+        },
+        "height": {
+          "default": ""
+        },
+        "keyref": {
+          "default": ""
+        },
+        "outputclass": {
+          "default": ""
+        },
+        "class": {
+          "default": ""
+        },
+        "alt": {
+          "default": ""
+        }
+      },
+      "content": "block_alt?",
+      "inline": true
+    },
+    "xref": {
+      "attrs": {
+        "parent": {
+          "default": ""
+        },
+        "props": {
+          "default": ""
+        },
+        "dir": {
+          "default": ""
+        },
+        "xml:lang": {
+          "default": ""
+        },
+        "translate": {
+          "default": ""
+        },
+        "href": {
+          "default": ""
+        },
+        "format": {
+          "default": ""
+        },
+        "scope": {
+          "default": ""
+        },
+        "keyref": {
+          "default": ""
+        },
+        "outputclass": {
+          "default": ""
+        },
+        "class": {
+          "default": ""
+        }
+      },
+      "content": "text* em* ph* strong* tt* image*",
+      "inline": true
+    },
+    "tt": {
+      "attrs": {
+        "parent": {
+          "default": ""
+        },
+        "dir": {
+          "default": ""
+        },
+        "xml:lang": {
+          "default": ""
+        },
+        "translate": {
+          "default": ""
+        },
+        "keyref": {
+          "default": ""
+        },
+        "outputclass": {
+          "default": ""
+        },
+        "class": {
+          "default": ""
+        }
+      },
+      "content": "text* em* ph* strong* tt* xref*",
+      "inline": true
+    },
+    "strong": {
+      "attrs": {
+        "parent": {
+          "default": ""
+        },
+        "dir": {
+          "default": ""
+        },
+        "xml:lang": {
+          "default": ""
+        },
+        "translate": {
+          "default": ""
+        },
+        "keyref": {
+          "default": ""
+        },
+        "outputclass": {
+          "default": ""
+        },
+        "class": {
+          "default": ""
+        }
+      },
+      "content": "text* em* ph* strong* tt* xref*",
+      "inline": true
+    },
+    "ph": {
+      "attrs": {
+        "parent": {
+          "default": ""
+        },
+        "props": {
+          "default": ""
+        },
+        "dir": {
+          "default": ""
+        },
+        "xml:lang": {
+          "default": ""
+        },
+        "translate": {
+          "default": ""
+        },
+        "keyref": {
+          "default": ""
+        },
+        "outputclass": {
+          "default": ""
+        },
+        "class": {
+          "default": ""
+        }
+      },
+      "content": "text* em* ph* strong* tt* image* xref*",
+      "inline": true
+    },
+    "em": {
+      "attrs": {
+        "parent": {
+          "default": ""
+        },
+        "dir": {
+          "default": ""
+        },
+        "xml:lang": {
+          "default": ""
+        },
+        "translate": {
+          "default": ""
+        },
+        "keyref": {
+          "default": ""
+        },
+        "outputclass": {
+          "default": ""
+        },
+        "class": {
+          "default": ""
+        }
+      },
+      "content": "text* em* ph* strong* tt* xref*",
+      "inline": true
+    },
+    "block_title": {
+      "attrs": {
+        "parent": {
+          "default": ""
+        },
+        "dir": {
+          "default": ""
+        },
+        "xml:lang": {
+          "default": ""
+        },
+        "translate": {
+          "default": ""
+        },
+        "outputclass": {
+          "default": ""
+        },
+        "class": {
+          "default": ""
+        }
+      },
+      "content": "text* em* ph* strong* tt* image*",
+      "inline": false
+    },
+    "block_shortdesc": {
+      "attrs": {
+        "parent": {
+          "default": ""
+        },
+        "props": {
+          "default": ""
+        },
+        "id": {
+          "default": ""
+        },
+        "conref": {
+          "default": ""
+        },
+        "dir": {
+          "default": ""
+        },
+        "xml:lang": {
+          "default": ""
+        },
+        "translate": {
+          "default": ""
+        },
+        "outputclass": {
+          "default": ""
+        },
+        "class": {
+          "default": ""
+        }
+      },
+      "content": "text* em* ph* strong* tt* image* xref*",
+      "inline": false
+    },
+    "block_othermeta": {
+      "attrs": {
+        "parent": {
+          "default": ""
+        },
+        "dir": {
+          "default": ""
+        },
+        "xml:lang": {
+          "default": ""
+        },
+        "translate": {
+          "default": ""
+        },
+        "name": {
+          "default": ""
+        },
+        "content": {
+          "default": ""
+        },
+        "class": {
+          "default": ""
+        }
+      },
+      "content": "",
+      "inline": false
+    },
+    "block_metadata": {
+      "attrs": {
+        "parent": {
+          "default": ""
+        },
+        "dir": {
+          "default": ""
+        },
+        "xml:lang": {
+          "default": ""
+        },
+        "translate": {
+          "default": ""
+        },
+        "props": {
+          "default": ""
+        },
+        "id": {
+          "default": ""
+        },
+        "conref": {
+          "default": ""
+        },
+        "outputclass": {
+          "default": ""
+        },
+        "class": {
+          "default": ""
+        }
+      },
+      "content": "block_othermeta*",
+      "inline": false
+    },
+    "block_prolog": {
+      "attrs": {
+        "parent": {
+          "default": ""
+        },
+        "props": {
+          "default": ""
+        },
+        "dir": {
+          "default": ""
+        },
+        "xml:lang": {
+          "default": ""
+        },
+        "translate": {
+          "default": ""
+        },
+        "outputclass": {
+          "default": ""
+        },
+        "class": {
+          "default": ""
+        }
+      },
+      "content": "block_metadata*",
+      "inline": false
+    },
+    "block_p": {
+      "attrs": {
+        "parent": {
+          "default": ""
+        },
+        "props": {
+          "default": ""
+        },
+        "dir": {
+          "default": ""
+        },
+        "xml:lang": {
+          "default": ""
+        },
+        "translate": {
+          "default": ""
+        },
+        "id": {
+          "default": ""
+        },
+        "conref": {
+          "default": ""
+        },
+        "outputclass": {
+          "default": ""
+        },
+        "class": {
+          "default": ""
+        }
+      },
+      "content": "text* em* ph* strong* tt* image* xref*",
+      "inline": false
+    },
+    "block_ol": {
+      "attrs": {
+        "parent": {
+          "default": ""
+        },
+        "props": {
+          "default": ""
+        },
+        "dir": {
+          "default": ""
+        },
+        "xml:lang": {
+          "default": ""
+        },
+        "translate": {
+          "default": ""
+        },
+        "id": {
+          "default": ""
+        },
+        "conref": {
+          "default": ""
+        },
+        "outputclass": {
+          "default": ""
+        },
+        "class": {
+          "default": ""
+        }
+      },
+      "content": "block_li+",
+      "inline": false
+    },
+    "block_dt": {
+      "attrs": {
+        "parent": {
+          "default": ""
+        },
+        "props": {
+          "default": ""
+        },
+        "dir": {
+          "default": ""
+        },
+        "xml:lang": {
+          "default": ""
+        },
+        "translate": {
+          "default": ""
+        },
+        "id": {
+          "default": ""
+        },
+        "conref": {
+          "default": ""
+        },
+        "outputclass": {
+          "default": ""
+        },
+        "class": {
+          "default": ""
+        }
+      },
+      "content": "text* em* ph* strong* tt* image* xref*",
+      "inline": false
+    },
+    "block_pre": {
+      "attrs": {
+        "parent": {
+          "default": ""
+        },
+        "props": {
+          "default": ""
+        },
+        "dir": {
+          "default": ""
+        },
+        "xml:lang": {
+          "default": ""
+        },
+        "translate": {
+          "default": ""
+        },
+        "id": {
+          "default": ""
+        },
+        "conref": {
+          "default": ""
+        },
+        "outputclass": {
+          "default": ""
+        },
+        "class": {
+          "default": ""
+        },
+        "xml:space": {
+          "default": ""
+        }
+      },
+      "content": "text* em* ph* strong* tt* xref*",
+      "inline": false
+    },
+    "block_desc": {
+      "attrs": {
+        "parent": {
+          "default": ""
+        },
+        "props": {
+          "default": ""
+        },
+        "dir": {
+          "default": ""
+        },
+        "xml:lang": {
+          "default": ""
+        },
+        "translate": {
+          "default": ""
+        },
+        "outputclass": {
+          "default": ""
+        },
+        "class": {
+          "default": ""
+        }
+      },
+      "content": "text* em* ph* strong* tt* image*",
+      "inline": false
+    },
+    "block_image": {
+      "attrs": {
+        "parent": {
+          "default": ""
+        },
+        "dir": {
+          "default": ""
+        },
+        "xml:lang": {
+          "default": ""
+        },
+        "translate": {
+          "default": ""
+        },
+        "href": {
+          "default": ""
+        },
+        "format": {
+          "default": ""
+        },
+        "scope": {
+          "default": ""
+        },
+        "width": {
+          "default": ""
+        },
+        "height": {
+          "default": ""
+        },
+        "keyref": {
+          "default": ""
+        },
+        "outputclass": {
+          "default": ""
+        },
+        "class": {
+          "default": ""
+        },
+        "alt": {
+          "default": ""
+        }
+      },
+      "content": "block_alt?",
+      "inline": false
+    },
+    "block_video_poster": {
+      "attrs": {
+        "parent": {
+          "default": ""
+        },
+        "dir": {
+          "default": ""
+        },
+        "xml:lang": {
+          "default": ""
+        },
+        "translate": {
+          "default": ""
+        },
+        "props": {
+          "default": ""
+        },
+        "href": {
+          "default": ""
+        },
+        "format": {
+          "default": ""
+        },
+        "scope": {
+          "default": ""
+        },
+        "id": {
+          "default": ""
+        },
+        "conref": {
+          "default": ""
+        },
+        "keyref": {
+          "default": ""
+        },
+        "outputclass": {
+          "default": ""
+        },
+        "class": {
+          "default": ""
+        }
+      },
+      "content": "",
+      "inline": false
+    },
+    "block_media_source": {
+      "attrs": {
+        "parent": {
+          "default": ""
+        },
+        "dir": {
+          "default": ""
+        },
+        "xml:lang": {
+          "default": ""
+        },
+        "translate": {
+          "default": ""
+        },
+        "href": {
+          "default": ""
+        },
+        "format": {
+          "default": ""
+        },
+        "scope": {
+          "default": ""
+        },
+        "keyref": {
+          "default": ""
+        },
+        "outputclass": {
+          "default": ""
+        },
+        "class": {
+          "default": ""
+        }
+      },
+      "content": "",
+      "inline": false
+    },
+    "block_media_track": {
+      "attrs": {
+        "parent": {
+          "default": ""
+        },
+        "dir": {
+          "default": ""
+        },
+        "xml:lang": {
+          "default": ""
+        },
+        "translate": {
+          "default": ""
+        },
+        "href": {
+          "default": ""
+        },
+        "format": {
+          "default": ""
+        },
+        "scope": {
+          "default": ""
+        },
+        "keyref": {
+          "default": ""
+        },
+        "outputclass": {
+          "default": ""
+        },
+        "class": {
+          "default": ""
+        },
+        "kind": {
+          "default": ""
+        },
+        "srclang": {
+          "default": ""
+        }
+      },
+      "content": "text*",
+      "inline": false
+    },
+    "block_video": {
+      "attrs": {
+        "parent": {
+          "default": ""
+        },
+        "props": {
+          "default": ""
+        },
+        "dir": {
+          "default": ""
+        },
+        "xml:lang": {
+          "default": ""
+        },
+        "translate": {
+          "default": ""
+        },
+        "href": {
+          "default": ""
+        },
+        "format": {
+          "default": ""
+        },
+        "scope": {
+          "default": ""
+        },
+        "id": {
+          "default": ""
+        },
+        "conref": {
+          "default": ""
+        },
+        "outputclass": {
+          "default": ""
+        },
+        "class": {
+          "default": ""
+        },
+        "width": {
+          "default": ""
+        },
+        "height": {
+          "default": ""
+        },
+        "autoplay": {
+          "default": ""
+        },
+        "controls": {
+          "default": ""
+        },
+        "loop": {
+          "default": ""
+        },
+        "muted": {
+          "default": ""
+        },
+        "tabindex": {
+          "default": ""
+        },
+        "poster": {
+          "default": ""
+        },
+        "title": {
+          "default": ""
+        }
+      },
+      "content": "block_desc? block_fallback? block_video_poster? block_media_source* block_media_track*",
+      "inline": false
+    },
+    "block_stentry": {
+      "attrs": {
+        "parent": {
+          "default": ""
+        },
+        "props": {
+          "default": ""
+        },
+        "dir": {
+          "default": ""
+        },
+        "xml:lang": {
+          "default": ""
+        },
+        "translate": {
+          "default": ""
+        },
+        "id": {
+          "default": ""
+        },
+        "conref": {
+          "default": ""
+        },
+        "outputclass": {
+          "default": ""
+        },
+        "class": {
+          "default": ""
+        },
+        "colspan": {
+          "default": ""
+        },
+        "rowspan": {
+          "default": ""
+        },
+        "scope": {
+          "default": ""
+        },
+        "headers": {
+          "default": ""
+        }
+      },
+      "content": "block_p* block_ul* block_ol* block_dl* block_pre* block_audio* block_video* block_example* block_note*",
+      "inline": false
+    },
+    "block_sthead": {
+      "attrs": {
+        "parent": {
+          "default": ""
+        },
+        "props": {
+          "default": ""
+        },
+        "dir": {
+          "default": ""
+        },
+        "xml:lang": {
+          "default": ""
+        },
+        "translate": {
+          "default": ""
+        },
+        "id": {
+          "default": ""
+        },
+        "conref": {
+          "default": ""
+        },
+        "outputclass": {
+          "default": ""
+        },
+        "class": {
+          "default": ""
+        }
+      },
+      "content": "block_stentry+",
+      "inline": false
+    },
+    "block_strow": {
+      "attrs": {
+        "parent": {
+          "default": ""
+        },
+        "props": {
+          "default": ""
+        },
+        "dir": {
+          "default": ""
+        },
+        "xml:lang": {
+          "default": ""
+        },
+        "translate": {
+          "default": ""
+        },
+        "id": {
+          "default": ""
+        },
+        "conref": {
+          "default": ""
+        },
+        "outputclass": {
+          "default": ""
+        },
+        "class": {
+          "default": ""
+        }
+      },
+      "content": "block_stentry*",
+      "inline": false
+    },
+    "block_simpletable": {
+      "attrs": {
+        "parent": {
+          "default": ""
+        },
+        "props": {
+          "default": ""
+        },
+        "dir": {
+          "default": ""
+        },
+        "xml:lang": {
+          "default": ""
+        },
+        "translate": {
+          "default": ""
+        },
+        "id": {
+          "default": ""
+        },
+        "conref": {
+          "default": ""
+        },
+        "outputclass": {
+          "default": ""
+        },
+        "class": {
+          "default": ""
+        }
+      },
+      "content": "block_title? block_sthead? block_strow+",
+      "inline": false
+    },
+    "block_xref": {
+      "attrs": {
+        "parent": {
+          "default": ""
+        },
+        "props": {
+          "default": ""
+        },
+        "dir": {
+          "default": ""
+        },
+        "xml:lang": {
+          "default": ""
+        },
+        "translate": {
+          "default": ""
+        },
+        "href": {
+          "default": ""
+        },
+        "format": {
+          "default": ""
+        },
+        "scope": {
+          "default": ""
+        },
+        "keyref": {
+          "default": ""
+        },
+        "outputclass": {
+          "default": ""
+        },
+        "class": {
+          "default": ""
+        }
+      },
+      "content": "text* em* ph* strong* tt* image*",
+      "inline": false
+    },
+    "block_fig": {
+      "attrs": {
+        "parent": {
+          "default": ""
+        },
+        "scale": {
+          "default": ""
+        },
+        "frame": {
+          "default": ""
+        },
+        "expanse": {
+          "default": ""
+        },
+        "dir": {
+          "default": ""
+        },
+        "xml:lang": {
+          "default": ""
+        },
+        "translate": {
+          "default": ""
+        },
+        "props": {
+          "default": ""
+        },
+        "id": {
+          "default": ""
+        },
+        "conref": {
+          "default": ""
+        },
+        "outputclass": {
+          "default": ""
+        },
+        "class": {
+          "default": ""
+        }
+      },
+      "content": "block_title? block_desc? block_p* block_ul* block_ol* block_dl* block_pre* block_audio* block_video* block_example* block_simpletable* block_image* block_xref*",
+      "inline": false
+    },
+    "block_example": {
+      "attrs": {
+        "parent": {
+          "default": ""
+        },
+        "scale": {
+          "default": ""
+        },
+        "frame": {
+          "default": ""
+        },
+        "expanse": {
+          "default": ""
+        },
+        "dir": {
+          "default": ""
+        },
+        "xml:lang": {
+          "default": ""
+        },
+        "translate": {
+          "default": ""
+        },
+        "props": {
+          "default": ""
+        },
+        "id": {
+          "default": ""
+        },
+        "conref": {
+          "default": ""
+        },
+        "outputclass": {
+          "default": ""
+        },
+        "class": {
+          "default": ""
+        }
+      },
+      "content": "block_title? block_p block_ul block_ol block_dl block_pre block_audio block_video block_simpletable block_fig block_note",
+      "inline": false
+    },
+    "block_note": {
+      "attrs": {
+        "parent": {
+          "default": ""
+        },
+        "props": {
+          "default": ""
+        },
+        "dir": {
+          "default": ""
+        },
+        "xml:lang": {
+          "default": ""
+        },
+        "translate": {
+          "default": ""
+        },
+        "id": {
+          "default": ""
+        },
+        "conref": {
+          "default": ""
+        },
+        "outputclass": {
+          "default": ""
+        },
+        "class": {
+          "default": ""
+        },
+        "type": {
+          "default": ""
+        }
+      },
+      "content": "block_p* block_ul* block_ol* block_dl* block_pre* block_audio* block_video* block_example* block_note*",
+      "inline": false
+    },
+    "block_fallback": {
+      "attrs": {
+        "parent": {
+          "default": ""
+        },
+        "dir": {
+          "default": ""
+        },
+        "xml:lang": {
+          "default": ""
+        },
+        "translate": {
+          "default": ""
+        },
+        "props": {
+          "default": ""
+        },
+        "outputclass": {
+          "default": ""
+        },
+        "class": {
+          "default": ""
+        }
+      },
+      "content": "block_image* block_alt* block_p* block_ul* block_ol* block_dl* block_pre* block_note*",
+      "inline": false
+    },
+    "block_audio": {
+      "attrs": {
+        "parent": {
+          "default": ""
+        },
+        "props": {
+          "default": ""
+        },
+        "dir": {
+          "default": ""
+        },
+        "xml:lang": {
+          "default": ""
+        },
+        "translate": {
+          "default": ""
+        },
+        "id": {
+          "default": ""
+        },
+        "conref": {
+          "default": ""
+        },
+        "keyref": {
+          "default": ""
+        },
+        "href": {
+          "default": ""
+        },
+        "format": {
+          "default": ""
+        },
+        "scope": {
+          "default": ""
+        },
+        "outputclass": {
+          "default": ""
+        },
+        "class": {
+          "default": ""
+        },
+        "autoplay": {
+          "default": ""
+        },
+        "controls": {
+          "default": ""
+        },
+        "loop": {
+          "default": ""
+        },
+        "muted": {
+          "default": ""
+        },
+        "tabindex": {
+          "default": ""
+        },
+        "title": {
+          "default": ""
+        }
+      },
+      "content": "block_desc? block_fallback? block_media_source* block_media_track*",
+      "inline": false
+    },
+    "block_dd": {
+      "attrs": {
+        "parent": {
+          "default": ""
+        },
+        "props": {
+          "default": ""
+        },
+        "dir": {
+          "default": ""
+        },
+        "xml:lang": {
+          "default": ""
+        },
+        "translate": {
+          "default": ""
+        },
+        "id": {
+          "default": ""
+        },
+        "conref": {
+          "default": ""
+        },
+        "outputclass": {
+          "default": ""
+        },
+        "class": {
+          "default": ""
+        }
+      },
+      "content": "block_p* block_ul* block_ol* block_dl* block_pre* block_audio* block_video* block_example* block_simpletable* block_fig* block_note*",
+      "inline": false
+    },
+    "block_dlentry": {
+      "attrs": {
+        "parent": {
+          "default": ""
+        },
+        "props": {
+          "default": ""
+        },
+        "dir": {
+          "default": ""
+        },
+        "xml:lang": {
+          "default": ""
+        },
+        "translate": {
+          "default": ""
+        },
+        "id": {
+          "default": ""
+        },
+        "conref": {
+          "default": ""
+        },
+        "outputclass": {
+          "default": ""
+        },
+        "class": {
+          "default": ""
+        }
+      },
+      "content": "block_dt block_dd",
+      "inline": false
+    },
+    "block_dl": {
+      "attrs": {
+        "parent": {
+          "default": ""
+        },
+        "props": {
+          "default": ""
+        },
+        "dir": {
+          "default": ""
+        },
+        "xml:lang": {
+          "default": ""
+        },
+        "translate": {
+          "default": ""
+        },
+        "id": {
+          "default": ""
+        },
+        "conref": {
+          "default": ""
+        },
+        "outputclass": {
+          "default": ""
+        },
+        "class": {
+          "default": ""
+        }
+      },
+      "content": "block_dlentry+",
+      "inline": false
+    },
+    "block_li": {
+      "attrs": {
+        "parent": {
+          "default": ""
+        },
+        "props": {
+          "default": ""
+        },
+        "dir": {
+          "default": ""
+        },
+        "xml:lang": {
+          "default": ""
+        },
+        "translate": {
+          "default": ""
+        },
+        "id": {
+          "default": ""
+        },
+        "conref": {
+          "default": ""
+        },
+        "outputclass": {
+          "default": ""
+        },
+        "class": {
+          "default": ""
+        }
+      },
+      "content": "block_p* block_ul* block_ol* block_dl* block_pre* block_audio* block_video* block_example* block_simpletable* block_fig* block_note*",
+      "inline": false
+    },
+    "block_ul": {
+      "attrs": {
+        "parent": {
+          "default": ""
+        },
+        "props": {
+          "default": ""
+        },
+        "dir": {
+          "default": ""
+        },
+        "xml:lang": {
+          "default": ""
+        },
+        "translate": {
+          "default": ""
+        },
+        "id": {
+          "default": ""
+        },
+        "conref": {
+          "default": ""
+        },
+        "outputclass": {
+          "default": ""
+        },
+        "class": {
+          "default": ""
+        }
+      },
+      "content": "block_li+",
+      "inline": false
+    },
+    "block_section": {
+      "attrs": {
+        "parent": {
+          "default": ""
+        },
+        "props": {
+          "default": ""
+        },
+        "dir": {
+          "default": ""
+        },
+        "xml:lang": {
+          "default": ""
+        },
+        "translate": {
+          "default": ""
+        },
+        "id": {
+          "default": ""
+        },
+        "conref": {
+          "default": ""
+        },
+        "outputclass": {
+          "default": ""
+        },
+        "class": {
+          "default": ""
+        }
+      },
+      "content": "block_title? block_p* block_ul* block_ol* block_dl* block_pre* block_audio* block_video* block_example* block_simpletable* block_fig* block_note*",
+      "inline": false
+    },
+    "block_fn": {
+      "attrs": {
+        "parent": {
+          "default": ""
+        },
+        "props": {
+          "default": ""
+        },
+        "dir": {
+          "default": ""
+        },
+        "xml:lang": {
+          "default": ""
+        },
+        "translate": {
+          "default": ""
+        },
+        "conref": {
+          "default": ""
+        },
+        "outputclass": {
+          "default": ""
+        },
+        "class": {
+          "default": ""
+        },
+        "id": {
+          "default": ""
+        },
+        "callout": {
+          "default": ""
+        }
+      },
+      "content": "block_p* block_ul* block_ol* block_dl*",
+      "inline": false
+    },
+    "block_div": {
+      "attrs": {
+        "parent": {
+          "default": ""
+        },
+        "dir": {
+          "default": ""
+        },
+        "xml:lang": {
+          "default": ""
+        },
+        "translate": {
+          "default": ""
+        },
+        "props": {
+          "default": ""
+        },
+        "outputclass": {
+          "default": ""
+        },
+        "class": {
+          "default": ""
+        }
+      },
+      "content": "block_fn+",
+      "inline": false
+    },
+    "block_body": {
+      "attrs": {
+        "parent": {
+          "default": ""
+        },
+        "dir": {
+          "default": ""
+        },
+        "xml:lang": {
+          "default": ""
+        },
+        "translate": {
+          "default": ""
+        },
+        "outputclass": {
+          "default": ""
+        },
+        "class": {
+          "default": ""
+        }
+      },
+      "content": "block_p* block_ul* block_ol* block_dl* block_pre* block_audio* block_video* block_example* block_simpletable* block_fig* block_note* block_section* block_div?",
+      "inline": false
+    },
+    "block_topic": {
+      "attrs": {
+        "parent": {
+          "default": ""
+        },
+        "dir": {
+          "default": ""
+        },
+        "xml:lang": {
+          "default": ""
+        },
+        "translate": {
+          "default": ""
+        },
+        "outputclass": {
+          "default": ""
+        },
+        "class": {
+          "default": ""
+        },
+        "specializations": {
+          "default": ""
+        },
+        "id": {
+          "default": ""
+        },
+        "xmlns:ditaarch": {
+          "default": ""
+        },
+        "ditaarch:DITAArchVersion": {
+          "default": ""
+        }
+      },
+      "content": "block_title block_shortdesc? block_prolog? block_body?",
+      "inline": false
+    },
+    "doc": {
+      "attrs": {
+        "parent": {
+          "default": ""
+        },
+        "xmlDecl": {
+          "default": ""
+        },
+        "docTypeDecl": {
+          "default": ""
+        }
+      },
+      "content": "block_topic",
+      "inline": false
+    },
+    "block_navtitle": {
+      "attrs": {
+        "parent": {
+          "default": ""
+        },
+        "dir": {
+          "default": ""
+        },
+        "xml:lang": {
+          "default": ""
+        },
+        "translate": {
+          "default": ""
+        },
+        "outputclass": {
+          "default": ""
+        },
+        "class": {
+          "default": ""
+        }
+      },
+      "content": "text* em* ph* strong* tt*",
+      "inline": false
+    },
+    "block_keytext": {
+      "attrs": {
+        "parent": {
+          "default": ""
+        },
+        "dir": {
+          "default": ""
+        },
+        "xml:lang": {
+          "default": ""
+        },
+        "translate": {
+          "default": ""
+        },
+        "outputclass": {
+          "default": ""
+        },
+        "class": {
+          "default": ""
+        }
+      },
+      "content": "text* em* ph* strong* tt*",
+      "inline": false
+    },
+    "block_topicmeta": {
+      "attrs": {
+        "parent": {
+          "default": ""
+        },
+        "dir": {
+          "default": ""
+        },
+        "xml:lang": {
+          "default": ""
+        },
+        "translate": {
+          "default": ""
+        },
+        "outputclass": {
+          "default": ""
+        },
+        "class": {
+          "default": ""
+        }
+      },
+      "content": "block_navtitle? block_keytext? block_othermeta*",
+      "inline": false
+    },
+    "block_topicref": {
+      "attrs": {
+        "parent": {
+          "default": ""
+        },
+        "dir": {
+          "default": ""
+        },
+        "xml:lang": {
+          "default": ""
+        },
+        "translate": {
+          "default": ""
+        },
+        "props": {
+          "default": ""
+        },
+        "outputclass": {
+          "default": ""
+        },
+        "class": {
+          "default": ""
+        },
+        "href": {
+          "default": ""
+        },
+        "format": {
+          "default": ""
+        },
+        "scope": {
+          "default": ""
+        },
+        "id": {
+          "default": ""
+        },
+        "conref": {
+          "default": ""
+        },
+        "keyref": {
+          "default": ""
+        },
+        "keys": {
+          "default": ""
+        }
+      },
+      "content": "block_topicmeta? block_topicref?",
+      "inline": false
+    },
+    "block_keydef": {
+      "attrs": {
+        "parent": {
+          "default": ""
+        },
+        "dir": {
+          "default": ""
+        },
+        "xml:lang": {
+          "default": ""
+        },
+        "translate": {
+          "default": ""
+        },
+        "props": {
+          "default": ""
+        },
+        "outputclass": {
+          "default": ""
+        },
+        "class": {
+          "default": ""
+        },
+        "href": {
+          "default": ""
+        },
+        "format": {
+          "default": ""
+        },
+        "scope": {
+          "default": ""
+        },
+        "keys": {
+          "default": ""
+        },
+        "processing-role": {
+          "default": ""
+        }
+      },
+      "content": "block_topicmeta?",
+      "inline": false
+    },
+    "block_map": {
+      "attrs": {
+        "parent": {
+          "default": ""
+        },
+        "dir": {
+          "default": ""
+        },
+        "xml:lang": {
+          "default": ""
+        },
+        "translate": {
+          "default": ""
+        },
+        "outputclass": {
+          "default": ""
+        },
+        "class": {
+          "default": ""
+        },
+        "specializations": {
+          "default": ""
+        },
+        "id": {
+          "default": ""
+        },
+        "xmlns:ditaarch": {
+          "default": ""
+        },
+        "ditaarch:DITAArchVersion": {
+          "default": ""
+        }
+      },
+      "content": "block_topicmeta? block_topicref* block_keydef*",
+      "inline": false
+    }
+  },
+  "marks": {
+    "u": {
+      "attrs": {
+        "parent": {
+          "default": ""
+        },
+        "dir": {
+          "default": ""
+        },
+        "xml:lang": {
+          "default": ""
+        },
+        "translate": {
+          "default": ""
+        },
+        "keyref": {
+          "default": ""
+        },
+        "outputclass": {
+          "default": ""
+        },
+        "class": {
+          "default": ""
+        }
+      },
+      "inline": true
+    },
+    "sup": {
+      "attrs": {
+        "parent": {
+          "default": ""
+        },
+        "dir": {
+          "default": ""
+        },
+        "xml:lang": {
+          "default": ""
+        },
+        "translate": {
+          "default": ""
+        },
+        "keyref": {
+          "default": ""
+        },
+        "outputclass": {
+          "default": ""
+        },
+        "class": {
+          "default": ""
+        }
+      },
+      "inline": true
+    },
+    "sub": {
+      "attrs": {
+        "parent": {
+          "default": ""
+        },
+        "dir": {
+          "default": ""
+        },
+        "xml:lang": {
+          "default": ""
+        },
+        "translate": {
+          "default": ""
+        },
+        "keyref": {
+          "default": ""
+        },
+        "outputclass": {
+          "default": ""
+        },
+        "class": {
+          "default": ""
+        }
+      },
+      "inline": true
+    },
+    "i": {
+      "attrs": {
+        "parent": {
+          "default": ""
+        },
+        "dir": {
+          "default": ""
+        },
+        "xml:lang": {
+          "default": ""
+        },
+        "translate": {
+          "default": ""
+        },
+        "keyref": {
+          "default": ""
+        },
+        "outputclass": {
+          "default": ""
+        },
+        "class": {
+          "default": ""
+        }
+      },
+      "inline": true
+    },
+    "b": {
+      "attrs": {
+        "parent": {
+          "default": ""
+        },
+        "dir": {
+          "default": ""
+        },
+        "xml:lang": {
+          "default": ""
+        },
+        "translate": {
+          "default": ""
+        },
+        "keyref": {
+          "default": ""
+        },
+        "outputclass": {
+          "default": ""
+        },
+        "class": {
+          "default": ""
+        }
+      },
+      "inline": true
+    }
+  }
+}

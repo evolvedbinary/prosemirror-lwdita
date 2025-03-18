@@ -15,7 +15,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import { AbstractBaseNode, ChildTypes, DocumentNode, MapNode, UnknownNodeError, getNodeClassType, nodeGroups } from '@evolvedbinary/lwdita-ast';
+import { AbstractBaseNode, ChildTypes, DocumentNode, MapNode, UnknownNodeError, getNodeClass, getNodeClassType, nodeGroups } from '@evolvedbinary/lwdita-ast';
 import { getDomNode } from './dom';
 import { NodeSpec, Schema, SchemaSpec, Node, MarkSpec, DOMOutputSpec, Attrs } from 'prosemirror-model';
 import { nodeSpec } from './schema-override';
@@ -32,7 +32,7 @@ import { nodeSpec } from './schema-override';
  * Will be used in `defaultNodeName()`.
  */
 export const NODE_NAMES: Record<string, string> = {
-  document: 'doc',
+  block_document: 'doc',
 }
 
 /**
@@ -198,15 +198,15 @@ export const SCHEMA_CONTENT: Record<string, [content: string, groups: string]> =
 /**
  * A map of special children for certain media nodes
  */
-export const SCHEMA_CHILDREN: Record<string, (type: ChildTypes) => string[]> = {
-  video: () => ['desc', 'fallback', 'video-poster', 'media-source', 'media-track' ],
-  audio: () => ['desc', 'fallback', 'media-source', 'media-track' ],
-}
+// export const SCHEMA_CHILDREN: Record<string, (type: ChildTypes) => string[]> = {
+//   video: () => ['desc', 'fallback', 'video-poster', 'media-source', 'media-track' ],
+//   audio: () => ['desc', 'fallback', 'media-source', 'media-track' ],
+// }
 
 /**
  * The inline markup elements bold, italic, underline, subscript, superscript
  */
-export const IS_MARK = ['b', 'i', 'u', 'sub', 'sup'];
+export const IS_MARK = ['b', 'i', 'u', 'sub', 'sup', 'cdata'];
 
 /**
  * A representation of a node in the schema
@@ -232,12 +232,41 @@ export interface SchemaNodes {
  * @param type - Type of the Child nodes
  * @returns - The children of the node
  */
-function getChildren(type: ChildTypes): string[] {
+//TODO make it return cardinality and use that as content
+function getChildren(type: ChildTypes): {name: string, required: boolean, single: boolean}[] {
   if (Array.isArray(type)) {
-    return type.map(subType => getChildren(subType)).reduce((result, children) =>
-    result.concat(children.filter(child => result.indexOf(child) < 0)), [] as string[]);
+    const childTypes = type.map(getChildren).flat();
+    return childTypes;
+
+
+
+
+
+
+    // return type.map(subType => getChildren(subType))
+    // .reduce((result, children) => {
+    //   for(const { name } of children) {
+    //     if(result.findIndex(child => child.name === name) < 0) {
+    //       // result.concat(children.map(child => }));
+    //     }
+    //   }
+    // }
+    // , [] as {name: string, required: boolean, single: boolean}[]);
   }
-  return (type.isGroup ? nodeGroups[type.name] : [ type.name ]);
+
+  if(type.isGroup) {
+    return nodeGroups[type.name].map(child => ({
+      name: child,
+      required: type.required,
+      single: type.single,
+    }));
+  } else {
+    return [{
+      name: type.name,
+      required: type.required,
+      single: type.single,
+    }];
+  }
 }
 
 
@@ -320,39 +349,57 @@ export function defaultNodeAttrs(attrs: string[]): Attrs {
 function defaultTravel(
   node: typeof AbstractBaseNode,
   next: (nodeName: string, parent: typeof AbstractBaseNode) => void): NodeSpec {
-  const children = (SCHEMA_CHILDREN[node.nodeName] || getChildren)(node.childTypes);
+  
+  const children = getChildren(node.childTypes);
   const isNode = IS_MARK.indexOf(node.nodeName) < 0;
-  const [content, group] = isNode ? SCHEMA_CONTENT[node.nodeName] : [undefined, undefined];
+  const [content, _group] = isNode ? SCHEMA_CONTENT[node.nodeName] : [undefined, undefined];
   const attrs = (NODE_ATTRS[node.nodeName] || defaultNodeAttrs)(['parent', ...node.fields]);
+
   // create the node spec
   const result: NodeSpec = {
     attrs,
-    inline: !(typeof group === 'string' && (group.indexOf('block') > -1 || group === '')),
-    group,
-    parseDom: [{
-      tag: '[data-j-type=' + node.nodeName + ']',
-      getAttrs(dom: HTMLElement) {
-        return attrs
-          ? Object.keys(attrs).reduce((newAttrs, attr) => {
-            const domAttr = getDomAttr(node.nodeName, attr);
-            if (dom.hasAttribute(domAttr)) {
-              newAttrs[attr] = dom.getAttribute(domAttr);
-            }
-            return newAttrs;
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          }, {} as any)
-          : {}
-      },
-    }],
+    // group,
     toDOM: (TO_DOM[node.nodeName] || defaultToDom)(node, attrs),
   };
   if (typeof content === 'string') {
-    result.content = content;
+    const parentAllowsMixedContent = checkIsInline(node);
+    
+    result.content = children.filter(child => !IS_MARK.includes(child.name)).reduce((accum, child) => accum + (accum.length > 0 ? " " : "") + nameAndCardinality(child, parentAllowsMixedContent), "");
   }
-  result.inline = true;
-  children.forEach(child => next(child, node));
+
+  children.forEach(child => next(child.name, node));
   return result;
 }
+
+function nameAndCardinality(child: {name: string, required: boolean, single: boolean}, parentAllowsMixedContent: boolean): string {
+  let name = defaultNodeName(child.name);
+  if(!parentAllowsMixedContent) {
+    name = "block_" + name;
+  }
+  if(child.required) {
+    if(!child.single) {
+      name += "+";
+    }
+  } else {
+    if(child.single) {
+      name += "?";
+    } else {
+      name += "*";
+    }
+  }
+
+  return name;
+}
+
+
+const checkIsInline = (node: typeof AbstractBaseNode): boolean => {
+  if(node.nodeName === 'document') {
+    return false;
+  }
+  const nodeClass = getNodeClass(node.nodeName);
+  const nodeInstance = new nodeClass({});
+  return nodeInstance.allowsMixedContent();
+};
 
 /**
  * Transforms the node `nodeName`
@@ -404,9 +451,14 @@ export function schema(): Schema {
   }
 
   // populate the schema spec using the jdita nodes
-  function browse(node: string | typeof AbstractBaseNode): void {
+  function browse(node: string | typeof AbstractBaseNode, parent: typeof AbstractBaseNode): void {
     // get the node name
-    const nodeName = typeof node === 'string' ? node : node.nodeName;
+    let nodeName = typeof node === 'string' ? node : node.nodeName;
+
+    const parentAllowsMixedContent = checkIsInline(parent);
+    if(!parentAllowsMixedContent) {
+      nodeName = 'block_' + nodeName;
+    }
 
     // if we have already processed this node then there's no need to process it again
     if (done.indexOf(nodeName) > -1) {
@@ -424,6 +476,7 @@ export function schema(): Schema {
       const nodeClass = typeof node === 'string' ? getNodeClassType(node) : node;
       // travel the node class and generate the node spec
       const result = defaultTravel(nodeClass, browse);
+      result.inline = checkIsInline(parent);
       if (result) {
         // set the node spec based on the node type
         if (IS_MARK.indexOf(nodeName) > -1) {
@@ -443,15 +496,15 @@ export function schema(): Schema {
   }
 
   // start the process of populating the schema spec using the jdita nodes from the document node
-  browse(DocumentNode);
-  browse(MapNode);
+  browse(DocumentNode, DocumentNode);
+  browse(MapNode, MapNode);
 
-  (spec.nodes as NodeSpec).topic.content = 'title shortdesc? prolog? body?';
-  (spec.nodes as NodeSpec).doc.content = 'topic';
+  console.log(JSON.stringify(spec, null, 2));
+  // (spec.nodes as NodeSpec).block_topic.content = 'title shortdesc? prolog? body?';
+  // (spec.nodes as NodeSpec).doc.content = 'topic';
 
-  console.log(spec.nodes);
   
-  spec.nodes = nodeSpec;
+  // spec.nodes = nodeSpec; //un comment to enable new schema
 
   return new Schema(spec);
 }

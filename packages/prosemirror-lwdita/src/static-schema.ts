@@ -51,11 +51,13 @@ export const IgnorenodeSpec: NodeSpec = {
       ...localizationAttrs,
       outputclass: { default: null },
       class: { default: "- topic/body " },
+      parent: { default: null },
     },
     toDOM(node: Node) {
-      const { localization, outputclass, class: className } = node.attrs;
+      debugger
+      const { dir ,outputclass, class: className } = node.attrs;
       return ["body", {
-        localization,
+        dir,
         outputclass,
         class: className
       }, 0];

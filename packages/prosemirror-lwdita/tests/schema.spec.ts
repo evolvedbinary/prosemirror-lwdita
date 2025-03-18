@@ -243,3 +243,11 @@ describe('Function schema()', () => {
   });
 
 });
+
+describe.only('checking schema output', () => {
+  it('display the schema output', () => {
+    const schemaObject = schema();
+    console.log('schema= ');
+    // console.log(schemaObject);
+  });
+});
