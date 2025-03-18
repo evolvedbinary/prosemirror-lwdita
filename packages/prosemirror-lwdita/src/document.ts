@@ -121,7 +121,7 @@ export const NODES: Record<string, (value: JDita, parent: JDita) => any> = {
       const result = { type, attrs };
       return result;
     }
-    return defaultTravel(value);
+    return defaultTravel(value, parent);
   },
   text: (value: JDita) => ({ type: 'text', text: value.content, attrs: {} }),
 
@@ -137,6 +137,9 @@ export const NODES: Record<string, (value: JDita, parent: JDita) => any> = {
  * @returns true if the parent node allows mixed content
  */
 function nodeAllowsMixedContent(nodeName: string): boolean {
+  if(nodeName === 'doc') {
+    return false;
+  }
   const nodeClass = getNodeClass(nodeName);
   const nodeInstance = new nodeClass({});
   if (nodeInstance.allowsMixedContent()) {
@@ -152,7 +155,7 @@ function nodeAllowsMixedContent(nodeName: string): boolean {
  * @returns The transformed JDita node
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function defaultTravel(value: JDita): any {
+function defaultTravel(value: JDita, parent: JDita): any {
   // children will become content
   const content = value.children?.map(child => travel(child, value));
   // attributes will become attrs
@@ -160,7 +163,7 @@ function defaultTravel(value: JDita): any {
   // remove undefined attributes
   deleteUndefined(attrs);
   // node name will become type
-  const type = defaultNodeName(value.nodeName);
+  let type = defaultNodeName(value.nodeName);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let result: any;
   // IS_MARK is the array  `u, s, b, sup, sub`
@@ -170,6 +173,9 @@ function defaultTravel(value: JDita): any {
       result.marks = [{ type }]
     }
   } else {
+    if(!nodeAllowsMixedContent(parent.nodeName)  && value.nodeName !== 'doc') {
+      type = 'block_' + type;
+    }
     result = {
       type,
       attrs,

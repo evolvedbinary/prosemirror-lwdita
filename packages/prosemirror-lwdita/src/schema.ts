@@ -499,7 +499,6 @@ export function schema(): Schema {
   browse(DocumentNode, DocumentNode);
   browse(MapNode, MapNode);
 
-  console.log(JSON.stringify(spec, null, 2));
   // (spec.nodes as NodeSpec).block_topic.content = 'title shortdesc? prolog? body?';
   // (spec.nodes as NodeSpec).doc.content = 'topic';
 
