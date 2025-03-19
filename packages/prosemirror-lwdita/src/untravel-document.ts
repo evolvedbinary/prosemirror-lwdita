@@ -161,7 +161,7 @@ function createMediaJDITAObject(nodeName: string, attributes: Record<string, str
     // return the created video node
     return {
       nodeName,
-      'attributes': deleteUndefined(allVideoAttributes),
+      'attributes': allVideoAttributes,
       'children': allVideoChildren
     }
   }
@@ -170,14 +170,14 @@ function createMediaJDITAObject(nodeName: string, attributes: Record<string, str
     // Note: The order of attributes determines their ordering in the object structure
     // Important for creating unit test data
     const allAudioAttributes = {
-      class: attributes.class,
-      conref: attributes.conref,
+      props: attributes.props,
       "xml:lang": attributes['xml:lang'],
       dir: attributes.dir,
       id: attributes.id,
-      outputclass: attributes.outputclass,
-      props: attributes.props,
+      conref: attributes.conref,
       translate: attributes.translate,
+      outputclass: attributes.outputclass,
+      class: attributes.class,
       autoplay: attributes.autoplay,
       controls: attributes.controls,
       loop: attributes.loop,
@@ -222,7 +222,7 @@ function createMediaJDITAObject(nodeName: string, attributes: Record<string, str
 
     return {
       nodeName,
-      'attributes': deleteUndefined(allAudioAttributes),
+      'attributes': allAudioAttributes,
       'children': allAudioChildren
     }
   }
@@ -237,11 +237,11 @@ function createMediaJDITAObject(nodeName: string, attributes: Record<string, str
       href: attributes.href,
       format: attributes.format,
       scope: attributes.scope,
-      class: attributes.class,
-      keyref: attributes.keyref,
       width: attributes.width,
       height: attributes.height,
       outputclass: attributes.outputclass,
+      keyref: attributes.keyref,
+      class: attributes.class,
     }
 
     const allImageChildren: JDita[] = [];
@@ -266,7 +266,7 @@ function createMediaJDITAObject(nodeName: string, attributes: Record<string, str
     })
     return {
       nodeName,
-      'attributes': deleteUndefined(allImageAttributes),
+      'attributes': allImageAttributes,
       'children': allImageChildren
     }
   }

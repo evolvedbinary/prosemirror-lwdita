@@ -141,6 +141,7 @@ function nodeAllowsMixedContent(nodeName: string): boolean {
  * Transforms the JDita document into a proper ProseMirror document
  *
  * @param value - The JDita node
+ * @param parent - The parent JDita node
  * @returns The transformed JDita node
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

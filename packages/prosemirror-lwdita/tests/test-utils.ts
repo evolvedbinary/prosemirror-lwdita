@@ -105,7 +105,8 @@ export const PMJSON = '{"type":"doc","attrs":{},"content":[{"type":"topic","attr
 
 export const JDITA_OBJECT = '{ "nodeName": "document", "children": [ { "nodeName": "topic", "attributes": { "id": "program" }, "children": [ { "nodeName": "title", "attributes": {}, "children": [ { "nodeName": "text", "content": "Programming Light Bulbs to a Lighting Group" } ] }, { "nodeName": "shortdesc", "attributes": {}, "children": [ { "nodeName": "text", "content": "You can program one or more light bulbs." } ] }, { "nodeName": "body", "attributes": {}, "children": [ { "nodeName": "section", "attributes": {}, "children": [ { "nodeName": "p", "attributes": {}, "children": [ { "nodeName": "text", "content": "You must assign a light bulb to at least one lighting group to operate that light bulb." } ] } ] } ] } ] } ] }';
 
-export const TRANSFORMED_JDITA_OBJECT = '{ "type": "doc", "attrs": {}, "content": [ { "type": "topic", "attrs": { "id": "program", "parent": "doc" }, "content": [ { "type": "title", "attrs": { "parent": "topic" }, "content": [ { "type": "text", "text": "Programming Light Bulbs to a Lighting Group", "attrs": { "parent": "title" } } ] }, { "type": "shortdesc", "attrs": { "parent": "topic" }, "content": [ { "type": "text", "text": "You can program one or more light bulbs.", "attrs": { "parent": "shortdesc" } } ] }, { "type": "body", "attrs": { "parent": "topic" }, "content": [ { "type": "section", "attrs": { "parent": "body" }, "content": [ { "type": "p", "attrs": { "parent": "section" }, "content": [ { "type": "text", "text": "You must assign a light bulb to at least one lighting group to operate that light bulb.", "attrs": { "parent": "p" } } ] } ] } ] } ] } ] }';
+export const TRANSFORMED_JDITA_OBJECT = 
+'{ "type": "doc", "attrs": {}, "content": [ { "type": "block_topic", "attrs": { "id": "program", "parent": "doc" }, "content": [ { "type": "block_title", "attrs": { "parent": "topic" }, "content": [ { "type": "text", "text": "Programming Light Bulbs to a Lighting Group", "attrs": { "parent": "title" } } ] }, { "type": "block_shortdesc", "attrs": { "parent": "topic" }, "content": [ { "type": "text", "text": "You can program one or more light bulbs.", "attrs": { "parent": "shortdesc" } } ] }, { "type": "block_body", "attrs": { "parent": "topic" }, "content": [ { "type": "block_section", "attrs": { "parent": "body" }, "content": [ { "type": "block_p", "attrs": { "parent": "section" }, "content": [ { "type": "text", "text": "You must assign a light bulb to at least one lighting group to operate that light bulb.", "attrs": { "parent": "p" } } ] } ] } ] } ] } ] }';
 
 export const shortXdita = `<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE topic PUBLIC "-//OASIS//DTD LIGHTWEIGHT DITA Topic//EN" "lw-topic.dtd">
@@ -121,17 +122,27 @@ export const shortXdita = `<?xml version="1.0" encoding="UTF-8"?>
 export const shortXditaProsemirroJson = {
   type: "doc",
   attrs: {
+    xmlDecl: {
+      version: "1.0",
+      encoding: "UTF-8",
+      standalone: undefined,
+    },
+    docTypeDecl: {
+      name: "topic",
+      systemId: "lw-topic.dtd",
+      publicId: "-//OASIS//DTD LIGHTWEIGHT DITA Topic//EN",
+    },
   },
   content: [
     {
-      type: "topic",
+      type: "block_topic",
       attrs: {
         id: "program",
         parent: "doc",
       },
       content: [
         {
-          type: "title",
+          type: "block_title",
           attrs: {
             parent: "topic",
           },
@@ -146,19 +157,19 @@ export const shortXditaProsemirroJson = {
           ],
         },
         {
-          type: "body",
+          type: "block_body",
           attrs: {
             parent: "topic",
           },
           content: [
             {
-              type: "section",
+              type: "block_section",
               attrs: {
                 parent: "body",
               },
               content: [
                 {
-                  type: "p",
+                  type: "block_p",
                   attrs: {
                     parent: "section",
                   },
@@ -426,7 +437,7 @@ export const parentVideoObject = `{
 }`
 
 export const expectedVideoObject = `{
-    "type": "video",
+    "type": "block_video",
     "attrs": {
         "width": "640",
         "height": "360",
