@@ -15,9 +15,10 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import { AbstractBaseNode, ChildTypes, DocumentNode, MapNode, UnknownNodeError, getNodeClassType, nodeGroups } from '@evolvedbinary/lwdita-ast';
+import { AbstractBaseNode, ChildTypes, DocumentNode, MapNode, UnknownNodeError, getNodeClass, getNodeClassType, nodeGroups } from '@evolvedbinary/lwdita-ast';
 import { getDomNode } from './dom';
 import { NodeSpec, Schema, SchemaSpec, Node, MarkSpec, DOMOutputSpec, Attrs } from 'prosemirror-model';
+import { lwditaNodeNameToSchemaNodeName } from './utils';
 
 
 /**
@@ -31,7 +32,7 @@ import { NodeSpec, Schema, SchemaSpec, Node, MarkSpec, DOMOutputSpec, Attrs } fr
  * Will be used in `defaultNodeName()`.
  */
 export const NODE_NAMES: Record<string, string> = {
-  document: 'doc',
+  block_document: 'doc',
 }
 
 /**
@@ -125,87 +126,87 @@ export const SCHEMAS: Record<string, (node: typeof AbstractBaseNode, next: (node
   },
 }
 
-/**
- * The LwDITA Schema. Describes parent-child relationships.
- * content: The allowed child elements of the element
- * groups: The content-groups, the element is allowed to be part of
- */
-export const SCHEMA_CONTENT: Record<string, [content: string, groups: string]> = {
-/*
-  lwdita-ast node groups:
-  'ph': ['b', 'em', 'i', 'ph', 'strong', 'sub', 'sup', 'tt', 'u'],
-  'inline.noimage': ['text', 'b', 'em', 'i', 'ph', 'strong', 'sub', 'sup', 'tt', 'u', 'xref'],
-  'inline.noxref': ['text', 'b', 'em', 'i', 'ph', 'strong', 'sub', 'sup', 'tt', 'u', 'image'],
-  'inline': ['text', 'b', 'em', 'i', 'ph', 'strong', 'sub', 'sup', 'tt', 'u', 'image', 'xref'],
-  'simple_blocks': ['p', 'ul', 'ol', 'dl', 'pre', 'audio', 'video', 'example', 'note'],
-  'fn-blocks': ['p', 'ul', 'ol', 'dl'],
-  'all-blocks': ['p','ul','ol','dl','pre','audio','video','example','simpletable','fig','note'],
-  'list-blocks': ['p','ul', 'ol', 'dl', 'pre', 'audio', 'video', 'example', 'simpletable', 'fig', 'note'],
-  'fig-blocks': ['p', 'ul', 'ol', 'dl', 'pre', 'audio', 'video', 'example', 'simpletable'],
-  'example-blocks': ['p','ul','ol','dl','pre','audio','video','simpletable','fig','note'],
-  'fallback-blocks': ['image','alt','p','ul','ol','dl','pre','note'],
- */
-  alt: ['(text|ph)*', 'fallback_blocks'],
-  audio: ['desc? fallback? media_source* media_track*', 'simple_blocks all_blocks list_blocks fig_blocks example_blocks'],
-  body: ['list_blocks* section* div?', ''],
-  dd: ['list_blocks*', ''],
-  desc: ['inline_noxref*', ''],
-  div: ['fn+', ''],
-  dl: ['dlentry+', 'simple_blocks fn_blocks all_blocks list_blocks fig_blocks example_blocks fallback_blocks'],
-  dlentry: ['dt dd', ''],
-  dt: ['inline*', ''],
-  document: ['topic', ''],
-  fallback: ['fallback_blocks', ''],
-  em: ['inline_noimage*', 'ph '],
-  example: ['title? example_blocks*', 'simple_blocks all_blocks list_blocks fig_blocks'],
-  fig: ['title? desc? (fig_blocks|image|xref)*', 'all_blocks list_blocks example_blocks'],
-  fn: ['fn_blocks*', ''],
-  image: ['alt?', 'inline_noxref inline fallback_blocks'],
-  keydef: ['topicmeta?', ''],
-  keytext: ['(text|ph)*', ''],
-  li: ['list_blocks*', ''],
-  map: ['(topicmeta? (topicref|keydef)*)', ''],
-  'media-source': ['', ''],
-  'media-track': ['', ''],
-  metadata: ['othermeta*', ''],
-  navtitle: ['(text|ph)*', ''],
-  note: ['simple_blocks*', 'simple_blocks all_blocks list_blocks example_blocks fallback_blocks'],
-  ol: ['li+', 'simple_blocks fn_blocks all_blocks list_blocks fig_blocks example_blocks fallback_blocks'],
-  othermeta: ['', ''],
-  p: ['inline*', 'fn_blocks simple_blocks fig_blocks list_blocks all_blocks'],
-  ph: ['inline*', 'ph inline_noimage inline_noxref inline'],
-  pre: ['(text|ph|xref)*', 'simple_blocks all_blocks list_blocks fig_blocks example_blocks fallback_blocks'],
-  prolog: ['metadata*', ''],
-  section: ['title? all_blocks*', ''],
-  simpletable: ['title? sthead? strow+', ' all_blocks list_blocks fig_blocks example_blocks'],
-  shortdesc: ['inline*', ''],
-  stentry: ['simple_blocks*', ''],
-  sthead: ['stentry+', ''],
-  strong: ['inline_noimage*', ''],
-  strow: ['(stentry*)', ''],
-  title: ['inline_noxref*', ''],
-  topic: ['title shortdesc? prolog? body?', ''],
-  topicmeta: ['navtitle? keytext? othermeta*', ''],
-  topicref: ['topicmeta? topicref*', ''],
-  tt: ['inline_noimage*', ''],
-  ul: ['li+', 'simple_blocks fn_blocks  all_blocks list_blocks fig_blocks example_blocks fallback_blocks'],
-  video: ['desc? fallback? video_poster? media_source* media_track*', 'simple_blocks all_blocks list_blocks fig_blocks example_blocks'],
-  'video-poster': ['', ''],
-  xref: ['inline_noxref', 'inline_noimage inline'],
-}
+// /**
+//  * The LwDITA Schema. Describes parent-child relationships.
+//  * content: The allowed child elements of the element
+//  * groups: The content-groups, the element is allowed to be part of
+//  */
+// export const SCHEMA_CONTENT: Record<string, [content: string, groups: string]> = {
+// /*
+//   lwdita-ast node groups:
+//   'ph': ['b', 'em', 'i', 'ph', 'strong', 'sub', 'sup', 'tt', 'u'],
+//   'inline.noimage': ['text', 'b', 'em', 'i', 'ph', 'strong', 'sub', 'sup', 'tt', 'u', 'xref'],
+//   'inline.noxref': ['text', 'b', 'em', 'i', 'ph', 'strong', 'sub', 'sup', 'tt', 'u', 'image'],
+//   'inline': ['text', 'b', 'em', 'i', 'ph', 'strong', 'sub', 'sup', 'tt', 'u', 'image', 'xref'],
+//   'simple_blocks': ['p', 'ul', 'ol', 'dl', 'pre', 'audio', 'video', 'example', 'note'],
+//   'fn-blocks': ['p', 'ul', 'ol', 'dl'],
+//   'all-blocks': ['p','ul','ol','dl','pre','audio','video','example','simpletable','fig','note'],
+//   'list-blocks': ['p','ul', 'ol', 'dl', 'pre', 'audio', 'video', 'example', 'simpletable', 'fig', 'note'],
+//   'fig-blocks': ['p', 'ul', 'ol', 'dl', 'pre', 'audio', 'video', 'example', 'simpletable'],
+//   'example-blocks': ['p','ul','ol','dl','pre','audio','video','simpletable','fig','note'],
+//   'fallback-blocks': ['image','alt','p','ul','ol','dl','pre','note'],
+//  */
+//   alt: ['(text|ph)*', 'fallback_blocks'],
+//   audio: ['desc? fallback? media_source* media_track*', 'simple_blocks all_blocks list_blocks fig_blocks example_blocks'],
+//   body: ['list_blocks* section* div?', ''],
+//   dd: ['list_blocks*', ''],
+//   desc: ['inline_noxref*', ''],
+//   div: ['fn+', ''],
+//   dl: ['dlentry+', 'simple_blocks fn_blocks all_blocks list_blocks fig_blocks example_blocks fallback_blocks'],
+//   dlentry: ['dt dd', ''],
+//   dt: ['inline*', ''],
+//   document: ['topic', ''],
+//   fallback: ['fallback_blocks', ''],
+//   em: ['inline_noimage*', 'ph '],
+//   example: ['title? example_blocks*', 'simple_blocks all_blocks list_blocks fig_blocks'],
+//   fig: ['title? desc? (fig_blocks|image|xref)*', 'all_blocks list_blocks example_blocks'],
+//   fn: ['fn_blocks*', ''],
+//   image: ['alt?', 'inline_noxref inline fallback_blocks'],
+//   keydef: ['topicmeta?', ''],
+//   keytext: ['(text|ph)*', ''],
+//   li: ['list_blocks*', ''],
+//   map: ['(topicmeta? (topicref|keydef)*)', ''],
+//   'media-source': ['', ''],
+//   'media-track': ['', ''],
+//   metadata: ['othermeta*', ''],
+//   navtitle: ['(text|ph)*', ''],
+//   note: ['simple_blocks*', 'simple_blocks all_blocks list_blocks example_blocks fallback_blocks'],
+//   ol: ['li+', 'simple_blocks fn_blocks all_blocks list_blocks fig_blocks example_blocks fallback_blocks'],
+//   othermeta: ['', ''],
+//   p: ['inline*', 'fn_blocks simple_blocks fig_blocks list_blocks all_blocks'],
+//   ph: ['inline*', 'ph inline_noimage inline_noxref inline'],
+//   pre: ['(text|ph|xref)*', 'simple_blocks all_blocks list_blocks fig_blocks example_blocks fallback_blocks'],
+//   prolog: ['metadata*', ''],
+//   section: ['title? all_blocks*', ''],
+//   simpletable: ['title? sthead? strow+', ' all_blocks list_blocks fig_blocks example_blocks'],
+//   shortdesc: ['inline*', ''],
+//   stentry: ['simple_blocks*', ''],
+//   sthead: ['stentry+', ''],
+//   strong: ['inline_noimage*', ''],
+//   strow: ['(stentry*)', ''],
+//   title: ['inline_noxref*', ''],
+//   topic: ['title shortdesc? prolog? body?', ''],
+//   topicmeta: ['navtitle? keytext? othermeta*', ''],
+//   topicref: ['topicmeta? topicref*', ''],
+//   tt: ['inline_noimage*', ''],
+//   ul: ['li+', 'simple_blocks fn_blocks  all_blocks list_blocks fig_blocks example_blocks fallback_blocks'],
+//   video: ['desc? fallback? video_poster? media_source* media_track*', 'simple_blocks all_blocks list_blocks fig_blocks example_blocks'],
+//   'video-poster': ['', ''],
+//   xref: ['inline_noxref', 'inline_noimage inline'],
+// }
 
 /**
  * A map of special children for certain media nodes
  */
-export const SCHEMA_CHILDREN: Record<string, (type: ChildTypes) => string[]> = {
-  video: () => ['desc', 'fallback', 'video-poster', 'media-source', 'media-track' ],
-  audio: () => ['desc', 'fallback', 'media-source', 'media-track' ],
-}
+// export const SCHEMA_CHILDREN: Record<string, (type: ChildTypes) => string[]> = {
+//   video: () => ['desc', 'fallback', 'video-poster', 'media-source', 'media-track' ],
+//   audio: () => ['desc', 'fallback', 'media-source', 'media-track' ],
+// }
 
 /**
  * The inline markup elements bold, italic, underline, subscript, superscript
  */
-export const IS_MARK = ['b', 'i', 'u', 'sub', 'sup'];
+export const IS_MARK = ['b', 'i', 'u', 'sub', 'sup', 'cdata'];
 
 /**
  * A representation of a node in the schema
@@ -231,12 +232,25 @@ export interface SchemaNodes {
  * @param type - Type of the Child nodes
  * @returns - The children of the node
  */
-function getChildren(type: ChildTypes): string[] {
+function getChildren(type: ChildTypes): {name: string, required: boolean, single: boolean}[] {
   if (Array.isArray(type)) {
-    return type.map(subType => getChildren(subType)).reduce((result, children) =>
-    result.concat(children.filter(child => result.indexOf(child) < 0)), [] as string[]);
+    const childTypes = type.map(getChildren).flat();
+    return childTypes;
   }
-  return (type.isGroup ? nodeGroups[type.name] : [ type.name ]);
+
+  if(type.isGroup) {
+    return nodeGroups[type.name].map(child => ({
+      name: child,
+      required: type.required,
+      single: type.single,
+    }));
+  } else {
+    return [{
+      name: type.name,
+      required: type.required,
+      single: type.single,
+    }];
+  }
 }
 
 
@@ -319,39 +333,53 @@ export function defaultNodeAttrs(attrs: string[]): Attrs {
 function defaultTravel(
   node: typeof AbstractBaseNode,
   next: (nodeName: string, parent: typeof AbstractBaseNode) => void): NodeSpec {
-  const children = (SCHEMA_CHILDREN[node.nodeName] || getChildren)(node.childTypes);
-  const isNode = IS_MARK.indexOf(node.nodeName) < 0;
-  const [content, group] = isNode ? SCHEMA_CONTENT[node.nodeName] : [undefined, undefined];
+  
+  const children = getChildren(node.childTypes);
+  // const isNode = IS_MARK.indexOf(node.nodeName) < 0;
+  // const [content, _group] = isNode ? SCHEMA_CONTENT[node.nodeName] : [undefined, undefined];
   const attrs = (NODE_ATTRS[node.nodeName] || defaultNodeAttrs)(['parent', ...node.fields]);
+
   // create the node spec
   const result: NodeSpec = {
     attrs,
-    inline: !(typeof group === 'string' && (group.indexOf('block') > -1 || group === '')),
-    group,
-    parseDom: [{
-      tag: '[data-j-type=' + node.nodeName + ']',
-      getAttrs(dom: HTMLElement) {
-        return attrs
-          ? Object.keys(attrs).reduce((newAttrs, attr) => {
-            const domAttr = getDomAttr(node.nodeName, attr);
-            if (dom.hasAttribute(domAttr)) {
-              newAttrs[attr] = dom.getAttribute(domAttr);
-            }
-            return newAttrs;
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          }, {} as any)
-          : {}
-      },
-    }],
+    // group,
     toDOM: (TO_DOM[node.nodeName] || defaultToDom)(node, attrs),
   };
-  if (typeof content === 'string') {
-    result.content = content;
-  }
-  result.inline = true;
-  children.forEach(child => next(child, node));
+
+  const parentAllowsMixedContent = checkIsInline(node);
+  result.content = children.filter(child => !IS_MARK.includes(child.name)).reduce((accum, child) => accum + (accum.length > 0 ? " " : "") + nameAndCardinality(child, parentAllowsMixedContent), "");
+
+  children.forEach(child => next(child.name, node));
   return result;
 }
+
+function nameAndCardinality(child: {name: string, required: boolean, single: boolean}, parentAllowsMixedContent: boolean): string {
+  let name = defaultNodeName(child.name);
+  name = lwditaNodeNameToSchemaNodeName(name, parentAllowsMixedContent);
+  if(child.required) {
+    if(!child.single) {
+      name += "+";
+    }
+  } else {
+    if(child.single) {
+      name += "?";
+    } else {
+      name += "*";
+    }
+  }
+
+  return name;
+}
+
+
+const checkIsInline = (node: typeof AbstractBaseNode): boolean => {
+  if(node.nodeName === 'document') {
+    return false;
+  }
+  const nodeClass = getNodeClass(node.nodeName);
+  const nodeInstance = new nodeClass({});
+  return nodeInstance.allowsMixedContent();
+};
 
 /**
  * Transforms the node `nodeName`
@@ -387,25 +415,20 @@ export function schema(): Schema {
     // the node types in this schema
     nodes: {
       text: {
-        group: 'inline inline_noimage inline_noxref',
         inline: true,
       },
-      hard_break: {
-        inline: true,
-        group: 'inline inline_noxref inline_noimage',
-        selectable: false,
-        parseDOM: [{tag: "br"}],
-        toDOM() { return ["br"] }
-      } as NodeSpec
     },
     // the mark types that exist in this schema
     marks: {},
   }
 
   // populate the schema spec using the jdita nodes
-  function browse(node: string | typeof AbstractBaseNode): void {
+  function browse(node: string | typeof AbstractBaseNode, parent: typeof AbstractBaseNode): void {
     // get the node name
-    const nodeName = typeof node === 'string' ? node : node.nodeName;
+    let nodeName = typeof node === 'string' ? node : node.nodeName;
+
+    const parentAllowsMixedContent = checkIsInline(parent);
+    nodeName = lwditaNodeNameToSchemaNodeName(nodeName, parentAllowsMixedContent);
 
     // if we have already processed this node then there's no need to process it again
     if (done.indexOf(nodeName) > -1) {
@@ -423,6 +446,7 @@ export function schema(): Schema {
       const nodeClass = typeof node === 'string' ? getNodeClassType(node) : node;
       // travel the node class and generate the node spec
       const result = defaultTravel(nodeClass, browse);
+      result.inline = checkIsInline(parent);
       if (result) {
         // set the node spec based on the node type
         if (IS_MARK.indexOf(nodeName) > -1) {
@@ -442,11 +466,11 @@ export function schema(): Schema {
   }
 
   // start the process of populating the schema spec using the jdita nodes from the document node
-  browse(DocumentNode);
-  browse(MapNode);
+  browse(DocumentNode, DocumentNode);
+  browse(MapNode, MapNode);
 
-  (spec.nodes as NodeSpec).topic.content = 'title shortdesc? prolog? body?';
-  (spec.nodes as NodeSpec).doc.content = 'topic';
+  // (spec.nodes as NodeSpec).block_topic.content = 'title shortdesc? prolog? body?';
+  // (spec.nodes as NodeSpec).doc.content = 'topic';
 
   return new Schema(spec);
 }
