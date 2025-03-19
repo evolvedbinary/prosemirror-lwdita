@@ -50,17 +50,15 @@ const pmjson = {
     },
   },
   content: [{
-    type: 'topic',
+    type: 'block_topic',
     attrs,
   }]
 };
 
 describe('document()', () => {
   it('transforms the JDita "topic" node into a Prosemirror node', async () => {
-    await expect(
-      xditaToJdita(topic(attrs))
-        .then(jdita => document(jdita))
-        .catch(e => console.error('error:', e))
-    ).to.eventually.become(pmjson);
+    const jdita = await xditaToJdita(topic(attrs));
+    const pm = document(jdita);
+    expect(pm).to.deep.equal(pmjson);
   });
 });

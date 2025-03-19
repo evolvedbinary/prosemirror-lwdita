@@ -144,8 +144,8 @@ export const mediaTrackAttributes = {
  * Attributes for desc nodes
  */
 export const descAttributes = {
-  ...commonAttributes,
   props: undefined,
+  ...commonAttributes,
 }
 
 

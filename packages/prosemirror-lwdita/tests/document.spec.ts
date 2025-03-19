@@ -73,7 +73,7 @@ describe('Function defaultTravel()', () => {
   describe('when passed a JDITA node "title" and its parent node "topic"', () => {
     it('returns the transformed ProseMirror objects', () => {
       const node = JSON.parse(JDITA_NODE),
-            expected = _test_private_document.defaultTravel(node),
+            expected = _test_private_document.defaultTravel(node, node),
             result = (
               JSON.parse(JDITA_TRANFORMED_RESULT1),
               JSON.parse(JDITA_TRANFORMED_RESULT2)
@@ -100,8 +100,8 @@ describe('Function travel()', () => {
     it('returns a transformed ProseMirror object', () => {
       const node = JSON.parse('{"nodeName":"topic","attributes":{"id":"program"},"children":[{"nodeName":"title","attributes":{},"children":[{"nodeName":"text","content":"Programming Light Bulbs to a Lighting Group"}]},{"nodeName":"body","attributes":{},"children":[{"nodeName":"section","attributes":{},"children":[{"nodeName":"p","attributes":{},"children":[{"nodeName":"text","content":"You must assign a light bulb to at least one lighting group to operate that light bulb."}]}]}]}]}'),
             parent = JSON.parse('{"nodeName":"doc","children":[{"nodeName":"topic","attributes":{"id":"program"},"children":[{"nodeName":"title","attributes":{},"children":[{"nodeName":"text","content":"Programming Light Bulbs to a Lighting Group"}]},{"nodeName":"body","attributes":{},"children":[{"nodeName":"section","attributes":{},"children":[{"nodeName":"p","attributes":{},"children":[{"nodeName":"text","content":"You must assign a light bulb to at least one lighting group to operate that light bulb."}]}]}]}]}]}'),
-            expected = _test_private_document.travel(node, parent),
-            result = JSON.parse('{"type":"topic","attrs":{"id":"program","parent":"doc"},"content":[{"type":"title","attrs":{"parent":"topic"},"content":[{"type":"text","text":"Programming Light Bulbs to a Lighting Group","attrs":{"parent":"title"}}]},{"type":"body","attrs":{"parent":"topic"},"content":[{"type":"section","attrs":{"parent":"body"},"content":[{"type":"p","attrs":{"parent":"section"},"content":[{"type":"text","text":"You must assign a light bulb to at least one lighting group to operate that light bulb.","attrs":{"parent":"p"}}]}]}]}]}');
+            result = _test_private_document.travel(node, parent),
+            expected = JSON.parse('{"type":"block_topic","attrs":{"id":"program","parent":"doc"},"content":[{"type":"block_title","attrs":{"parent":"topic"},"content":[{"type":"text","text":"Programming Light Bulbs to a Lighting Group","attrs":{"parent":"title"}}]},{"type":"block_body","attrs":{"parent":"topic"},"content":[{"type":"block_section","attrs":{"parent":"body"},"content":[{"type":"block_p","attrs":{"parent":"section"},"content":[{"type":"text","text":"You must assign a light bulb to at least one lighting group to operate that light bulb.","attrs":{"parent":"p"}}]}]}]}]}');
       assert.deepEqual(result, expected);
     });
   });
@@ -112,15 +112,14 @@ describe('Function travel()', () => {
 describe('Function document()', () => {
   it('returns a transformed Prosemirror object', () => {
     const transformedJdita = document(JSON.parse(JDITA_OBJECT));
-    expect(transformedJdita).to.deep.equal(JSON.parse(TRANSFORMED_JDITA_OBJECT));
+    const expected = JSON.parse(TRANSFORMED_JDITA_OBJECT);
+    expect(transformedJdita).to.deep.equal(expected);
   });
 });
 
-// Pass a Prosemirror document
-// and test against the expected JDita object
 describe('Function unTravel()', () => {
   describe('when passed a Prosemirror document', () => {
-
+    
     it('handles a simple JDita document', async () => {
 
       // original JDita to compare against
@@ -236,7 +235,7 @@ describe('Const NODES handles', () => {
     it('returns an audio node', () => {
       value = JSON.parse('{"nodeName":"audio","attributes":{}}');
       parent = JSON.parse('{"nodeName":"body","attributes":{},"children":[{"nodeName":"p","attributes":{"parent":"body"},"children":[{"nodeName":"text","content":"Paragraph"}]},{"nodeName":"audio","attributes":{}},{"nodeName":"video","attributes":{"width":"640","height":"360"},"children":[{"nodeName":"desc","attributes":{},"children":[{"nodeName":"text","content":"Your browser does not support the video tag."}]}]},{"nodeName":"p","attributes":{},"children":[{"nodeName":"image","attributes":{}}]}]}');
-      expected = JSON.parse('{"type":"audio","attrs":{},"content":[]}');
+      expected = JSON.parse('{"type":"block_audio","attrs":{},"content":[]}');
       result = NODES.audio(value, parent);
       assert.deepEqual(result, expected);
     });
