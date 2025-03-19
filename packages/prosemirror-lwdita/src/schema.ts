@@ -435,7 +435,6 @@ export function schema(): Schema {
     // the node types in this schema
     nodes: {
       text: {
-        group: 'inline inline_noimage inline_noxref',
         inline: true,
       },
       hard_break: {
