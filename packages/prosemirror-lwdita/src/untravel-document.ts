@@ -18,6 +18,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import { JDita } from "@evolvedbinary/lwdita-ast";
 import { deleteUndefined } from './document';
 import { commonAttributes, descAttributes, fallbackAttributes, mediaTrackAttributes } from "./attributes";
+import { schemaNodeNameToLwditaNodeName } from "./utils";
 
 /**
 * Recursively traverse through all items in the Prosemirror DOM
@@ -36,7 +37,8 @@ export function unTravel(prosemirrorDocument: Record<string, any>): JDita {
   const attributes = prosemirrorDocument.attrs || {};
 
   // get the node name
-  const nodeName = getJditaNodeName(prosemirrorDocument.type);
+  let nodeName = schemaNodeNameToLwditaNodeName(prosemirrorDocument.type);
+  nodeName = getJditaNodeName(nodeName);
 
   if (nodeName === 'video' || nodeName === 'audio' || nodeName === 'image') {
     return createMediaJDITAObject(nodeName, attributes, children)
@@ -47,13 +49,6 @@ export function unTravel(prosemirrorDocument: Record<string, any>): JDita {
   for (const key in attributes) {
     if (!attributes[key]) {
       delete attributes[key];
-    }
-  }
-
-  if(nodeName === 'hard-break') {
-    return {
-      nodeName: 'text',
-      content: '\n'
     }
   }
 
