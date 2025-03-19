@@ -93,7 +93,7 @@ class SuggestionPopup {
         ul_list.appendChild(li)
         li.addEventListener("click", (e) => {
           e.preventDefault();
-          insertNode(editorView, followingSibling.type);
+          insertNode(editorView, followingSibling.type, followingSibling.parent);
           this.destroy();
         })
       }
@@ -145,7 +145,7 @@ class SuggestionPopup {
  * @param view - The ProseMirror editor view instance.
  * @param nodeType - The type of the node to be inserted.
  */
-function insertNode(view: EditorView, nodeType: NodeType) {
+function insertNode(view: EditorView, nodeType: NodeType, _parent?: string) {
   const { dispatch } = view;
   const { selection, tr, schema } = view.state;
   const { $from } = selection;
@@ -173,7 +173,7 @@ function getSuggestions(view: EditorView): Suggestion[][] {
   const { state } = view;
   const { $from } = state.selection;
 
-  const path = pathToRoot($from);
+  const path = pathToRoot($from).map((name) => name.replace("block_", ""));
 
   const suggestions = getFollowingSiblings(path, state.schema.nodes);
 
@@ -181,7 +181,7 @@ function getSuggestions(view: EditorView): Suggestion[][] {
   let nodeTypesWithRankAndLabel = suggestions.map((suggestionsSubList, index) => {
     const parentNodeInfo = getNodeLabelRank(path[index]);
     return suggestionsSubList.map((type) => {
-      const { label, rank} = getNodeLabelRank(type.name);
+      const { label, rank} = getNodeLabelRank(type.name.replace("block_", ""));
       return {
         type: type,
         label,
@@ -232,17 +232,25 @@ function getFollowingSiblings(pathToRoot: string[], nodes: Record<string, NodeTy
     if(!siblings) continue; // if there are no siblings, return an empty array
     for(const sibling of siblings) {
       if((sibling as ChildType).isGroup) {
-        for(const node of nodeGroups[(sibling as ChildType).name]) {
+        for(let node of nodeGroups[(sibling as ChildType).name]) {
+          if(!parentNode.allowsMixedContent()) {
+            node = "block_" + node;
+          }
           tempNodeTypes.push(nodes[node]);
         }
       } else {
-        tempNodeTypes.push(nodes[(sibling as ChildType).name]);
+        if(!parentNode.allowsMixedContent()) {
+          tempNodeTypes.push(nodes["block_" +  (sibling as ChildType).name]);
+        } else {
+          tempNodeTypes.push(nodes[(sibling as ChildType).name]);
+        }
+        
       }
     }
-    nodeTypes.push(tempNodeTypes.filter(type => type));
+    nodeTypes.push(tempNodeTypes);
   }
   
-  return nodeTypes.filter(type => type);
+  return nodeTypes
 }
 
 /**

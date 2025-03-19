@@ -3,7 +3,9 @@
 <topic id="program">
   <title>Test File 2</title>
   <body>
-    <image href="https://picsum.photos/200/300"><alt>alt text</alt></image>
-    <p>A test paragraph. <image href="https://picsum.photos/200/300"><alt>alt text</alt></image></p>
+    <section>
+      <p>Paragraph one</p>
+      <p>A test paragraph.</p>
+    </section>
   </body>
 </topic>
