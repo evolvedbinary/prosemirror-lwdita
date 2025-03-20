@@ -17,7 +17,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import { JDita } from "@evolvedbinary/lwdita-ast";
 import { deleteUndefined } from './document';
-import { commonAttributes, descAttributes, fallbackAttributes, mediaTrackAttributes } from "./attributes";
+import { descAttributes, fallbackAttributes, mediaTrackAttributes, videoPosterAttributes } from "./attributes";
 import { schemaNodeNameToLwditaNodeName } from "./utils";
 
 /**
@@ -171,21 +171,21 @@ function createMediaJDITAObject(nodeName: string, attributes: Record<string, str
     // Important for creating unit test data
     const allAudioAttributes = {
       props: attributes.props,
-      "xml:lang": attributes['xml:lang'],
       dir: attributes.dir,
+      "xml:lang": attributes['xml:lang'],
+      translate: attributes.translate,
       id: attributes.id,
       conref: attributes.conref,
-      translate: attributes.translate,
+      keyref: attributes.keyref,
+      href: attributes.href,
+      format: attributes.format,
+      scope: attributes.scope,
       outputclass: attributes.outputclass,
       class: attributes.class,
       autoplay: attributes.autoplay,
       controls: attributes.controls,
       loop: attributes.loop,
       muted: attributes.muted,
-      source: attributes.source,
-      href: attributes.href,
-      format: attributes.format,
-      scope: attributes.scope,
       tabindex: attributes.tabindex,
     }
 
@@ -239,8 +239,8 @@ function createMediaJDITAObject(nodeName: string, attributes: Record<string, str
       scope: attributes.scope,
       width: attributes.width,
       height: attributes.height,
-      outputclass: attributes.outputclass,
       keyref: attributes.keyref,
+      outputclass: attributes.outputclass,
       class: attributes.class,
     }
 
@@ -286,13 +286,11 @@ function createMediaChild(nodeName: string, value: string, additionalAttributes?
   // and additional attributes based on the nodeName,
   // for media-source and video-poster add a href attribute
   const attributes = {
-    ...commonAttributes,
     ...(nodeName === "desc" ? descAttributes : {}),
     ...(nodeName === "fallback" ? fallbackAttributes : {}),
-    ...(nodeName === "video-poster" ? { href: value } : {}),
+    ...(nodeName === "video-poster" ? videoPosterAttributes({ href: value, ...additionalAttributes}) : {}),
     ...(nodeName === "media-source" ? { href: value } : {}),
     ...(nodeName === "media-track" ? mediaTrackAttributes : {}),
-    ...(additionalAttributes || {})
   };
 
   // create a node object based on the nodeName and attributes
