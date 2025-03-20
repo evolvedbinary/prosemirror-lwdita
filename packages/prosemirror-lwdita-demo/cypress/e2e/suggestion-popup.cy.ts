@@ -38,7 +38,7 @@ describe('inserts a line break', () => {
     cy.get('.suggestionsPopup').should('exist');
   })
 
-  it('Pop up will not shows up when hitting enter at the middle of the title', () => {
+  it.skip('Pop up will not shows up when hitting enter at the middle of the title', () => {
     cy.visit('http://localhost:1234/')
       .get('#editor > div > div.ProseMirror > article > h1')
       .click()

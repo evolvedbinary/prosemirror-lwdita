@@ -903,11 +903,7 @@ export function enterPressed(state: EditorState, dispatch?: (tr: Transaction) =>
       resultTr = enterEOL(tr, !!dispatch, depth)
     }
   } else {
-    if ($from.parentOffset === 0) {
-      resultTr = enterSplit(tr, !!dispatch, depth)
-    } else {
-      resultTr = tr.replaceSelectionWith(state.schema.nodes.hard_break.create()).scrollIntoView();
-    }
+    resultTr = enterSplit(tr, !!dispatch, depth)
   }
 
   // if the transaction is triggered, then dispatch the transaction

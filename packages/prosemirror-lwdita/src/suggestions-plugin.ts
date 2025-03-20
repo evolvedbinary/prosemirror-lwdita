@@ -18,7 +18,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import { NodeType, ResolvedPos } from "prosemirror-model";
 import { Plugin, TextSelection } from "prosemirror-state"
 import { EditorView } from "prosemirror-view";
-import { createNode, isEmpty, isEOL } from "./commands";
+import { createNode } from "./commands";
 import { ChildType, ChildTypes, getNodeClass, nodeGroups } from "@evolvedbinary/lwdita-ast";
 import { lwditaNodeNameToSchemaNodeName, schemaNodeNameToLwditaNodeName } from "./utils";
 
@@ -34,16 +34,16 @@ export const suggestionPlugin = new Plugin({
     handleKeyDown(view, event) {
       if (event.key === 'Enter') {
         // make sure the cursor is at the end of a node or at an empty node
-        if (isEOL(view.state.tr, 0) || isEmpty(view.state.tr, 0)) {
-          const suggestions = getSuggestions(view);
-          // Create a new suggestion popup
-          const suggestionPopup = new SuggestionPopup(view, suggestions);
-          view.dom.parentNode?.appendChild(suggestionPopup.dom);
-          const firstListItem = suggestionPopup.dom.querySelector(".suggestionsList li") as HTMLLIElement;
-          firstListItem?.focus();
-          // Return true to indicate that the event was handled, no other handlers should be called.
-          return true;
-        }
+
+        const suggestions = getSuggestions(view);
+        // Create a new suggestion popup
+        const suggestionPopup = new SuggestionPopup(view, suggestions);
+        view.dom.parentNode?.appendChild(suggestionPopup.dom);
+        const firstListItem = suggestionPopup.dom.querySelector(".suggestionsList li") as HTMLLIElement;
+        firstListItem?.focus();
+        // Return true to indicate that the event was handled, no other handlers should be called.
+        return true;
+        
 
       }
       return false;
