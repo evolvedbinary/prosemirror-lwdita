@@ -37,19 +37,28 @@ const attrs = {
 };
 const pmjson = {
   type: 'doc',
-  attrs: {},
+  attrs: {
+    xmlDecl: {
+      version: "1.0",
+      encoding: "UTF-8",
+      standalone: undefined,
+    },
+    docTypeDecl: {
+      name: "topic",
+      systemId: "lw-topic.dtd",
+      publicId: "-//OASIS//DTD LIGHTWEIGHT DITA Topic//EN",
+    },
+  },
   content: [{
-    type: 'topic',
+    type: 'block_topic',
     attrs,
   }]
 };
 
 describe('document()', () => {
   it('transforms the JDita "topic" node into a Prosemirror node', async () => {
-    await expect(
-      xditaToJdita(topic(attrs))
-        .then(jdita => document(jdita))
-        .catch(e => console.error('error:', e))
-    ).to.eventually.become(pmjson);
+    const jdita = await xditaToJdita(topic(attrs));
+    const pm = document(jdita);
+    expect(pm).to.deep.equal(pmjson);
   });
 });
