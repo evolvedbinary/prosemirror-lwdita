@@ -121,6 +121,16 @@ export const shortXdita = `<?xml version="1.0" encoding="UTF-8"?>
 export const shortXditaProsemirroJson = {
   type: "doc",
   attrs: {
+    xmlDecl: {
+      version: "1.0",
+      encoding: "UTF-8",
+      standalone: undefined,
+    },
+    docTypeDecl: {
+      name: "topic",
+      systemId: "lw-topic.dtd",
+      publicId: "-//OASIS//DTD LIGHTWEIGHT DITA Topic//EN",
+    },
   },
   content: [
     {
