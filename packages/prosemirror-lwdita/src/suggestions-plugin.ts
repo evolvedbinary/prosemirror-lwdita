@@ -19,7 +19,8 @@ import { NodeType, ResolvedPos } from "prosemirror-model";
 import { Plugin, TextSelection } from "prosemirror-state"
 import { EditorView } from "prosemirror-view";
 import { createNode, isEmpty, isEOL } from "./commands";
-import { ChildType, getNodeClass, nodeGroups } from "@evolvedbinary/lwdita-ast";
+import { ChildType, ChildTypes, getNodeClass, nodeGroups } from "@evolvedbinary/lwdita-ast";
+import { lwditaNodeNameToSchemaNodeName, schemaNodeNameToLwditaNodeName } from "./utils";
 
 type Suggestion = {
   type: NodeType,
@@ -93,7 +94,7 @@ class SuggestionPopup {
         ul_list.appendChild(li)
         li.addEventListener("click", (e) => {
           e.preventDefault();
-          insertNode(editorView, followingSibling.type);
+          insertNode(editorView, followingSibling.type, followingSibling.parent);
           this.destroy();
         })
       }
@@ -145,7 +146,7 @@ class SuggestionPopup {
  * @param view - The ProseMirror editor view instance.
  * @param nodeType - The type of the node to be inserted.
  */
-function insertNode(view: EditorView, nodeType: NodeType) {
+function insertNode(view: EditorView, nodeType: NodeType, _parent?: string) {
   const { dispatch } = view;
   const { selection, tr, schema } = view.state;
   const { $from } = selection;
@@ -173,15 +174,16 @@ function getSuggestions(view: EditorView): Suggestion[][] {
   const { state } = view;
   const { $from } = state.selection;
 
-  const path = pathToRoot($from);
+  const path = pathToRoot($from).map(schemaNodeNameToLwditaNodeName);
 
-  const suggestions = getFollowingSiblings(path, state.schema.nodes);
+  const followingSiblings = getFollowingSiblings(path);
+  const suggestions = childTypesToNodeTypes(followingSiblings, state.schema.nodes);
 
   // Inject the rank and label into the suggestions
   let nodeTypesWithRankAndLabel = suggestions.map((suggestionsSubList, index) => {
     const parentNodeInfo = getNodeLabelRank(path[index]);
     return suggestionsSubList.map((type) => {
-      const { label, rank} = getNodeLabelRank(type.name);
+      const { label, rank} = getNodeLabelRank(schemaNodeNameToLwditaNodeName(type.name));
       return {
         type: type,
         label,
@@ -222,27 +224,47 @@ function pathToRoot($from: ResolvedPos) {
  * @param nodes - A record of node names to their corresponding NodeType objects.
  * @returns A 2D array of NodeType objects, the following siblings for each node in the node tree
  */
-function getFollowingSiblings(pathToRoot: string[], nodes: Record<string, NodeType>) {
-  const nodeTypes: NodeType[][] = [];
+function getFollowingSiblings(pathToRoot: string[]) {
+  // p -> section -> body -> topic -> doc
+                      
+  const siblings: {parentAllowsMixedContent: boolean, followingSiblings: ChildTypes[]}[] = [];
   for(let i = 1; i < pathToRoot.length; i++) {
-    const tempNodeTypes: NodeType[] = [];
-    const parentClass = getNodeClass(pathToRoot[i]);    
+    const parentClass = getNodeClass(pathToRoot[i]);
     const parentNode = new parentClass({});
-    const siblings = parentNode.followingSiblings(pathToRoot[i - 1]);
-    if(!siblings) continue; // if there are no siblings, return an empty array
-    for(const sibling of siblings) {
-      if((sibling as ChildType).isGroup) {
-        for(const node of nodeGroups[(sibling as ChildType).name]) {
-          tempNodeTypes.push(nodes[node]);
+    const followingSiblings = parentNode.followingSiblings(pathToRoot[i - 1]);
+    siblings.push({
+      parentAllowsMixedContent: parentNode.allowsMixedContent(),
+      followingSiblings: followingSiblings || []
+    });
+  }
+  return siblings;
+}
+
+/**
+ * Converts a list of child types to a list of node types.
+ * 
+ * @param childTypeSiblings - A list of child types for each parent node.
+ * @param nodes - A record of node names to their corresponding NodeType objects.
+ * @returns A 2D array of NodeType objects, the node types for each child type in the list.
+ */
+function childTypesToNodeTypes(childTypeSiblings: {parentAllowsMixedContent: boolean, followingSiblings: ChildTypes[]}[], nodes: Record<string, NodeType>) {
+  const nodeTypes: NodeType[][] = [];
+  
+  for(const siblings of childTypeSiblings) {
+    const tempNodeTypes = [];
+    for(const sibling of siblings.followingSiblings) {
+      const currentSibling = sibling as ChildType;
+      if(currentSibling.isGroup) {
+        for(const node of nodeGroups[currentSibling.name]) {
+          tempNodeTypes.push(nodes[lwditaNodeNameToSchemaNodeName(node, siblings.parentAllowsMixedContent)]);
         }
       } else {
-        tempNodeTypes.push(nodes[(sibling as ChildType).name]);
+        tempNodeTypes.push(nodes[lwditaNodeNameToSchemaNodeName(currentSibling.name, siblings.parentAllowsMixedContent)]);  
       }
     }
     nodeTypes.push(tempNodeTypes);
   }
-  
-  return nodeTypes;
+  return nodeTypes
 }
 
 /**
