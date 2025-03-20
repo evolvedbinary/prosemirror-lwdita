@@ -106,9 +106,21 @@ export const fallbackAttributes = {
 /**
  * Attributes for video-poster nodes
  */
-export const videoPosterAttributes = {
-  ...commonAttributes,
-  href: undefined,
+export const videoPosterAttributes = (attrs?: { [key: string]: string | undefined }) => {
+  return {
+    dir: attrs?.dir,
+    "xml:lang": attrs?.["xml:lang"],
+    translate: attrs?.translate,
+    props: attrs?.props,
+    href: attrs?.href,
+    format: attrs?.format,
+    scope: attrs?.scope,
+    id: attrs?.id,
+    conref: attrs?.conref,
+    keyref: attrs?.keyref,
+    outputclass: attrs?.outputclass,
+    class: attrs?.class,
+  }
 }
 
 /**

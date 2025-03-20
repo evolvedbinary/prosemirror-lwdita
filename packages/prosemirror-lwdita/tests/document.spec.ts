@@ -134,7 +134,7 @@ describe('Function unTravel()', () => {
       const result = unTravel(transformedJdita);
 
       //compare the original JDita with the result
-      expect(JSON.stringify(result)).to.deep.equal(JSON.stringify(originalJdita));
+      expect(result).to.deep.equal(originalJdita);
     });
 
     it('handles a fully-featured JDita document', async () => {
@@ -148,7 +148,7 @@ describe('Function unTravel()', () => {
       // untransform the transformed JDita document
       const result = unTravel(transformedJdita);
       //compare the original JDita with the result
-      expect(JSON.stringify(result)).to.deep.equal(JSON.stringify(originalJdita));
+      expect(result).to.deep.equal(originalJdita);
     });
 
     it('handles a JDita document containing an b mark', async () => {
@@ -181,7 +181,7 @@ describe('Function unTravel()', () => {
       // untransform the transformed JDita document
       const result = unTravel(transformedJdita);
       //compare the original JDita with the result
-      expect(JSON.stringify(result)).to.deep.equal(JSON.stringify(originalJdita));
+      expect(result).to.deep.equal(originalJdita);
     });
 
     it('handles a JDita document containing an audio element', async () => {
@@ -196,7 +196,7 @@ describe('Function unTravel()', () => {
       // untransform the transformed JDita document
       const result = unTravel(transformedJdita);
       //compare the original JDita with the result
-      expect(JSON.stringify(result)).to.deep.equal(JSON.stringify(originalJdita));
+      expect(result).to.deep.equal(originalJdita);
     });
 
     it('handles a JDita document containing an image', async () => {
@@ -212,7 +212,7 @@ describe('Function unTravel()', () => {
       // untransform the transformed JDita document
       const result = unTravel(transformedJdita);
       //compare the original JDita with the result
-      expect(JSON.stringify(result)).to.deep.equal(JSON.stringify(originalJdita));
+      expect(result).to.deep.equal(originalJdita);
     });
   });
 
