@@ -291,20 +291,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@evolvedbinary/lwdita-ast@npm:^3.2.1":
-  version: 3.2.1
-  resolution: "@evolvedbinary/lwdita-ast@npm:3.2.1"
-  checksum: 10c0/448383e5ce489d5c186da21bc2ecfee62ac6b75af056766c7d360ab86cab9e38e0dc6dfc940a752ad891496df3ebd52a20abc9862e6ccca11da21dda3e295a8a
+"@evolvedbinary/lwdita-ast@npm:^3.3.0":
+  version: 3.3.0
+  resolution: "@evolvedbinary/lwdita-ast@npm:3.3.0"
+  checksum: 10c0/9c1276fcd40d13419bfb0be3817509b10a7a1df999fbf470789668def6263f6e20be290e6fc342bf92300529691947efd45136951a32c4bb8da0882cc653d211
   languageName: node
   linkType: hard
 
-"@evolvedbinary/lwdita-xdita@npm:^3.2.1":
-  version: 3.2.1
-  resolution: "@evolvedbinary/lwdita-xdita@npm:3.2.1"
+"@evolvedbinary/lwdita-xdita@npm:^3.3.0":
+  version: 3.3.0
+  resolution: "@evolvedbinary/lwdita-xdita@npm:3.3.0"
   dependencies:
-    "@evolvedbinary/lwdita-ast": "npm:^3.2.1"
+    "@evolvedbinary/lwdita-ast": "npm:^3.3.0"
     "@rubensworks/saxes": "npm:6.0.1"
-  checksum: 10c0/1f0a9893fd9f4368a0a52d878aa5943e1949adef9cf78d005aef1dc5c20a080c1098166a7c0b978d3d540348a4eb9f0a71074dac86f3098ad4a406e14f8e1788
+  checksum: 10c0/89a55d5a9189c8ce6aba26cc89ec5d4534577d884baac52d2d4cb9f9adaef9d0e44b9d2c3951737f6821f427db01cfa6e9574d658b4cdeb791302ec2aefe59bf
   languageName: node
   linkType: hard
 
@@ -354,7 +354,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@evolvedbinary/prosemirror-lwdita-demo@workspace:packages/prosemirror-lwdita-demo"
   dependencies:
-    "@evolvedbinary/lwdita-xdita": "npm:^3.2.1"
+    "@evolvedbinary/lwdita-xdita": "npm:^3.3.0"
     "@evolvedbinary/prosemirror-lwdita": "workspace:^"
     "@evolvedbinary/prosemirror-lwdita-localization": "workspace:^"
     "@parcel/transformer-sass": "npm:^2.12.0"
@@ -421,8 +421,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@evolvedbinary/prosemirror-lwdita@workspace:packages/prosemirror-lwdita"
   dependencies:
-    "@evolvedbinary/lwdita-ast": "npm:^3.2.1"
-    "@evolvedbinary/lwdita-xdita": "npm:^3.2.1"
+    "@evolvedbinary/lwdita-ast": "npm:^3.3.0"
+    "@evolvedbinary/lwdita-xdita": "npm:^3.3.0"
     "@evolvedbinary/prosemirror-lwdita-localization": "workspace:^"
     "@types/chai": "npm:^4.3.11"
     "@types/chai-as-promised": "npm:^7.1.3"
