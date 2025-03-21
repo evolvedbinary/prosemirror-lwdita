@@ -33,7 +33,6 @@ describe('fetchRawDocumentFromGitHub', () => {
   it('should fetch the raw content of a document from a GitHub repository', async () => {
     const ghrepo = 'evolvedbinary/prosemirror-lwdita';
     const source = 'packages/prosemirror-lwdita-demo/example-xdita/02-short-file.xml';
-    const branch = 'main';
     const mockResponse = '<xml>Mock Content</xml>';
     // this will mock the next fetch request
     fetchMock.getOnce(`https://raw.githubusercontent.com/${ghrepo}/refs/heads/main/${source}`, {
@@ -41,19 +40,31 @@ describe('fetchRawDocumentFromGitHub', () => {
       headers: { 'Content-Type': 'text/plain' },
     });
 
-    const result = await fetchRawDocumentFromGitHub(config, ghrepo, source, branch);
+    const urlParams = {
+      ghrepo,
+      source,
+      branch: 'main',
+    };
+
+    const result = await fetchRawDocumentFromGitHub(config, urlParams);
     expect(result).to.equal(mockResponse);
   });
 
   it('should handle errors when fetching the document', async () => {
     const ghrepo = 'evolvedbinary/prosemirror-lwdita';
     const source = 'packages/prosemirror-lwdita-demo/example-xdita/02-short-file.xml';
-    const branch = 'main';
+
     // this will mock the next fetch request
     fetchMock.getOnce(`https://raw.githubusercontent.com/${ghrepo}/refs/heads/main/${source}`, 404);
 
+    const urlParams = {
+      ghrepo,
+      source,
+      branch: 'main',
+    };
+
     try {
-      await fetchRawDocumentFromGitHub(config, ghrepo, source, branch);
+      await fetchRawDocumentFromGitHub(config, urlParams);
       throw new Error('Expected fetchRawDocumentFromGitHub to throw an error');
     } catch (error) {
       expect(error).to.be.instanceOf(Error);

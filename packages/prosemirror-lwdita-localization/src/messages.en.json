@@ -12,20 +12,22 @@
         "paragraphError": "Something went wrong with publishing your changes because of following error:"
     },
     "error": {
-        "headlineDefault": "Sorry, something went wrong",
-        "headline1": "Sorry, something went wrong",
-        "headline2": "Sorry, something went wrong with your GitHub Authentication",
-        "bodyDefault": "No worries, you can simply close this page and reach out to the maintainers of the page if you need any assistance.",
-        "body1": "The file you are trying to edit could not be found and we don't know where to send you.",
-        "body2": "No worries, you can simply close this page and reach out to the maintainers of the page if you need any assistance.",
-        "body3": "The file you are trying to edit could not be found, because something is wrong with the parameters you provided. Please reach out to the maintainers of the page if you need any assistance.",
-        "body4": "You can click on the link below that will take you back to the file you were trying to edit.",
-        "body5": "It seems you have not been authenticated by GitHub.",
-        "body6": "Following error occurred: ",
-        "body7": "The file you are trying to edit could not be found.",
-        "body8": "Failed to load your file.",
-        "body9": "You could check your file and try again, or you can click on the link below to go back to the start page.",
-        "link1": "TODO: Content for 'messageKeys.error.link1'",
+        "invalidParameters": {
+            "headline": "Invalid Request Parameters",
+            "body": "It looks like the parameters in your request are invalid or incomplete. Please refer to the maintainer's documentation for correct usage or contact the developer for further assistance."
+        },
+        "authenticationError": {
+            "headline": "GitHub Integration Required",
+            "body": "To proceed, GitHub integration is mandatory. It seems you declined the GitHub authentication request. Please revisit the original documentation, try again, and ensure you accept the GitHub authentication prompt to continue."
+        },
+        "fileNotFoundError": {
+            "headline": "File Not Found",
+            "body": "The file you are trying to access does not exist on GitHub or is no longer available. Please contact the documentation maintainer for further clarification and support."
+        },
+        "incompatibleXditaFile": {
+            "headline": "Invalid File Format",
+            "body": "The uploaded file is not a valid XDITA file or is malformed. Please verify your file and contact the documentation maintainer for further assistance."
+        },
         "toastImageUpload": "Sorry, there was an error with uploading the image. Please check the image and try again.",
         "toastImageInsert": "Sorry, something went wrong with inserting and saving the image.",
         "toastFileUploadInvalid": "Sorry, there was an error with reading the file. Please check if the file you tried to upload contains valid xml and try again",
