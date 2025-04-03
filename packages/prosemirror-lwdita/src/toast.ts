@@ -37,7 +37,7 @@ export function showToast(message: string, type: 'success' | 'error' | 'warning'
   const toast = Toastify({
     text: message,
     duration: 5000,
-    gravity: 'bottom',
+    gravity: 'top',
     position: 'right',
     className: `toast toast--${type}`,
   }).showToast();
@@ -106,6 +106,11 @@ export function showPublicationResultSuccess(localization: Localization, destina
 
   const parentNode = document.body;
   parentNode.appendChild(customNote);
+
+
+  // Remove the submit notification
+  const existingToast = document.querySelector(".toastify");
+  existingToast?.remove();
 
   Toastify({
     text: '',

@@ -264,6 +264,9 @@ export function renderPrDialog(config: Config, localization: Localization, ghrep
         });
 
       document.body.removeChild(overlay);
+
+      // Notify the user that the PR is being processed
+      showToast(localization.t("info.prPushed"), "info")
     }
   });
 }
