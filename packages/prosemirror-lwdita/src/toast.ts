@@ -37,7 +37,7 @@ export function showToast(message: string, type: 'success' | 'error' | 'warning'
   const toast = Toastify({
     text: message,
     duration: 5000,
-    gravity: 'bottom',
+    gravity: 'top',
     position: 'right',
     className: `toast toast--${type}`,
   }).showToast();
