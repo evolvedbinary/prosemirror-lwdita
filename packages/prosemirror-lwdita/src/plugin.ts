@@ -22,6 +22,7 @@ import { redo, undo } from "prosemirror-history";
 import { MarkType, NodeType, Schema } from "prosemirror-model";
 import { Command, Plugin } from "prosemirror-state";
 import { Localization } from "@evolvedbinary/prosemirror-lwdita-localization";
+import { chainCommands, deleteSelection, joinBackward, selectNodeBackward } from "prosemirror-commands";
 
 /**
  * This is the entire DOM node of the Prosemirror editor that will be observed for DOM mutations
@@ -73,6 +74,12 @@ if (targetNode) {
   observer.observe(targetNode, config);
 }
 
+const customBackspace = chainCommands(
+  deleteSelection,
+  joinBackward,
+  selectNodeBackward
+);
+
 /**
  * Provide keyboard shortcuts for the editor
  *
@@ -96,6 +103,7 @@ export function shortcuts(localization: Localization, schema: Schema) {
     'Ctrl-y': redo,
     'Ctrl-Shift-z': redo,
     'Alt-p': insertImage(localization, schema.nodes.image),
+    'Backspace': customBackspace
   });
 }
 
