@@ -115,9 +115,11 @@ function renderProsemirrorDocument(jsonDoc: Record<string, Json>, urlParams: URL
       ]
     })
     // create a new EditorView with the dom element and the state
-    new EditorView(domEl, {
+    const view = new EditorView(domEl, {
       state,
     });
+
+    window.editorView = view;
   }
 
   // TODO handled the case where we can not render the editor

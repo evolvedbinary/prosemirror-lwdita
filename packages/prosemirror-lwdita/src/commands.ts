@@ -45,7 +45,12 @@ export function createNode(type: NodeType, args: Record<string, any> = {}): Node
     case 'stentry': return type.createAndFill({}, createNode(type.schema.nodes['p'])) as Node;
     case 'block_ul':
     case 'block_ol': return type.createAndFill({}, createNode(type.schema.nodes['block_li'])) as Node;
-    case 'section': return type.createAndFill({}, createNode(type.schema.nodes['ul'])) as Node;
+    case 'block_title': return type.createAndFill({}, type.schema.text("Section Title")) as Node;
+    case 'block_section': {
+      const title = createNode(type.schema.nodes['block_title']);
+      const paragraph = createNode(type.schema.nodes['block_p']);
+      return type.createAndFill({}, [title, paragraph]) as Node;
+    }
     case 'strow': return type.createAndFill({}, createNode(type.schema.nodes['stentry'])) as Node;
     case 'block_image': return type.createAndFill({ href: args.src, height: args.height, width: args.width, scope: args.scope, alt: args.alt }) as Node;
     case 'image': return type.createAndFill({ href: args.src, height: args.height, width: args.width, scope: args.scope, alt: args.alt }) as Node;
