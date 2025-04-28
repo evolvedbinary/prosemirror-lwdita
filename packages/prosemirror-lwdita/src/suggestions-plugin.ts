@@ -78,13 +78,16 @@ class SuggestionPopup {
     const ul_list = document.createElement("ul");
     ul_list.className = "suggestionsList";
 
-    for(const subSuggestionsList of suggestions) {
+
+    for(let idx = 0; idx < suggestions.length ; idx++) {
+      const subSuggestionsList = suggestions[idx];
       if(subSuggestionsList.length === 0) {
         continue;
       }
       const p = document.createElement('p');
       p.innerHTML = `Insert after <strong>${subSuggestionsList[0].parent}</strong>: `;
       ul_list.appendChild(p);
+
 
       for(const followingSibling of subSuggestionsList) {
         const li = document.createElement("li")
@@ -94,7 +97,7 @@ class SuggestionPopup {
         ul_list.appendChild(li)
         li.addEventListener("click", (e) => {
           e.preventDefault();
-          insertNode(editorView, followingSibling.type, followingSibling.parent);
+          insertNode(editorView, followingSibling.type, idx);
           this.destroy();
         })
       }
@@ -146,7 +149,7 @@ class SuggestionPopup {
  * @param view - The ProseMirror editor view instance.
  * @param nodeType - The type of the node to be inserted.
  */
-function insertNode(view: EditorView, nodeType: NodeType, _parent?: string) {
+function insertNode(view: EditorView, nodeType: NodeType, depth: number) {
   const { dispatch } = view;
   const { selection, tr, schema } = view.state;
   const { $from } = selection;
@@ -155,9 +158,11 @@ function insertNode(view: EditorView, nodeType: NodeType, _parent?: string) {
 
   const node = createNode(type, { schema });
   if (!node) return;
-  tr.insert($from.pos, node);
+  
+  const newPos = $from.end($from.depth - depth);
+  tr.insert(newPos, node);
 
-  const mapped = tr.mapping.map($from.pos);
+  const mapped = tr.mapping.map(newPos);
   const resolvedPos = tr.doc.resolve(mapped + node.nodeSize);
   tr.setSelection(TextSelection.create(tr.doc, resolvedPos.pos));
 
