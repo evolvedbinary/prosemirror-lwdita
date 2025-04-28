@@ -15,7 +15,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-describe('inserts a line break', () => {
+describe('inserts a Paragraph', () => {
   beforeEach(() => {
     window.localStorage.setItem('file', `<?xml version="1.0" encoding="UTF-8"?>
   <!DOCTYPE topic PUBLIC "-//OASIS//DTD LIGHTWEIGHT DITA Topic//EN" "lw-topic.dtd">
@@ -99,4 +99,76 @@ describe('inserts a line break', () => {
     cy.get('#editor > div > div.ProseMirror > article > div > section > p')
       .should('have.length', 5)
   })
-})
+});
+
+describe('Inserting sections', () => {
+  it('Can insert a new section at the end of another section', () => {
+
+    window.localStorage.setItem('file', `<?xml version="1.0" encoding="UTF-8"?>
+    <!DOCTYPE topic PUBLIC "-//OASIS//DTD LIGHTWEIGHT DITA Topic//EN" "lw-topic.dtd">
+    <topic id="program">
+      <title>Test File 2</title>
+      <body>
+        <section>
+          <p>A test paragraph.</p>
+          <p>Second paragraph.</p>
+          <p>Third paragraph.</p>
+        </section>
+      </body>
+    </topic>`);
+
+    cy.visit('http://localhost:1234/')
+    // #editor > div > div.ProseMirror > article > div > section > p:nth-child(3)
+      .get('#editor > div > div.ProseMirror > article > div > section > p:nth-child(3)')
+      .click()
+    cy.focused()
+    // #editor > div > div.suggestionsOverlay > div > ul > li:nth-child(14)
+      .type('{enter}')
+    cy.get('#editor > div > div.suggestionsOverlay > div > ul > li:nth-child(14)')
+      .click()
+    // Make sure the new section is created and the cursor is in the expected place
+    cy.focused()
+      .type('new paragraph')
+    cy.window().then( win => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      expect((win as any).editorView.state.doc.toString())
+        .to.eq('doc(block_topic(block_title("Test File 2"), block_body(block_section(block_p("A test paragraph."), block_p("Second paragraph."), block_p("Third paragraph.")), block_section(block_title("Section Title"), block_p("new paragraph")))))')      
+    })
+  });
+
+  it('can create a new section in the middle of other sections', () => {
+
+    window.localStorage.setItem('file', `<?xml version="1.0" encoding="UTF-8"?>
+      <!DOCTYPE topic PUBLIC "-//OASIS//DTD LIGHTWEIGHT DITA Topic//EN" "lw-topic.dtd">
+      <topic id="program">
+        <title>Test File 2</title>
+        <body>
+          <section>
+            <p>A test paragraph.</p>
+          </section>
+          <section>
+            <p>Another section paragraph.</p>
+          </section>
+        </body>
+      </topic>`);
+    
+    cy.visit('http://localhost:1234/')
+    // #editor > div > div.ProseMirror > article > div > section > p:nth-child(3)
+      .get('#editor > div > div.ProseMirror > article > div > section > p')
+      .first()
+      .click()
+    cy.focused()
+    // #editor > div > div.suggestionsOverlay > div > ul > li:nth-child(14)
+      .type('{enter}')
+    cy.get('#editor > div > div.suggestionsOverlay > div > ul > li:nth-child(14)')
+      .click()
+    // Make sure the new section is created and the cursor is in the expected place
+    cy.focused()
+      .type('new paragraph')
+    cy.window().then( win => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        expect((win as any).editorView.state.doc.toString())
+          .to.eq('doc(block_topic(block_title("Test File 2"), block_body(block_section(block_p("A test paragraph.")), block_section(block_title("Section Title"), block_p("new paragraph")), block_section(block_p("Another section paragraph.")))))')      
+      })
+    })
+});
