@@ -39,16 +39,17 @@ import { Localization } from "@evolvedbinary/prosemirror-lwdita-localization";
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function createNode(type: NodeType, args: Record<string, any> = {}): Node {
   switch (type.name) {
-    case 'p': return type.createAndFill() as Node;
+    case 'block_p': return type.createAndFill() as Node;
     case 'simpletable': return type.createAndFill({}, createNode(type.schema.nodes['strow'])) as Node;
-    case 'li': return type.createAndFill({}, createNode(type.schema.nodes['p'])) as Node;
+    case 'block_li': return type.createAndFill({}, createNode(type.schema.nodes['block_p'])) as Node;
     case 'stentry': return type.createAndFill({}, createNode(type.schema.nodes['p'])) as Node;
-    case 'ul':
-    case 'ol': return type.createAndFill({}, createNode(type.schema.nodes['li'])) as Node;
+    case 'block_ul':
+    case 'block_ol': return type.createAndFill({}, createNode(type.schema.nodes['block_li'])) as Node;
     case 'section': return type.createAndFill({}, createNode(type.schema.nodes['ul'])) as Node;
     case 'strow': return type.createAndFill({}, createNode(type.schema.nodes['stentry'])) as Node;
+    case 'block_image': return type.createAndFill({ href: args.src, height: args.height, width: args.width, scope: args.scope, alt: args.alt }) as Node;
     case 'image': return type.createAndFill({ href: args.src, height: args.height, width: args.width, scope: args.scope, alt: args.alt }) as Node;
-    case 'fig': return type.createAndFill({}, createNode(type.schema.nodes['image'], args)) as Node;
+    case 'block_fig': return type.createAndFill({}, createNode(type.schema.nodes['block_image'], args)) as Node;
   }
   throw new Error('unkown node type: ' + type.name);
 }
@@ -514,7 +515,7 @@ export function insertImage(localization: Localization, type: NodeType): Command
         // show the image upload dialog
         imageInputOverlay(localization, (imageInfo) => {
           if (!imageInfo) return false;
-          const node = createNode(type.schema.nodes['fig'], { src: imageInfo.src, scope: imageInfo.scope, alt: imageInfo.alt, height: imageInfo.height, width: imageInfo.width });
+          const node = createNode(type.schema.nodes['block_fig'], { src: imageInfo.src, scope: imageInfo.scope, alt: imageInfo.alt, height: imageInfo.height, width: imageInfo.width });
           const tr = state.tr.insert(state.selection.$to.pos, node);
           dispatch(tr.scrollIntoView());
         });
@@ -536,7 +537,7 @@ export function insertImage(localization: Localization, type: NodeType): Command
  * @returns node index from the list of nodes
  */
 function canCreateIndex(type: NodeType) {
-  return ['ul', 'li', 'p', 'section', 'stentry', 'strow', 'simpletable'].indexOf(type.name);
+  return ['block_ul', 'block_li', 'block_p', 'block_section', 'block_stentry', 'block_strow', 'block_simpletable'].indexOf(type.name);
 }
 
 /**

@@ -17,7 +17,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import { JDita } from "@evolvedbinary/lwdita-ast";
 import { deleteUndefined } from './document';
-import { commonAttributes, descAttributes, fallbackAttributes, mediaTrackAttributes } from "./attributes";
+import { descAttributes, fallbackAttributes, mediaTrackAttributes, videoPosterAttributes } from "./attributes";
+import { schemaNodeNameToLwditaNodeName } from "./utils";
 
 /**
 * Recursively traverse through all items in the Prosemirror DOM
@@ -36,7 +37,8 @@ export function unTravel(prosemirrorDocument: Record<string, any>): JDita {
   const attributes = prosemirrorDocument.attrs || {};
 
   // get the node name
-  const nodeName = getJditaNodeName(prosemirrorDocument.type);
+  let nodeName = schemaNodeNameToLwditaNodeName(prosemirrorDocument.type);
+  nodeName = getJditaNodeName(nodeName);
 
   if (nodeName === 'video' || nodeName === 'audio' || nodeName === 'image') {
     return createMediaJDITAObject(nodeName, attributes, children)
@@ -47,13 +49,6 @@ export function unTravel(prosemirrorDocument: Record<string, any>): JDita {
   for (const key in attributes) {
     if (!attributes[key]) {
       delete attributes[key];
-    }
-  }
-
-  if(nodeName === 'hard-break') {
-    return {
-      nodeName: 'text',
-      content: '\n'
     }
   }
 
@@ -166,7 +161,7 @@ function createMediaJDITAObject(nodeName: string, attributes: Record<string, str
     // return the created video node
     return {
       nodeName,
-      'attributes': deleteUndefined(allVideoAttributes),
+      'attributes': allVideoAttributes,
       'children': allVideoChildren
     }
   }
@@ -175,22 +170,22 @@ function createMediaJDITAObject(nodeName: string, attributes: Record<string, str
     // Note: The order of attributes determines their ordering in the object structure
     // Important for creating unit test data
     const allAudioAttributes = {
-      class: attributes.class,
-      conref: attributes.conref,
-      "xml:lang": attributes['xml:lang'],
-      dir: attributes.dir,
-      id: attributes.id,
-      outputclass: attributes.outputclass,
       props: attributes.props,
+      dir: attributes.dir,
+      "xml:lang": attributes['xml:lang'],
       translate: attributes.translate,
+      id: attributes.id,
+      conref: attributes.conref,
+      keyref: attributes.keyref,
+      href: attributes.href,
+      format: attributes.format,
+      scope: attributes.scope,
+      outputclass: attributes.outputclass,
+      class: attributes.class,
       autoplay: attributes.autoplay,
       controls: attributes.controls,
       loop: attributes.loop,
       muted: attributes.muted,
-      source: attributes.source,
-      href: attributes.href,
-      format: attributes.format,
-      scope: attributes.scope,
       tabindex: attributes.tabindex,
     }
 
@@ -227,7 +222,7 @@ function createMediaJDITAObject(nodeName: string, attributes: Record<string, str
 
     return {
       nodeName,
-      'attributes': deleteUndefined(allAudioAttributes),
+      'attributes': allAudioAttributes,
       'children': allAudioChildren
     }
   }
@@ -242,11 +237,11 @@ function createMediaJDITAObject(nodeName: string, attributes: Record<string, str
       href: attributes.href,
       format: attributes.format,
       scope: attributes.scope,
-      class: attributes.class,
-      keyref: attributes.keyref,
       width: attributes.width,
       height: attributes.height,
+      keyref: attributes.keyref,
       outputclass: attributes.outputclass,
+      class: attributes.class,
     }
 
     const allImageChildren: JDita[] = [];
@@ -271,7 +266,7 @@ function createMediaJDITAObject(nodeName: string, attributes: Record<string, str
     })
     return {
       nodeName,
-      'attributes': deleteUndefined(allImageAttributes),
+      'attributes': allImageAttributes,
       'children': allImageChildren
     }
   }
@@ -291,13 +286,11 @@ function createMediaChild(nodeName: string, value: string, additionalAttributes?
   // and additional attributes based on the nodeName,
   // for media-source and video-poster add a href attribute
   const attributes = {
-    ...commonAttributes,
     ...(nodeName === "desc" ? descAttributes : {}),
     ...(nodeName === "fallback" ? fallbackAttributes : {}),
-    ...(nodeName === "video-poster" ? { href: value } : {}),
+    ...(nodeName === "video-poster" ? videoPosterAttributes({ href: value, ...additionalAttributes}) : {}),
     ...(nodeName === "media-source" ? { href: value } : {}),
     ...(nodeName === "media-track" ? mediaTrackAttributes : {}),
-    ...(additionalAttributes || {})
   };
 
   // create a node object based on the nodeName and attributes
