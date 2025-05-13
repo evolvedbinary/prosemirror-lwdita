@@ -27,20 +27,20 @@ const schemaObject = schema();
 
 describe('Function createNode()', () => {
   it('creates a node', () => {
-    const type = schemaObject.nodes.p;
+    const type = schemaObject.nodes.block_p;
 
     const node = createNode(type);
-    expect(node.type.name).to.equal('p');
+    expect(node.type.name).to.equal('block_p');
   });
 
   it('creates a node and fills it with content', () => {
-    const type = schemaObject.nodes.ul;
+    const type = schemaObject.nodes.block_ul;
     const node = createNode(type, {});
     const li = node.content.firstChild;
     const p = li?.content.firstChild;
 
-    expect(li?.type.name).to.equal('li');
-    expect(p?.type.name).to.equal('p');
+    expect(li?.type.name).to.equal('block_li');
+    expect(p?.type.name).to.equal('block_p');
   });
 
   it('throws an error on an unknown node type', () => {
@@ -55,17 +55,17 @@ describe('Function createNode()', () => {
 describe('Function createNodesTree()', () => {
   it('creates a node tree', () => {
     const nodeTypes = [
-      schemaObject.nodes.p,
-      schemaObject.nodes.li,
-      schemaObject.nodes.ul
+      schemaObject.nodes.block_p,
+      schemaObject.nodes.block_li,
+      schemaObject.nodes.block_ul
     ];
 
     const node = createNodesTree(nodeTypes);
     const li = node.content.firstChild;
     const p = li?.content.firstChild;
 
-    expect(li?.type.name).to.equal('li');
-    expect(p?.type.name).to.equal('p');
+    expect(li?.type.name).to.equal('block_li');
+    expect(p?.type.name).to.equal('block_p');
 
   });
 });
@@ -75,13 +75,13 @@ describe('Function createNodesTree()', () => {
 describe('Function canCreateIndex()', () => {
   it('returns the correct index for allowed node types ul, li, p, section, stentry, strow, simpletable', () => {
     const knownTypes = [
-      schemaObject.nodes.ul,
-      schemaObject.nodes.li,
-      schemaObject.nodes.p,
-      schemaObject.nodes.section,
-      schemaObject.nodes.stentry,
-      schemaObject.nodes.strow,
-      schemaObject.nodes.simpletable
+      schemaObject.nodes.block_ul,
+      schemaObject.nodes.block_li,
+      schemaObject.nodes.block_p,
+      schemaObject.nodes.block_section,
+      schemaObject.nodes.block_stentry,
+      schemaObject.nodes.block_strow,
+      schemaObject.nodes.block_simpletable
     ]
     knownTypes.forEach((type) => {
       const index = _test_private_commands.canCreateIndex(type);
@@ -99,13 +99,13 @@ describe('Function canCreateIndex()', () => {
 describe('Function canCreate()', () => {
   it('returns "true" for allowed types', () => {
     const knownTypes = [
-      schemaObject.nodes.ul,
-      schemaObject.nodes.li,
-      schemaObject.nodes.p,
-      schemaObject.nodes.section,
-      schemaObject.nodes.stentry,
-      schemaObject.nodes.strow,
-      schemaObject.nodes.simpletable
+      schemaObject.nodes.block_ul,
+      schemaObject.nodes.block_li,
+      schemaObject.nodes.block_p,
+      schemaObject.nodes.block_section,
+      schemaObject.nodes.block_stentry,
+      schemaObject.nodes.block_strow,
+      schemaObject.nodes.block_simpletable
     ]
     knownTypes.forEach((type) => {
       const result = _test_private_commands.canCreate(type);
