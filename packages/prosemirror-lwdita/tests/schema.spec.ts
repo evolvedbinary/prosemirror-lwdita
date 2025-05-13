@@ -49,17 +49,17 @@ describe('Function getChildren()', () => {
     const children = _test_private_schema.getChildren(type);
     // %list-blocks are 'p','ul', 'ol', 'dl', 'pre', 'audio', 'video', 'example', 'simpletable', 'fig', 'note'
     assert.deepEqual(children, [
-      { name: 'p', required: false, single: false },
-      { name: 'ul', required: false, single: false },
-      { name: 'ol', required: false, single: false },
-      { name: 'dl', required: false, single: false },
-      { name: 'pre', required: false, single: false },
-      { name: 'audio', required: false, single: false },
-      { name: 'video', required: false, single: false },
-      { name: 'example', required: false, single: false },
-      { name: 'simpletable', required: false, single: false },
-      { name: 'fig', required: false, single: false },
-      { name: 'note', required: false, single: false },
+      { name: 'p', required: false, single: false , group: "list-blocks"},
+      { name: 'ul', required: false, single: false , group: "list-blocks"},
+      { name: 'ol', required: false, single: false , group: "list-blocks"},
+      { name: 'dl', required: false, single: false , group: "list-blocks"},
+      { name: 'pre', required: false, single: false , group: "list-blocks"},
+      { name: 'audio', required: false, single: false , group: "list-blocks"},
+      { name: 'video', required: false, single: false , group: "list-blocks"},
+      { name: 'example', required: false, single: false , group: "list-blocks"},
+      { name: 'simpletable', required: false, single: false , group: "list-blocks"},
+      { name: 'fig', required: false, single: false , group: "list-blocks"},
+      { name: 'note', required: false, single: false , group: "list-blocks"},
     ]);
   });
 });
@@ -214,10 +214,10 @@ describe('Function schema()', () => {
     expect(nodesObject['block_topic'].content).to.equal('block_title block_shortdesc? block_prolog? block_body?');
 
     // dd node
-    expect(nodesObject['block_dd'].content).to.equal("block_p* block_ul* block_ol* block_dl* block_pre* block_audio* block_video* block_example* block_simpletable* block_fig* block_note*");
+    expect(nodesObject['block_dd'].content).to.equal("(block_p|block_ul|block_ol|block_dl|block_pre|block_audio|block_video|block_example|block_simpletable|block_fig|block_note)*");
 
     // title node
-    expect(nodesObject['block_title'].content).to.equal("text* em* ph* strong* tt* image*");
+    expect(nodesObject['block_title'].content).to.equal("(text|em|ph|strong|tt|image)*");
   });
 
   it('returns a node spec with a schema-compliant inline property', () => {

@@ -232,7 +232,7 @@ export interface SchemaNodes {
  * @param type - Type of the Child nodes
  * @returns - The children of the node
  */
-function getChildren(type: ChildTypes): {name: string, required: boolean, single: boolean}[] {
+function getChildren(type: ChildTypes): {name: string, required: boolean, single: boolean, group?: string}[] {
   if (Array.isArray(type)) {
     const childTypes = type.map(getChildren).flat();
     return childTypes;
@@ -243,6 +243,7 @@ function getChildren(type: ChildTypes): {name: string, required: boolean, single
       name: child,
       required: type.required,
       single: type.single,
+      group: type.name
     }));
   } else {
     return [{
@@ -347,13 +348,51 @@ function defaultTravel(
   };
 
   const parentAllowsMixedContent = checkIsInline(node);
-  result.content = children.filter(child => !IS_MARK.includes(child.name)).reduce((accum, child) => accum + (accum.length > 0 ? " " : "") + nameAndCardinality(child, parentAllowsMixedContent), "");
+  result.content = generateContent(children, parentAllowsMixedContent);
 
   children.forEach(child => next(child.name, node));
   return result;
 }
 
-function nameAndCardinality(child: {name: string, required: boolean, single: boolean}, parentAllowsMixedContent: boolean): string {
+function generateContent(children: { name: string, required: boolean, single: boolean, group?: string }[], parentAllowsMixedContent: boolean) {
+  let content = "";
+  for (let idx = 0; idx < children.length; idx++) {
+    const child = children[idx]
+    // remove the marks
+    if(IS_MARK.includes(child.name)) continue;
+    
+    if (child.group) {
+      const groupName = child.group;
+      const groupChildren = children.filter(child => !IS_MARK.includes(child.name)).filter(child => child.group === groupName);
+      content += `(`
+      for (const groupChild of groupChildren) {
+        content += `${lwditaNodeNameToSchemaNodeName(groupChild.name, parentAllowsMixedContent)}|`
+      }
+      content = content.substring(0, content.length - 1);
+      content += `)`;
+      if (child.required) {
+        if (!child.single) {
+          content += "+";
+        }
+      } else {
+        if (child.single) {
+          content += "?";
+        } else {
+          content += "*";
+        }
+      }
+
+      content += " "
+      idx += children.filter(child => child.group === groupName).length - 1;
+    } else {
+      content += nameAndCardinality(child, parentAllowsMixedContent)
+      content += " "
+    }
+  }
+  return content.trim();
+}
+
+function nameAndCardinality(child: { name: string, required: boolean, single: boolean }, parentAllowsMixedContent: boolean): string {
   let name = defaultNodeName(child.name);
   name = lwditaNodeNameToSchemaNodeName(name, parentAllowsMixedContent);
   if(child.required) {
