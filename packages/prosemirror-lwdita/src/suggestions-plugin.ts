@@ -159,13 +159,12 @@ function insertNode(view: EditorView, nodeType: NodeType, depth: number) {
   const node = createNode(type, { schema });
   if (!node) return;
   
-  const newPos = $from.end($from.depth - depth);
+  const newPos = $from.after($from.depth - depth);
   tr.insert(newPos, node);
 
-  const mapped = tr.mapping.map(newPos);
-  const resolvedPos = tr.doc.resolve(mapped + node.nodeSize);
-  tr.setSelection(TextSelection.create(tr.doc, resolvedPos.pos));
-
+  const nodeTextLength = node.textContent.length ? node.textContent.length + 2 : 0;
+  const resolvedPos = tr.doc.resolve(newPos + nodeTextLength + 1);
+  tr.setSelection(TextSelection.near(resolvedPos));
   dispatch(tr.scrollIntoView())
 }
 
