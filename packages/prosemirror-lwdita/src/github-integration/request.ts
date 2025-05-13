@@ -32,19 +32,19 @@ export interface URLParams {
  * ghrepo = GitHub repository,
  * source = GitHub resource,
  * branch = Branch of the repository to fetch the document from, and use as base branch for PRs
- * referer = Referer of the request
+ * referrer = Referrer of the request
  */
-export const validKeys = ['ghrepo', 'source', 'branch', 'referer'];
+export const validKeys = ['ghrepo', 'source', 'branch', 'referrer'];
 
 /**
- * Retrieves the values of the valid URL parameters `ghrepo`, `source`, and `referer`
+ * Retrieves the values of the valid URL parameters `ghrepo`, `source`, and `referrer`
  * and returns a status string for handling the notifications
  * in case the URL has missing values or invalid parameters
  *
  * @param url - URL string
  * @returns An array with key-value objects of the URL parameter values or a status string for handling the notifications
  */
-export function getAndValidateParameterValues(url: string): 'invalidParams' | 'missingReferer' | 'noParams' | { key: string, value: string }[] {
+export function getAndValidateParameterValues(url: string): 'invalidParams' | 'missingReferrer' | 'noParams' | { key: string, value: string }[] {
   const parameters: { key: string, value: string }[] = [];
 
   const urlParts = url.split('?');
@@ -70,17 +70,17 @@ export function getAndValidateParameterValues(url: string): 'invalidParams' | 'm
   // TODO (AvC): Define all expected and allowed parameters in endpoints
   // and handle everything else as a redirect to the error page with e.g. error-type `unknownError`.
   // Currently all parameters that are not explicitly handled
-  // are treated as a `missingReferer` error, because we are simply
-  // checking if the referer is missing as a catch-all case.
+  // are treated as a `missingReferrer` error, because we are simply
+  // checking if the referrer is missing as a catch-all case.
 
-  // Check if referer parameter is missing
-  const hasMissingReferer = !params.has('referer');
+  // Check if referrer parameter is missing
+  const hasMissingReferrer = !params.has('referrer');
   const hasMissingValues = parameters.some(({ value }) => value === null || value === '');
   const hasInvalidParams = validKeys.some(key => !params.has(key));
 
   // Return the status string for the notifications
-  if (hasMissingReferer) {
-    return 'missingReferer';
+  if (hasMissingReferrer) {
+    return 'missingReferrer';
   }
 
   if (hasMissingValues || hasInvalidParams) {
@@ -112,13 +112,13 @@ export function isInstallationParam(key: string): boolean {
  *
  * @param parameters - The URL parameters
  */
-export function showNotification(parameters: 'authenticated' | 'invalidParams' | 'noParams' | 'missingReferer' |{ key: string, value: string }[]): void {
+export function showNotification(parameters: 'authenticated' | 'invalidParams' | 'noParams' | 'missingReferrer' |{ key: string, value: string }[]): void {
   if (typeof parameters === 'object') {
     showToast('Success! You will be redirected to GitHub OAuth', 'success');
   } else if (parameters === 'invalidParams') {
     showToast('Your request is invalid.', 'error');
-  } else if (parameters === 'missingReferer') {
-    showToast('Missing referer parameter.', 'error');
+  } else if (parameters === 'missingReferrer') {
+    showToast('Missing referrer parameter.', 'error');
   } else if(parameters === 'authenticated') {
     showToast('You are authenticated.', 'success');
   }
@@ -141,28 +141,28 @@ export function redirectToGitHubAppInstall(config: Config, parameters: URLParams
 
 /**
  * Redirects the user to the error page
- * If a referer, error type, or error message parameter are provided,
+ * If a referrer, error type, or error message parameter are provided,
  * they will be passed to the error page
  *
  * @param config - configuration
  * @param errorType - Error type
- * @param referer - Referer of the request
+ * @param referrer - Referrer of the request
  * @param errorMsg - Error message
  */
-export function showErrorPage(config: Config, errorType: string, referer?: string, errorMsg?: string): void {
-  const errorPageUrl = `${config.server.frontend.url}/error.html?error-type=${encodeURIComponent(errorType)}&referer=${encodeURIComponent(referer || '')}&error-msg=${encodeURIComponent(errorMsg || '')}`;
+export function showErrorPage(config: Config, errorType: string, referrer?: string, errorMsg?: string): void {
+  const errorPageUrl = `${config.server.frontend.url}/error.html?error-type=${encodeURIComponent(errorType)}&referrer=${encodeURIComponent(referrer || '')}&error-msg=${encodeURIComponent(errorMsg || '')}`;
   window.location.href = errorPageUrl;
 }
 
 /**
- * Redirects the user to the referer parameter from URL params
- * If a referer parameter is not provided, it will be passed to the error page
+ * Redirects the user to the referrer parameter from URL params
+ * If a referrer parameter is not provided, it will be passed to the error page
  */
-export function handleInvalidRequest(config: Config, referer: string | null): void {
-  if (referer) {
-    showErrorPage(config, 'invalidParams', referer, '');
+export function handleInvalidRequest(config: Config, referrer: string | null): void {
+  if (referrer) {
+    showErrorPage(config, 'invalidParams', referrer, '');
   } else {
-    showErrorPage(config, 'missingReferer');
+    showErrorPage(config, 'missingReferrer');
   }
 }
 
@@ -183,11 +183,11 @@ export function processRequest(config: Config, localization: Localization): unde
       // Requests with string parameters from e.g. 'Petal Edit Button'
       if (typeof parameters === 'string') {
         if (parameters === 'invalidParams') {
-          const referer = new URLSearchParams(window.location.search).get('referer');
-          handleInvalidRequest(config, referer);
+          const referrer = new URLSearchParams(window.location.search).get('referrer');
+          handleInvalidRequest(config, referrer);
         }
-        if (parameters === 'missingReferer') {
-          showErrorPage(config, 'missingReferer');
+        if (parameters === 'missingReferrer') {
+          showErrorPage(config, 'missingReferrer');
         }
         // Requests with object parameters from e.g. Git
       } else if (typeof parameters === 'object') {
@@ -207,7 +207,7 @@ export function processRequest(config: Config, localization: Localization): unde
           // in case of an error, the user did not authenticate the app
           const errorParam = parameters.find(param => param.key === 'error');
           if (errorParam) {
-            // TODO (AvC): Parse the referer from the state object if available and pass it to the error page
+            // TODO (AvC): Parse the referrer from the state object if available and pass it to the error page
             // TODO (AvC): Provide the authentication redirect URL and pass it to the error page (or extend redirectToGitHubOAuth()?)
             // FIXME (AvC): The error page should prompt the user to authenticate again,
             // this is currently not implemeted, thus a simple toast notification for now
@@ -224,9 +224,9 @@ export function processRequest(config: Config, localization: Localization): unde
             }
           }).catch(e => {
             console.error(e);
-            //TODO(YB): make sure the error page can redirect back to the referer
+            //TODO(YB): make sure the error page can redirect back to the referrer
             //TODO(YB): the error page should prompt the user to authenticate again
-            // TODO (AvC): Parse the referer from the state object if available and pass it to the error page
+            // TODO (AvC): Parse the referrer from the state object if available and pass it to the error page
             showErrorPage(config, 'missingAuthentication', '', e);
           });
 

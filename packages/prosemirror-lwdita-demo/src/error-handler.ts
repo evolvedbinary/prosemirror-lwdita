@@ -26,7 +26,7 @@ import { Localization } from "@evolvedbinary/prosemirror-lwdita-localization";
 export function handleError(localization: Localization) {
   const urlParams = new URLSearchParams(window.location.search);
   const errorType = urlParams.get('error-type');
-  const referer = urlParams.get('referer');
+  const referrer = urlParams.get('referrer');
   const errorMsg = urlParams.get('error-msg');
 
   const errorHeadline = document.getElementById('errorHeadline');
@@ -36,19 +36,19 @@ export function handleError(localization: Localization) {
   const errorLink = document.getElementById('errorLink') as HTMLAnchorElement | null;
 
   if (errorHeadline && errorBody1 && errorBody2 && errorBody3 && errorLink) {
-    if (errorType === 'missingReferer') {
+    if (errorType === 'missingReferrer') {
       errorHeadline.innerText = localization.t("error.headline1");
       errorBody1.innerText = localization.t("error.body1");
       errorBody2.innerText = localization.t("error.body2");
     } else if (errorType === 'invalidParams') {
       errorHeadline.innerText = localization.t("error.headline1");
       errorBody1.innerText = localization.t("error.body3");
-      if (referer) {
+      if (referrer) {
         errorBody2.innerText = localization.t("error.body4");
         if (errorLink) {
-          errorLink.href = referer;
+          errorLink.href = referrer;
           errorLink.target = '_self';
-          errorLink.innerText = referer;
+          errorLink.innerText = referrer;
         }
       }
     } else if (errorType === 'missingAuthentication') {
@@ -60,11 +60,11 @@ export function handleError(localization: Localization) {
         errorBody1.innerText = localization.t("error.body6");
       }
       errorBody2.innerText = localization.t("error.body5");
-      if (referer) {
+      if (referrer) {
         errorBody3.innerText = localization.t("error.body4");
         if (errorLink) {
-          errorLink.href = referer;
-          errorLink.innerText = referer;
+          errorLink.href = referrer;
+          errorLink.innerText = referrer;
         }
       }
     } else if (errorType === 'unknownError') {
@@ -76,11 +76,11 @@ export function handleError(localization: Localization) {
         errorBody1.innerText = localization.t("error.body6");
       }
       errorBody2.innerText = localization.t("error.bodyDefault");
-      if (referer) {
+      if (referrer) {
         errorBody3.innerText = localization.t("error.body4");
         if (errorLink) {
-          errorLink.href = referer;
-          errorLink.innerText = referer;
+          errorLink.href = referrer;
+          errorLink.innerText = referrer;
         }
       }
     } else if (errorType === 'fileNotFound') {
@@ -92,11 +92,11 @@ export function handleError(localization: Localization) {
         errorBody1.innerText = localization.t("error.body6");
       }
       errorBody2.innerText = localization.t("error.bodyDefault");
-      if (referer) {
+      if (referrer) {
         errorBody3.innerText = localization.t("error.body4");
         if (errorLink) {
-          errorLink.href = referer;
-          errorLink.innerText = referer;
+          errorLink.href = referrer;
+          errorLink.innerText = referrer;
         }
       }
     } else if (errorType === 'fileUploadError') {
@@ -109,11 +109,11 @@ export function handleError(localization: Localization) {
         errorBody2.innerText = localization.t("error.body6");
       }
       errorBody3.innerText = localization.t("error.body9");
-      if (referer) {
+      if (referrer) {
         if (errorLink) {
-          errorLink.href = referer;
+          errorLink.href = referrer;
           errorLink.target = '_self';
-          errorLink.innerText = referer;
+          errorLink.innerText = referrer;
           const fileName = localStorage.getItem('fileName');
           const file = localStorage.getItem('file');
           if (fileName && file) {
@@ -125,11 +125,11 @@ export function handleError(localization: Localization) {
     } else {
       errorHeadline.innerText = localization.t("error.headlineDefault");
       errorBody1.innerText = localization.t("error.bodyDefault");
-      if (referer) {
+      if (referrer) {
         errorBody2.innerText = localization.t("error.body4");
         if (errorLink) {
-          errorLink.href = referer;
-          errorLink.innerText = referer;
+          errorLink.href = referrer;
+          errorLink.innerText = referrer;
         }
       }
     }

@@ -27,38 +27,38 @@ const url: string = 'https://example.com/';
 // Function getParameterValues()
 describe('When function getParameterValues() is passed a URL with', () => {
   it('valid parameters, it returns an object containing key-value pairs', () => {
-    validUrl = url + '?ghrepo=repo1&source=source1&branch=main&referer=referer1';
+    validUrl = url + '?ghrepo=repo1&source=source1&branch=main&referrer=referrer1';
     expect(getAndValidateParameterValues(validUrl)).to.deep.equal([
       { key: 'ghrepo', value: 'repo1' },
       { key: 'source', value: 'source1' },
       { key: 'branch', value: 'main' },
-      { key: 'referer', value: 'referer1' },
+      { key: 'referrer', value: 'referrer1' },
     ]);
   });
 
   it('a missing value of any of the keys, it returns string "invalidParams"', () => {
-    invalidUrl = url + '?ghrepo=ghrepo1&source=source1&referer=';
+    invalidUrl = url + '?ghrepo=ghrepo1&source=source1&referrer=';
     expect(getAndValidateParameterValues(invalidUrl)).to.equal('invalidParams');
   });
 
   it('one missing parameter, it returns string "invalidParams"', () => {
-    invalidUrl = url + '?ghrepo=ghrepo1&source=source1&referer';
+    invalidUrl = url + '?ghrepo=ghrepo1&source=source1&referrer';
     expect(getAndValidateParameterValues(invalidUrl)).to.equal('invalidParams');
   });
 
   it('one valid parameter, but the rest is missing, it returns string "invalidParams"', () => {
     invalidUrl = url + '?ghrepo=xyz';
-    expect(getAndValidateParameterValues(invalidUrl)).to.equal('missingReferer');
+    expect(getAndValidateParameterValues(invalidUrl)).to.equal('missingReferrer');
   });
 
   it('two missing parameters, it returns string "invalidParams"', () => {
     invalidUrl = url + '?ghrepo';
-    expect(getAndValidateParameterValues(invalidUrl)).to.equal('missingReferer');
+    expect(getAndValidateParameterValues(invalidUrl)).to.equal('missingReferrer');
   });
 
   it('any parameter that is not matching any of the expected keys, it returns string "invalidParams"', () => {
     invalidUrl = url + '?xyz';
-    expect(getAndValidateParameterValues(invalidUrl)).to.equal('missingReferer');
+    expect(getAndValidateParameterValues(invalidUrl)).to.equal('missingReferrer');
   });
 
   it('no parameters at all, it returns string "noParams"', () => {
@@ -88,7 +88,7 @@ describe('When function isValidParam() is passed a key', () => {
     expect(isValidParam('ghrepo')).to.equal(true);
     expect(isValidParam('source')).to.equal(true);
     expect(isValidParam('branch')).to.equal(true);
-    expect(isValidParam('referer')).to.equal(true);
+    expect(isValidParam('referrer')).to.equal(true);
   });
   it('that is a invalid key, it returns true', () => {
     expect(isValidParam('xyz')).to.equal(false);
