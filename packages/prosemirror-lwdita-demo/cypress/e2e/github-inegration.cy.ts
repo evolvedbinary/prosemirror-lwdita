@@ -23,7 +23,7 @@ describe('redirect to gitHub', () => {
 
   it('should redirect to GitHub app authentication', () => {
 
-    cy.visit('http://localhost:1234/?ghrepo=evolvedbinary/prosemirror-lwdita&source=packages/prosemirror-lwdita-demo/example-xdita/02-short-file.xml&branch=main&referer=https://petal.evolvedbinary.com/')
+    cy.visit('http://localhost:1234/?ghrepo=evolvedbinary/prosemirror-lwdita&source=packages/prosemirror-lwdita-demo/example-xdita/02-short-file.xml&branch=main&referrer=https://petal.evolvedbinary.com/')
 
     cy.window().then((win) => {
       cy.stub(win.location, 'href').callsFake((url) => {
@@ -58,7 +58,7 @@ describe.skip('handle Github Oauth response', () => {
     }).as('githubOAuth');
 
     // Visit the app page where the OAuth flow starts
-    cy.visit('http://localhost:1234/?ghrepo=evolvedbinary/prosemirror-lwdita&source=packages/prosemirror-lwdita-demo/example-xdita/02-short-file.xml&branch=main&referer=https://petal.evolvedbinary.com/');
+    cy.visit('http://localhost:1234/?ghrepo=evolvedbinary/prosemirror-lwdita&source=packages/prosemirror-lwdita-demo/example-xdita/02-short-file.xml&branch=main&referrer=https://petal.evolvedbinary.com/');
 
     // Wait for the interception to occur
     cy.wait('@githubOAuth');
@@ -79,7 +79,7 @@ describe.skip('handle Github Oauth response', () => {
     }).as('githubOAuth');
 
     // Visit the app page where the OAuth flow starts
-    cy.visit('http://localhost:1234/?ghrepo=evolvedbinary/prosemirror-lwdita&source=packages/prosemirror-lwdita-demo/example-xdita/02-short-file.xml&branch=main&referer=https://petal.evolvedbinary.com/');
+    cy.visit('http://localhost:1234/?ghrepo=evolvedbinary/prosemirror-lwdita&source=packages/prosemirror-lwdita-demo/example-xdita/02-short-file.xml&branch=main&referrer=https://petal.evolvedbinary.com/');
 
     // Wait for the interception to occur
     cy.wait('@githubOAuth');
@@ -98,7 +98,7 @@ describe('request the token after OAuth', () => {
     // Intercept the OAuth request and mock the authentication process
     cy.intercept('GET', githubOAuthUrl, {
       statusCode: 302,
-      headers: { location: `http://localhost:1234/?code=${mockCode}&state=eyJnaHJlcG8iOiJldm9sdmVkYmluYXJ5L3Byb3NlbWlycm9yLWx3ZGl0YSIsInNvdXJjZSI6InBhY2thZ2VzL3Byb3NlbWlycm9yLWx3ZGl0YS1kZW1vL2V4YW1wbGUteGRpdGEvMDItc2hvcnQtZmlsZS54bWwiLCJicmFuY2giOiJtYWluIiwicmVmZXJlciI6Imh0d3NyaHRzaHJ0cyJ9` }
+      headers: { location: `http://localhost:1234/?code=${mockCode}&state=eyJnaHJlcG8iOiJldm9sdmVkYmluYXJ5L3Byb3NlbWlycm9yLWx3ZGl0YSIsInNvdXJjZSI6InBhY2thZ2VzL3Byb3NlbWlycm9yLWx3ZGl0YS1kZW1vL2V4YW1wbGUteGRpdGEvMDItc2hvcnQtZmlsZS54bWwiLCJicmFuY2giOiJtYWluIiwicmVmZXJyZXIiOiJodHdzcmh0c2hydHMifQ==` }
     }).as('githubOAuth');
 
     // Intercept the token request
@@ -112,13 +112,13 @@ describe('request the token after OAuth', () => {
     }).as('requestToken');
 
     // Visit the app page where the OAuth flow starts
-    cy.visit('http://localhost:1234/?ghrepo=evolvedbinary/prosemirror-lwdita&source=packages/prosemirror-lwdita-demo/example-xdita/02-short-file.xml&branch=main&referer=https://petal.evolvedbinary.com/');
+    cy.visit('http://localhost:1234/?ghrepo=evolvedbinary/prosemirror-lwdita&source=packages/prosemirror-lwdita-demo/example-xdita/02-short-file.xml&branch=main&referrer=https://petal.evolvedbinary.com/');
 
     // Wait for the interception to occur
     cy.wait('@githubOAuth');
 
     // Verify that the mocked redirect URL is correct
-    cy.url().should('eq', `http://localhost:1234/?code=${mockCode}&state=eyJnaHJlcG8iOiJldm9sdmVkYmluYXJ5L3Byb3NlbWlycm9yLWx3ZGl0YSIsInNvdXJjZSI6InBhY2thZ2VzL3Byb3NlbWlycm9yLWx3ZGl0YS1kZW1vL2V4YW1wbGUteGRpdGEvMDItc2hvcnQtZmlsZS54bWwiLCJicmFuY2giOiJtYWluIiwicmVmZXJlciI6Imh0d3NyaHRzaHJ0cyJ9`);
+    cy.url().should('eq', `http://localhost:1234/?code=${mockCode}&state=eyJnaHJlcG8iOiJldm9sdmVkYmluYXJ5L3Byb3NlbWlycm9yLWx3ZGl0YSIsInNvdXJjZSI6InBhY2thZ2VzL3Byb3NlbWlycm9yLWx3ZGl0YS1kZW1vL2V4YW1wbGUteGRpdGEvMDItc2hvcnQtZmlsZS54bWwiLCJicmFuY2giOiJtYWluIiwicmVmZXJyZXIiOiJodHdzcmh0c2hydHMifQ==`);
 
 
     cy.wait('@requestToken');
@@ -141,7 +141,7 @@ describe('request the token after OAuth', () => {
     // Intercept the OAuth request and mock the authentication process
     cy.intercept('GET', githubOAuthUrl, {
       statusCode: 302,
-      headers: { location: `http://localhost:1234/?code=${mockCode}&state=eyJnaHJlcG8iOiJldm9sdmVkYmluYXJ5L3Byb3NlbWlycm9yLWx3ZGl0YSIsInNvdXJjZSI6InBhY2thZ2VzL3Byb3NlbWlycm9yLWx3ZGl0YS1kZW1vL2V4YW1wbGUteGRpdGEvMDItc2hvcnQtZmlsZS54bWwiLCJicmFuY2giOiJtYWluIiwicmVmZXJlciI6Imh0d3NyaHRzaHJ0cyJ9` }
+      headers: { location: `http://localhost:1234/?code=${mockCode}&state=eyJnaHJlcG8iOiJldm9sdmVkYmluYXJ5L3Byb3NlbWlycm9yLWx3ZGl0YSIsInNvdXJjZSI6InBhY2thZ2VzL3Byb3NlbWlycm9yLWx3ZGl0YS1kZW1vL2V4YW1wbGUteGRpdGEvMDItc2hvcnQtZmlsZS54bWwiLCJicmFuY2giOiJtYWluIiwicmVmZXJyZXIiOiJodHdzcmh0c2hydHMifQ==` }
     }).as('githubOAuth');
 
     const tokenRequest = /http:\/\/localhost:3000\/api\/github\/token\?.*/;
@@ -152,7 +152,7 @@ describe('request the token after OAuth', () => {
     }).as('requestToken');
 
     // Visit the app page where the OAuth flow starts
-    cy.visit('http://localhost:1234/?ghrepo=evolvedbinary/prosemirror-lwdita&source=packages/prosemirror-lwdita-demo/example-xdita/02-short-file.xml&branch=main&referer=https://petal.evolvedbinary.com/');
+    cy.visit('http://localhost:1234/?ghrepo=evolvedbinary/prosemirror-lwdita&source=packages/prosemirror-lwdita-demo/example-xdita/02-short-file.xml&branch=main&referrer=https://petal.evolvedbinary.com/');
 
     // Wait for the interception to occur
     cy.wait('@githubOAuth');
@@ -175,7 +175,7 @@ describe('request the token after OAuth', () => {
     // Intercept the OAuth request and mock the authentication process
     cy.intercept('GET', githubOAuthUrl, {
       statusCode: 302,
-      headers: { location: `http://localhost:1234/?code=${mockCode}&state=eyJnaHJlcG8iOiJldm9sdmVkYmluYXJ5L3Byb3NlbWlycm9yLWx3ZGl0YSIsInNvdXJjZSI6InBhY2thZ2VzL3Byb3NlbWlycm9yLWx3ZGl0YS1kZW1vL2V4YW1wbGUteGRpdGEvMDItc2hvcnQtZmlsZS54bWwiLCJicmFuY2giOiJtYWluIiwicmVmZXJlciI6Imh0d3NyaHRzaHJ0cyJ9` }
+      headers: { location: `http://localhost:1234/?code=${mockCode}&state=eyJnaHJlcG8iOiJldm9sdmVkYmluYXJ5L3Byb3NlbWlycm9yLWx3ZGl0YSIsInNvdXJjZSI6InBhY2thZ2VzL3Byb3NlbWlycm9yLWx3ZGl0YS1kZW1vL2V4YW1wbGUteGRpdGEvMDItc2hvcnQtZmlsZS54bWwiLCJicmFuY2giOiJtYWluIiwicmVmZXJyZXIiOiJodHdzcmh0c2hydHMifQ==` }
     }).as('githubOAuth');
 
     // Intercept the token request
@@ -190,13 +190,13 @@ describe('request the token after OAuth', () => {
     }).as('requestToken');
 
     // Visit the app page where the OAuth flow starts
-    cy.visit('http://localhost:1234/?ghrepo=evolvedbinary/prosemirror-lwdita&source=packages/prosemirror-lwdita-demo/example-xdita/02-short-file.xml&branch=main&referer=https://petal.evolvedbinary.com/');
+    cy.visit('http://localhost:1234/?ghrepo=evolvedbinary/prosemirror-lwdita&source=packages/prosemirror-lwdita-demo/example-xdita/02-short-file.xml&branch=main&referrer=https://petal.evolvedbinary.com/');
 
     // Wait for the interception to occur
     cy.wait('@githubOAuth');
 
     // Verify that the mocked redirect URL is correct
-    cy.url().should('eq', `http://localhost:1234/?code=${mockCode}&state=eyJnaHJlcG8iOiJldm9sdmVkYmluYXJ5L3Byb3NlbWlycm9yLWx3ZGl0YSIsInNvdXJjZSI6InBhY2thZ2VzL3Byb3NlbWlycm9yLWx3ZGl0YS1kZW1vL2V4YW1wbGUteGRpdGEvMDItc2hvcnQtZmlsZS54bWwiLCJicmFuY2giOiJtYWluIiwicmVmZXJlciI6Imh0d3NyaHRzaHJ0cyJ9`);
+    cy.url().should('eq', `http://localhost:1234/?code=${mockCode}&state=eyJnaHJlcG8iOiJldm9sdmVkYmluYXJ5L3Byb3NlbWlycm9yLWx3ZGl0YSIsInNvdXJjZSI6InBhY2thZ2VzL3Byb3NlbWlycm9yLWx3ZGl0YS1kZW1vL2V4YW1wbGUteGRpdGEvMDItc2hvcnQtZmlsZS54bWwiLCJicmFuY2giOiJtYWluIiwicmVmZXJyZXIiOiJodHdzcmh0c2hydHMifQ==`);
 
     cy.wait('@requestToken');
     
@@ -221,7 +221,7 @@ describe('render publish button', () => {
     // Intercept the OAuth request and mock the authentication process
     cy.intercept('GET', githubOAuthUrl, {
       statusCode: 302,
-      headers: { location: `http://localhost:1234/?code=${mockCode}&state=eyJnaHJlcG8iOiJldm9sdmVkYmluYXJ5L3Byb3NlbWlycm9yLWx3ZGl0YSIsInNvdXJjZSI6InBhY2thZ2VzL3Byb3NlbWlycm9yLWx3ZGl0YS1kZW1vL2V4YW1wbGUteGRpdGEvMDItc2hvcnQtZmlsZS54bWwiLCJicmFuY2giOiJtYWluIiwicmVmZXJlciI6Imh0d3NyaHRzaHJ0cyJ9` }
+      headers: { location: `http://localhost:1234/?code=${mockCode}&state=eyJnaHJlcG8iOiJldm9sdmVkYmluYXJ5L3Byb3NlbWlycm9yLWx3ZGl0YSIsInNvdXJjZSI6InBhY2thZ2VzL3Byb3NlbWlycm9yLWx3ZGl0YS1kZW1vL2V4YW1wbGUteGRpdGEvMDItc2hvcnQtZmlsZS54bWwiLCJicmFuY2giOiJtYWluIiwicmVmZXJyZXIiOiJodHdzcmh0c2hydHMifQ==` }
     }).as('githubOAuth');
 
     // Intercept the token request
@@ -235,7 +235,7 @@ describe('render publish button', () => {
       }
     }).as('requestToken');
 
-    cy.visit('http://localhost:1234/?ghrepo=evolvedbinary/prosemirror-lwdita&source=packages/prosemirror-lwdita-demo/example-xdita/02-short-file.xml&branch=main&referer=https://petal.evolvedbinary.com/');
+    cy.visit('http://localhost:1234/?ghrepo=evolvedbinary/prosemirror-lwdita&source=packages/prosemirror-lwdita-demo/example-xdita/02-short-file.xml&branch=main&referrer=https://petal.evolvedbinary.com/');
     cy.get('#publishFile').should('exist');
   });
 });
@@ -251,7 +251,7 @@ describe('PR dialog', () => {
     // Intercept the OAuth request and mock the authentication process
     cy.intercept('GET', githubOAuthUrl, {
       statusCode: 302,
-      headers: { location: `http://localhost:1234/?code=${mockCode}&state=eyJnaHJlcG8iOiJldm9sdmVkYmluYXJ5L3Byb3NlbWlycm9yLWx3ZGl0YSIsInNvdXJjZSI6InBhY2thZ2VzL3Byb3NlbWlycm9yLWx3ZGl0YS1kZW1vL2V4YW1wbGUteGRpdGEvMDItc2hvcnQtZmlsZS54bWwiLCJicmFuY2giOiJtYWluIiwicmVmZXJlciI6Imh0d3NyaHRzaHJ0cyJ9` }
+      headers: { location: `http://localhost:1234/?code=${mockCode}&state=eyJnaHJlcG8iOiJldm9sdmVkYmluYXJ5L3Byb3NlbWlycm9yLWx3ZGl0YSIsInNvdXJjZSI6InBhY2thZ2VzL3Byb3NlbWlycm9yLWx3ZGl0YS1kZW1vL2V4YW1wbGUteGRpdGEvMDItc2hvcnQtZmlsZS54bWwiLCJicmFuY2giOiJtYWluIiwicmVmZXJyZXIiOiJodHdzcmh0c2hydHMifQ==` }
     }).as('githubOAuth');
 
     // Intercept the token request
@@ -265,7 +265,7 @@ describe('PR dialog', () => {
       }
     }).as('requestToken');
 
-    cy.visit('http://localhost:1234/?ghrepo=evolvedbinary/prosemirror-lwdita&source=packages/prosemirror-lwdita-demo/example-xdita/02-short-file.xml&branch=main&referer=https://petal.evolvedbinary.com/');
+    cy.visit('http://localhost:1234/?ghrepo=evolvedbinary/prosemirror-lwdita&source=packages/prosemirror-lwdita-demo/example-xdita/02-short-file.xml&branch=main&referrer=https://petal.evolvedbinary.com/');
 
     cy.get('body > div.toastify.on.toast.toast__panel.toast--welcome.toastify-right.toastify-top > section > button').click();
   })
