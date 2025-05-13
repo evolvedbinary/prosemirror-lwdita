@@ -163,8 +163,9 @@ export function processRequest(config: Config, localization: Localization): unde
           // in case of an error, the user did not authenticate the app
           const errorParam = parameters.find(param => param.key === 'error');
           if (errorParam) {
+            const state = JSON.parse(atob(returnParams.state))
             // redirect the user to the error page and show the error message so he can try again
-            showErrorPage(config, 'authenticationError', returnParams.referer);
+            showErrorPage(config, 'authenticationError', state.referer);
           }
 
           exchangeOAuthCodeForAccessToken(config, localization, returnParams.code).then(({token, installation}) => {
