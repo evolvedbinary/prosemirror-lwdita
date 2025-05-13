@@ -36,5 +36,8 @@
         "toastGitHubUserEndpoint": "Sorry, an error occured while publishing the document. Please try again. The error: ",
         "toastGitHubToken": "Sorry, an error occured while publishing the document. Please try again. The error: ",
         "toastGitHubPR": "Sorry, an error occured while publishing the document. Please try again. The error: "
+    },
+    "info": {
+        "prPushed": "Submitting your PR... Please wait."
     }
 }
