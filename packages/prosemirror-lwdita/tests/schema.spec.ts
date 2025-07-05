@@ -35,7 +35,12 @@ describe('Function getChildren()', () => {
   it('makes sure that the node type gets the correct children according to the schema', () => {
     const type = TopicNode.childTypes;
     const children = _test_private_schema.getChildren(type);
-    assert.deepEqual(children, ["title","shortdesc","prolog","body"]);
+    assert.deepEqual(children, [
+      { name: 'title', required: true, single: true },
+      { name: 'shortdesc', required: false, single: true },
+      { name: 'prolog', required: false, single: true },
+      { name: 'body', required: false, single: true },
+    ]);
   });
 
   it('makes sure that the node type gets the correct group node children according to the schema', () => {
@@ -43,7 +48,19 @@ describe('Function getChildren()', () => {
     const type = DdNode.childTypes;
     const children = _test_private_schema.getChildren(type);
     // %list-blocks are 'p','ul', 'ol', 'dl', 'pre', 'audio', 'video', 'example', 'simpletable', 'fig', 'note'
-    assert.deepEqual(children, ['p','ul', 'ol', 'dl', 'pre', 'audio', 'video', 'example', 'simpletable', 'fig', 'note']);
+    assert.deepEqual(children, [
+      { name: 'p', required: false, single: false , group: "list-blocks"},
+      { name: 'ul', required: false, single: false , group: "list-blocks"},
+      { name: 'ol', required: false, single: false , group: "list-blocks"},
+      { name: 'dl', required: false, single: false , group: "list-blocks"},
+      { name: 'pre', required: false, single: false , group: "list-blocks"},
+      { name: 'audio', required: false, single: false , group: "list-blocks"},
+      { name: 'video', required: false, single: false , group: "list-blocks"},
+      { name: 'example', required: false, single: false , group: "list-blocks"},
+      { name: 'simpletable', required: false, single: false , group: "list-blocks"},
+      { name: 'fig', required: false, single: false , group: "list-blocks"},
+      { name: 'note', required: false, single: false , group: "list-blocks"},
+    ]);
   });
 });
 
@@ -52,7 +69,7 @@ describe('Function defaultToDom()', () => {
     const attrs = {};
     const toDom = defaultToDom(AbstractBaseNode, attrs);
 
-    const type = schema().nodes.li;
+    const type = schema().nodes.block_li;
     const node = createNode(type, {});
     const result = toDom(node);
     const expected = [
@@ -130,23 +147,56 @@ describe('Function schema()', () => {
     const nodeNames = nodes.content.filter((node: NodeSpec) => typeof node === 'string')
 
     const expectedNodes = [
-      'alt',          'audio',       'body',
-      'dd',           'desc',        'div',
-      'dl',           'dlentry',     'doc',
-      'dt',           'em',          'example',
-      'fallback',     'fig',         'fn',
-      'hard_break',   'image',       'keydef',
-      'keytext',      'li',          'map',
-      'media_source', 'media_track', 'metadata',
-      'navtitle',     'note',        'ol',
-      'othermeta',    'p',           'ph',
-      'pre',          'prolog',      'section',
-      'shortdesc',    'simpletable', 'stentry',
-      'sthead',       'strong',      'strow',
-      'text',         'title',       'topic',
-      'topicmeta',    'topicref',    'tt',
-      'ul',           'video',       'video_poster',
-      'xref'
+        "text",
+        "block_alt",
+        "image",
+        "xref",
+        "tt",
+        "strong",
+        "ph",
+        "em",
+        "block_title",
+        "block_shortdesc",
+        "block_othermeta",
+        "block_metadata",
+        "block_prolog",
+        "block_p",
+        "block_ol",
+        "block_dt",
+        "block_pre",
+        "block_desc",
+        "block_image",
+        "block_video_poster",
+        "block_media_source",
+        "block_media_track",
+        "block_video",
+        "block_stentry",
+        "block_sthead",
+        "block_strow",
+        "block_simpletable",
+        "block_xref",
+        "block_fig",
+        "block_example",
+        "block_note",
+        "block_fallback",
+        "block_audio",
+        "block_dd",
+        "block_dlentry",
+        "block_dl",
+        "block_li",
+        "block_ul",
+        "block_section",
+        "block_fn",
+        "block_div",
+        "block_body",
+        "block_topic",
+        "doc",
+        "block_navtitle",
+        "block_keytext",
+        "block_topicmeta",
+        "block_topicref",
+        "block_keydef",
+        "block_map",
     ];
 
     expect(nodeNames).to.have.members(expectedNodes);
@@ -161,13 +211,13 @@ describe('Function schema()', () => {
     }
 
     // topic node
-    expect(nodesObject['topic'].content).to.equal('title shortdesc? prolog? body?');
+    expect(nodesObject['block_topic'].content).to.equal('block_title block_shortdesc? block_prolog? block_body?');
 
     // dd node
-    expect(nodesObject['dd'].content).to.equal('list_blocks*');
+    expect(nodesObject['block_dd'].content).to.equal("(block_p|block_ul|block_ol|block_dl|block_pre|block_audio|block_video|block_example|block_simpletable|block_fig|block_note)*");
 
     // title node
-    expect(nodesObject['title'].content).to.equal('inline_noxref*');
+    expect(nodesObject['block_title'].content).to.equal("(text|em|ph|strong|tt|image)*");
   });
 
   it('returns a node spec with a schema-compliant inline property', () => {
@@ -179,13 +229,13 @@ describe('Function schema()', () => {
     }
 
     // topic node
-    expect(nodesObject['topic'].inline).to.equal(true);
+    expect(nodesObject['block_topic'].inline).to.equal(false);
 
     // dd node
-    expect(nodesObject['dd'].inline).to.equal(true);
+    expect(nodesObject['block_dd'].inline).to.equal(false);
 
     // title node
-    expect(nodesObject['title'].inline).to.equal(true);
+    expect(nodesObject['block_title'].inline).to.equal(false);
 
     // text node
     expect(nodesObject['text'].inline).to.equal(true);
@@ -200,7 +250,7 @@ describe('Function schema()', () => {
     }
 
     // topic node
-    expect(nodesObject['topic'].attrs).to.have.keys(
+    expect(nodesObject['block_topic'].attrs).to.have.keys(
       'id',
       'xmlns:ditaarch',
       'ditaarch:DITAArchVersion',
@@ -214,7 +264,7 @@ describe('Function schema()', () => {
     );
 
     // body node
-    expect(nodesObject['body'].attrs).to.have.keys(
+    expect(nodesObject['block_body'].attrs).to.have.keys(
       'parent',
       'dir',
       'xml:lang',
@@ -224,7 +274,7 @@ describe('Function schema()', () => {
     );
 
     // title node
-    expect(nodesObject['title'].attrs).to.have.keys(
+    expect(nodesObject['block_title'].attrs).to.have.keys(
       'parent',
       'dir',
       'xml:lang',

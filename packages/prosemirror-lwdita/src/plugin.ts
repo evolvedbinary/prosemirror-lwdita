@@ -22,6 +22,7 @@ import { redo, undo } from "prosemirror-history";
 import { MarkType, NodeType, Schema } from "prosemirror-model";
 import { Command, Plugin } from "prosemirror-state";
 import { Localization } from "@evolvedbinary/prosemirror-lwdita-localization";
+import { chainCommands, deleteSelection, joinBackward, selectNodeBackward } from "prosemirror-commands";
 
 /**
  * This is the entire DOM node of the Prosemirror editor that will be observed for DOM mutations
@@ -73,6 +74,12 @@ if (targetNode) {
   observer.observe(targetNode, config);
 }
 
+const customBackspace = chainCommands(
+  deleteSelection,
+  joinBackward,
+  selectNodeBackward
+);
+
 /**
  * Provide keyboard shortcuts for the editor
  *
@@ -96,6 +103,7 @@ export function shortcuts(localization: Localization, schema: Schema) {
     'Ctrl-y': redo,
     'Ctrl-Shift-z': redo,
     'Alt-p': insertImage(localization, schema.nodes.image),
+    'Backspace': customBackspace
   });
 }
 
@@ -258,6 +266,7 @@ export function menu(localization: Localization, schema: Schema, { start, before
       active: () => document.body.classList.contains('debug'),
     }, { label: 'Show debug info', class: 'ic-bug', css: 'color: #c81200' }),
   ];
+
   const toolbar:MenuElement[][] = [[
     commandItem(undo, { icon: {text: ""}, title: 'Undo', class: 'ic-undo' }),
     commandItem(redo, { icon: {text: ""}, title: 'Redo', class: 'ic-redo' }),
@@ -268,8 +277,8 @@ export function menu(localization: Localization, schema: Schema, { start, before
     markItem(schema.marks.sub, { icon: {text: ""}, title: 'Subscript', class: 'ic-subscript' }),
     markItem(schema.marks.sup, { icon: {text: ""}, title: 'Superscript', class: 'ic-superscript' }),
   ], [
-    insertItem(schema.nodes.ol, { icon: {text: ""}, title: 'Ordered list', class: 'ic-olist' }),
-    insertItem(schema.nodes.ul, { icon: {text: ""}, title: 'Unordered list', class: 'ic-ulist' }),
+    insertItem(schema.nodes.block_ol, { icon: {text: ""}, title: 'Ordered list', class: 'ic-olist' }),
+    insertItem(schema.nodes.block_ul, { icon: {text: ""}, title: 'Unordered list', class: 'ic-ulist' }),
     insertImageItem(localization, schema.nodes.image, { icon: {text: ""}, title: 'Insert image', class: 'ic-image' }),
   ]];
   if (!start) {
