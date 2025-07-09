@@ -33,7 +33,8 @@ import {
   processRequest,
   fetchAndTransform,
   URLParams,
-  Json
+  Json,
+  suggestionPlugin
 } from "@evolvedbinary/prosemirror-lwdita";
 import { createLocalization } from "@evolvedbinary/prosemirror-lwdita-localization";
 
@@ -98,6 +99,7 @@ function renderProsemirrorDocument(jsonDoc: Record<string, Json>, urlParams: URL
         // history plugin comes from prosemirror-history
         history(),
         // these were custom plugins check the prosemirror-lwdita/src/plugin.ts file
+        suggestionPlugin,
         shortcuts(localization, schemaObject),
         menu(localization, schemaObject, {
           end: [[
@@ -113,9 +115,11 @@ function renderProsemirrorDocument(jsonDoc: Record<string, Json>, urlParams: URL
       ]
     })
     // create a new EditorView with the dom element and the state
-    new EditorView(domEl, {
+    const view = new EditorView(domEl, {
       state,
     });
+
+    window.editorView = view;
   }
 
   // TODO handled the case where we can not render the editor
