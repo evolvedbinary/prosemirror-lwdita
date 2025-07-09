@@ -76,13 +76,13 @@ export const transformGitHubDocumentToProsemirrorJson = async (rawDocument: stri
  * @param branch - The branch from which to fetch the document.
  * @returns A promise that resolves to the transformed ProseMirror JSON document.
  */
-export const fetchAndTransform = async (config: Config, ghrepo: string, source: string, branch: string, referer: string) => {
+export const fetchAndTransform = async (config: Config, ghrepo: string, source: string, branch: string, referrer: string) => {
   const rawDoc = await fetchRawDocumentFromGitHub(config, ghrepo, source, branch);
   // update the document with the relative path
 
   const updatedDoc = rawDoc.replace(/href="([^"]+)"/g, (_match, url) => {
     // https://www.npmjs.com/package/urijs
-    return `href="${urijs(url).absoluteTo(referer).href()}"`;
+    return `href="${urijs(url).absoluteTo(referrer).href()}"`;
   });
 
   const jsonDoc = await transformGitHubDocumentToProsemirrorJson(updatedDoc);

@@ -74,7 +74,7 @@ async function entryPoint() {
   let loadJsonDoc = jsonDocLoader;
   // if the URL parameters are present, fetch the document from GitHub
   if(urlParams) {
-    loadJsonDoc = fetchAndTransform(config, urlParams.ghrepo, urlParams.source, urlParams.branch, urlParams.referer);
+    loadJsonDoc = fetchAndTransform(config, urlParams.ghrepo, urlParams.source, urlParams.branch, urlParams.referrer);
   }
 
   // render the prosemirror document
