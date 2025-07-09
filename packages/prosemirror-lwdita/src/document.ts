@@ -15,8 +15,9 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import { JDita } from "@evolvedbinary/lwdita-ast";
+import { getNodeClass, JDita } from "@evolvedbinary/lwdita-ast";
 import { IS_MARK, defaultNodeName } from "./schema";
+import { lwditaNodeNameToSchemaNodeName } from "./utils";
 
 /**
  * A JSON object that can be applied to ProseMirror document
@@ -60,7 +61,7 @@ export function deleteUndefined(object?: any) {
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const NODES: Record<string, (value: JDita, parent: JDita) => any> = {
-  video: (value) => {
+  video: (value, parent) => {
     // Create a new object with title and poster attributes, if they exist:
     // the desc and the video-poster children will be assigned as new attributes to the video element
     // undefined attributes will be removed
@@ -80,9 +81,9 @@ export const NODES: Record<string, (value: JDita, parent: JDita) => any> = {
     });
 
     // Return the video object with the new attributes and content
-    return { type: value.nodeName, attrs, content: content?.map(child => travel(child, value)) };
+    return { type: lwditaNodeNameToSchemaNodeName(value.nodeName, nodeAllowsMixedContent(parent.nodeName)), attrs, content: content?.map(child => travel(child, value)) };
   },
-  audio: (value) => {
+  audio: (value, parent) => {
     // Create a new object with a title attribute, if it exists:
     // the `desc` child will be assigned as a new attribute to the audio element,
     // undefined attributes will be removed
@@ -101,9 +102,9 @@ export const NODES: Record<string, (value: JDita, parent: JDita) => any> = {
     });
 
     // Return the audio object with the new attributes and content
-    return { type: value.nodeName, attrs, content: content?.map(child => travel(child, value)) };
+    return { type: lwditaNodeNameToSchemaNodeName(value.nodeName, nodeAllowsMixedContent(parent.nodeName)), attrs, content: content?.map(child => travel(child, value)) };
   },
-  image: (value) => {
+  image: (value, parent) => {
     if (value.children
       && value.children[0].nodeName === 'alt'
       && value.children[0]?.children
@@ -113,22 +114,38 @@ export const NODES: Record<string, (value: JDita, parent: JDita) => any> = {
         ...value.attributes,
         alt: value.children[0].children[0].content,
       });
-      const result = { type: 'image', attrs };
+      const result = { type: lwditaNodeNameToSchemaNodeName('image', nodeAllowsMixedContent(parent.nodeName)), attrs };
       return result;
     }
-    return defaultTravel(value);
+    return defaultTravel(value, parent);
   },
   text: (value: JDita) => ({ type: 'text', text: value.content, attrs: {} }),
 };
 
 /**
+ * Checks if the node allows mixed content
+ * @param value - The JDita node
+ * @returns true if the node allows mixed content
+ */
+function nodeAllowsMixedContent(nodeName: string): boolean {
+  if(nodeName === 'doc') {
+    return false;
+  }
+  const nodeClass = getNodeClass(nodeName);
+  const nodeInstance = new nodeClass({});
+  return nodeInstance.allowsMixedContent()
+}
+
+
+/**
  * Transforms the JDita document into a proper ProseMirror document
  *
  * @param value - The JDita node
+ * @param parent - The parent JDita node
  * @returns The transformed JDita node
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function defaultTravel(value: JDita): any {
+function defaultTravel(value: JDita, parent: JDita): any {
   // children will become content
   const content = value.children?.map(child => travel(child, value));
   // attributes will become attrs
@@ -136,7 +153,7 @@ function defaultTravel(value: JDita): any {
   // remove undefined attributes
   deleteUndefined(attrs);
   // node name will become type
-  const type = defaultNodeName(value.nodeName);
+  let type = defaultNodeName(value.nodeName);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let result: any;
   // IS_MARK is the array  `u, s, b, sup, sub`
@@ -146,6 +163,7 @@ function defaultTravel(value: JDita): any {
       result.marks = [{ type }]
     }
   } else {
+    type = lwditaNodeNameToSchemaNodeName(type, nodeAllowsMixedContent(parent.nodeName));
     result = {
       type,
       attrs,
