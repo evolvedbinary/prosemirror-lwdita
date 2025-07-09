@@ -66,7 +66,7 @@ export function getAndValidateParameterValues(url: string): 'invalidParams' | 'n
     }
   }
 
-  // Check if referer parameter is missing
+  // Check if referrer parameter is missing
   const hasMissingValues = parameters.some(({ value }) => value === null || value === '');
   const hasInvalidParams = validKeys.some(key => !params.has(key));
 
@@ -122,7 +122,6 @@ export function redirectToGitHubAppInstall(config: Config, parameters: URLParams
 export function showErrorPage(config: Config, errorType: string, referrer: string): void {
   const errorPageUrl = `${config.server.frontend.url}/error.html?error-type=${encodeURIComponent(errorType)}&referrer=${encodeURIComponent(referrer)}`;
   window.location.href = errorPageUrl;
-  throw new Error('Error page redirect');
 }
 
 /**
@@ -166,7 +165,7 @@ export function processRequest(config: Config, localization: Localization): unde
           if (errorParam) {
             const state = JSON.parse(atob(returnParams.state))
             // redirect the user to the error page and show the error message so he can try again
-            showErrorPage(config, 'authenticationError', state.referer);
+            showErrorPage(config, 'authenticationError', state.referrer);
           }
 
           exchangeOAuthCodeForAccessToken(config, localization, returnParams.code).then(({token, installation}) => {
@@ -178,7 +177,7 @@ export function processRequest(config: Config, localization: Localization): unde
           }).catch(e => {
             console.error(e);
             // redirect the user to the error page and show the error message so he can try again
-            showErrorPage(config, 'authenticationError', returnParams.referer);
+            showErrorPage(config, 'authenticationError', returnParams.referrer);
           });
 
           return JSON.parse(atob(returnParams.state));

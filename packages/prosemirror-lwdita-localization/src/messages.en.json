@@ -11,6 +11,10 @@
         "paragraphSuccess": "You can check your published changes here: ",
         "paragraphError": "Something went wrong with publishing your changes because of following error:"
     },
+    "info": {
+        "returnToReferrer": "Please click here to head back to the referrer page.",
+        "contactDocumentationTeam": "Please contact the documentation team, and relay the above error message."
+    },
     "error": {
         "invalidParameters": {
             "headline": "Invalid Request Parameters",
@@ -37,6 +41,7 @@
         "toastGitHubPublishNoEditorState": "Sorry, it seems there is nothing in the editor to save and publish. Please try again.",
         "toastGitHubUserEndpoint": "Sorry, an error occured while publishing the document. Please try again. The error: ",
         "toastGitHubToken": "Sorry, an error occured while publishing the document. Please try again. The error: ",
-        "toastGitHubPR": "Sorry, an error occured while publishing the document. Please try again. The error: "
+        "toastGitHubPR": "Sorry, an error occured while publishing the document. Please try again. The error: ",
+        "GitHubNoPr": "Sorry, an error occured while publishing the document. The error: "
     }
 }

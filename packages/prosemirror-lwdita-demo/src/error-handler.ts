@@ -38,11 +38,11 @@ export function handleError(localization: Localization) {
   errorBody.innerText = localization.t("error." + errorType + ".body");
 
   if(referrer) {
-    referrerLink.innerText = "Please click here to head back to the referrer page.";
+    referrerLink.innerText = localization.t("info.returnToReferrer");
     referrerLink.href = referrer;
     referrerLink.target = "_self";
   } else {
-    referrerLink.innerText = "Please contact the documentation team, and relay the above error message.";
+    referrerLink.innerText = localization.t("info.contactDocumentationTeam");
   }
 
 }

@@ -18,19 +18,19 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 // handle errors resulting from erronous URL parameters,
 describe('handle errors resulting from erronous URL parameters', () => {
   it('Missing required URL parameters', () => {
-    cy.visit('http://localhost:1234/?ghrepo=ghrepo&source=source&referer=referer');
+    cy.visit('http://localhost:1234/?ghrepo=ghrepo&source=source&referrer=referrer');
     // should be redirected to the error page
     cy.url().should('include', '/error.html');
     cy.get('#errorHeadline').should('have.text', 'Invalid Request Parameters');
     cy.get('#errorBody').should('have.text', `It looks like the parameters in your request are invalid or incomplete. Please refer to the maintainer's documentation for correct usage or contact the developer for further assistance.`);
   });
 
-  it('Missing referer URL parameter', () => {
+  it('Missing referrer URL parameter', () => {
     cy.visit('http://localhost:1234/?ghrepo=ghrepo&source=source&branch=branch');
     // should be redirected to the error page
     cy.url().should('include', '/error.html');
     cy.get('#errorHeadline').should('have.text', 'Invalid Request Parameters');
-    cy.get('#refererLink').should('have.text', `Please contact the documentation team, and relay the above error message.`);
+    cy.get('#referrerLink').should('have.text', `Please contact the documentation team, and relay the above error message.`);
   });
 });
 
@@ -47,7 +47,7 @@ describe('handle authentication errors', () => {
       }).as('githubOAuth');
   
       // Visit the app page where the OAuth flow starts
-      cy.visit('http://localhost:1234/?ghrepo=evolvedbinary/prosemirror-lwdita&source=packages/prosemirror-lwdita-demo/example-xdita/02-short-file.xml&branch=main&referer=https://petal.evolvedbinary.com/');
+      cy.visit('http://localhost:1234/?ghrepo=evolvedbinary/prosemirror-lwdita&source=packages/prosemirror-lwdita-demo/example-xdita/02-short-file.xml&branch=main&referrer=https://petal.evolvedbinary.com/');
   
       // Wait for the interception to occur
       cy.wait('@githubOAuth');

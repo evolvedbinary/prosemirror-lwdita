@@ -42,7 +42,7 @@ export const fetchRawDocumentFromGitHub = async (config: Config, urlParams: URLP
   const response = await fetch(url);
 
   if (!response.ok) {
-    showErrorPage(config, 'fileNotFoundError', urlParams.referer);
+    showErrorPage(config, 'fileNotFoundError', urlParams.referrer);
   }
 
   return response.text();
@@ -86,7 +86,7 @@ export const fetchAndTransform = async (config: Config, urlParams: URLParams) =>
     const jsonDoc = await transformGitHubDocumentToProsemirrorJson(updatedDoc);
     return jsonDoc;
   } catch (_error) {
-    showErrorPage(config, 'incompatibleXditaFile', urlParams.referer);
+    showErrorPage(config, 'incompatibleXditaFile', urlParams.referrer);
   }
 };
 
@@ -186,7 +186,7 @@ export const createPrFromContribution = async (config: Config, localization: Loc
 
   const json = await response.json();
   if(!json.url) {
-    throw new Error("Unable to open a new PR.")
+    throw new Error(localization.t("error.toastGitHubPR") + json.error);
   }
   return json.url;
 };
