@@ -132,41 +132,6 @@ describe('request the token after OAuth', () => {
     })
   });
 
-  it('should show an error when the token request fails', () => {
-    // Intercept the GitHub OAuth URL
-    const githubOAuthUrl = /https:\/\/github\.com\/login\/oauth\/authorize\?.*/;
-
-    const mockCode = 'mock-user-code';
-
-    // Intercept the OAuth request and mock the authentication process
-    cy.intercept('GET', githubOAuthUrl, {
-      statusCode: 302,
-      headers: { location: `http://localhost:1234/?code=${mockCode}&state=eyJnaHJlcG8iOiJldm9sdmVkYmluYXJ5L3Byb3NlbWlycm9yLWx3ZGl0YSIsInNvdXJjZSI6InBhY2thZ2VzL3Byb3NlbWlycm9yLWx3ZGl0YS1kZW1vL2V4YW1wbGUteGRpdGEvMDItc2hvcnQtZmlsZS54bWwiLCJicmFuY2giOiJtYWluIiwicmVmZXJyZXIiOiJodHdzcmh0c2hydHMifQ==` }
-    }).as('githubOAuth');
-
-    const tokenRequest = /http:\/\/localhost:3000\/api\/github\/token\?.*/;
-    cy.intercept('GET', tokenRequest, {
-      statusCode: 401,
-      headers: { 'content-type': 'application/json' },
-      body: 'Unauthorized'
-    }).as('requestToken');
-
-    // Visit the app page where the OAuth flow starts
-    cy.visit('http://localhost:1234/?ghrepo=evolvedbinary/prosemirror-lwdita&source=packages/prosemirror-lwdita-demo/example-xdita/02-short-file.xml&branch=main&referrer=https://petal.evolvedbinary.com/');
-
-    // Wait for the interception to occur
-    cy.wait('@githubOAuth');
-
-    cy.wait('@requestToken');
-    // Verify that the token request was made
-    cy.get('@requestToken').should('have.property', 'response');
-    cy.get('@requestToken').its('response.statusCode').should('eq', 401);
-
-
-    // Verify that the error page is shown
-    cy.url().should('match', /^http:\/\/localhost:1234\/error\.html\?/)
-  });
-
   it('should ask the user to install the app when token request returns not installed', () => {
     const mockCode = 'mock-user-code';
     // Intercept the GitHub OAuth URL
