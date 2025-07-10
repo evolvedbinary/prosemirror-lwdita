@@ -101,6 +101,31 @@ describe('inserts a Paragraph', () => {
   })
 });
 
+describe('Splitting a paragraph', () => {
+  beforeEach(() => {
+    window.localStorage.setItem('file', `<?xml version="1.0" encoding="UTF-8"?>
+  <!DOCTYPE topic PUBLIC "-//OASIS//DTD LIGHTWEIGHT DITA Topic//EN" "lw-topic.dtd">
+  <topic id="program">
+    <title>Test File 2</title>
+    <body>
+      <section>
+        <p>A test paragraph.</p>
+      </section>
+    </body>
+  </topic>`);
+  })
+
+  it('Can split a paragraph into two paragraphs', () => {
+    cy.visit('http://localhost:1234/')
+      .get('#editor > div > div.ProseMirror > article > div > section > p')
+      .click()
+    cy.focused()
+      .type('{leftArrow}{leftArrow}{leftArrow}{leftArrow}{enter}') // hit left arrow 4 times to move the cursor to the middle of the paragraph, then hit enter
+      .get('#editor > div > div.ProseMirror > article > div > section > p')
+      .should('have.length', 2)
+  });
+});
+
 describe('Inserting sections', () => {
   it('Can insert a new section at the end of another section', () => {
 
