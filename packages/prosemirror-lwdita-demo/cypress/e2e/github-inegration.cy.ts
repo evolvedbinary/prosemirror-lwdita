@@ -286,7 +286,7 @@ describe('PR dialog', () => {
     cy.get('#okButton').click();
 
     // check for the processing notification
-    cy.get(".toastify.toast--info").should("have.text", "Submitting your PR... Please wait.")
+    cy.get(".toastify").should("have.text", "Submitting your PR... Please wait.")
 
     // Wait for the requests to complete
     cy.wait('@getUserInfo');

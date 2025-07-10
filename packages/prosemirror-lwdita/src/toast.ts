@@ -33,13 +33,20 @@ import { Localization } from "@evolvedbinary/prosemirror-lwdita-localization";
  * @param message - Message to display
  * @param type - Type of toast
  */
-export function showToast(message: string, type: 'success' | 'error' | 'warning' | 'info') {
+export function showToast(message: string, type: 'success' | 'error' | 'warning' | 'info' | 'status') {
+  let className = 'toast';
+  if(type !== 'status') {
+    className += ` toast--${type}`;
+  }
   const toast = Toastify({
     text: message,
     duration: 5000,
     gravity: 'top',
     position: 'right',
-    className: `toast toast--${type}`,
+    style: {
+      background: type === 'status' ? '#FFBF00' : "",
+      color: 'white'
+    }
   }).showToast();
 }
 
