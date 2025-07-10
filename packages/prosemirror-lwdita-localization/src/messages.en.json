@@ -13,7 +13,8 @@
     },
     "info": {
         "returnToReferrer": "Please click here to head back to the referrer page.",
-        "contactDocumentationTeam": "Please contact the documentation team, and relay the above error message."
+        "contactDocumentationTeam": "Please contact the documentation team, and relay the above error message.",
+        "prPushed": "Submitting your PR... Please wait."
     },
     "error": {
         "invalidParameters": {

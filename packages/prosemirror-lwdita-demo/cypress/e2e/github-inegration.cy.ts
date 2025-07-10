@@ -259,6 +259,40 @@ describe('PR dialog', () => {
     cy.focused().should('have.attr', 'id', 'titleInput');
   });
 
+  it("should notify that PR is being processed", () => {
+    const url = `http://localhost:3000/api/github/user`;
+    cy.intercept('GET', url, {
+      statusCode: 200,
+      headers: { 'content-type': 'application/json' },
+      body: {
+        login: 'mock-user'
+      }
+    }).as('getUserInfo');
+
+    // Intercept the PR request
+    const prRequest = `http://localhost:3000/api/github/integration`;
+    cy.intercept('POST', prRequest, {
+      statusCode: 200,
+      delay: 2000,
+      headers: { 'content-type': 'application/json' },
+      body: {
+        url: 'http-pr-url'
+      }
+    }).as('prRequest');
+
+    cy.get('#publishFile').click();
+    cy.get('#titleInput').type('mock-title');
+    cy.get('#descField').type('mock-description');
+    cy.get('#okButton').click();
+
+    // check for the processing notification
+    cy.get(".toastify").should("have.text", "Submitting your PR... Please wait.")
+
+    // Wait for the requests to complete
+    cy.wait('@getUserInfo');
+    cy.wait('@prRequest');
+  })
+
   it('should show the success message when the PR is created', () => {
     // mock the user data request
     const url = `http://localhost:3000/api/github/user`;
