@@ -21,6 +21,7 @@ import fetchMock from 'fetch-mock';
 import { shortXdita, shortXditaProsemirroJson } from './test-utils';
 import { MockConfig } from './mock.config';
 import { createLocalization } from '@evolvedbinary/prosemirror-lwdita-localization';
+import { Global } from '../src/global'
 
 const config = new MockConfig();
 const localization = createLocalization();
@@ -127,15 +128,6 @@ describe('getUserInfo', () => {
 });
 
 describe('createPrFromContribution', () => {
-  beforeEach(() => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const window = global as any;
-    Object.defineProperty(window, 'localStorage', {
-      value: {
-        getItem: () => 'mock-token',
-      },
-    });
-  });
   afterEach(() => {
     fetchMock.restore();
   });
@@ -162,6 +154,7 @@ describe('createPrFromContribution', () => {
         login: petalBotUser,
       },
     });
+    (global as Global).token = token;
     await createPrFromContribution(config, localization, ghrepo, source, branch, changedDocument, title, description);
     const lastCall = fetchMock.lastCall(config.server.api.baseUrl + config.server.api.endpoint.integration) as fetchMock.MockCall;
     if (!lastCall) {

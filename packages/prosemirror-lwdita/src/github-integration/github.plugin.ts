@@ -21,6 +21,7 @@ import { showErrorPage, URLParams } from "./request";
 import { Config } from "../config";
 import { Localization } from "@evolvedbinary/prosemirror-lwdita-localization";
 import urijs from "urijs";
+import { Global } from '../global'
 
 /**
  * Fetches the raw content of a document from a GitHub repository.
@@ -147,7 +148,9 @@ export const getUserInfo = async (config: Config, _localization: Localization, t
  * @returns A promise that resolves when the document has been published.
  */
 export const createPrFromContribution = async (config: Config, localization: Localization, ghrepo: string, source: string, branch: string, changedDocument: string, title: string, desc: string): Promise<string> => {
-  const authenticatedUserInfo = await getUserInfo(config, localization, localStorage.getItem('token') as string);
+  const token = (global as Global).token;
+  
+  const authenticatedUserInfo = await getUserInfo(config, localization, token);
 
   const owner = ghrepo.split('/')[0];
   const repo = ghrepo.split('/')[1];
@@ -162,8 +165,7 @@ export const createPrFromContribution = async (config: Config, localization: Loc
     content
   };
   const body = `${desc}` + config.git.commitMessageSuffix;
-  // get the token from the local storage
-  const token = localStorage.getItem('token');
+
   // make a post request to  /api/github/integration
   const response = await fetch(config.server.api.baseUrl + config.server.api.endpoint.integration, {
     method: 'POST',
