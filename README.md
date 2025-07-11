@@ -11,6 +11,11 @@ This tool generates ProseMirror documents from JDITA objects. It also provides S
 
 The implemented schema complies with the LwDITA specs v0.3.0.2, see: [https://github.com/oasis-tcs/dita-lwdita/releases/tag/v0.3.0.2](https://github.com/oasis-tcs/dita-lwdita/releases/tag/v0.3.0.2)
 
+## Connecting your documentation page to Petal
+Petal offers an way to directly edit your documentation via our API, as show in our [Declarative Amsterdam presentation](https://www.youtube.com/watch?v=Ia5Vb-aA2jk)
+
+
+Please follow these [instructions](./install-guide-for-documentation-owners.md)
 ## Usage
 
 Add the library to your project using Yarn or Npm:
