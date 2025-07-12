@@ -20,9 +20,10 @@ import { menuBar, MenuElement, MenuItem, MenuItemSpec } from "prosemirror-menu";
 import { toggleMark, newLine, hasMark, insertNode, insertImage, imageInputOverlay, createNode } from "./commands";
 import { redo, undo } from "prosemirror-history";
 import { MarkType, NodeType, Schema } from "prosemirror-model";
-import { Command, Plugin } from "prosemirror-state";
+import { Command, EditorState, Plugin } from "prosemirror-state";
 import { Localization } from "@evolvedbinary/prosemirror-lwdita-localization";
 import { chainCommands, deleteSelection, joinBackward, selectNodeBackward } from "prosemirror-commands";
+import { debugPluginKey, toggleDebugCommand } from "./attributes-plugin";
 
 /**
  * This is the entire DOM node of the Prosemirror editor that will be observed for DOM mutations
@@ -153,9 +154,9 @@ function markItem(mark: MarkType, props: Partial<MenuItemSpec> = {}): MenuElemen
  * Menu item callbacks
  */
 interface SimpleItemCallbacks {
-  call: () => void;
-  enable?: () => boolean;
-  active?: () => boolean;
+  call: () => Command;
+  active?: (state: EditorState) => boolean;
+  enable?: (state: EditorState) => boolean;
 }
 
 /**
@@ -180,15 +181,15 @@ interface SimpleItemCallbacks {
  * @param props - MenuItem properties
  * @returns The MenuItem object
  */
-function simpleCommand(callbacks: SimpleItemCallbacks | (() => void), props: Partial<MenuItemSpec> = {}): MenuElement {
-  if (typeof callbacks === 'function') {
-    callbacks = { call: callbacks };
-  }
+function simpleCommand(
+  callbacks: SimpleItemCallbacks,
+  props: Partial<MenuItemSpec> = {}
+): MenuElement {
   return new MenuItem({
     ...props,
     run: (state, dispatch) => {
-      (callbacks as SimpleItemCallbacks).call();
-      dispatch(state.tr);
+      const command = callbacks.call(); // must return a command function
+      return command(state, dispatch);
     },
     enable: callbacks.enable,
     active: callbacks.active,
@@ -249,7 +250,14 @@ export interface Additions {
   after?: MenuElement[][];
   end?: MenuElement[][];
 }
-
+function isDebugActive(state: EditorState): boolean {
+  try {
+    return !!debugPluginKey.getState(state)?.active;
+  } catch {
+    console.log("Debug plugin is not active, please check if the plugin is included in the editor plugins array.");
+    return false;
+  }
+}
 /**
  * Create a menu bar for the editor
  *
@@ -259,13 +267,17 @@ export interface Additions {
  * @returns menuBar
  */
 export function menu(localization: Localization, schema: Schema, { start, before, after, end}: Additions = {}) {
-  const debug = [
-    separator(),
-    simpleCommand({
-      call: () => document.body.classList.toggle('debug'),
-      active: () => document.body.classList.contains('debug'),
-    }, { label: 'Show debug info', class: 'ic-bug', css: 'color: #c81200' }),
-  ];
+const debug = [
+  separator(),
+  simpleCommand({
+    call: () => toggleDebugCommand(),
+    active: isDebugActive,
+  }, {
+    label: 'Show debug info',
+    class: 'ic-bug',
+    css: 'color: #c81200'
+  }),
+];
 
   const toolbar:MenuElement[][] = [[
     commandItem(undo, { icon: {text: ""}, title: 'Undo', class: 'ic-undo' }),

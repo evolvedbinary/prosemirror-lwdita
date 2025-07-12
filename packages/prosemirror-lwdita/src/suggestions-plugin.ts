@@ -214,7 +214,7 @@ function getSuggestions(view: EditorView): Suggestion[][] {
  * @param $from - The resolved position from which to start the path.
  * @returns An array of node type names representing the path to the root.
  */
-function pathToRoot($from: ResolvedPos) {
+export function pathToRoot($from: ResolvedPos) {
   const path = [];
   let index = 0;
   while($from.node($from.depth - index).type.name !== 'doc') {
