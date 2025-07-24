@@ -84,3 +84,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 .ic-download:before {
   content: "\ea36";
 }
+
+.ic-tree:before {
+  content: "\e9bc";
+}

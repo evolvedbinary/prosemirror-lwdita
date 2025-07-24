@@ -273,9 +273,9 @@ const debug = [
     call: () => toggleDebugCommand(),
     active: isDebugActive,
   }, {
-    label: 'Show debug info',
-    class: 'ic-bug',
-    css: 'color: #c81200'
+    label: " Show structure",
+    class: 'ic-tree',
+    css: 'color: #555'
   }),
 ];
 

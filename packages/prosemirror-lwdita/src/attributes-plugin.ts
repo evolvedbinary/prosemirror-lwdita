@@ -49,8 +49,7 @@ export const debugPlugin = new Plugin({
         }
 
         const $from = view.state.selection.$from;
-        const node = $from.node();
-        renderAttributesEditor(node, $from, view);
+        renderAttributesEditor($from, view);
 
       }
     };
@@ -75,7 +74,7 @@ function getNodeAttributes(node: Node): Record<string, string> {
   return attributes;
 }
 
-function renderAttributesEditor(node: Node, $from: ResolvedPos, view: EditorView): void {
+function renderAttributesEditor($from: ResolvedPos, view: EditorView): void {
   //if the panel is already open, remove it
   const existingPanel = document.getElementById('attributes-editor-panel');
   if (existingPanel) {
@@ -84,18 +83,27 @@ function renderAttributesEditor(node: Node, $from: ResolvedPos, view: EditorView
   const panel = document.createElement('div');
   panel.id = 'attributes-editor-panel';
   panel.className = 'debug-panel';
-  panel.innerHTML = '<h1>Edit attributes</h1>';
 
   document.body.appendChild(panel);
 
+  const node = $from.node();
 
-  if (node) {
+  if (node) { 
     // get attributes of the node from lwdita library
     const attrs = getNodeAttributes(node);
+    panel.innerHTML = `<h1>\`${getNodeLabel(node)}\` attributes</h1>`;
     // for each attribute, create an input and label
-    const path = pathToRoot($from).reverse().map((nodeName) => schemaNodeNameToLwditaNodeName(nodeName)).map(e => `<span>${e}</span>`).join(' > ');
-    panel.innerHTML += `<h1>${getNodeLabel(node)} element</h1>`;
-    panel.innerHTML += `<h2>${path}</h2>`;
+    let path = pathToRoot($from).reverse().map((nodeName) => schemaNodeNameToLwditaNodeName(nodeName));
+    path = path.map((name, idx) => {
+      if (idx === path.length - 1) {
+        return `<span class="breadcrumb" >${getNodePosRelativeToParent($from, name)}</span>`;
+      }
+      return `<span class="breadcrumb" >${name}</span>`;
+    });
+
+    panel.innerHTML += `<h1>Location:</h1>`;
+    panel.innerHTML += `<h2>${path.join(' / ')}</h2>`;
+
     if (Object.keys(attrs).length > 0) {
       const attributesHtml = renderAttributes(attrs);
       panel.innerHTML += `<div class="attributes">${attributesHtml}</div>`;
@@ -106,17 +114,13 @@ function renderAttributesEditor(node: Node, $from: ResolvedPos, view: EditorView
       const parentElements = panel.querySelectorAll('h2 > span');
       parentElements.forEach((element, index) => {
         element.addEventListener('click', () => {
-          const distanceFromNode = parentElements.length - index - 1
-          if (distanceFromNode < 1) {
-            console.warn('Distance from node is less than 1, cannot resolve parent node.');
-            return;
-          }
-          const parentNode = $from.node(-distanceFromNode);
-          const pos = $from.before() - distanceFromNode + 1; // Adjust position to the start of the parent node
-          const resolvedPos = view.state.doc.resolve(pos);
+          const distanceFromNode = parentElements.length - index -2; 
 
-          if (parentNode) {
-            renderAttributesEditor(parentNode, resolvedPos, view);
+          const ancestor = getAncestorAtDistance($from, distanceFromNode);
+          
+          if (ancestor) {
+            const resolvedPos = view.state.doc.resolve(ancestor.pos);
+            renderAttributesEditor(resolvedPos, view);
           }
         });
       });
@@ -168,8 +172,9 @@ function destroy() {
 
 function renderAttributes(attrs: Record<string, string>): string {
   let attributesHtml = ``;
+  const sortedAttrs = Object.keys(attrs).sort((a, b) => getAttributeOptimalIndex(a) - getAttributeOptimalIndex(b));
 
-  for (const attr of Object.keys(attrs)) {
+  for (const attr of sortedAttrs) {
     switch (attr) {
       case 'class': // Skip the class attribute
       case 'parent': // Skip the parent attribute
@@ -198,4 +203,41 @@ function renderAttributes(attrs: Record<string, string>): string {
   }
 
   return attributesHtml;
+}
+
+function getAttributeOptimalIndex(attr: string): number {
+  // Define the optimal order of attributes
+  // This order is based on the common usage and importance of attributes in lwdita
+  const attributeOptimalOrder = [
+    `id`, `conref`, //%reuse;
+    `keyref`, // keyref
+    `href`, // href
+    `type`, // note
+    `colspan`, `rowspan`, `headers`, // table;
+    `autoplay`, `controls`, `loop`, `muted`, `tabindex`, // media;
+    `dir`, `xml:lang`, `translate`, //%localization;
+    `format`, `scope`, //%reference-content;
+    `props`, //%filters;
+    `outputclass`
+  ];
+  return attributeOptimalOrder.indexOf(attr);
+}
+
+function getNodePosRelativeToParent($from: ResolvedPos, name: string): string {
+  const index = $from.index(-1) + 1;
+
+  if(index > 1) {
+    return `${name}[${index}]`;
+  }
+  return `${name}`;
+}
+
+
+function getAncestorAtDistance($pos: ResolvedPos, distance: number) {
+  const depth = $pos.depth - distance;
+  if (depth < 0) return null;
+
+  const node = $pos.node(depth);
+  const pos = depth > 0 ? $pos.before(depth) : 0;
+  return { node, pos, depth };
 }
