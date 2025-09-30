@@ -105,7 +105,8 @@ function renderAttributesEditor($from: ResolvedPos, view: EditorView): void {
     panel.innerHTML += `<h2>${path.join(' / ')}</h2>`;
 
     if (Object.keys(attrs).length > 0) {
-      const attributesHtml = renderAttributes(attrs);
+      const ids = getNodesWithId(view); // Get all existing IDs in the document
+      const attributesHtml = renderAttributes(attrs, ids);
       panel.innerHTML += `<div class="attributes">${attributesHtml}</div>`;
 
       panel.innerHTML += `<button id="save-attributes">Save Attributes</button>`;
@@ -140,6 +141,12 @@ function renderAttributesEditor($from: ResolvedPos, view: EditorView): void {
             }
 
           });
+
+          panel.querySelectorAll('.attribute select').forEach((select) => {
+            if (!select.id) return; // Skip if no id
+            if(!(select as HTMLSelectElement).value) return; // Skip if no value
+            updatedAttrs[select.id] = `#${(select as HTMLSelectElement).value}`;
+          });
           const tr = view.state.tr.setNodeMarkup($from.before(), undefined, updatedAttrs);
           view.dispatch(tr);
         });
@@ -170,7 +177,13 @@ function destroy() {
   }
 }
 
-function renderAttributes(attrs: Record<string, string>): string {
+/**
+ * Render the attributes as HTML inputs
+ * @param attrs - All attributes of the node
+ * @param ids - All existing IDs in the document (used for conref dropdown)
+ * @returns html string
+ */
+function renderAttributes(attrs: Record<string, string>, ids: string[]): string {
   let attributesHtml = ``;
   const sortedAttrs = Object.keys(attrs).sort((a, b) => getAttributeOptimalIndex(a) - getAttributeOptimalIndex(b));
 
@@ -179,6 +192,17 @@ function renderAttributes(attrs: Record<string, string>): string {
       case 'class': // Skip the class attribute
       case 'parent': // Skip the parent attribute
         continue;
+      case 'conref':
+        attributesHtml += `<div class="attribute">
+                  <label for="conref">conref:</label>
+                    <select id="conref" name="conref">`
+        attributesHtml += `<option value="" ${!attrs[attr] ? 'selected' : ''}>-- none --</option>`;
+        attributesHtml += ids.map((id) => {
+          return `<option value="${id}" ${attrs[attr] === `#${id}` ? 'selected' : ''}>${id}</option>`;
+        }).join('\n');
+        attributesHtml += `</select>
+                </div>`;
+        break;
 
       case 'translate':
         attributesHtml += `<div class="attribute">
@@ -240,4 +264,15 @@ function getAncestorAtDistance($pos: ResolvedPos, distance: number) {
   const node = $pos.node(depth);
   const pos = depth > 0 ? $pos.before(depth) : 0;
   return { node, pos, depth };
+}
+
+
+function getNodesWithId(view: EditorView): string[] {
+  const ids: string[] = [];
+  view.state.doc.descendants((node) => {
+    if (node.attrs && node.attrs.id) {
+      ids.push(node.attrs.id);
+    }
+  });
+  return ids;
 }
