@@ -28,6 +28,7 @@ describe('Attributes Plugin', () => {
         <p id="p1">A test paragraph.</p>
         <p>Second paragraph.</p>
         <p>Third paragraph.</p>
+        <p conref="#p1">Fourth paragraph.</p>
       </section>
     </body>
   </topic>`);
@@ -121,4 +122,41 @@ describe('Attributes Plugin', () => {
       .click()
       .get('#dir').should('have.value', 'ltr')
   })
+
+  it('Should show conref attributes when they exist', () => {
+    cy.visit('http://localhost:1234/')
+      .get("#editor > div > div.ProseMirror > article > div > section > p:nth-child(4)")
+      .click()
+    cy.get('#editor > div > div.ProseMirror-menubar  div.ic-tree')
+      .click()
+      .get('#attributes-editor-panel > h2').should('have.text', 'topic / body / section / p[4]')
+      .get('#conref').should('have.value', 'p1')
+  });
+
+  it('Should know none when no conref is set', () => {
+    cy.visit('http://localhost:1234/')
+      .get("#editor > div > div.ProseMirror > article > div > section > p:nth-child(1)")
+      .click()
+    cy.get('#editor > div > div.ProseMirror-menubar  div.ic-tree')
+      .click()
+      .get('#attributes-editor-panel > h2').should('have.text', 'topic / body / section / p')
+      .get('select#conref option:selected').should('have.text', '-- none --')
+  });
+
+  it('Should set conref attribute of the second paragraph', () => {
+    cy.visit('http://localhost:1234/')
+      .get("#editor > div > div.ProseMirror > article > div > section > p:nth-child(2)")
+      .click()
+    cy.get('#editor > div > div.ProseMirror-menubar  div.ic-tree')
+      .click()
+      .get('#attributes-editor-panel > h2').should('have.text', 'topic / body / section / p[2]')
+      .get('select#conref').select('p1')
+      .get('#save-attributes')
+      .click()
+      .get('select#conref').should('have.value', 'p1')
+    cy.get('#saveFile')
+      .click()
+      .readFile('cypress/downloads/Petal.xml')
+      .should('contain', '<p conref="#p1">Second paragraph.</p>');
+  });
 });
