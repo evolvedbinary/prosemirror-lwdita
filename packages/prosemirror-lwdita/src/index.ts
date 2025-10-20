@@ -26,4 +26,4 @@ export * from './toast';
 export * from './github-integration/github.plugin';
 export * from './config'
 export * from './suggestions-plugin';
-export * from './attributes-plugin';
+export * from './structure-plugin';

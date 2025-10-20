@@ -22,14 +22,14 @@ import { schemaNodeNameToLwditaNodeName } from "./utils";
 import { pathToRoot } from "./suggestions-plugin";
 import { getNodeClass } from "@evolvedbinary/lwdita-ast";
 
-export const debugPluginKey = new PluginKey('debugView');
+export const structurePluginKey = new PluginKey('structureView');
 
-export const debugPlugin = new Plugin({
-  key: debugPluginKey,
+export const structurePlugin = new Plugin({
+  key: structurePluginKey,
   state: {
     init: () => ({ active: false }),
     apply(tr, value) {
-      const meta = tr.getMeta(debugPluginKey);
+      const meta = tr.getMeta(structurePluginKey);
       if (meta?.toggle) {
         return { ...value, active: !value.active };
       }
@@ -41,8 +41,8 @@ export const debugPlugin = new Plugin({
     return {
       update(view) {
         // Update the panel visibility based on the plugin state
-        const { active } = debugPluginKey.getState(view.state);
-        document.body.classList.toggle('debug', active);
+        const { active } = structurePluginKey.getState(view.state);
+        document.body.classList.toggle('structure', active);
         if (!active) {
           destroy();
           return;
@@ -50,16 +50,15 @@ export const debugPlugin = new Plugin({
 
         const $from = view.state.selection.$from;
         renderAttributesEditor($from, view);
-
       }
     };
   },
 });
 
-export function toggleDebugCommand() {
+export function toggleStructurePluginCommand() {
   return (state: EditorState, dispatch?: (tr: Transaction) => void) => {
     if (dispatch) {
-      const tr = state.tr.setMeta(debugPluginKey, { toggle: true });
+      const tr = state.tr.setMeta(structurePluginKey, { toggle: true });
       dispatch(tr);
     }
     return true;
@@ -82,7 +81,6 @@ function renderAttributesEditor($from: ResolvedPos, view: EditorView): void {
   }
   const panel = document.createElement('div');
   panel.id = 'attributes-editor-panel';
-  panel.className = 'debug-panel';
 
   document.body.appendChild(panel);
 
@@ -170,7 +168,7 @@ function getNodeLabel(node: Node): string {
 
 function destroy() {
   
-  document.body.classList.remove('debug');
+  document.body.classList.remove('structure');
   const panel = document.getElementById('attributes-editor-panel');
   if (panel) {
     panel.remove();
@@ -196,6 +194,17 @@ function renderAttributes(attrs: Record<string, string>, ids: string[]): string 
         attributesHtml += `<div class="attribute">
                   <label for="conref">conref:</label>
                     <select id="conref" name="conref">`
+        attributesHtml += `<option value="" ${!attrs[attr] ? 'selected' : ''}>-- none --</option>`;
+        attributesHtml += ids.map((id) => {
+          return `<option value="${id}" ${attrs[attr] === `#${id}` ? 'selected' : ''}>${id}</option>`;
+        }).join('\n');
+        attributesHtml += `</select>
+                </div>`;
+        break;
+      case 'href':
+        attributesHtml += `<div class="attribute">
+                  <label for="href">href:</label>
+                    <select id="href" name="href">`
         attributesHtml += `<option value="" ${!attrs[attr] ? 'selected' : ''}>-- none --</option>`;
         attributesHtml += ids.map((id) => {
           return `<option value="${id}" ${attrs[attr] === `#${id}` ? 'selected' : ''}>${id}</option>`;
@@ -247,11 +256,40 @@ function getAttributeOptimalIndex(attr: string): number {
   return attributeOptimalOrder.indexOf(attr);
 }
 
-function getNodePosRelativeToParent($from: ResolvedPos, name: string): string {
-  const index = $from.index(-1) + 1;
+/**
+ * Get all sibling nodes of the parent node ignoring text nodes
+ * @param $from - resolved position 
+ * @returns all siblings of the parent node ignoring text nodes
+ */
+function getAllSiblings($from: ResolvedPos) {
+  // Get the parent node
+  const depth = $from.depth - 1 >= 0 ? $from.depth - 1 : 0;
+  const parent = $from.node(depth);
 
-  if(index > 1) {
-    return `${name}[${index}]`;
+  // Find the index of the current block node within that parent
+  const index = $from.index(depth);
+
+  const siblings: Node[] = [];
+  parent.forEach((node: Node) => siblings.push(node));
+
+  return {
+    allSiblings: siblings,
+    index,
+  };
+}
+
+function getNodePosRelativeToParent($from: ResolvedPos, name: string): string {
+  const siblings = getAllSiblings($from);
+  const { allSiblings, index } = siblings;
+  let count = 0;
+  for (let i = 0; i < index; i++) {
+    if (schemaNodeNameToLwditaNodeName(allSiblings[i].type.name) === name) {
+      count++;
+    }
+  }
+
+  if (count > 0) {
+    return `${name}[${count + 1}]`;
   }
   return `${name}`;
 }

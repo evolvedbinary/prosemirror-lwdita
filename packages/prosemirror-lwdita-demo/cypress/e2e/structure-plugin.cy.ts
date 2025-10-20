@@ -15,7 +15,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-describe('Attributes Plugin', () => {
+describe('Structure Plugin', () => {
   beforeEach(() => {
     
     window.localStorage.setItem('welcomeNoteConfirmed', 'true')
@@ -33,7 +33,7 @@ describe('Attributes Plugin', () => {
     </body>
   </topic>`);
   })
-  it('should open the attributes plugin', () => {
+  it('should open the structure plugin', () => {
     cy.visit('http://localhost:1234/')
       .get('#editor > div > div.ProseMirror-menubar  div.ic-tree')
       .click()
@@ -158,5 +158,37 @@ describe('Attributes Plugin', () => {
       .click()
       .readFile('cypress/downloads/Petal.xml')
       .should('contain', '<p conref="#p1">Second paragraph.</p>');
+  });
+
+  it('Should show the correct path for the nodes in the document', () => {
+    window.localStorage.setItem('file', `<?xml version="1.0" encoding="UTF-8"?>
+  <!DOCTYPE topic PUBLIC "-//OASIS//DTD LIGHTWEIGHT DITA Topic//EN" "lw-topic.dtd">
+  <topic id="program">
+    <title>Test File 2</title>
+    <body>
+      <section id='section'>
+        <p>A test paragraph.</p>
+        <p>Second paragraph.</p>
+        <p>Third paragraph.</p>
+        <p>Fourth paragraph.</p>
+        <p>Fifth paragraph.</p>
+        <ul>
+          <li><p>First item</p></li>
+          <li><p>Second item</p></li>
+        </ul>
+        <p>Sixth paragraph.</p>
+        <p>Seventh paragraph.</p>
+      </section>
+    </body>
+  </topic>`);
+    cy.visit('http://localhost:1234/')
+      .get("#editor > div > div.ProseMirror > article > div > section > p:nth-child(7)")
+      .click()
+    cy.get('#editor > div > div.ProseMirror-menubar  div.ic-tree')
+      .click()
+      .get('#attributes-editor-panel > h2').should('have.text', 'topic / body / section / p[6]')
+      .get("#editor > div > div.ProseMirror > article > div > section > ul > li:nth-child(2)")
+      .click()
+      .get('#attributes-editor-panel > h2').should('have.text', 'topic / body / section / ul / li / p')
   });
 });

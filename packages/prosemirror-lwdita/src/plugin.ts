@@ -23,7 +23,7 @@ import { MarkType, NodeType, Schema } from "prosemirror-model";
 import { Command, EditorState, Plugin } from "prosemirror-state";
 import { Localization } from "@evolvedbinary/prosemirror-lwdita-localization";
 import { chainCommands, deleteSelection, joinBackward, selectNodeBackward } from "prosemirror-commands";
-import { debugPluginKey, toggleDebugCommand } from "./attributes-plugin";
+import { structurePluginKey, toggleStructurePluginCommand } from "./structure-plugin";
 
 /**
  * This is the entire DOM node of the Prosemirror editor that will be observed for DOM mutations
@@ -164,17 +164,17 @@ interface SimpleItemCallbacks {
  * when clicked, executes a command
  *
  * @remarks
- * This instance of MenuItem is used for the "Debug Info" icon button in the menu
+ * This instance of MenuItem is used for the "Structure Info" icon button in the menu
  *
  * @example of the MenuItem object:
  * ```
- * {spec: {label: 'Show debug info', class: 'ic-bug', css: 'color: #c81200', enable: undefined, run}}
+ * {spec: {label: 'Show structure info', class: 'ic-bug', css: 'color: #c81200', enable: undefined, run}}
  * ```
  *
  * @example of the callback functions:
  * ```
- * active:() => document.body.classList.contains('debug')
- * call:() => document.body.classList.toggle('debug')
+ * active:() => document.body.classList.contains('structure')
+ * call:() => document.body.classList.toggle('structure')
  * ```
  *
  * @param callbacks - callbacks `active`, `call`, e.g.
@@ -250,11 +250,11 @@ export interface Additions {
   after?: MenuElement[][];
   end?: MenuElement[][];
 }
-function isDebugActive(state: EditorState): boolean {
+function isStructureActive(state: EditorState): boolean {
   try {
-    return !!debugPluginKey.getState(state)?.active;
+    return !!structurePluginKey.getState(state)?.active;
   } catch {
-    console.log("Debug plugin is not active, please check if the plugin is included in the editor plugins array.");
+    console.log("Structure plugin is not active, please check if the plugin is included in the editor plugins array.");
     return false;
   }
 }
@@ -267,11 +267,11 @@ function isDebugActive(state: EditorState): boolean {
  * @returns menuBar
  */
 export function menu(localization: Localization, schema: Schema, { start, before, after, end}: Additions = {}) {
-const debug = [
+const structure = [
   separator(),
   simpleCommand({
-    call: () => toggleDebugCommand(),
-    active: isDebugActive,
+    call: () => toggleStructurePluginCommand(),
+    active: isStructureActive,
   }, {
     label: " Show structure",
     class: 'ic-tree',
@@ -306,9 +306,9 @@ const debug = [
     end = [];
   }
   if (after.length > 0) {
-    after[after.length - 1] = [...after[after.length - 1], ...debug];
+    after[after.length - 1] = [...after[after.length - 1], ...structure];
   } else {
-    toolbar[toolbar.length - 1] = toolbar[toolbar.length - 1].concat(debug);
+    toolbar[toolbar.length - 1] = toolbar[toolbar.length - 1].concat(structure);
   }
   if (before.length > 0) {
     before[before.length - 1] = [separator(), ...before[before.length - 1]];

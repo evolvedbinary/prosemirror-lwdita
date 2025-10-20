@@ -232,10 +232,10 @@ body {
         }
 
         @each $node in $nodes {
-          .debug & [data-j-type=topic] {
+          .structure & [data-j-type=topic] {
             margin-left: auto !important;
           }
-          .debug & [data-j-type="#{$node}"] {
+          .structure & [data-j-type="#{$node}"] {
             border: 2px solid rgba(blue, 0.05);
             position: relative;
             margin-left: 10px;
