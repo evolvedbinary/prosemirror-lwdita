@@ -34,7 +34,8 @@ import {
   fetchAndTransform,
   URLParams,
   Json,
-  suggestionPlugin
+  suggestionPlugin,
+  structurePlugin
 } from "@evolvedbinary/prosemirror-lwdita";
 import { createLocalization } from "@evolvedbinary/prosemirror-lwdita-localization";
 
@@ -111,7 +112,8 @@ function renderProsemirrorDocument(jsonDoc: Record<string, Json>, urlParams: URL
             saveFileMenuItem(urlParams, localization)
           ]],
         }),
-        doubleClickImagePlugin(localization)
+        doubleClickImagePlugin(localization),
+        structurePlugin
       ]
     })
     // create a new EditorView with the dom element and the state

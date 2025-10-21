@@ -256,7 +256,7 @@ function saveFile(localization: Localization, _input: InputContainer): Command {
  * @returns The JDITA document node object
  */
 function transformToJditaDocumentNode(state: EditorState): string {
-  const prosemirrorJson = state.toJSON();
+  const prosemirrorJson = structuredClone(state.toJSON());
   // Change the type value from 'type: doc' to expected 'type: document' for JDITA processing
   prosemirrorJson.doc.type = 'document';
   const documentNode = unTravel(prosemirrorJson.doc);

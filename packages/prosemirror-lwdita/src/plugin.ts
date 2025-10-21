@@ -20,9 +20,10 @@ import { menuBar, MenuElement, MenuItem, MenuItemSpec } from "prosemirror-menu";
 import { toggleMark, newLine, hasMark, insertNode, insertImage, imageInputOverlay, createNode } from "./commands";
 import { redo, undo } from "prosemirror-history";
 import { MarkType, NodeType, Schema } from "prosemirror-model";
-import { Command, Plugin } from "prosemirror-state";
+import { Command, EditorState, Plugin } from "prosemirror-state";
 import { Localization } from "@evolvedbinary/prosemirror-lwdita-localization";
 import { chainCommands, deleteSelection, joinBackward, selectNodeBackward } from "prosemirror-commands";
+import { structurePluginKey, toggleStructurePluginCommand } from "./structure-plugin";
 
 /**
  * This is the entire DOM node of the Prosemirror editor that will be observed for DOM mutations
@@ -153,9 +154,9 @@ function markItem(mark: MarkType, props: Partial<MenuItemSpec> = {}): MenuElemen
  * Menu item callbacks
  */
 interface SimpleItemCallbacks {
-  call: () => void;
-  enable?: () => boolean;
-  active?: () => boolean;
+  call: () => Command;
+  active?: (state: EditorState) => boolean;
+  enable?: (state: EditorState) => boolean;
 }
 
 /**
@@ -163,32 +164,32 @@ interface SimpleItemCallbacks {
  * when clicked, executes a command
  *
  * @remarks
- * This instance of MenuItem is used for the "Debug Info" icon button in the menu
+ * This instance of MenuItem is used for the "Structure Info" icon button in the menu
  *
  * @example of the MenuItem object:
  * ```
- * {spec: {label: 'Show debug info', class: 'ic-bug', css: 'color: #c81200', enable: undefined, run}}
+ * {spec: {label: 'Show structure info', class: 'ic-bug', css: 'color: #c81200', enable: undefined, run}}
  * ```
  *
  * @example of the callback functions:
  * ```
- * active:() => document.body.classList.contains('debug')
- * call:() => document.body.classList.toggle('debug')
+ * active:() => document.body.classList.contains('structure')
+ * call:() => document.body.classList.toggle('structure')
  * ```
  *
  * @param callbacks - callbacks `active`, `call`, e.g.
  * @param props - MenuItem properties
  * @returns The MenuItem object
  */
-function simpleCommand(callbacks: SimpleItemCallbacks | (() => void), props: Partial<MenuItemSpec> = {}): MenuElement {
-  if (typeof callbacks === 'function') {
-    callbacks = { call: callbacks };
-  }
+function simpleCommand(
+  callbacks: SimpleItemCallbacks,
+  props: Partial<MenuItemSpec> = {}
+): MenuElement {
   return new MenuItem({
     ...props,
     run: (state, dispatch) => {
-      (callbacks as SimpleItemCallbacks).call();
-      dispatch(state.tr);
+      const command = callbacks.call(); // must return a command function
+      return command(state, dispatch);
     },
     enable: callbacks.enable,
     active: callbacks.active,
@@ -249,7 +250,14 @@ export interface Additions {
   after?: MenuElement[][];
   end?: MenuElement[][];
 }
-
+function isStructureActive(state: EditorState): boolean {
+  try {
+    return !!structurePluginKey.getState(state)?.active;
+  } catch {
+    console.log("Structure plugin is not active, please check if the plugin is included in the editor plugins array.");
+    return false;
+  }
+}
 /**
  * Create a menu bar for the editor
  *
@@ -259,13 +267,17 @@ export interface Additions {
  * @returns menuBar
  */
 export function menu(localization: Localization, schema: Schema, { start, before, after, end}: Additions = {}) {
-  const debug = [
-    separator(),
-    simpleCommand({
-      call: () => document.body.classList.toggle('debug'),
-      active: () => document.body.classList.contains('debug'),
-    }, { label: 'Show debug info', class: 'ic-bug', css: 'color: #c81200' }),
-  ];
+const structure = [
+  separator(),
+  simpleCommand({
+    call: () => toggleStructurePluginCommand(),
+    active: isStructureActive,
+  }, {
+    label: " Show structure",
+    class: 'ic-tree',
+    css: 'color: #555'
+  }),
+];
 
   const toolbar:MenuElement[][] = [[
     commandItem(undo, { icon: {text: ""}, title: 'Undo', class: 'ic-undo' }),
@@ -294,9 +306,9 @@ export function menu(localization: Localization, schema: Schema, { start, before
     end = [];
   }
   if (after.length > 0) {
-    after[after.length - 1] = [...after[after.length - 1], ...debug];
+    after[after.length - 1] = [...after[after.length - 1], ...structure];
   } else {
-    toolbar[toolbar.length - 1] = toolbar[toolbar.length - 1].concat(debug);
+    toolbar[toolbar.length - 1] = toolbar[toolbar.length - 1].concat(structure);
   }
   if (before.length > 0) {
     before[before.length - 1] = [separator(), ...before[before.length - 1]];

@@ -1,0 +1,194 @@
+/*!
+Copyright (C) 2020 Evolved Binary
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
+
+describe('Structure Plugin', () => {
+  beforeEach(() => {
+    
+    window.localStorage.setItem('welcomeNoteConfirmed', 'true')
+    window.localStorage.setItem('file', `<?xml version="1.0" encoding="UTF-8"?>
+  <!DOCTYPE topic PUBLIC "-//OASIS//DTD LIGHTWEIGHT DITA Topic//EN" "lw-topic.dtd">
+  <topic id="program">
+    <title>Test File 2</title>
+    <body dir="ltr">
+      <section id='section'>
+        <p id="p1">A test paragraph.</p>
+        <p>Second paragraph.</p>
+        <p>Third paragraph.</p>
+        <p conref="#p1">Fourth paragraph.</p>
+      </section>
+    </body>
+  </topic>`);
+  })
+  it('should open the structure plugin', () => {
+    cy.visit('http://localhost:1234/')
+      .get('#editor > div > div.ProseMirror-menubar  div.ic-tree')
+      .click()
+    cy.get('#attributes-editor-panel').should('be.visible')
+  })
+  it('Should show attributes of the first paragraph', () => {
+    cy.visit('http://localhost:1234/')
+      .get("#editor > div > div.ProseMirror > article > div > section > p:nth-child(1)")
+      .click()
+    cy.get('#editor > div > div.ProseMirror-menubar  div.ic-tree')
+      .click()
+      .get('#attributes-editor-panel > h2').should('have.text', 'topic / body / section / p')
+      .get('#id').should('have.value', 'p1')
+  });
+
+  it('Should add attributes', () => {
+    cy.visit('http://localhost:1234/')
+      .get("#editor > div > div.ProseMirror > article > div > section > p:nth-child(1)")
+      .click()
+    cy.get('#editor > div > div.ProseMirror-menubar  div.ic-tree')
+      .click()
+      .get('#id').type('test-id')
+  });
+
+  it('Should remove attributes from the document', () => {
+    cy.visit('http://localhost:1234/')
+      .get("#editor > div > div.ProseMirror > article > div > section > p:nth-child(1)")
+      .click()
+    cy.get('#editor > div > div.ProseMirror-menubar  div.ic-tree')
+      .click()
+      .get('#id').clear()
+      .get('#save-attributes')
+      .click()
+    cy.get('#editor > div > div.ProseMirror-menubar  div.ic-tree')
+      .click()
+    cy.get('#editor > div > div.ProseMirror-menubar  div.ic-tree')
+      .click()
+      .get('#id').should('have.value', '')
+  });
+
+  it('Should update attributes in the document', () => {
+    cy.visit('http://localhost:1234/')
+      .get("#editor > div > div.ProseMirror > article > div > section > p:nth-child(1)")
+      .click()
+    cy.get('#editor > div > div.ProseMirror-menubar  div.ic-tree')
+      .click()
+      .get('#id').clear()
+      .type('updated-id')
+      .get('#save-attributes')
+      .click()
+    cy.get('#editor > div > div.ProseMirror-menubar  div.ic-tree')
+      .click()
+    cy.get('#editor > div > div.ProseMirror-menubar  div.ic-tree')
+      .click()
+      .get('#id').should('have.value', 'updated-id')
+  });
+
+  it('Should download document with attributes', () => {
+    cy.visit('http://localhost:1234/')
+      .get("#editor > div > div.ProseMirror > article > div > section > p:nth-child(2)")
+      .click()
+    cy.get('#editor > div > div.ProseMirror-menubar  div.ic-tree')
+      .click()
+      .get('#id')
+      .type('new-id')
+      .get('#save-attributes')
+      .click()
+    cy.get('#saveFile')
+    .click()
+    .readFile('cypress/downloads/Petal.xml')
+    .should('contain', '<p id="new-id">Second paragraph.</p>');
+    
+  });
+
+  it('Should travel up the tree', () => {
+    cy.visit('http://localhost:1234/')
+      .get("#editor > div > div.ProseMirror > article > div > section > p:nth-child(1)")
+      .click()
+    cy.get('#editor > div > div.ProseMirror-menubar  div.ic-tree')
+      .click()
+      .get('#id').should('have.value', 'p1')
+      .get('#attributes-editor-panel > h2 > span:nth-child(3)')
+      .click()
+      .get('#id').should('have.value', 'section')
+      .get('#attributes-editor-panel > h2 > span:nth-child(2)')
+      .click()
+      .get('#dir').should('have.value', 'ltr')
+  })
+
+  it('Should show conref attributes when they exist', () => {
+    cy.visit('http://localhost:1234/')
+      .get("#editor > div > div.ProseMirror > article > div > section > p:nth-child(4)")
+      .click()
+    cy.get('#editor > div > div.ProseMirror-menubar  div.ic-tree')
+      .click()
+      .get('#attributes-editor-panel > h2').should('have.text', 'topic / body / section / p[4]')
+      .get('#conref').should('have.value', 'p1')
+  });
+
+  it('Should know none when no conref is set', () => {
+    cy.visit('http://localhost:1234/')
+      .get("#editor > div > div.ProseMirror > article > div > section > p:nth-child(1)")
+      .click()
+    cy.get('#editor > div > div.ProseMirror-menubar  div.ic-tree')
+      .click()
+      .get('#attributes-editor-panel > h2').should('have.text', 'topic / body / section / p')
+      .get('select#conref option:selected').should('have.text', '-- none --')
+  });
+
+  it('Should set conref attribute of the second paragraph', () => {
+    cy.visit('http://localhost:1234/')
+      .get("#editor > div > div.ProseMirror > article > div > section > p:nth-child(2)")
+      .click()
+    cy.get('#editor > div > div.ProseMirror-menubar  div.ic-tree')
+      .click()
+      .get('#attributes-editor-panel > h2').should('have.text', 'topic / body / section / p[2]')
+      .get('select#conref').select('p1')
+      .get('#save-attributes')
+      .click()
+      .get('select#conref').should('have.value', 'p1')
+    cy.get('#saveFile')
+      .click()
+      .readFile('cypress/downloads/Petal.xml')
+      .should('contain', '<p conref="#p1">Second paragraph.</p>');
+  });
+
+  it('Should show the correct path for the nodes in the document', () => {
+    window.localStorage.setItem('file', `<?xml version="1.0" encoding="UTF-8"?>
+  <!DOCTYPE topic PUBLIC "-//OASIS//DTD LIGHTWEIGHT DITA Topic//EN" "lw-topic.dtd">
+  <topic id="program">
+    <title>Test File 2</title>
+    <body>
+      <section id='section'>
+        <p>A test paragraph.</p>
+        <p>Second paragraph.</p>
+        <p>Third paragraph.</p>
+        <p>Fourth paragraph.</p>
+        <p>Fifth paragraph.</p>
+        <ul>
+          <li><p>First item</p></li>
+          <li><p>Second item</p></li>
+        </ul>
+        <p>Sixth paragraph.</p>
+        <p>Seventh paragraph.</p>
+      </section>
+    </body>
+  </topic>`);
+    cy.visit('http://localhost:1234/')
+      .get("#editor > div > div.ProseMirror > article > div > section > p:nth-child(7)")
+      .click()
+    cy.get('#editor > div > div.ProseMirror-menubar  div.ic-tree')
+      .click()
+      .get('#attributes-editor-panel > h2').should('have.text', 'topic / body / section / p[6]')
+      .get("#editor > div > div.ProseMirror > article > div > section > ul > li:nth-child(2)")
+      .click()
+      .get('#attributes-editor-panel > h2').should('have.text', 'topic / body / section / ul / li / p')
+  });
+});
