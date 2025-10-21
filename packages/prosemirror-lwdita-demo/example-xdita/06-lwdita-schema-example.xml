@@ -18,10 +18,6 @@
         </metadata>
     </prolog>
     <body dir="ltr">
-        <!--
-        ((%list-blocks;)*, section*, div?)
-        list-blocks = p|ul|ol|dl|pre|audio|video|example|simpletable|fig|note
-        -->
         <p>Paragraph content</p>
         <p>
             <b>Bold</b>
@@ -50,26 +46,20 @@
         </dl>
         <pre>Preformatted content</pre>
         <audio autoplay="false" controls="true" loop="false" muted="true">
-            <!--
-            ((desc)?,(fallback)?,(media-source)*,(media-track)*)*
-            -->
             <desc>Theme song for the LwDITA podcast</desc>
             <fallback>
                 <p>The theme song is not available.</p>
             </fallback>
             <media-source href="https://upload.wikimedia.org/wikipedia/commons/a/aa/1943_Nov_14_NYPhil_Bernstein.ogg" format="application/ogg"/>
-            <media-track srclang="en" value="theme-song.vtt"/>
+            <media-track srclang="en"/>
         </audio>
         <video outputclass="videoElement" width="320" height="240" controls="true">
-          <desc>Kool-Aid Commercial, Debut of Pitcher Man</desc>
-          <video-poster href="https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/1954_Kool-Aid_Commercial._Debut_of_Pitcher_Man.webm/120px--1954_Kool-Aid_Commercial._Debut_of_Pitcher_Man.webm.jpg" />
-          <media-source href="https://upload.wikimedia.org/wikipedia/commons/7/74/1954_Kool-Aid_Commercial._Debut_of_Pitcher_Man.webm" />
+            <desc>Kool-Aid Commercial, Debut of Pitcher Man</desc>
+            <video-poster href="https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/1954_Kool-Aid_Commercial._Debut_of_Pitcher_Man.webm/120px--1954_Kool-Aid_Commercial._Debut_of_Pitcher_Man.webm.jpg"/>
+            <media-source href="https://upload.wikimedia.org/wikipedia/commons/7/74/1954_Kool-Aid_Commercial._Debut_of_Pitcher_Man.webm"/>
         </video>
         <example>
             <title>title</title>
-            <!--
-            p|ul|ol|dl|pre|audio|video|simpletable|fig|note
-            -->
         </example>
         <simpletable>
             <title>Table title</title>
@@ -99,36 +89,21 @@
             </strow>
         </simpletable>
         <fig>
-            <!--
-            (title?, desc?, (%fig-blocks;|image|xref)*)
-            -->
             <title>Figure title</title>
             <desc>Figure description</desc>
             <image href="https://placehold.co/300x300">
                 <alt>alt text</alt>
             </image>
         </fig>
-        <note>
-            <!--
-            <!ENTITY % simple-blocks  "p|ul|ol|dl|pre|audio|video|example|note">
-            -->
+        <note type="note">
             <p>Note content</p>
         </note>
         <section>
             <title>Section title</title>
-            <!--
-            p|ul|ol|dl|pre|audio|video|example|simpletable|fig|note
-            -->
             <p>Section content</p>
         </section>
         <div>
-            <!--
-            p|ul|ol|dl|pre|audio|video|example|simpletable|fig|note
-            -->
             <fn id="footnote">
-                <!--
-                "p|ul|ol|dl"
-                -->
                 <p>A footnote</p>
             </fn>
         </div>
