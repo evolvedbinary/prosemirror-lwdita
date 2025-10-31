@@ -167,7 +167,7 @@ const createBranch = async (octokit: Octokit, owner: string, newOwner: string, r
     const lastCommitSha = branchData.commit.sha;
 
     // create the new branch based on upstream
-    const { data: refData } = await octokit.git.createRef({
+    const { data: _refData } = await octokit.git.createRef({
       owner: newOwner,
       repo,
       ref: `refs/heads/${newBranch}`,
