@@ -438,7 +438,7 @@ __metadata:
     eslint: "npm:^8.57.0"
     eslint-plugin-notice: "npm:^1.0.0"
     eslint-plugin-tsdoc: "npm:^0.3.0"
-    fetch-mock: "npm:^11.1.5"
+    fetch-mock: "npm:^12.6.0"
     mocha: "npm:^10.7.3"
     nodemon: "npm:^3.1.7"
     nyc: "npm:^17.0.0"
@@ -4798,19 +4798,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fetch-mock@npm:^11.1.5":
-  version: 11.1.5
-  resolution: "fetch-mock@npm:11.1.5"
+"fetch-mock@npm:^12.6.0":
+  version: 12.6.0
+  resolution: "fetch-mock@npm:12.6.0"
   dependencies:
     "@types/glob-to-regexp": "npm:^0.4.4"
     dequal: "npm:^2.0.3"
     glob-to-regexp: "npm:^0.4.1"
-    is-subset: "npm:^0.1.1"
     regexparam: "npm:^3.0.0"
-  peerDependenciesMeta:
-    node-fetch:
-      optional: true
-  checksum: 10c0/f32f1d7879b654a3fab7c3576901193ddd4c63cb9aeae2ed66ff42062400c0937d4696b1a5171e739d5f62470e6554e190f14816789f5e3b2bf1ad90208222e6
+  checksum: 10c0/2454b15d50e6cda65943f65875f1d167c86e2a05f5440765d758045c88c1403413a9b597cfdcb0cce2e86eb0e133cbf9843e8fa5e888772c5b0e20f21d8c1f24
   languageName: node
   linkType: hard
 
@@ -5806,13 +5802,6 @@ __metadata:
   version: 2.0.1
   resolution: "is-stream@npm:2.0.1"
   checksum: 10c0/7c284241313fc6efc329b8d7f08e16c0efeb6baab1b4cd0ba579eb78e5af1aa5da11e68559896a2067cd6c526bd29241dda4eb1225e627d5aa1a89a76d4635a5
-  languageName: node
-  linkType: hard
-
-"is-subset@npm:^0.1.1":
-  version: 0.1.1
-  resolution: "is-subset@npm:0.1.1"
-  checksum: 10c0/d8125598ab9077a76684e18726fb915f5cea7a7358ed0c6ff723f4484d71a0a9981ee5aae06c44de99cfdef0fefce37438c6257ab129e53c82045ea0c2acdebf
   languageName: node
   linkType: hard
 

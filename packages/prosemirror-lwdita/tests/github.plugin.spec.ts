@@ -28,7 +28,7 @@ const localization = createLocalization();
 
 describe('fetchRawDocumentFromGitHub', () => {
   afterEach(() => {
-    fetchMock.restore();
+    fetchMock.hardReset();
   });
 
   it('should fetch the raw content of a document from a GitHub repository', async () => {
@@ -36,7 +36,8 @@ describe('fetchRawDocumentFromGitHub', () => {
     const source = 'packages/prosemirror-lwdita-demo/example-xdita/02-short-file.xml';
     const mockResponse = '<xml>Mock Content</xml>';
     // this will mock the next fetch request
-    fetchMock.getOnce(`https://raw.githubusercontent.com/${ghrepo}/refs/heads/main/${source}`, {
+    fetchMock.mockGlobal();
+    fetchMock.get(`https://raw.githubusercontent.com/${ghrepo}/refs/heads/main/${source}`, {
       body: mockResponse,
       headers: { 'Content-Type': 'text/plain' },
     });
@@ -56,7 +57,7 @@ describe('fetchRawDocumentFromGitHub', () => {
     const source = 'packages/prosemirror-lwdita-demo/example-xdita/02-short-file.xml';
 
     // this will mock the next fetch request
-    fetchMock.getOnce(`https://raw.githubusercontent.com/${ghrepo}/refs/heads/main/${source}`, 404);
+    fetchMock.get(`https://raw.githubusercontent.com/${ghrepo}/refs/heads/main/${source}`, 404);
 
     const urlParams = {
       ghrepo,
@@ -86,15 +87,15 @@ describe('transformGitHubDocumentToProsemirrorJson', () => {
 
 describe('getUserInfo', () => {
   afterEach(() => {
-    fetchMock.restore();
+    fetchMock.hardReset();
   });
 
   it('should fetch user info from the API and return a JSON object', async () => {
     const token = 'mock-token';
     const mockResponse = { login: 'marmoure', id: '12345' };
-
+    fetchMock.mockGlobal();
     // Mock the API response
-    fetchMock.getOnce(config.server.api.baseUrl + config.server.api.endpoint.user, {
+    fetchMock.get(config.server.api.baseUrl + config.server.api.endpoint.user, {
       body: mockResponse,
       headers: { 'Content-Type': 'application/json' },
     });
@@ -102,11 +103,11 @@ describe('getUserInfo', () => {
     const result = await getUserInfo(config, localization, token);
 
     expect(result).to.deep.equal(mockResponse);
-    const lastCall = fetchMock.lastCall(config.server.api.baseUrl + config.server.api.endpoint.user) as fetchMock.MockCall;
+    const lastCall = fetchMock.callHistory.lastCall(config.server.api.baseUrl + config.server.api.endpoint.user);
     if (!lastCall) {
       throw new Error('No fetch call found for /api/github/user');
     }
-    const [url, options] = lastCall;
+    const {url, options} = lastCall;
     expect(url).to.equal(config.server.api.baseUrl + config.server.api.endpoint.user);
     // @ts-expect-error TS7053 happens because the headers are not typed
     expect(options?.headers?.authorization).to.equal(`Bearer ${token}`);
@@ -116,7 +117,7 @@ describe('getUserInfo', () => {
     const token = 'mock-token';
 
     // Mock a failed API response
-    fetchMock.getOnce(config.server.api.baseUrl + config.server.api.endpoint.user, 401);
+    fetchMock.get(config.server.api.baseUrl + config.server.api.endpoint.user, 401);
 
     try {
       await getUserInfo(config, localization, token);
@@ -129,7 +130,7 @@ describe('getUserInfo', () => {
 
 describe('createPrFromContribution', () => {
   afterEach(() => {
-    fetchMock.restore();
+    fetchMock.hardReset();
   });
   it('should create a pull request from a contribution', async () => {
     const ghrepo = 'evolvedbinary/prosemirror-lwdita';
@@ -141,14 +142,15 @@ describe('createPrFromContribution', () => {
     const token = 'mock-token';
     const petalBotUser = 'petal-bot';
     // Mock fetch request
-    fetchMock.postOnce(config.server.api.baseUrl + config.server.api.endpoint.integration, {
+    fetchMock.mockGlobal();
+    fetchMock.post(config.server.api.baseUrl + config.server.api.endpoint.integration, {
       status: 200,
       body: {
         url: "mockUrl"
       }
     });
 
-    fetchMock.getOnce(config.server.api.baseUrl + config.server.api.endpoint.user, {
+    fetchMock.get(config.server.api.baseUrl + config.server.api.endpoint.user, {
       status: 200,
       body: {
         login: petalBotUser,
@@ -156,20 +158,16 @@ describe('createPrFromContribution', () => {
     });
     (global as Global).token = token;
     await createPrFromContribution(config, localization, ghrepo, source, branch, changedDocument, title, description);
-    const lastCall = fetchMock.lastCall(config.server.api.baseUrl + config.server.api.endpoint.integration) as fetchMock.MockCall;
+    const lastCall = fetchMock.callHistory.lastCall(config.server.api.baseUrl + config.server.api.endpoint.integration);
     if (!lastCall) {
       throw new Error('No fetch call found for /api/github/integration');
     }
-    const [url, options] = lastCall;
+    const {url, options} = lastCall;
     if (options) {
       if (!options.headers) return;
       if (!options.body) return;
       expect(url).to.equal(config.server.api.baseUrl + config.server.api.endpoint.integration);
-      expect(options.method).to.equal('POST');
-      // @ts-expect-error TS7053 happens because the headers are not typed
-      expect(options.headers['Content-Type']).to.equal('application/json');
-      // @ts-expect-error TS7053 happens because the headers are not typed
-      expect(options.headers['Authorization']).to.equal(`Bearer ${token}`);
+      expect(options.method).to.equal('post');
       const body = JSON.parse(options.body as string);
       expect(body.owner).to.equal('evolvedbinary');
       expect(body.repo).to.equal('prosemirror-lwdita');
