@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
 /*!
 Copyright (C) 2020 Evolved Binary
 
