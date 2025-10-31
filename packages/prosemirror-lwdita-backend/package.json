@@ -16,7 +16,7 @@
     "dist": "webpack"
   },
   "engines": {
-    "node": ">=20.1.0 <21",
+    "node": ">=22.16.0 <23",
     "yarn": ">=4.2.2"
   },
   "repository": {

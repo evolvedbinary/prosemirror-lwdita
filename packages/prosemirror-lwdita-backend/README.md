@@ -43,7 +43,7 @@ Our instructions are for the following suggested environment:
 * [Ubuntu](https://www.ubuntu.com) Linux
 * [nginx](https://nginx.org/en/) Web Server
 * [Let's Encrypt](https://letsencrypt.org/) and [Certbot](https://certbot.eff.org/) for TLS/SSL Encryption
-* [Node.js 20](https://nodejs.org)
+* [Node.js 22](https://nodejs.org)
 
 We assume that you have a server running Ubuntu Linux with a public IPv4 or IPv6 address, with nginx, Let's Encrypt, and Certbot already installed. If not, briefly, you need to do something like the following:
 

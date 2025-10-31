@@ -40,7 +40,7 @@
     "publish": "yarn workspace @evolvedbinary/prosemirror-lwdita-localization npm publish --access public && yarn workspace @evolvedbinary/prosemirror-lwdita npm publish --access public"
   },
   "engines": {
-    "node": ">=20.10.0 <21",
+    "node": ">=22.16.0 <23",
     "yarn": ">=4.2.2"
   },
   "workspaces": [
