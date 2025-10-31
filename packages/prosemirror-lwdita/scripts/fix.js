@@ -15,11 +15,11 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+/* eslint-disable @typescript-eslint/no-require-imports */
 /**
  * This file attempts to fix a problem where the cursor
  * doesn't change position after adding a new line
  */
-
 const fs = require('fs');
 const path = require('path');
 
