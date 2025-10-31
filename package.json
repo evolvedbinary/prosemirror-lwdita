@@ -29,6 +29,7 @@
     "build:demo": "yarn workspace @evolvedbinary/prosemirror-lwdita-demo build",
     "build": "yarn workspace @evolvedbinary/prosemirror-lwdita-localization build && yarn workspace @evolvedbinary/prosemirror-lwdita build",
     "prepack": "yarn run build",
+    "lint": "eslint",
     "test": "yarn workspace @evolvedbinary/prosemirror-lwdita-localization test && yarn workspace @evolvedbinary/prosemirror-lwdita test && yarn workspace @evolvedbinary/prosemirror-lwdita-backend test",
     "test:demo": "yarn workspace @evolvedbinary/prosemirror-lwdita-demo test",
     "coverage": "yarn workspace @evolvedbinary/prosemirror-lwdita-localization coverage && yarn workspace @evolvedbinary/prosemirror-lwdita coverage && yarn workspace @evolvedbinary/prosemirror-lwdita-backend coverage",
@@ -48,16 +49,18 @@
     "packages/prosemirror-lwdita-backend"
   ],
   "devDependencies": {
+    "@eslint/js": "^9.38.0",
     "@tsconfig/recommended": "^1.0.7",
     "@types/node": "^24.9.2",
     "@typescript-eslint/eslint-plugin": "^8.11.0",
     "@typescript-eslint/parser": "^8.11.0",
-    "eslint": "^8.57.0",
+    "eslint": "^9.38.0",
     "eslint-plugin-notice": "^1.0.0",
-    "eslint-plugin-tsdoc": "^0.3.0",
-    "globals": "^16.5.0",
+    "eslint-plugin-tsdoc": "^0.4.0",
+    "globals": "^16.4.0",
+    "jiti": "^2.6.1",
     "rimraf": "^6.0.1",
-    "typescript-eslint": "^8.11.0"
+    "typescript-eslint": "^8.46.2"
   },
   "packageManager": "yarn@4.2.2"
 }
