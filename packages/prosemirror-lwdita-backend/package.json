@@ -66,7 +66,7 @@
     "chai-as-promised": "^7.1.2",
     "cors": "^2.8.5",
     "coveralls": "^3.1.1",
-    "eslint": "^8.57.0",
+    "eslint": "^9.38.0",
     "eslint-plugin-notice": "^1.0.0",
     "eslint-plugin-tsdoc": "^0.3.0",
     "mocha": "^10.7.3",
