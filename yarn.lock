@@ -440,7 +440,7 @@ __metadata:
     eslint-plugin-tsdoc: "npm:^0.3.0"
     fetch-mock: "npm:^12.6.0"
     mocha: "npm:^10.7.3"
-    nodemon: "npm:^3.1.7"
+    nodemon: "npm:^3.1.10"
     nyc: "npm:^17.0.0"
     prosemirror-commands: "npm:^1.6.0"
     prosemirror-history: "npm:^1.4.1"
@@ -7081,9 +7081,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nodemon@npm:^3.1.7":
-  version: 3.1.7
-  resolution: "nodemon@npm:3.1.7"
+"nodemon@npm:^3.1.10":
+  version: 3.1.10
+  resolution: "nodemon@npm:3.1.10"
   dependencies:
     chokidar: "npm:^3.5.2"
     debug: "npm:^4"
@@ -7097,7 +7097,7 @@ __metadata:
     undefsafe: "npm:^2.0.5"
   bin:
     nodemon: bin/nodemon.js
-  checksum: 10c0/e0b46939abdbce251b1d6281005a5763cee57db295bb00bc4a753b0f5320dac00fe53547fb6764c70a086cf6d1238875cccb800fbc71544b3ecbd3ef71183c87
+  checksum: 10c0/95b64d647f2c22e85e375b250517b0a4b32c2d2392ad898444e331f70d6b1ab43b17f53a8a1d68d5879ab8401fc6cd6e26f0d2a8736240984f6b5a8435b407c0
   languageName: node
   linkType: hard
 
