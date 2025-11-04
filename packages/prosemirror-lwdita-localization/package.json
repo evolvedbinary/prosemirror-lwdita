@@ -11,6 +11,8 @@
   "scripts": {
     "clean": "rimraf dist generated-docs",
     "build": "tsc",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "prepack": "yarn run build",
     "test": "mocha",
     "test:watch": "mocha -w",
@@ -50,6 +52,11 @@
     "@types/mocha": "^10.0.9",
     "@types/node": "^24.9.2",
     "coveralls": "^3.1.1",
+    "eslint": "^9.39.1",
+    "eslint-plugin-notice": "^1.0.0",
+    "eslint-plugin-tsdoc": "^0.4.0",
+    "globals": "^16.5.0",
+    "jiti": "^2.6.1",
     "mocha": "^10.7.3",
     "node-polyglot": "^2.6.0",
     "nyc": "^17.0.0",
@@ -57,7 +64,8 @@
     "ts-node": "^10.9.2",
     "typedoc": "^0.26.10",
     "typedoc-plugin-missing-exports": "^3.0.0",
-    "typescript": "5.6.3"
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.46.3"
   },
   "packageManager": "yarn@4.2.2"
 }

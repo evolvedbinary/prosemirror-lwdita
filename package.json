@@ -25,6 +25,8 @@
   "scripts": {
     "clean": "rimraf .parcel-cache && yarn workspace @evolvedbinary/prosemirror-lwdita-localization run clean && yarn workspace @evolvedbinary/prosemirror-lwdita run clean && yarn workspace @evolvedbinary/prosemirror-lwdita-backend run clean && yarn workspace @evolvedbinary/prosemirror-lwdita-demo run clean",
     "docker": "yarn workspace @evolvedbinary/prosemirror-lwdita-demo docker",
+    "lint": "yarn workspaces foreach -A run lint",
+    "lint:fix": "yarn workspaces foreach -A run lint:fix",
     "start:demo": "yarn workspace @evolvedbinary/prosemirror-lwdita-demo start",
     "build:demo": "yarn workspace @evolvedbinary/prosemirror-lwdita-demo build",
     "build": "yarn workspace @evolvedbinary/prosemirror-lwdita-localization build && yarn workspace @evolvedbinary/prosemirror-lwdita build",
@@ -50,8 +52,14 @@
   "devDependencies": {
     "@tsconfig/recommended": "^1.0.7",
     "@types/node": "^24.9.2",
-    "globals": "^15.11.0",
-    "rimraf": "^6.0.1"
+    "eslint": "^9.39.1",
+    "eslint-plugin-notice": "^1.0.0",
+    "eslint-plugin-tsdoc": "^0.4.0",
+    "globals": "^16.5.0",
+    "jiti": "^2.6.1",
+    "rimraf": "^6.0.1",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.46.3"
   },
   "packageManager": "yarn@4.2.2"
 }
