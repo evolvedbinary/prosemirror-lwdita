@@ -6,6 +6,7 @@
   },
   "exclude": [
     "tests/*",
-    "dist"
+    "dist",
+    "eslint.config.*"
   ]
 }
