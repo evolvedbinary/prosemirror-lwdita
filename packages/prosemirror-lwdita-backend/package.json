@@ -13,7 +13,8 @@
     "test": "mocha",
     "coverage": "rimraf coverage && nyc yarn mocha",
     "coveralls": "nyc --reporter=text-lcov report | coveralls",
-    "dist": "webpack"
+    "dist": "webpack",
+    "lint": "eslint"
   },
   "engines": {
     "node": ">=22.16.0 <23",
@@ -64,6 +65,7 @@
     "chai-as-promised": "^8.0.2",
     "cors": "^2.8.5",
     "coveralls": "^3.1.1",
+    "eslint": "^9.38.0",
     "mocha": "^10.7.3",
     "nyc": "^17.0.0",
     "rimraf": "^6.0.1",
