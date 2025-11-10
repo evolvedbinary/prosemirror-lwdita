@@ -50,6 +50,7 @@
     "@evolvedbinary/prosemirror-lwdita-localization": "workspace:^",
     "@types/chai-as-promised": "^8.0.2",
     "chai-as-promised": "^8.0.2",
+    "eslint": "^9.38.0",
     "fetch-mock": "^12.6.0",
     "prosemirror-commands": "^1.6.0",
     "prosemirror-history": "^1.4.1",

@@ -2,6 +2,11 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "rootDir": "src",
-    "outDir": "dist",
-  }
+    "outDir": "dist"
+  },
+  "exclude": [
+    "cypress.config.ts",
+    "cypress",
+    "eslint.config.mts",
+  ]
 }

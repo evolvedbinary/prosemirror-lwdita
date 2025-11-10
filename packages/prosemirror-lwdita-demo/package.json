@@ -35,6 +35,7 @@
   "scripts": {
     "clean": "rimraf dist",
     "build": "parcel build ./index.html ./error.html",
+    "lint": "eslint",
     "prepack": "yarn run build",
     "start": "parcel ./index.html ./error.html",
     "docker": "yarn build && node docker",
@@ -60,6 +61,7 @@
     "@parcel/transformer-sass": "^2.12.0",
     "@types/urijs": "^1.19.25",
     "cypress": "^13.15.1",
+    "eslint": "^9.38.0",
     "parcel": "^2.12.0",
     "parcel-reporter-static-files-copy": "^1.5.3",
     "rimraf": "^6.0.1",

@@ -14,4 +14,9 @@
     "outDir": "dist",                         /* Redirect output structure to the `dist/` directory. */
     "resolveJsonModule": true
   },
+  "exclude": [
+    "**/eslint.config.*",
+    "**/node_modules",
+    "**/dist"
+  ]
 }

@@ -5,6 +5,7 @@
     "outDir": "dist",
   },
   "exclude": [
-    "tests/*"
+    "tests/*",
+    "dist"
   ]
 }

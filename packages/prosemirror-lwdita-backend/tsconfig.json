@@ -8,6 +8,8 @@
     "moduleResolution": "Node16",
   },
   "exclude": [
-    "tests/*"
+    "tests/*",
+    "eslint.config.mts",
+    "../../eslint.config.mts"
   ]
 }
