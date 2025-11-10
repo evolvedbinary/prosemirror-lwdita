@@ -29,7 +29,7 @@
     "build:demo": "yarn workspace @evolvedbinary/prosemirror-lwdita-demo build",
     "build": "yarn workspace @evolvedbinary/prosemirror-lwdita-localization build && yarn workspace @evolvedbinary/prosemirror-lwdita build",
     "prepack": "yarn run build",
-    "lint": "eslint",
+    "lint": "yarn workspaces foreach -A run lint",
     "test": "yarn workspace @evolvedbinary/prosemirror-lwdita-localization test && yarn workspace @evolvedbinary/prosemirror-lwdita test && yarn workspace @evolvedbinary/prosemirror-lwdita-backend test",
     "test:demo": "yarn workspace @evolvedbinary/prosemirror-lwdita-demo test",
     "coverage": "yarn workspace @evolvedbinary/prosemirror-lwdita-localization coverage && yarn workspace @evolvedbinary/prosemirror-lwdita coverage && yarn workspace @evolvedbinary/prosemirror-lwdita-backend coverage",
