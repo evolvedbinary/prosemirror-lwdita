@@ -6,7 +6,6 @@
   },
   "exclude": [
     "cypress.config.ts",
-    "cypress",
     "eslint.config.mts",
   ]
 }
