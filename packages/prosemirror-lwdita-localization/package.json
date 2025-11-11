@@ -4,20 +4,6 @@
   "description": "Localization for LwDITA in ProseMirror",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "engines": {
-    "node": ">=22.16.0 <23",
-    "yarn": ">=4.2.2"
-  },
-  "scripts": {
-    "clean": "rimraf dist generated-docs",
-    "build": "tsc",
-    "prepack": "yarn run build",
-    "test": "mocha",
-    "test:watch": "mocha -w",
-    "coverage": "rimraf coverage && nyc yarn mocha",
-    "coveralls": "nyc --reporter=text-lcov report | coveralls",
-    "generate-docs": "typedoc"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/evolvedbinary/prosemirror-lwdita.git"
@@ -38,26 +24,28 @@
     "url": "https://github.com/evolvedbinary/prosemirror-lwdita/issues"
   },
   "homepage": "https://github.com/evolvedbinary/prosemirror-lwdita#readme",
-  "directories": {
-    "src": "./src",
-    "test": "./test"
+  "scripts": {
+    "build": "tsc",
+    "clean": "rimraf dist",
+    "test": "mocha"
   },
   "dependencies": {
-    "@types/node-polyglot": "^2.5.0"
+    "@types/node-polyglot": "^2.5.0",
+    "node-polyglot": "^2.6.0"
   },
   "devDependencies": {
     "@types/chai": "^4.3.11",
     "@types/mocha": "^10.0.9",
     "@types/node": "^24.9.2",
-    "coveralls": "^3.1.1",
+    "chai": "^6.2.0",
     "mocha": "^10.7.3",
-    "node-polyglot": "^2.6.0",
-    "nyc": "^17.0.0",
     "rimraf": "^6.0.1",
     "ts-node": "^10.9.2",
-    "typedoc": "^0.26.10",
-    "typedoc-plugin-missing-exports": "^3.0.0",
-    "typescript": "5.6.3"
+    "typescript": "^5.6.3"
+  },
+  "engines": {
+    "node": ">=22.16.0 <23",
+    "yarn": ">=4.2.2"
   },
   "packageManager": "yarn@4.2.2"
 }

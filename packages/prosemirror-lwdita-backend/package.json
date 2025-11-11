@@ -1,24 +1,10 @@
 {
   "name": "@evolvedbinary/prosemirror-lwdita-backend",
-  "private": true,
   "version": "2.6.0",
-  "description": "Use LwDITA in ProseMirror",
+  "private": true,
+  "description": "Backend server for ProseMirror LwDITA",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "scripts": {
-    "start": "yarn run clean && yarn build && yarn serve",
-    "serve": "node ./dist/server.js",
-    "clean": "rimraf dist",
-    "build": "tsc",
-    "test": "mocha",
-    "coverage": "rimraf coverage && nyc yarn mocha",
-    "coveralls": "nyc --reporter=text-lcov report | coveralls",
-    "dist": "webpack"
-  },
-  "engines": {
-    "node": ">=22.16.0 <23",
-    "yarn": ">=4.2.2"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/evolvedbinary/prosemirror-lwdita.git"
@@ -38,15 +24,17 @@
     "url": "https://github.com/evolvedbinary/prosemirror-lwdita/issues"
   },
   "homepage": "https://github.com/evolvedbinary/prosemirror-lwdita#readme",
-  "directories": {
-    "src": "./src",
-    "test": "./test"
+  "scripts": {
+    "build": "tsc",
+    "clean": "rimraf dist",
+    "test": "mocha"
   },
   "dependencies": {
     "@octokit/auth-oauth-user": "^5.1.1",
     "@octokit/rest": "^21.0.2",
     "@octokit/types": "^13.5.0",
     "ajv": "^8.17.1",
+    "cors": "^2.8.5",
     "express": "^4.21.1",
     "octokit": "^4.0.2"
   },
@@ -60,26 +48,19 @@
     "@types/sinon": "^17.0.3",
     "@types/sinon-chai": "^4.0.0",
     "@types/supertest": "^6.0.2",
-    "@typescript-eslint/eslint-plugin": "^8.11.0",
-    "@typescript-eslint/parser": "^8.11.0",
     "chai": "^6.2.0",
     "chai-as-promised": "^8.0.2",
-    "cors": "^2.8.5",
-    "coveralls": "^3.1.1",
-    "eslint": "^8.57.0",
-    "eslint-plugin-notice": "^1.0.0",
-    "eslint-plugin-tsdoc": "^0.3.0",
     "mocha": "^10.7.3",
-    "nyc": "^17.0.0",
     "rimraf": "^6.0.1",
     "sinon": "^21.0.0",
     "sinon-chai": "^4.0.0",
     "supertest": "^7.0.0",
-    "ts-loader": "^9.5.1",
     "ts-node": "^10.9.2",
-    "typescript": "^5.6.3",
-    "webpack": "^5.95.0",
-    "webpack-cli": "^5.1.4"
+    "typescript": "^5.6.3"
+  },
+  "engines": {
+    "node": ">=22.16.0 <23",
+    "yarn": ">=4.2.2"
   },
   "packageManager": "yarn@4.2.2"
 }
