@@ -3,6 +3,7 @@
   "compilerOptions": {
     "rootDir": "src",
     "outDir": "dist",
+    "composite": true
   },
   "include": [
     "src/**/*",
@@ -10,5 +11,8 @@
   "exclude": [
     "tests/*",
     "eslint.config.mts"
+  ],
+  "references": [
+    { "path": "../prosemirror-lwdita-localization" }
   ]
 }

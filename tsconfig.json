@@ -12,10 +12,14 @@
     "outDir": "dist", /* Redirect output structure to the `dist/` directory. */
     "resolveJsonModule": true
   },
-  "files": [], // no root files each package will compile its own files
+  "files": [], // This tells tsc to not include any files by default, and only include those specified in "references"
   "exclude": [
     "**/eslint.config.*",
-    "**/dist",
-    "packages"
+  ],
+  "references": [
+    { "path": "packages/prosemirror-lwdita-backend" },
+    { "path": "packages/prosemirror-lwdita-demo" },
+    { "path": "packages/prosemirror-lwdita-localization" },
+    { "path": "packages/prosemirror-lwdita" }
   ]
 }

@@ -6,6 +6,7 @@
     "outDir": "dist",
     "module": "Node16",
     "moduleResolution": "Node16",
+    "composite": true
   },
   "include": [
     "src/**/*",
@@ -13,5 +14,6 @@
   "exclude": [
     "tests/*",
     "eslint.config.mts",
-  ]
+  ],
+  "references": [] // no internal package dependencies
 }
