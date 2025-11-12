@@ -9,7 +9,7 @@
     "yarn": ">=4.2.2"
   },
   "scripts": {
-    "clean": "rimraf dist generated-docs",
+    "clean": "rimraf dist generated-docs tsconfig.tsbuildinfo",
     "build": "tsc",
     "prepack": "yarn run build",
     "test": "mocha",

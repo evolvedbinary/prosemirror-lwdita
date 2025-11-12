@@ -3,6 +3,7 @@
   "compilerOptions": {
     "rootDir": "src",
     "outDir": "dist",
+    "composite": true
   },
   "include": [
     "src/**/*",
@@ -10,5 +11,9 @@
   "exclude": [
     "cypress.config.ts",
     "eslint.config.mts"
+  ],
+  "references": [
+    { "path": "../prosemirror-lwdita" },
+    { "path": "../prosemirror-lwdita-localization" }
   ]
 }
