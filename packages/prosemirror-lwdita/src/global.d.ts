@@ -1,4 +1,3 @@
-/* eslint-disable no-var */
 /*!
 Copyright (C) 2020 Evolved Binary
 

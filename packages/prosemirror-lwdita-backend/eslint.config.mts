@@ -15,33 +15,20 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+import rootConfig from "../../eslint.config.mjs";
+import { defineConfig } from "eslint/config";
+import globals from "globals";
 
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const path = require('path');
-
-module.exports = {
-  target: 'node',
-  entry: './src/server.ts',
-  module: {
-    rules: [
-      {
-        // NOTE(AR) the test is for any of: .mts, .mtsx, .ts, or .tsx
-        test: /\.m?tsx?$/,
-        use: 'ts-loader',
-        exclude: /node_modules/,
-      },
-    ],
-  },
-  resolve: {
-    extensions: ['.tsx', '.ts', '.mts', '.js'],
-    extensionAlias: {
-      // map import for .mjs file to .mts file
-      '.mjs': ['.mts']
+export default defineConfig([
+  ...rootConfig,
+  {
+    files: ["src/**/*.ts"],
+    languageOptions: {
+      globals: { ...globals.node }
+    },
+    rules: {
+      // Backend-specific rules
+      "@typescript-eslint/no-var-requires": "off"
     }
-  },
-  output: {
-    filename: 'server.bundle.js',
-    path: path.resolve(__dirname, 'dist/bundle'),
-    clean: true,
-  },
-};
+  }
+]);

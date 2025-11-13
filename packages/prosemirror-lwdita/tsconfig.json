@@ -3,8 +3,14 @@
   "compilerOptions": {
     "rootDir": "src",
     "outDir": "dist",
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true,
   },
-  "exclude": [
-    "tests/*"
+  "include": [
+    "src/**/*",
+  ],
+  "references": [
+    { "path": "../prosemirror-lwdita-localization" }
   ]
 }

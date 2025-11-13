@@ -1,17 +1,19 @@
 {
   "extends": "@tsconfig/recommended/tsconfig.json",
-
   // overrides recommended
   "compilerOptions": {
-    "target": "es6",                          /* Target ECMAScript version 6. */
-    "skipLibCheck": false,                    /* Do NOT skip type checking of declaration files. */
-    "experimentalDecorators": true,           /* Enables experimental support for ES7 decorators. */
-    "declaration": true,                      /* Generates corresponding '.d.ts' file. */
-    "sourceMap": true,                        /* Generates corresponding '.map' file. */
-    "noEmit": false,                          /* NOTE(AR) just making it explicit that we are using tsc (and not another tool) to emit compiled JavaScript */
-    "moduleResolution": "node10",             /* NOTE(AR) just making it explicit that this is the tsc compilation strategy for module resolution that we are currently using */
-    "rootDir": "src",
-    "outDir": "dist",                         /* Redirect output structure to the `dist/` directory. */
-    "resolveJsonModule": true
+    "target": "es6", /* Target ECMAScript version 6. */
+    "skipLibCheck": false, /* Do NOT skip type checking of declaration files. */
+    "experimentalDecorators": true, /* Enables experimental support for ES7 decorators. */
+    "declaration": true, /* Generates corresponding '.d.ts' file. */
+    "sourceMap": true, /* Generates corresponding '.map' file. */
+    "noEmit": false, /* NOTE(AR) just making it explicit that we are using tsc (and not another tool) to emit compiled JavaScript */
+    "moduleResolution": "node10", /* NOTE(AR) just making it explicit that this is the tsc compilation strategy for module resolution that we are currently using */
   },
+  "references": [
+    { "path": "packages/prosemirror-lwdita-backend" },
+    { "path": "packages/prosemirror-lwdita-demo" },
+    { "path": "packages/prosemirror-lwdita-localization" },
+    { "path": "packages/prosemirror-lwdita" }
+  ]
 }

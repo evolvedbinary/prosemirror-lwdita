@@ -40,7 +40,8 @@
     "docker": "yarn build && node docker",
     "cypress": "cypress open",
     "test": "start-server-and-test start http://localhost:1234 cy:run",
-    "cy:run": "cypress run"
+    "cy:run": "cypress run",
+    "lint": "eslint"
   },
   "staticFiles": {
     "staticPath": "../prosemirror-lwdita/config.json"
@@ -59,12 +60,8 @@
   "devDependencies": {
     "@parcel/transformer-sass": "^2.12.0",
     "@types/urijs": "^1.19.25",
-    "@typescript-eslint/eslint-plugin": "^8.11.0",
-    "@typescript-eslint/parser": "^8.11.0",
     "cypress": "^13.15.1",
-    "eslint": "^8.57.0",
-    "eslint-plugin-notice": "^1.0.0",
-    "eslint-plugin-tsdoc": "^0.3.0",
+    "eslint": "^9.38.0",
     "parcel": "^2.12.0",
     "parcel-reporter-static-files-copy": "^1.5.3",
     "rimraf": "^6.0.1",

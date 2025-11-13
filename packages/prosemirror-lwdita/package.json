@@ -9,7 +9,7 @@
     "yarn": ">=4.2.2"
   },
   "scripts": {
-    "clean": "rimraf dist generated-docs",
+    "clean": "rimraf dist generated-docs tsconfig.tsbuildinfo",
     "fix": "node scripts/fix",
     "postinstall": "yarn fix",
     "build": "tsc",
@@ -18,7 +18,8 @@
     "test:watch": "mocha -w",
     "coverage": "rimraf coverage && nyc yarn mocha",
     "coveralls": "nyc --reporter=text-lcov report | coveralls",
-    "generate-docs": "typedoc"
+    "generate-docs": "typedoc",
+    "lint": "eslint"
   },
   "repository": {
     "type": "git",
@@ -69,13 +70,9 @@
     "@types/node": "^24.9.2",
     "@types/toastify-js": "^1",
     "@types/urijs": "^1.19.25",
-    "@typescript-eslint/eslint-plugin": "^8.11.0",
-    "@typescript-eslint/parser": "^8.11.0",
     "chai": "^6.2.0",
     "coveralls": "^3.1.1",
-    "eslint": "^8.57.0",
-    "eslint-plugin-notice": "^1.0.0",
-    "eslint-plugin-tsdoc": "^0.3.0",
+    "eslint": "^9.38.0",
     "mocha": "^10.7.3",
     "nodemon": "^3.1.10",
     "nyc": "^17.0.0",
