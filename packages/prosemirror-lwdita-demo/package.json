@@ -59,7 +59,7 @@
   },
   "devDependencies": {
     "@parcel/transformer-sass": "^2.12.0",
-    "@types/urijs": "^1.19.25",
+    "@types/urijs": "^1.19.26",
     "cypress": "^13.15.1",
     "eslint": "^9.38.0",
     "parcel": "^2.12.0",
