@@ -9,13 +9,7 @@
     "sourceMap": true, /* Generates corresponding '.map' file. */
     "noEmit": false, /* NOTE(AR) just making it explicit that we are using tsc (and not another tool) to emit compiled JavaScript */
     "moduleResolution": "node10", /* NOTE(AR) just making it explicit that this is the tsc compilation strategy for module resolution that we are currently using */
-    "outDir": "dist", /* Redirect output structure to the `dist/` directory. */
-    "resolveJsonModule": true
   },
-  "files": [], // This tells tsc to not include any files by default, and only include those specified in "references"
-  "exclude": [
-    "**/eslint.config.*",
-  ],
   "references": [
     { "path": "packages/prosemirror-lwdita-backend" },
     { "path": "packages/prosemirror-lwdita-demo" },

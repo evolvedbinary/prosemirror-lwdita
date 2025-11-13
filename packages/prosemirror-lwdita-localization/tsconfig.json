@@ -4,14 +4,13 @@
     "rootDir": "src",
     "outDir": "dist",
     "composite": true,
+    "declaration": true,
+    "declarationMap": true,
+    "resolveJsonModule": true,
   },
   "include": [
     "src/**/*",
-    "src/**/*.json"
-  ],
-  "exclude": [
-    "tests/*",
-    "eslint.config.mts"
+    "src/**/*.json",
   ],
   "references": [] // no internal package dependencies
 }
