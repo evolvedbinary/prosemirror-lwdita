@@ -429,7 +429,7 @@ __metadata:
     prosemirror-menu: "npm:^1.2.4"
     prosemirror-model: "npm:^1.23.0"
     prosemirror-state: "npm:^1.4.3"
-    prosemirror-view: "npm:^1.34.3"
+    prosemirror-view: "npm:^1.41.3"
     rimraf: "npm:^6.0.1"
     sass: "npm:^1.93.2"
     start-server-and-test: "npm:^2.0.8"
@@ -505,7 +505,7 @@ __metadata:
     prosemirror-schema-list: "npm:^1.4.1"
     prosemirror-state: "npm:^1.4.3"
     prosemirror-transform: "npm:^1.10.1"
-    prosemirror-view: "npm:^1.34.3"
+    prosemirror-view: "npm:^1.41.3"
     rimraf: "npm:^6.0.1"
     toastify-js: "npm:^1.12.0"
     ts-node: "npm:^10.9.2"
@@ -7811,7 +7811,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prosemirror-view@npm:^1.27.0, prosemirror-view@npm:^1.31.0, prosemirror-view@npm:^1.34.3":
+"prosemirror-view@npm:^1.27.0, prosemirror-view@npm:^1.31.0":
   version: 1.34.3
   resolution: "prosemirror-view@npm:1.34.3"
   dependencies:
@@ -7819,6 +7819,17 @@ __metadata:
     prosemirror-state: "npm:^1.0.0"
     prosemirror-transform: "npm:^1.1.0"
   checksum: 10c0/f08a9eeb6988e2180ec19989bb11c11db02c37952d1ab8b3ae8c7c1ebf9ce143725855bfa8cee59e4819aab3c9045ef5721cc90e69353f8fd81b7bb3a1c4ea03
+  languageName: node
+  linkType: hard
+
+"prosemirror-view@npm:^1.41.3":
+  version: 1.41.3
+  resolution: "prosemirror-view@npm:1.41.3"
+  dependencies:
+    prosemirror-model: "npm:^1.20.0"
+    prosemirror-state: "npm:^1.0.0"
+    prosemirror-transform: "npm:^1.1.0"
+  checksum: 10c0/e7f86771cf1e793cacf23152d3c3b3e860f6d49c8fb04888e61232382b5803861f070b55e13f5ff515202c13198589d87ce266c9b91c2332a202ec00f4f39fdf
   languageName: node
   linkType: hard
 

@@ -54,7 +54,7 @@
     "prosemirror-menu": "^1.2.4",
     "prosemirror-model": "^1.23.0",
     "prosemirror-state": "^1.4.3",
-    "prosemirror-view": "^1.34.3",
+    "prosemirror-view": "^1.41.3",
     "urijs": "^1.19.11"
   },
   "devDependencies": {
