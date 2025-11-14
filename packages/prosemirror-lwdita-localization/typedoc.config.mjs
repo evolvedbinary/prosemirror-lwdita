@@ -15,11 +15,8 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import { OptionDefaults } from "typedoc";
-
 const config = {
   tsconfig: "./tsconfig.json",
-  modifierTags: [...OptionDefaults.modifierTags, "@decorator"],
   highlightLanguages: ["ts", "js", "xml", "json", "bash"],
   treatWarningsAsErrors: true,
   treatValidationWarningsAsErrors: true,
