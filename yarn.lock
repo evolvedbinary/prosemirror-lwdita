@@ -420,7 +420,7 @@ __metadata:
     "@evolvedbinary/prosemirror-lwdita": "workspace:^"
     "@evolvedbinary/prosemirror-lwdita-localization": "workspace:^"
     "@parcel/transformer-sass": "npm:^2.12.0"
-    "@types/urijs": "npm:^1.19.25"
+    "@types/urijs": "npm:^1.19.26"
     cypress: "npm:^13.15.1"
     eslint: "npm:^9.38.0"
     parcel: "npm:^2.12.0"
@@ -488,7 +488,7 @@ __metadata:
     "@types/mocha": "npm:^10.0.9"
     "@types/node": "npm:^24.9.2"
     "@types/toastify-js": "npm:^1"
-    "@types/urijs": "npm:^1.19.25"
+    "@types/urijs": "npm:^1.19.26"
     chai: "npm:^6.2.0"
     chai-as-promised: "npm:^8.0.2"
     coveralls: "npm:^3.1.1"
@@ -2577,10 +2577,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/urijs@npm:^1.19.25":
-  version: 1.19.25
-  resolution: "@types/urijs@npm:1.19.25"
-  checksum: 10c0/462464294f0cd5f2271e1ab760a45abe252a946559444188a4ad0edba39b1a8bff41b140b79596a5e3c44a5d0d29f78c9ab97b5e82efb1e8617093a549c22bf6
+"@types/urijs@npm:^1.19.26":
+  version: 1.19.26
+  resolution: "@types/urijs@npm:1.19.26"
+  checksum: 10c0/8e7660cb5a316f9ddc636b4051ad44a7e437a733a5ac8c621bc4a6014805acdf9a54cb7828cff8e4d16556c8757ec34e1144e21da9a3224c212f886e8ae68833
   languageName: node
   linkType: hard
 
