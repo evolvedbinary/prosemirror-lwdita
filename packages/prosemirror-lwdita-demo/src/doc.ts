@@ -43,7 +43,7 @@ if (!storedFile) {
         <strong>strong</strong>
         and <sub>subscript</sub> and <sup>superscipt</sup> and <tt>tele type</tt> and
         <u>underline</u>
-        <image href="https://picsum.photos/200/300">
+        <image href="https://static.evolvedbinary.com/petal/eb-rose-small.png">
             <alt>alt text</alt>
         </image>
     </title>
@@ -86,13 +86,13 @@ if (!storedFile) {
             <fallback>
                 <p>The theme song is not available.</p>
             </fallback>
-            <media-source href="https://upload.wikimedia.org/wikipedia/commons/a/aa/1943_Nov_14_NYPhil_Bernstein.ogg" format="application/ogg"/>
+            <media-source href="https://static.evolvedbinary.com/petal/1943_Nov_14_NYPhil_Bernstein.ogg" format="application/ogg"/>
             <media-track srclang="en"/>
         </audio>
         <video outputclass="videoElement" width="320" height="240" controls="true">
             <desc>Kool-Aid Commercial, Debut of Pitcher Man</desc>
-            <video-poster href="https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/1954_Kool-Aid_Commercial._Debut_of_Pitcher_Man.webm/120px--1954_Kool-Aid_Commercial._Debut_of_Pitcher_Man.webm.jpg"/>
-            <media-source href="https://upload.wikimedia.org/wikipedia/commons/7/74/1954_Kool-Aid_Commercial._Debut_of_Pitcher_Man.webm"/>
+            <video-poster href="https://static.evolvedbinary.com/petal/1954_Kool-Aid_Commercial._Debut_of_Pitcher_Man.webm.jpg"/>
+            <media-source href="https://static.evolvedbinary.com/petal/1954_Kool-Aid_Commercial._Debut_of_Pitcher_Man.webm"/>
         </video>
         <example>
             <title>title</title>
@@ -127,7 +127,7 @@ if (!storedFile) {
         <fig>
             <title>Figure title</title>
             <desc>Figure description</desc>
-            <image href="https://placehold.co/300x300">
+            <image href="https://static.evolvedbinary.com/petal/eb-rose-small.png">
                 <alt>alt text</alt>
             </image>
         </fig>
