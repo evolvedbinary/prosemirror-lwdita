@@ -8,7 +8,7 @@
   "scripts": {
     "start": "yarn run clean && yarn build && yarn serve",
     "serve": "node ./dist/server.js",
-    "clean": "rimraf dist",
+    "clean": "rimraf dist tsconfig.tsbuildinfo",
     "build": "tsc",
     "test": "mocha",
     "coverage": "rimraf coverage && nyc yarn mocha",
