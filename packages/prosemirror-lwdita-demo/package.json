@@ -51,7 +51,7 @@
     "@evolvedbinary/prosemirror-lwdita": "workspace:^",
     "@evolvedbinary/prosemirror-lwdita-localization": "workspace:^",
     "prosemirror-history": "^1.4.1",
-    "prosemirror-menu": "^1.2.4",
+    "prosemirror-menu": "^1.2.5",
     "prosemirror-model": "^1.23.0",
     "prosemirror-state": "^1.4.3",
     "prosemirror-view": "^1.34.3",
