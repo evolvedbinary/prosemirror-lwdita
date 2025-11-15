@@ -55,7 +55,7 @@
     "prosemirror-commands": "^1.6.0",
     "prosemirror-history": "^1.4.1",
     "prosemirror-keymap": "^1.2.2",
-    "prosemirror-menu": "^1.2.4",
+    "prosemirror-menu": "^1.2.5",
     "prosemirror-model": "^1.23.0",
     "prosemirror-schema-list": "^1.4.1",
     "prosemirror-state": "^1.4.3",
