@@ -462,7 +462,7 @@ __metadata:
   resolution: "@evolvedbinary/prosemirror-lwdita-package@workspace:."
   dependencies:
     "@eslint/js": "npm:^9.38.0"
-    "@tsconfig/recommended": "npm:^1.0.7"
+    "@tsconfig/recommended": "npm:^1.0.13"
     "@types/node": "npm:^24.9.2"
     "@typescript-eslint/eslint-plugin": "npm:^8.11.0"
     "@typescript-eslint/parser": "npm:^8.11.0"
@@ -2280,10 +2280,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tsconfig/recommended@npm:^1.0.7":
-  version: 1.0.8
-  resolution: "@tsconfig/recommended@npm:1.0.8"
-  checksum: 10c0/bd6517e3f69cf96108ab8b7d2ee70a7e64ee457bb72326524acdef6e2219813b298654e9aa57ce2f8899901c9b8fd66388b036b9ca0aa062952a83adb59bec17
+"@tsconfig/recommended@npm:^1.0.13":
+  version: 1.0.13
+  resolution: "@tsconfig/recommended@npm:1.0.13"
+  checksum: 10c0/b0fae7ff8243621da68cd7a259499e1fd536e1aa3b3e3be233d30ab8d5bf046ec3dcc4ff68fc640435f421575e41e56bc735f61a1fe8a47b4475f3f2bf5ed882
   languageName: node
   linkType: hard
 
