@@ -33,71 +33,119 @@ if (storedFile) {
 // Otherwise take this XML example as a start for the demo editor
 // It is the content of file petal-introduction.xml
 if (!storedFile) {
-  xml = `<?xml version="1.0" encoding="UTF-8"?>
+    // load file from the xdita demo files / 06-lwdita-schema-example.xml
+    xml = `<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE topic PUBLIC "-//OASIS//DTD LIGHTWEIGHT DITA Topic//EN" "lw-topic.dtd">
-<topic id="petal">
-    <title>What is Petal?</title>
-    <body>
-        <p dir="ltr">Sadly many projects lack proper documentation, but why is that?</p>
+<topic id="fullTopic">
+    <title>
+        <b>bold</b>
+        and <em>emphasized</em> and <i>italic</i> and <ph>Phrase content</ph> and
+        <strong>strong</strong>
+        and <sub>subscript</sub> and <sup>superscipt</sup> and <tt>tele type</tt> and
+        <u>underline</u>
+        <image href="https://static.evolvedbinary.com/petal/eb-rose-small.png">
+            <alt>alt text</alt>
+        </image>
+    </title>
+    <shortdesc>Short description of the full topic.</shortdesc>
+    <prolog>
+        <metadata>
+            <othermeta name="test" content="test"/>
+        </metadata>
+    </prolog>
+    <body dir="ltr">
+        <p>Paragraph content</p>
+        <p>
+            <b>Bold</b>
+            and <em>emphasized</em> and <i>italic</i> and <ph>Phrase content</ph> and
+            <strong>strong</strong>
+            and <sub>subscript</sub> and <sup>superscipt</sup> and <tt>tele type</tt> and
+            <u>underline</u>.
+        </p>
+        <ul>
+            <li>
+                <p>Unordered list item</p>
+            </li>
+        </ul>
+        <ol>
+            <li>
+                <p>Ordered list item</p>
+            </li>
+        </ol>
+        <dl>
+            <dlentry>
+                <dt>Definition term</dt>
+                <dd>
+                    <p>Definition description</p>
+                </dd>
+            </dlentry>
+        </dl>
+        <pre>Preformatted content</pre>
+        <audio autoplay="false" controls="true" loop="false" muted="true">
+            <desc>Theme song for the LwDITA podcast</desc>
+            <fallback>
+                <p>The theme song is not available.</p>
+            </fallback>
+            <media-source href="https://static.evolvedbinary.com/petal/1943_Nov_14_NYPhil_Bernstein.ogg" format="application/ogg"/>
+            <media-track srclang="en"/>
+        </audio>
+        <video outputclass="videoElement" width="320" height="240" controls="true">
+            <desc>Kool-Aid Commercial, Debut of Pitcher Man</desc>
+            <video-poster href="https://static.evolvedbinary.com/petal/1954_Kool-Aid_Commercial._Debut_of_Pitcher_Man.webm.jpg"/>
+            <media-source href="https://static.evolvedbinary.com/petal/1954_Kool-Aid_Commercial._Debut_of_Pitcher_Man.webm"/>
+        </video>
+        <example>
+            <title>title</title>
+        </example>
+        <simpletable>
+            <title>Table title</title>
+            <sthead>
+                <stentry>
+                    <p>Header 1</p>
+                </stentry>
+                <stentry>
+                    <p>Header 2</p>
+                </stentry>
+            </sthead>
+            <strow>
+                <stentry>
+                    <p>Row 1, Cell 1</p>
+                </stentry>
+                <stentry>
+                    <p>Row 1, Cell 2</p>
+                </stentry>
+            </strow>
+            <strow>
+                <stentry>
+                    <p>Row 2, Cell 1</p>
+                </stentry>
+                <stentry>
+                    <p>Row 2, Cell 2</p>
+                </stentry>
+            </strow>
+        </simpletable>
         <fig>
-            <image href="https://static.evolvedbinary.com/petal/eb-rose-small.png"></image>
+            <title>Figure title</title>
+            <desc>Figure description</desc>
+            <image href="https://static.evolvedbinary.com/petal/eb-rose-small.png">
+                <alt>alt text</alt>
+            </image>
         </fig>
-
-        <p dir="ltr">The effort that goes into coding great software is paramount, but often
-            pointless if others can't understand and use the software. Most developers have
-            witnessed brilliant code with incomplete or entirely missing documentation. Petal lowers
-            the barrier to delivering this critical part of any software product.</p>
-        <p dir="ltr">Often it is difficult or time-consuming to add documentation to a project.
-            Potentially great projects stay in obscurity because users and developers don't have the
-            information they need to understand them and use them.</p>
-        <p dir="ltr">Our dream is to make adding documentation to a project as easy as typing text
-            into a web browser and hitting save. This approach would lead to more usable projects
-            through robust and helpful documentation.</p>
-        <p dir="ltr">Petal is a first of its kind technical documentation editor that realises this
-            dream!</p>
-        <p dir="ltr">Petal makes it simple to:</p>
-        <ul>
-            <li dir="ltr">
-                <p dir="ltr">Create new pages of documentation</p>
-            </li>
-            <li dir="ltr">
-                <p dir="ltr">Update existing pages of documentation</p>
-            </li>
-            <li dir="ltr">
-                <p dir="ltr">Submit your work for review</p>
-            </li>
-            <li dir="ltr">
-                <p dir="ltr">Accept documentation contributions from the community</p>
-            </li>
-            <li dir="ltr">
-                <p dir="ltr">Integrate with version control repositories such as GitHub</p>
-            </li>
-        </ul>
-        <p dir="ltr">Petal is:</p>
-        <ul>
-            <li dir="ltr">
-                <p dir="ltr">A Visual Technical Documentation Editor</p>
-            </li>
-            <li dir="ltr">
-                <p dir="ltr">Accessible through a Web Browser just like a Wiki</p>
-            </li>
-            <li dir="ltr">
-                <p dir="ltr">Filling a gap in the market where other offerings are too complex</p>
-            </li>
-            <li dir="ltr">
-                <p dir="ltr">Open Source</p>
-            </li>
-            <li dir="ltr">
-                <p dir="ltr">Standards compliant</p>
-            </li>
-            <li dir="ltr">
-                <p dir="ltr">Developed with the latest web technologies</p>
-            </li>
-        </ul>
-        <p dir="ltr">Bad documentation keeps good projects from being GREAT.</p>
-        <p dir="ltr">Petal helps anyone to contribute documentation to a project with ease. If you know how to type text on a computer, then you already know how to use Petal.</p>
+        <note type="note">
+            <p>Note content</p>
+        </note>
+        <section>
+            <title>Section title</title>
+            <p>Section content</p>
+        </section>
+        <div>
+            <fn id="footnote">
+                <p>A footnote</p>
+            </fn>
+        </div>
     </body>
-</topic>`;
+</topic>
+`
 }
 
 // transform the xml to Jdita object
