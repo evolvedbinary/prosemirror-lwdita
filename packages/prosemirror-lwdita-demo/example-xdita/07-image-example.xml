@@ -6,7 +6,7 @@
     <section>
       <title>An Image</title>
       <fig>
-        <image outputclass="imageElement" height="300" width="300" href="https://placehold.co/300x300" scope="external">
+        <image outputclass="imageElement" height="300" width="300" href="https://static.evolvedbinary.com/petal/eb-rose-small.png" scope="external">
           <alt>A Placeholder</alt>
         </image>
       </fig>
