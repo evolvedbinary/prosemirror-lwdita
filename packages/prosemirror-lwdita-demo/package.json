@@ -62,7 +62,7 @@
     "@types/urijs": "^1.19.26",
     "cypress": "^13.15.1",
     "eslint": "^9.38.0",
-    "parcel": "^2.12.0",
+    "parcel": "^2.16.0",
     "parcel-reporter-static-files-copy": "^1.5.3",
     "rimraf": "^6.0.1",
     "sass": "^1.94.1",
