@@ -47,7 +47,7 @@
   },
   "dependencies": {
     "@evolvedbinary/lwdita-ast": "^3.3.0",
-    "@evolvedbinary/lwdita-xdita": "^3.3.0",
+    "@evolvedbinary/lwdita-xdita": "^3.3.2",
     "@evolvedbinary/prosemirror-lwdita-localization": "workspace:^",
     "@types/chai-as-promised": "^8.0.2",
     "chai-as-promised": "^8.0.2",
