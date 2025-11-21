@@ -3020,9 +3020,9 @@ __metadata:
   linkType: hard
 
 "@types/toastify-js@npm:^1":
-  version: 1.12.3
-  resolution: "@types/toastify-js@npm:1.12.3"
-  checksum: 10c0/e886fdef7c110eed0a2eece0fd1c2292f696d722409e8cc66f583ebf33a36feface876524710b202b167a17c8937451b60add302e4600e103ef93c6ba740b311
+  version: 1.12.4
+  resolution: "@types/toastify-js@npm:1.12.4"
+  checksum: 10c0/6e997e655e69cc742fc8562c32fdb5d123897a6fb1e83914ef6618f125bf06769651bdce80c26143ebc0cef22698c0b0548b950f81eaccd443e320ea5cd2c261
   languageName: node
   linkType: hard
 
