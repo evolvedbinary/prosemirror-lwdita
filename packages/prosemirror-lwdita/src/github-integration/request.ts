@@ -181,7 +181,17 @@ export function processRequest(config: Config, localization: Localization): unde
             showErrorPage(config, 'authenticationError', returnParams.referrer);
           });
 
-          return JSON.parse(atob(returnParams.state));
+          const state = JSON.parse(atob(returnParams.state))
+
+          // Replace the one-time OAuth callback URL with the original edit URL so that
+          // a page refresh does not attempt to reuse the already-spent code.
+          const editUrl = `/?ghrepo=${encodeURIComponent(state.ghrepo)}`
+            + `&source=${encodeURIComponent(state.source)}`
+            + `&branch=${encodeURIComponent(state.branch)}`
+            + `&referrer=${encodeURIComponent(state.referrer)}`;
+          history.replaceState({}, '', editUrl);
+
+          return state;
         }
       }
 
