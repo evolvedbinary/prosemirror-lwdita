@@ -160,11 +160,45 @@ describe('request the token after OAuth', () => {
     cy.url().should('eq', `http://localhost:1234/?code=${mockCode}&state=eyJnaHJlcG8iOiJldm9sdmVkYmluYXJ5L3Byb3NlbWlycm9yLWx3ZGl0YSIsInNvdXJjZSI6InBhY2thZ2VzL3Byb3NlbWlycm9yLWx3ZGl0YS1kZW1vL2V4YW1wbGUteGRpdGEvMDItc2hvcnQtZmlsZS54bWwiLCJicmFuY2giOiJtYWluIiwicmVmZXJyZXIiOiJodHdzcmh0c2hydHMifQ==`);
 
     cy.wait('@requestToken');
-    
+
     // assert the user was redirected to the installation page
     // github.com/apps/petal-demo/installations/new
     cy.url().should('include', 'integration=petal-bot');
   });
+});
+
+describe('Browser behaviours', () => {
+  it('should restore the original url after OAuth', () => {
+    // mock the GitHub OAuth URL
+    const mockCode = 'mock-user-code';
+    // Intercept the GitHub OAuth URL
+    const githubOAuthUrl = /https:\/\/github\.com\/login\/oauth\/authorize\?.*/;
+
+    // Intercept the OAuth request and mock the authentication process
+    cy.intercept('GET', githubOAuthUrl, {
+      statusCode: 302,
+      headers: { location: `http://localhost:1234/?code=${mockCode}&state=eyJnaHJlcG8iOiJldm9sdmVkYmluYXJ5L3Byb3NlbWlycm9yLWx3ZGl0YSIsInNvdXJjZSI6InBhY2thZ2VzL3Byb3NlbWlycm9yLWx3ZGl0YS1kZW1vL2V4YW1wbGUteGRpdGEvMDItc2hvcnQtZmlsZS54bWwiLCJicmFuY2giOiJtYWluIiwicmVmZXJyZXIiOiJodHdzcmh0c2hydHMifQ==` }
+    }).as('githubOAuth');
+
+    // Intercept the token request
+    const tokenRequest = /http:\/\/localhost:3000\/api\/github\/token\?.*/;
+    cy.intercept('GET', tokenRequest, {
+      statusCode: 200,
+      headers: { 'content-type': 'application/json' },
+      body: {
+        token: 'mock-token',
+        installation: true
+      }
+    }).as('requestToken');
+
+    cy.visit('http://localhost:1234/?ghrepo=evolvedbinary/prosemirror-lwdita&source=packages/prosemirror-lwdita-demo/example-xdita/02-short-file.xml&branch=main&referrer=https://petal.evolvedbinary.com/')
+    // make sure the token request is done
+    cy.wait('@requestToken').should('have.property', 'response');
+    cy.get('@requestToken').its('response.statusCode').should('eq', 200);
+    // check the url state
+    cy.wait(500)
+      .url().should('eq', `http://localhost:1234/?ghrepo=evolvedbinary%2Fprosemirror-lwdita&source=packages%2Fprosemirror-lwdita-demo%2Fexample-xdita%2F02-short-file.xml&branch=main&referrer=htwsrhtshrts`)
+  })
 });
 
 describe('render publish button', () => {
