@@ -18,16 +18,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 export const mockXML = `<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE topic PUBLIC "-//OASIS//DTD LIGHTWEIGHT DITA Topic//EN" "lw-topic.dtd">
 <topic id="fullTopic">
-    <title>
-        <b>bold</b>
+    <title><b>bold</b>
         and <em>emphasized</em> and <i>italic</i> and <ph>Phrase content</ph> and
         <strong>strong</strong>
         and <sub>subscript</sub> and <sup>superscipt</sup> and <tt>tele type</tt> and
-        <u>underline</u>
-        <image href="https://static.evolvedbinary.com/petal/eb-rose-small.png">
+        <u>underline</u><image href="https://static.evolvedbinary.com/petal/eb-rose-small.png">
             <alt>alt text</alt>
-        </image>
-    </title>
+        </image></title>
     <shortdesc>Short description of the full topic.</shortdesc>
     <prolog>
         <metadata>
@@ -36,8 +33,7 @@ export const mockXML = `<?xml version="1.0" encoding="UTF-8"?>
     </prolog>
     <body dir="ltr">
         <p>Paragraph content</p>
-        <p>
-            <b>Bold</b>
+        <p><b>Bold</b>
             and <em>emphasized</em> and <i>italic</i> and <ph>Phrase content</ph> and
             <strong>strong</strong>
             and <sub>subscript</sub> and <sup>superscipt</sup> and <tt>tele type</tt> and
@@ -129,22 +125,22 @@ export const mockXML = `<?xml version="1.0" encoding="UTF-8"?>
 `;
 
 describe('download a file', () => {
-  
-  it('downloads the file correctly', () => {
-    cy.visit('http://localhost:1234/')
-    .readFile('Petal.xml').
-    should('not.exist')
-    .get('#saveFile').click()
-    .readFile('cypress/downloads/Petal.xml');
-  })
+
+    it('downloads the file correctly', () => {
+        cy.visit('http://localhost:1234/')
+            .readFile('Petal.xml').
+            should('not.exist')
+            .get('#saveFile').click()
+            .readFile('cypress/downloads/Petal.xml');
+    })
 
 
-  it('downloads the file correctly', () => {
-    cy.visit('http://localhost:1234/')
-    .get('#saveFile')
-    .click()
-    .readFile('cypress/downloads/Petal.xml')
-    .debug()
-    .should('equal', mockXML);
-  })
+    it('downloads the file correctly', () => {
+        cy.visit('http://localhost:1234/')
+            .get('#saveFile')
+            .click()
+            .readFile('cypress/downloads/Petal.xml')
+            .debug()
+            .should('equal', mockXML);
+    })
 })
